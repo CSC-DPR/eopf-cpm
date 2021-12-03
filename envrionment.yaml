@@ -17,6 +17,7 @@ dependencies:
   - jupyter_sphinx=0.3.2
   - pre-commit=2.16.0
   - bandit=1.7.1
+  - fsspec=2021.11.1
   - pip
   - pip:
     - pyre-check==0.9.8
