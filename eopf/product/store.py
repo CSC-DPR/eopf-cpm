@@ -15,12 +15,14 @@ class EOProductStore(ABC):
     _path: str
 
     @abstractclassmethod
-    def from_product(cls, eoproduct: EOProduct) -> "EOProductStore":
-        """ """
+    def dump(cls, eoproduct: EOProduct) -> "EOProductStore":
+        """Generate a EOProductStore from the given EOProduct"""
 
     @abstractmethod
-    def to_product(self, klass: Type[EOProduct]) -> EOProduct:
-        """ """
+    def load(self, klass: Type[EOProduct]) -> EOProduct:
+        """Generate a EOProduct f the given EOProduct class with
+        the self EOProductStore representation
+        """
 
     @abstractmethod
     def update(self, product: EOProduct) -> None:
