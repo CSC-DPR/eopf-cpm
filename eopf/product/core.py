@@ -8,8 +8,11 @@ Climate and Forecast conventions: https://cfconventions.org/
 
 from abc import ABC, abstractmethod
 from collections.abc import MutableMapping
+from dataclasses import dataclass
+from os import PathLike
 from typing import Any, Iterable, Iterator, KeysView, List, Optional, Union
 
+import numpy as np
 from xarray import DataArray
 
 from eopf import exceptions
@@ -122,6 +125,10 @@ class EOVariable(EOProperties):
     @property
     def dims(self) -> tuple[str]:
         return self._ndarray.dims
+
+    @property
+    def dtype(self) -> np.dtype:
+        return self._ndarray.dtype
 
     @property
     def name(self) -> Optional[str]:
@@ -258,20 +265,20 @@ class EOGroup(EOProperties, MutableMapping[str, EOVariable]):
         self._dims = tuple(i for i in (dims or []))
 
     def __getitem__(self, key: str) -> EOVariable:
-        return self._variables.__getitem__(key)
+        return self._variables[key]
 
     def __setitem__(self, key: str, value: EOVariable) -> None:
-        self._variables.__setitem__(key, value)
+        self._variables[key] = value
         value.parent = self
 
     def __delitem__(self, key: str) -> None:
-        self._variables.__delitem__[key]
+        del self._variables[key]
 
     def __len__(self) -> int:
-        return self._variables.__len__()
+        return len(self._variables)
 
     def __iter__(self) -> Iterator[EOVariable]:
-        return self._variables.__iter__()
+        return iter(self._variables.values())
 
     def __str__(self):
         return self.__repr__()
@@ -319,16 +326,9 @@ class EOGroup(EOProperties, MutableMapping[str, EOVariable]):
         return self._variables.values()
 
 
-class MetaData(ABC):
-    @property
-    @abstractmethod
-    def path(self):
-        """ """
-
-    @property
-    @abstractmethod
-    def store(self):
-        """ """
+@dataclass
+class MetaData:
+    path: Union[str, PathLike]
 
 
 class EOProduct(EOProperties, MutableMapping[str, EOGroup]):
@@ -343,7 +343,7 @@ class EOProduct(EOProperties, MutableMapping[str, EOGroup]):
         self._groups: MutableMapping[str, EOGroup]
         self._coords: EOGroup
         self._attrs: MutableMapping[str, Any]
-        self._metadata: Optional[MetaData] = None
+        self._metadatas: Optional[Iterable[MetaData]] = None
 
     def __init__(
         self,
@@ -352,7 +352,7 @@ class EOProduct(EOProperties, MutableMapping[str, EOGroup]):
         *args: EOGroup,
         groups: Optional[Iterable[EOGroup]] = None,
         attrs: Optional[MutableMapping[str, Any]] = None,
-        metadata: Optional[MetaData] = None,
+        metadatas: Optional[Iterable[MetaData]] = None,
     ) -> None:
         self.__types__()
         self._name = name
@@ -368,23 +368,23 @@ class EOProduct(EOProperties, MutableMapping[str, EOGroup]):
         self._attrs = {}
         self._attrs.update(attrs or {})
 
-        self._metadata = metadata
+        self._metadatas = tuple(metadata for metadata in (metadatas or []))
 
     def __getitem__(self, key: str) -> EOGroup:
-        return self._groups.__getitem__(key)
+        return self._groups[key]
 
     def __setitem__(self, key: str, value: EOGroup) -> None:
-        self._groups.__setitem__(key, value)
+        self._groups[key] = value
         value.parent = self
 
     def __delitem__(self, key: str) -> None:
-        self._groups.__delitem__[key]
+        del self._groups[key]
 
     def __len__(self) -> int:
-        return self._groups.__len__()
+        return len(self._groups)
 
     def __iter__(self) -> Iterator[EOGroup]:
-        return self._groups.__iter__()
+        return iter(self._groups.values())
 
     def __str__(self):
         return self.__repr__()
@@ -405,7 +405,7 @@ class EOProduct(EOProperties, MutableMapping[str, EOGroup]):
         return tuple()
 
     @property
-    def metadata(self) -> Optional[MetaData]:
+    def metadatas(self) -> Optional[MetaData]:
         return self._metadata
 
     @property
