@@ -10,12 +10,14 @@ from abc import ABC, abstractmethod
 from collections.abc import MutableMapping
 from dataclasses import dataclass
 from os import PathLike
-from typing import Any, Iterable, Iterator, KeysView, List, Optional, Union
+from typing import Any, Iterable, Iterator, KeysView, List, Mapping, Optional, Union
 
 import numpy as np
 from xarray import DataArray
 
 from eopf import exceptions
+
+from .mixins import EOVariableOperatorsMixin
 
 
 def search(eoobject: Union["EOGroup", "EOProduct"], path, already_done: List["EOGroup"] = None):
@@ -87,7 +89,7 @@ class EOProperties(ABC):
         """
 
 
-class EOVariable(EOProperties):
+class EOVariable(EOProperties, EOVariableOperatorsMixin):
     """Earth Observation Variable definition
     Compliant to the Common data model.
     Compliant to the NEP 13 and 18.
@@ -107,9 +109,15 @@ class EOVariable(EOProperties):
         self._ndarray: DataArray
         self._parent: Optional["EOGroup"] = None
 
-    def __init__(self, ndarray: DataArray):
+    def __init__(self, data: Any, **kwargs: Any):
         self.__types__()
-        self._ndarray = ndarray
+        if isinstance(data, DataArray):
+            self._ndarray = data
+        else:
+            self._ndarray = DataArray(
+                data=data,
+                **kwargs,
+            )
 
     def __str__(self):
         return self.__repr__()
@@ -148,68 +156,71 @@ class EOVariable(EOProperties):
             )
         self._parent = value
 
-    # @abstractmethod
-    # def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
-    #     """Must be compliant to the NEP 13.
-    #     https://numpy.org/neps/nep-0013-ufunc-overrides.html
-    #     """
+    @property
+    def chunks(self) -> Optional[tuple[tuple[int, ...], ...]]:
+        """Accessor to the chunks"""
+        return self._ndarray.chunks
 
-    # @abstractmethod
-    # def __array_function__(self, func, types, args, kwargs):
-    #     """Must be compliant to th NEP 18.
-    #     https://numpy.org/neps/nep-0018-array-function-protocol.html
-    #     """
+    def rechunk(
+        self,
+        chunks_shape: Union[
+            Mapping[Any, Union[None, int, tuple[int, ...]]],
+            int,
+            tuple[int, ...],
+            tuple[tuple[int, ...], ...],
+        ],
+    ) -> None:
+        """Change chunk shape / size"""
+        self._ndarray = self._ndarray.chunk(chunks_shape)
 
-    # @abstractmethod
-    # def __dask_graph__(self) -> Union[Mapping, None]:
-    #     """ """
+    def map_chunk(self, func, *args, template=None, **kwargs):
+        """map function on each chunk"""
+        self._ndarray = self._ndarray.map_blocks(func, args, kwargs, template)
 
-    # @abstractmethod
-    # def __dask_keys__(self) -> list:
-    #     """ """
+    def __array_wrap__(self, obj, context=None) -> "EOVariable":
+        self._ndarray = self._ndarray.__array_wrap__(obj, context=context)
+        return self
 
-    # @abstractmethod
-    # def __dask_layers__(self) -> tuple:
-    #     """ """
+    def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
+        """Must be compliant to the NEP 13.
+        https://numpy.org/neps/nep-0013-ufunc-overrides.html
+        """
+        return self._ndarray.__array_ufunc__(ufunc, method, *inputs, **kwargs)
 
-    # @abstractmethod
-    # def __dask_postcompute__(self) -> tuple[Callable, tuple]:
-    #     """ """
+    def __array_function__(self, func, types, args, kwargs):
+        """Must be compliant to th NEP 18.
+        https://numpy.org/neps/nep-0018-array-function-protocol.html
+        """
+        # TODO: implement to be compliant with the NEP 18
+        raise NotImplementedError()
 
-    # @abstractmethod
-    # def __dask_postpersist__(self) -> tuple[Callable, tuple]:
-    #     """ """
+    def __dask_tokenize__(self):
+        from dask.base import normalize_token
 
-    # @abstractmethod
-    # def __dask_tokenize__(self) -> Hashable:
-    #     """Dask deterministic Hashing:
-    #     https://docs.dask.org/en/stable/custom-collections.html#deterministic-hashing"""
+        return normalize_token((type(self), self._ndarray))
 
-    # @staticmethod
-    # @abstractmethod
-    # def __dask_scheduler__(dsk, keys, **kwargs):
-    #     """ """
+    def __dask_graph__(self):
+        return self._ndarray.__dask_graph__()
 
-    # @property
-    # @abstractmethod
-    # def chunks(self) -> Optional[tuple[tuple[int, ...], ...]]:
-    #     """Accessor to the chunks"""
+    def __dask_keys__(self):
+        return self._ndarray.__dask_keys__()
 
-    # @abstractmethod
-    # def rechunk(
-    #     self,
-    #     chunks_shape: Union[
-    #         Mapping[Any, Union[None, int, tuple[int, ...]]],
-    #         int,
-    #         tuple[int, ...],
-    #         tuple[tuple[int, ...], ...],
-    #     ],
-    # ) -> None:
-    #     """Change chunk shape / size"""
+    def __dask_layers__(self):
+        return self._ndarray.__dask_layers__()
 
-    # @abstractmethod
-    # def map_chunk(self, func):
-    #     """map function on each chunk"""
+    @property
+    def __dask_optimize__(self):
+        return self._ndarray.__dask_optimize__
+
+    @property
+    def __dask_scheduler__(self):
+        return self._ndarray.__dask_scheduler__
+
+    def __dask_postcompute__(self):
+        return self._ndarray.__dask_postcompute__()
+
+    def __dask_postpersist__(self):
+        return self._ndarray.__dask_postpersist__()
 
 
 class EOGroup(EOProperties, MutableMapping[str, EOVariable]):
