@@ -348,7 +348,7 @@ class EOProduct(EOProperties, MutableMapping[str, EOGroup]):
     def __init__(
         self,
         name: str,
-        coords: Optional[EOGroup],
+        coords: EOGroup,
         *args: EOGroup,
         groups: Optional[Iterable[EOGroup]] = None,
         attrs: Optional[MutableMapping[str, Any]] = None,
