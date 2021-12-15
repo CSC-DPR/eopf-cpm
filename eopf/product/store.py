@@ -61,9 +61,12 @@ def find_files_paths(abs_path, extension):
     )
 
 
-def convert_nc_to_product(path, attr_file=None):
+def convert_nc_to_product(path, attr_file=None, as_dask_array=False):
     def group_order(file_path: str):
         return file_path.name.split("_")[-1].replace(".nc", "")
+
+    def process(eovariable: EOVariable):
+        return eovariable.chunk() if as_dask_array else eovariable
 
     attrs = None
     product_name = pathlib.Path(path)
@@ -80,7 +83,7 @@ def convert_nc_to_product(path, attr_file=None):
         )
         current_group = EOGroup(group_name)
         for dt, name in dts:
-            variables = [EOVariable(value) for value in dt.values()]
+            variables = [process(EOVariable(value)) for value in dt.values()]
             if len(variables) == 1:
                 current_group[name] = variables[0]
             else:

@@ -13,6 +13,7 @@ from os import PathLike
 from typing import Any, Iterable, Iterator, KeysView, List, Mapping, Optional, Union
 
 import numpy as np
+from dask.array.core import DaskMethodsMixin
 from xarray import DataArray
 
 from eopf import exceptions
@@ -60,7 +61,8 @@ class EOProperties(ABC):
     @property
     @abstractmethod
     def name(self) -> Optional[str]:
-        """
+        """print(variables)
+
         Accessor to the name of the EO Object.
         """
 
@@ -123,8 +125,7 @@ class EOVariable(EOProperties, EOVariableOperatorsMixin):
         return self.__repr__()
 
     def __repr__(self) -> str:
-        parent_part = f"(parent={self.parent.name})" if self._parent else ""
-        return f"[EOGVariable]{parent_part}(dims={self.dims}) {self.name}"
+        return f"[EOGVariable](dims={self.dims}){self.name}"
 
     @property
     def attrs(self) -> MutableMapping[str, Any]:
@@ -157,25 +158,34 @@ class EOVariable(EOProperties, EOVariableOperatorsMixin):
         self._parent = value
 
     @property
+    def chunksizes(self) -> Mapping[Any, tuple[int, ...]]:
+        return self._ndarray.chunksizes
+
+    @property
     def chunks(self) -> Optional[tuple[tuple[int, ...], ...]]:
         """Accessor to the chunks"""
         return self._ndarray.chunks
 
-    def rechunk(
+    def chunk(
         self,
-        chunks_shape: Union[
+        chunks: Union[
             Mapping[Any, Union[None, int, tuple[int, ...]]],
             int,
             tuple[int, ...],
             tuple[tuple[int, ...], ...],
-        ],
+        ] = {},
+        name_prefix: str = "eopf-",
+        token: Union[str, None] = None,
+        lock: bool = False,
     ) -> None:
         """Change chunk shape / size"""
-        self._ndarray = self._ndarray.chunk(chunks_shape)
+        self._ndarray = self._ndarray.chunk(chunks, name_prefix=name_prefix, token=token, lock=lock)
+        return self
 
     def map_chunk(self, func, *args, template=None, **kwargs):
         """map function on each chunk"""
         self._ndarray = self._ndarray.map_blocks(func, args, kwargs, template)
+        return self
 
     def __array_wrap__(self, obj, context=None) -> "EOVariable":
         self._ndarray = self._ndarray.__array_wrap__(obj, context=context)
@@ -217,13 +227,29 @@ class EOVariable(EOProperties, EOVariableOperatorsMixin):
         return self._ndarray.__dask_scheduler__
 
     def __dask_postcompute__(self):
-        return self._ndarray.__dask_postcompute__()
+        finalize, extra_args = self._ndarray.__dask_postcompute__()
+
+        def finalize_wrapper(results, name, func, *args, **kwargs):
+            return EOVariable(finalize(results, name, func, *args, **kwargs))
+
+        return finalize_wrapper, extra_args
 
     def __dask_postpersist__(self):
-        return self._ndarray.__dask_postpersist__()
+        finalize, extra_args = self._ndarray.__dask_postpersist__()
+
+        def finalize_wrapper(results, name, func, *args, **kwargs):
+            return EOVariable(finalize(results, name, func, *args, **kwargs))
+
+        return finalize_wrapper, extra_args
+
+    def compute(self, **kwargs):
+        return EOVariable(self._ndarray.compute(**kwargs))
+
+    def persiste(self, **kwargs):
+        return EOVariable(self._ndarray.persiste(**kwargs))
 
 
-class EOGroup(EOProperties, MutableMapping[str, EOVariable]):
+class EOGroup(EOProperties, MutableMapping[str, EOVariable], DaskMethodsMixin):
     """Earth Observation Group definition
     Compliant to the Common data model and
     Climate and forecast conventions.
@@ -295,8 +321,7 @@ class EOGroup(EOProperties, MutableMapping[str, EOVariable]):
         return self.__repr__()
 
     def __repr__(self) -> str:
-        parent_part = f"(parent={self.parent.name or type(self.parent)})" if self._parent else ""
-        return f"[EOGroup]{parent_part}(dims={self.dims}) {self.name}"
+        return f"[EOGroup](dims={self.dims}){self.name}"
 
     @property
     def attrs(self):
@@ -336,13 +361,116 @@ class EOGroup(EOProperties, MutableMapping[str, EOVariable]):
     def values(self) -> KeysView["EOGroup"]:
         return self._variables.values()
 
+    def __dask_tokenize__(self):
+        from dask.base import normalize_token
+
+        return normalize_token((type(self), self._variables, self._groups, self._attrs))
+
+    def __dask_graph__(self):
+        v_graphs = (v.__dask_graph__() for v in self._variables.values())
+        variables = [v for v in v_graphs if v is not None]
+
+        g_graph = (g.__dask_graph__() for g in self._groups.values())
+        groups = [g for g in g_graph if g is not None]
+
+        coords = self._coords.__dask_graph__() if self._coords else None
+
+        if coords is not None:
+            groups.append(coords)
+
+        if not (variables or groups):
+            return None
+
+        from dask.highlevelgraph import HighLevelGraph
+
+        return HighLevelGraph.merge(*variables, *groups)
+
+    def __dask_keys__(self):
+        keys = [v.__dask_keys__() for v in self._variables.values()]
+        keys += [g.__dask_keys__() for g in self._groups.values()]
+        if self.coords:
+            keys.append(self.coords.__dask_keys__())
+        return keys
+
+    def __dask_layers__(self):
+        return sum(
+            self.__dask_keys__(),
+            (),
+        )
+
+    def __dask_postcompute__(self):
+        return self._dask_postcompute, ()
+
+    def __dask_postpersist__(self):
+        return self._dask_postpersist, ()
+
+    def _dask_postcompute(self, results: Iterable[EOVariable]) -> "EOGroup":
+        variables = []
+
+        for v, result in zip(self._variables.values(), results):
+            rebuild, args = v.__dask_postcompute__()
+            variables.append(rebuild(result, *args))
+
+        return EOGroup(
+            self.name,
+            *variables,
+            # coords=coords,
+            # groups=groups,
+            dims=self._dims,
+            attrs=self._attrs,
+        )
+
+    def _dask_postpersist(self, dsk: Mapping, *, rename: Mapping[str, str] = None) -> "EOGroup":
+        from dask.highlevelgraph import HighLevelGraph
+        from dask.optimization import cull
+
+        variables = []
+
+        for v in self._variables.values():
+            if isinstance(dsk, HighLevelGraph):
+                # dask >= 2021.3
+                # __dask_postpersist__() was called by dask.highlevelgraph.
+                # Don't use dsk.cull(), as we need to prevent partial layers:
+                # https://github.com/dask/dask/issues/7137
+                layers = v.__dask_layers__()
+                if rename:
+                    layers = [rename.get(k, k) for k in layers]
+                dsk2 = dsk.cull_layers(layers)
+            elif rename:  # pragma: nocover
+                # At the moment of writing, this is only for forward compatibility.
+                # replace_name_in_key requires dask >= 2021.3.
+                from dask.base import flatten, replace_name_in_key
+
+                keys = [replace_name_in_key(k, rename) for k in flatten(v.__dask_keys__())]
+                dsk2, _ = cull(dsk, keys)
+            else:
+                # __dask_postpersist__() was called by dask.optimize or dask.persist
+                dsk2, _ = cull(dsk, v.__dask_keys__())
+
+            rebuild, args = v.__dask_postpersist__()
+            # rename was added in dask 2021.3
+            kwargs = {"rename": rename} if rename else {}
+            variables.append(rebuild(dsk2, *args, **kwargs))
+
+        return EOGroup(
+            self.name,
+            *variables,
+            # coords=coords,
+            # groups=groups,
+            attrs=self._attrs,
+            dims=self.dims,
+        )
+
+    def _ipython_key_completions_(self):
+        return self.keys()
+
 
 @dataclass
 class MetaData:
     path: Union[str, PathLike]
 
 
-class EOProduct(EOProperties, MutableMapping[str, EOGroup]):
+class EOProduct(EOProperties, MutableMapping[str, EOGroup], DaskMethodsMixin):
     """Earth Observation Top Group definition
     Compliant to the Common data model.
     """
@@ -401,7 +529,7 @@ class EOProduct(EOProperties, MutableMapping[str, EOGroup]):
         return self.__repr__()
 
     def __repr__(self) -> str:
-        return f"[EOProduct](metadata={self.metadata}) {hex(id(self))}"
+        return f"[EOProduct] {hex(id(self))}"
 
     @property
     def attrs(self) -> MutableMapping[str, Any]:
@@ -432,3 +560,106 @@ class EOProduct(EOProperties, MutableMapping[str, EOGroup]):
 
     def values(self) -> KeysView["EOProduct"]:
         return self._groups.values()
+
+    def __dask_tokenize__(self):
+        from dask.base import normalize_token
+
+        return normalize_token((type(self), self._groups, self._coords.name, self._attrs))
+
+    def __dask_graph__(self):
+        graphs = ((k, v.__dask_graph__()) for k, v in self._groups.items())
+        graphs = [v for v in graphs if v is not None]
+        coords_graph = self.coords.__dask_graph__()
+        if coords_graph:
+            graphs.append(coords_graph)
+        if not graphs:
+            return None
+
+        from dask.highlevelgraph import HighLevelGraph
+
+        return HighLevelGraph.merge(*graphs)
+
+    def __dask_keys__(self):
+        keys = [g.__dask_keys__() for g in self._groups.values()]
+        keys.append(self.coords.__dask_keys__())
+        return keys
+
+    def __dask_layers__(self):
+        return sum(
+            self.__dask_keys__(),
+            (),
+        )
+
+    @property
+    def __dask_optimize__(self):
+        import dask.array as da
+
+        return da.Array.__dask_optimize__
+
+    @property
+    def __dask_scheduler__(self):
+        import dask.array as da
+
+        return da.Array.__dask_scheduler__
+
+    def __dask_postcompute__(self):
+        return self._dask_postcompute, ()
+
+    def __dask_postpersist__(self):
+        return self._dask_postpersist, ()
+
+    def _dask_postcompute(self, results: Iterable[EOGroup]) -> "EOProduct":
+        groups = []
+
+        for v, result in zip(self._groups.values(), results):
+            rebuild, args = v.__dask_postcompute__()
+            groups.append(rebuild(result, *args))
+
+        return EOGroup(
+            self.name,
+            *groups,
+            # coords=coords,
+            attrs=self._attrs,
+        )
+
+    def _dask_postpersist(self, dsk: Mapping, *, rename: Mapping[str, str] = None) -> "EOGroup":
+        from dask.highlevelgraph import HighLevelGraph
+        from dask.optimization import cull
+
+        groups = []
+
+        for v in self._groups.values():
+            if isinstance(dsk, HighLevelGraph):
+                # dask >= 2021.3
+                # __dask_postpersist__() was called by dask.highlevelgraph.
+                # Don't use dsk.cull(), as we need to prevent partial layers:
+                # https://github.com/dask/dask/issues/7137
+                layers = v.__dask_layers__()
+                if rename:
+                    layers = [rename.get(k, k) for k in layers]
+                dsk2 = dsk.cull_layers(layers)
+            elif rename:  # pragma: nocover
+                # At the moment of writing, this is only for forward compatibility.
+                # replace_name_in_key requires dask >= 2021.3.
+                from dask.base import flatten, replace_name_in_key
+
+                keys = [replace_name_in_key(k, rename) for k in flatten(v.__dask_keys__())]
+                dsk2, _ = cull(dsk, keys)
+            else:
+                # __dask_postpersist__() was called by dask.optimize or dask.persist
+                dsk2, _ = cull(dsk, v.__dask_keys__())
+
+            rebuild, args = v.__dask_postpersist__()
+            # rename was added in dask 2021.3
+            kwargs = {"rename": rename} if rename else {}
+            groups.append(rebuild(dsk2, *args, **kwargs))
+
+        return EOGroup(
+            self.name,
+            *groups,
+            # coords=coords,
+            attrs=self._attrs,
+        )
+
+    def _ipython_key_completions_(self):
+        return self.keys()
