@@ -41,3 +41,11 @@ profile = "black"
 [tool.black]
 line-length = 120
 target-version = ['py39']
+
+[tool.bandit]
+assert_used = { skips = ["tests/*.py"]}
+
+[tool.pytest.ini_options]
+markers = [
+    "unit",
+]
