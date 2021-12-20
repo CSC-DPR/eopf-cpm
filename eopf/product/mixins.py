@@ -7,7 +7,11 @@ class EOVariableOperatorsMixin:
     __slots__ = ()
 
     def __apply_binary_ops__(self, other, ops, reflexive=False):
-        return type(self)(ops(self._ndarray, other._ndarray) if not reflexive else ops(other._ndarray, self._ndarray))
+        if isinstance(other, EOVariableOperatorsMixin):
+            other_value = other._ndarray
+        else:
+            other_value = other
+        return type(self)(ops(self._ndarray, other_value) if not reflexive else ops(other_value, self._ndarray))
 
     def __add__(self, other):
         return self.__apply_binary_ops__(other, operator.add)
@@ -88,7 +92,11 @@ class EOVariableOperatorsMixin:
         return self.__apply_binary_ops__(other, operator.or_, reflexive=True)
 
     def __apply_inplace_ops__(self, other, ops):
-        self._ndarray = ops(self._ndarray, other._ndarray)
+        if isinstance(other, EOVariableOperatorsMixin):
+            other_value = other._ndarray
+        else:
+            other_value = other
+        self._ndarray = ops(self._ndarray, other_value)
         return self
 
     def __iadd__(self, other):

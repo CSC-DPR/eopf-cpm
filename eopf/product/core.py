@@ -125,7 +125,10 @@ class EOVariable(EOProperties, EOVariableOperatorsMixin):
         return self.__repr__()
 
     def __repr__(self) -> str:
-        return f"[EOGVariable](dims={self.dims}){self.name}"
+        return f"[EOVariable]{hex(id(self))}"
+
+    def _repr_html_(self):
+        return ""
 
     @property
     def attrs(self) -> MutableMapping[str, Any]:
@@ -166,6 +169,10 @@ class EOVariable(EOProperties, EOVariableOperatorsMixin):
         """Accessor to the chunks"""
         return self._ndarray.chunks
 
+    @property
+    def sizes(self) -> Mapping[str, int]:
+        return self._ndarray.sizes
+
     def chunk(
         self,
         chunks: Union[
@@ -186,6 +193,12 @@ class EOVariable(EOProperties, EOVariableOperatorsMixin):
         """map function on each chunk"""
         self._ndarray = self._ndarray.map_blocks(func, args, kwargs, template)
         return self
+
+    def compute(self, **kwargs):
+        return EOVariable(self._ndarray.compute(**kwargs))
+
+    def persiste(self, **kwargs):
+        return EOVariable(self._ndarray.persiste(**kwargs))
 
     def __array_wrap__(self, obj, context=None) -> "EOVariable":
         self._ndarray = self._ndarray.__array_wrap__(obj, context=context)
@@ -241,12 +254,6 @@ class EOVariable(EOProperties, EOVariableOperatorsMixin):
             return EOVariable(finalize(results, name, func, *args, **kwargs))
 
         return finalize_wrapper, extra_args
-
-    def compute(self, **kwargs):
-        return EOVariable(self._ndarray.compute(**kwargs))
-
-    def persiste(self, **kwargs):
-        return EOVariable(self._ndarray.persiste(**kwargs))
 
 
 class EOGroup(EOProperties, MutableMapping[str, EOVariable], DaskMethodsMixin):
@@ -321,7 +328,10 @@ class EOGroup(EOProperties, MutableMapping[str, EOVariable], DaskMethodsMixin):
         return self.__repr__()
 
     def __repr__(self) -> str:
-        return f"[EOGroup](dims={self.dims}){self.name}"
+        return f"[EOGroup]{hex(id(self))}"
+
+    def _repr_html_(self):
+        return ""
 
     @property
     def attrs(self):
@@ -529,7 +539,10 @@ class EOProduct(EOProperties, MutableMapping[str, EOGroup], DaskMethodsMixin):
         return self.__repr__()
 
     def __repr__(self) -> str:
-        return f"[EOProduct] {hex(id(self))}"
+        return f"[EOProduct]{hex(id(self))}"
+
+    def _repr_html_(self):
+        return ""
 
     @property
     def attrs(self) -> MutableMapping[str, Any]:

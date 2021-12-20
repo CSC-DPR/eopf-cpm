@@ -34,6 +34,7 @@ test = [
     "hypothesis ==6.29.0",
 ]
 doc = ["jupyter_sphinx"]
+notebook = ["jupyter", "Jinja2"]
 
 [tool.isort]
 profile = "black"
@@ -41,9 +42,6 @@ profile = "black"
 [tool.black]
 line-length = 120
 target-version = ['py39']
-
-[tool.bandit]
-assert_used = { skips = ["tests/*.py"]}
 
 [tool.pytest.ini_options]
 markers = [
