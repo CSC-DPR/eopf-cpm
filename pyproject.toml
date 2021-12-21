@@ -33,7 +33,7 @@ test = [
     "pytest-cov ==3.0.0",
     "hypothesis ==6.29.0",
 ]
-doc = ["jupyter_sphinx"]
+doc = ["jupyter_sphinx", "yummy-sphinx-theme"]
 notebook = ["jupyter", "Jinja2"]
 
 [tool.isort]
