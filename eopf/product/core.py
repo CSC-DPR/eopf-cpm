@@ -27,6 +27,7 @@ from dask.array.core import DaskMethodsMixin
 from xarray import DataArray
 
 from eopf import exceptions
+from eopf.product.formatting import renderer
 
 from .mixins import EOVariableOperatorsMixin
 
@@ -154,7 +155,7 @@ class EOVariable(EOProperties, EOVariableOperatorsMixin):
         return f"[EOVariable]{hex(id(self))}"
 
     def _repr_html_(self):
-        return ""
+        return renderer("variable.html", variable=self)
 
     @property
     def attrs(self) -> MutableMapping[str, Any]:
@@ -649,7 +650,7 @@ class EOGroup(EOProperties, MutableMapping[str, EOVariable], DaskMethodsMixin):
         return f"[EOGroup]{hex(id(self))}"
 
     def _repr_html_(self):
-        return ""
+        return renderer("group.html", group=self)
 
     @property
     def attrs(self):
@@ -890,7 +891,7 @@ class EOProduct(EOProperties, MutableMapping[str, EOGroup], DaskMethodsMixin):
         return f"[EOProduct]{hex(id(self))}"
 
     def _repr_html_(self):
-        return ""
+        return renderer("product.html", product=self)
 
     @property
     def attrs(self) -> MutableMapping[str, Any]:

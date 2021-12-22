@@ -1,0 +1,19 @@
+
+{% if attrs %}
+    {% if container %}
+    <li class="eopf-section-item">
+        <input type="checkbox" id="attrs">
+        <label for="attrs" style="font-weight: bolder;">Attributes</label>
+    {% endif %}
+        <ul class="eopf-sections attrs">
+            {% for name, value in attrs.items() %}
+                <li class="eopf-section-item">
+                    <span>{{ name }} : </span>
+                    <span style="color: #555;">{{ value }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+        {% if container %}
+    </li>
+    {% endif %}
+{% endif %}

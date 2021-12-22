@@ -23,3 +23,4 @@ dependencies:
   - pip:
     - pyre-check==0.9.8
     - yummy-sphinx-theme==0.1.1
+    - jinja2==2.11.3
