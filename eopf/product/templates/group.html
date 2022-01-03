@@ -35,9 +35,6 @@
         {% endwith %}
         </li>
     {% endif %}
-    {% with attrs=group.attrs, container=True %}
-        {% include "attrs.html" %}
-    {% endwith %}
     {% for variable in group %}
         <li class="eopf-section-item">
         {% with variable=variable %}

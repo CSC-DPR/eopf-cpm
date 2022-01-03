@@ -6,6 +6,7 @@ common data model: https://www.unidata.ucar.edu/software/netcdf/docs/netcdf_data
 Climate and Forecast conventions: https://cfconventions.org/
 """
 
+import itertools as it
 from abc import ABC, abstractmethod
 from collections.abc import MutableMapping
 from dataclasses import dataclass
@@ -15,7 +16,6 @@ from typing import (
     Iterable,
     Iterator,
     KeysView,
-    List,
     Mapping,
     Optional,
     Union,
@@ -32,7 +32,7 @@ from eopf.product.formatting import renderer
 from .mixins import EOVariableOperatorsMixin
 
 
-def search(eoobject: Union["EOGroup", "EOProduct"], path, already_done: List["EOGroup"] = None):
+def search(eoobject: Union["EOGroup", "EOProduct"], path, already_done: Optional[list["EOGroup"]] = None):
     """
     Climate and forecast convention search mechanisme for group
     https://cfconventions.org/Data/cf-conventions/cf-conventions-1.9/cf-conventions.html#_scope
@@ -592,7 +592,7 @@ class EOGroup(EOProperties, MutableMapping[str, EOVariable], DaskMethodsMixin):
     )
 
     def __types__(self) -> None:
-        self._name: str
+        self._name: int
         self._variables: MutableMapping[str, EOVariable]
         self._groups: MutableMapping[str, "EOGroup"]
         self._attrs: MutableMapping[str, Any]
@@ -751,16 +751,41 @@ class EOGroup(EOProperties, MutableMapping[str, EOVariable], DaskMethodsMixin):
 
     def _dask_postcompute(self, results: Iterable[EOVariable]) -> "EOGroup":
         variables = []
+        groups = []
+        coords_results = None
+        coords_group = None
+        groups_results: MutableMapping[str, Iterable[EOVariable]] = {}
 
-        for v, result in zip(self._variables.values(), results):
-            rebuild, args = v.__dask_postcompute__()
-            variables.append(rebuild(result, *args))
+        for result in results:
+            if (name := result.name) in self._variables:
+                v = self._variables.get(name)
+                rebuild, args = v.__dask_postcompute__()
+                variables.append(rebuild(result, *args))
+            else:
+                for group_name, group in self.groups.items():
+                    if result.__dask_tokenize__() in group.__dask_keys__():
+                        groups_results.setdefault(group_name, []).append(result)
+                        break
+                else:
+                    if self.coords and result.__dask_tokenize__() in self.coords.__dask_keys__():
+                        if coords_results is None:
+                            coords_results = []
+                        coords_results.append(result)
+
+        for group_name, group_results in groups_results.items():
+            group = self.groups.get(group_name)
+            rebuild, args = group.__dask_postcompute__()
+            groups.append(rebuild(group_results, *args))
+
+        if coords_results:
+            rebuild, args = self.coords.__dask_postcompute__()
+            coords_group = rebuild(coords_results, *args)
 
         return EOGroup(
             self.name,
             *variables,
-            # coords=coords,
-            # groups=groups,
+            coords=coords_group,
+            groups=groups,
             dims=self._dims,
             attrs=self._attrs,
         )
@@ -942,7 +967,7 @@ class EOProduct(EOProperties, MutableMapping[str, EOGroup], DaskMethodsMixin):
         return normalize_token((type(self), self._groups, self._coords.name, self._attrs))
 
     def __dask_graph__(self):
-        graphs = ((k, v.__dask_graph__()) for k, v in self._groups.items())
+        graphs = (v.__dask_graph__() for v in self._groups.values())
         graphs = [v for v in graphs if v is not None]
         coords_graph = self.coords.__dask_graph__()
         if coords_graph:
@@ -983,17 +1008,25 @@ class EOProduct(EOProperties, MutableMapping[str, EOGroup], DaskMethodsMixin):
     def __dask_postpersist__(self):
         return self._dask_postpersist, ()
 
-    def _dask_postcompute(self, results: Iterable[EOGroup]) -> "EOProduct":
+    def _dask_postcompute(self, results: Iterable[EOVariable]) -> "EOProduct":
         groups = []
+        coords = None
 
-        for v, result in zip(self._groups.values(), results):
-            rebuild, args = v.__dask_postcompute__()
-            groups.append(rebuild(result, *args))
+        for result in it.product(results):
 
-        return EOGroup(
+            if (name := result.name) in self._groups:
+                g = self._groups.get(name)
+                rebuild, args = g.__dask_postcompute__()
+                groups.append(rebuild(result, *args))
+            else:
+                if (name := result.name) == self.coords.name:
+                    rebuild, args = self.coords.__dask_postcompute__()
+                    coords = rebuild(result, *args)
+
+        return EOProduct(
             self.name,
             *groups,
-            # coords=coords,
+            coords=coords,
             attrs=self._attrs,
         )
 
