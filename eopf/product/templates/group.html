@@ -1,0 +1,45 @@
+{% extends "obj_repr.html" %}
+
+{% set obj = group %}
+{% set obj_type = "eogroup" %}
+
+{% block icon %}
+    {% if class_name == "coords" %}
+        {% include "static/images/icons-svg-coords.svg" %}
+    {% elif class_name == "measure" %}
+        {% include "static/images/icons-svg-measurement.svg" %}
+    {% elif class_name == "info" %}
+        {% include "static/images/icons-svg-info.svg" %}
+    {% elif class_name == "quality" %}
+        {% include "static/images/icons-svg-quality.svg" %}
+    {% elif class_name == "attrs" %}
+        {% include "static/images/icons-svg-attributes.svg" %}
+    {%else%}
+        {% include "static/images/icons-svg-group.svg" %}
+    {%endif%}
+{% endblock %}
+
+{% block sections %}
+    {% for group in group.groups.values() %}
+        <li class="eopf-section-item">
+        {% with group=group, class_name="" %}
+            {% include "group.html" %}
+        {% endwith %}
+        </li>
+    {% endfor %}
+
+    {% if group.coords %}
+        <li class="eopf-section-item">
+        {% with group=group.coords, class_name="coords" %}
+            {% include "group.html" %}
+        {% endwith %}
+        </li>
+    {% endif %}
+    {% for variable in group %}
+        <li class="eopf-section-item">
+        {% with variable=variable %}
+            {% include "variable.html" %}
+        {% endwith %}
+        </li>
+    {% endfor %}
+{% endblock %}

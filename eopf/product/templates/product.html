@@ -1,0 +1,23 @@
+{% extends "obj_repr.html" %}
+
+{% set obj = product %}
+{% set obj_type = "eoproduct" %}
+
+{% block icon %}
+    {% include "static/images/icons-svg-root.svg" %}
+{% endblock %}
+
+{% block sections %}
+    <li class="eopf-section-item">
+    {% with group=product.coords, class_name="coords"  %}
+        {% include "group.html" %}
+    {% endwith %}
+    </li>
+    {% for group in product %}
+    <li class="eopf-section-item">
+    {% with group=group %}
+        {% include "group.html" %}
+    {% endwith %}
+    </li>
+    {% endfor %}
+{% endblock %}

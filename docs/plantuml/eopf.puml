@@ -1,0 +1,13 @@
+@startuml
+package "eopf" {
+    [product]
+    [numerical]
+    [computing]
+    [logging]
+    [tracing]
+    [remotesensing]
+    [triggering]
+    [serde]
+}
+
+@enduml
