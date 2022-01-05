@@ -1,0 +1,103 @@
+@startuml
+left to right direction
+actor "EOPF CPM Developper" as cpm
+actor "Developper" as du
+actor "EOProduct user" as pu
+
+' package Actors {
+'   actor developper as c
+'   actor "EOProduct user" as fc
+' }
+package EOProduct {
+  usecase CPM_UC1 as "Data Structure
+  ==
+  The EOProduct should follow the harmonized EOProduct Data Structure.
+  "
+
+  usecase CPM_UC2 as "chunk locking
+  ==
+  The used chunk in writing mode should be locked.
+  Only the current process/Thread can modify it.
+  "
+  note right : "Warning : take into account the complexity of this point"
+
+  usecase UC1 as "Read/Load EOProduct
+  ==
+  Can read/load EOProduct or a part of the EOProduct.
+  From any type of storage (S3, Swift, FTP, Posix, ...),
+  and for any following format : Zarr, CoG and HDF5."
+  usecase UC2 as " Filtering
+  ==
+  Can filter/select using coordinates of EOProduct"
+  usecase UC3 as " Downloading
+  ==
+  Can download a part of the EOProduct"
+  usecase UC4 as " Conversion
+  ==
+  Can do a conversion to or from a legacy format"
+
+  usecase UC5 as " Tree/hierarchy
+  ==
+  Can display the hierarchy of the EOProduct,
+   without loading the whole product."
+
+  usecase UC6 as " Computing
+  ==
+  Can do a computation ( adding,applying scale factors, ... )
+  using variables of the EOProduct."
+
+  usecase UC7 as " Quicklooks
+  ==
+  Can plot/visualize a given variable of the EOProduct."
+
+  usecase DUC0 as "Opening
+  ==
+  Can open the EOProduct with a given mode "
+
+  usecase DUC1 as "Copying
+  ==
+  Can do a copy of a specific part of the EOProduct to a given destination "
+
+  usecase DUC2 as "Saving
+  ==
+  Can save the EOProduct to the given destination.
+  The destination can be any type of storage (S3, Swift, FTP, Posix,..),
+  and the writing format can be the following : Zarr, CoG and HDF5."
+  usecase DUC3 as "Updating
+  ==
+  Can update any variable/group/attribute of the EOProduct"
+  usecase DUC4 as "Chunking
+  ==
+  Can specify a chunk to be used while creating the EOProduct"
+
+  usecase DUC5 as "Adding Group
+  ==
+  Can add a new group the EOProduct"
+
+
+  usecase DUC6 as "Distributed Writing
+  ==
+  Can do a distributed writing of the EOProduct"
+
+
+}
+
+cpm --> CPM_UC1
+cpm --> CPM_UC2
+
+pu --> UC1
+pu --> UC2
+pu --> UC3
+pu --> UC4
+pu --> UC5
+pu --> UC6
+pu --> UC7
+
+du --> DUC0
+du --> DUC1
+du --> DUC2
+du --> DUC3
+du --> DUC4
+du --> DUC5
+du --> DUC6
+@enduml
