@@ -10,50 +10,15 @@ package "eopf.product" {
         open(name,mode,...)
     }
 
-    'Python AbstractFileSystem
-    class fsspec.spec.AbstractFileSystem
-    {
-        open()
-        create()
-    }
-
-    class EOProduct {
-        ' EOProduct class shall implement Python magic/dunder methods necessary to emulate MutableMapping[Hashable, Group] type. The (Hashable) 'key' being the name of the group.
-        __getitem__()
-        __setitem__()
-        __delitem__()
-        __len__()
-        __iter__()
-
-        {field}_name : string
-        {field}_groups : MutableMapping[hashable,EOGroup]
-        {field}_coords : MutableMapping[hashable,EOGroup]
-        {field}_attrs : MutableMapping[hashable,EOGroup]
-        ' reading/writing mode
-        {field}_mode : string
-        ' json description of the product structure : chunk, locked chunk , dimensions
-        {field}_metadata : MutableMapping[string,hashable]
-    }
-
-    class EOVariable {
-        ' EOProduct class shall implement Python magic/dunder methods necessary to emulate MutableMapping[Hashable, Group] type. The (Hashable) 'key' being the name of the group.
-        'put here dunders
-        plot()
-    }
-
-    class EOVariableOperatorsMixin {
-
-        'put here dunders
-    }
+    class EOProduct
+    class EOGroup
+    class EOVariableOperatorsMixin
+    class EOVariable
 
     package store
     {
+        ' inspired by fsspec.spec.AbstractFileSystem
         abstract EOProductStore
-        class EOZarrStore{
-            open()
-            create()
-        }
-
         EOZarrStore --|> EOProductStore
         EOCoGStore --|> EOProductStore
         EOHDF5Store --|> EOProductStore
@@ -64,23 +29,32 @@ package "eopf.product" {
     EOGroup "1" o-- "0..*" EOVariable
     EOGroup "1" o-- "0..*" EOGroup
     EOGroup "1" o-- "0..*" EOAttributes
-    EOVariable "1" o-- "1..*" EOAttributes
     EOVariableOperatorsMixin <|-- EOVariable
 
     EOProductStore <-- EOTools : uses
     EOProduct "1" *-- "1" EOProductStore
+    EOGroup "1" *-- "1" EOProductStore
+    EOvariable "1" *-- "1" EOProductStore
 
 }
 
+package xarray {
+    class DataArray
+}
+note bottom: Pypi package
 
-EOProduct --|> collections.abc.MutableMapping
-note right: Python module
+package collections.abc {
+    abstract MutableMapping
+    abstract Mapping
+    MutableMapping --|> Mapping
+}
+note bottom: Python legacy module
 
+EOProduct --|> MutableMapping
+EOGroup --|> MutableMapping
+EOVariable --|> MutableMapping
+EOProductStore --|> MutableMapping
 
-EOVariable "1" *-- "1" xarray.NDarray
-note right: Xarray module
-
-EOProductStore --|> fsspec.spec.AbstractFileSystem
-note right: Python module
+EOVariable "1" *-- "1" DataArray
 
 @enduml
