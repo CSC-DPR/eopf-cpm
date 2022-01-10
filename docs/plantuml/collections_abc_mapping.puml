@@ -1,0 +1,31 @@
+@startuml
+package collections.abc {
+    abstract MutableMapping {
+        __ Abstract methods __
+        __getitem__(self, key): retrieve item from the given key
+        __setitem__(self, key, value): set an item to the given key
+        __delitem__(self, key): suppress the key from the mapping
+        __len__(self) -> int: number of items
+        __iter__(self) -> Iterator: offer the capability to iter over the object
+
+        __ Methods __
+        pop(self, k[,d]) -> v: remove specified key and return the corresponding value or default if key is not found.
+        popitem(self): Remove and return a (key, value) pair as a 2-tuple in LIFO order.
+        clear(self): Remove all items
+        update(self, [E, ]**F): Update self from dict/iterable E and F.
+        setdefault(self, key[,default]): D.get(key, default), also set D[key] = default if key not in D
+    }
+
+    abstract Mapping {
+        keys(self): a set-like object providing a view on D's keys
+        items(self):  a set-like object providing a view on D's items
+        values(self): an object providing a view on D's values
+        get(self, k[,d]): D[k] if k in D, else d.  d defaults to None.
+        __contains__(self, key): return a boolean indicating that the given key is in this mapping
+        __eq__(self, mapping): return a boolean indicating that mapping have same key, values
+        __ne__(self, mapping): return a boolean indicating that mapping have different key, values
+    }
+    MutableMapping --|> Mapping
+}
+note bottom: Python legacy module
+@enduml

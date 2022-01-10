@@ -1,0 +1,119 @@
+@startuml
+package "eopf.product" {
+
+    class EOVariableOperatorsMixin {
+        __apply_binary_ops__(self, other, ops, reflexive=False)
+        __add__(self, other)
+        __sub__(self, other)
+        __mul__(self, other)
+        __pow__(self, other)
+        __truediv__(self, other)
+        __floordiv__(self, other)
+        __mod__(self, other)
+        __and__(self, other)
+        __xor__(self, other)
+        __or__(self, other)
+        __lt__(self, other)
+        __le__(self, other)
+        __gt__(self, other)
+        __ge__(self, other)
+        __eq__(self, other)
+        __ne__(self, other)
+        __radd__(self, other)
+        __rsub__(self, other)
+        __rmul__(self, other)
+        __rpow__(self, other)
+        __rtruediv__(self, other)
+        __rfloordiv__(self, other)
+        __rmod__(self, other)
+        __rand__(self, other)
+        __rxor__(self, other)
+        __ror__(self, other)
+        __apply_inplace_ops__(self, other, ops)
+        __iadd__(self, other)
+        __isub__(self, other)
+        __imul__(self, other)
+        __ipow__(self, other)
+        __itruediv__(self, other)
+        __ifloordiv__(self, other)
+        __imod__(self, other)
+        __iand__(self, other)
+        __ixor__(self, other)
+        __ior__(self, other)
+        __apply_unary_ops__(self, ops, *args, **kwargs)
+        __neg__(self)
+        __pos__(self)
+        __abs__(self)
+        __invert__(self)
+        round(self, *args, **kwargs)
+        argsort(self, *args, **kwargs)
+        conj(self, *args, **kwargs)
+        conjugate(self, *args, **kwargs)
+    }
+
+    class EOVariable {
+        __Methods__
+        __init__(self, data, **kwargs): Constructor
+        plot(self[, dims, file]): show the EOVariable as possible, if nothing is passed, then only the 2 first dims are displayed
+        chunk(self[, chunks, name_prefix, token, lock]): apply the given chunks as chunk shape
+        map_chunk(self, func, *args[ template, **kwargs]): apply fun  on each chunk
+        sel(self[, indexers, method, tolerance, drop, **indexers_kwargs]): Return a new EOVariable whose data is given by selecting index labels along the specified dimension(s)
+        isel(self[, indexers, drop, missing_dims, **indexers_kwargs]): Return a new EOVariable whose data is given by integer indexing along the specified dimension(s).
+
+        __ Field Member __
+        _data: xarray.DataArray
+
+        __Property__
+        chunksize: Mapping of the chunks sizes over each dims
+        chunks: tuple of block lengths for this EOvariable
+        sizes: Ordered mapping from dimension names to lengths
+        name: str
+        attrs: MutableMapping
+        dims: tuple    ' this class will be used as set of functions
+    ' that giving access to the EOProducts
+    ' just a design class and all methods should be available
+    ' at the parent module level.
+
+        __ Dask methods __
+        compute(self)
+        persiste(self)
+        __dask_tokenize__(self)
+        __dask_graph__(self)
+        __dask_keys__(self)
+        __dask_layers__(self)
+        __dask_postcompute__(self)
+        __dask_postpersist__(self)
+        _dask_postcompute(self, results) -> EOVaribale
+        _dask_postpersist(self, dsk: Mapping, *[, rename]) -> EOVariable
+        [property] __dask_optimize__
+        [property] __dask_scheduler__
+    }
+
+    package store
+    {
+        ' inspired by fsspec.spec.AbstractFileSystem
+        abstract EOProductStore
+    }
+
+    EOVariableOperatorsMixin <|-- EOVariable
+
+    EOVariable "1" *-- "1" EOProductStore
+}
+
+package xarray {
+    class DataArray
+}
+note bottom: Pypi package
+
+package collections.abc {
+    abstract MutableMapping
+    abstract Mapping
+    MutableMapping --|> Mapping
+}
+note bottom: Python legacy module
+
+EOVariable --|> MutableMapping
+
+EOVariable "1" *-- "1" DataArray
+
+@enduml

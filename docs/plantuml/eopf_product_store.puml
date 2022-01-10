@@ -1,0 +1,28 @@
+@startuml
+package eopf.product.store
+{
+
+    ' inspired by fsspec.spec.AbstractFileSystem
+    abstract EOProductStore {
+        __ Methods __
+        __init__(self[, target, mode, encoding, **kwargs]): Constructor
+        __enter__(self): open the store on "with" statement
+        __exit__(self, exc_type, exc_value, traceback): close the store on "with" statement
+        open(self): open the store
+        close(self): close the store
+        listdir(self[, path]): list the given path or root
+        rmdir(self, ):
+        rename(self, src, dest): rename src by dest
+
+        __ Property __
+        is_readable
+        is_writeable
+        is_listable
+        is_erasable
+    }
+
+    EOZarrStore --|> EOProductStore
+    EOCoGStore --|> EOProductStore
+    EOHDF5Store --|> EOProductStore
+}
+@enduml

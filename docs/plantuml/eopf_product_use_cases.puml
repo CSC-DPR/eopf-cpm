@@ -79,6 +79,11 @@ package EOProduct {
   ==
   Can do a distributed writing of the EOProduct"
 
+  usecase DUC7 as "Field Access
+  ==
+  Can access to an eogroup or eovariable as member of it's parent
+
+  "
 
 }
 
@@ -100,4 +105,5 @@ du --> DUC3
 du --> DUC4
 du --> DUC5
 du --> DUC6
+du --> DUC7
 @enduml

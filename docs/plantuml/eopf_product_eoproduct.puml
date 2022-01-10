@@ -1,0 +1,50 @@
+@startuml
+package eopf.product {
+    class EOProduct {
+        ' EOProduct class shall implement Python magic/dunder methods necessary to emulate MutableMapping[Hashable, Group] type. The (Hashable) 'key' being the name of the group.
+        __ Methods __
+        __init__(self, name, *items[, coordinates, measurements,
+            quality, information, attrs,
+            store]): Constructor
+        __getattr__(self, key): access to the given key as a member field
+        __str__(self) -> str: string readable representation
+        __repr__(self) -> str: unique identifying string
+        _repr_html_(self) -> html representation for jupyter notebook
+        _ipython_key_completions_(self) -> Iterable[str]: keys for completion by ipython
+
+        __ Property __
+        name: str
+        attrs: MutableMapping
+        metadata: MutableMapping
+
+        __ Field Members __
+        _name : str
+        _attrs : MutableMapping
+        _store : MutableMapping
+        ' reading/writing mode
+        _mode : str
+
+        __ Dask methods __
+        compute(self)
+        persiste(self)
+        __dask_tokenize__(self)
+        __dask_graph__(self)
+        __dask_keys__(self)
+        __dask_layers__(self)
+        __dask_postcompute__(self)
+        __dask_postpersist__(self)
+        _dask_postcompute(self, results) -> EOProduct
+        _dask_postpersist(self, dsk: Mapping, *[, rename]) -> EOProduct
+        [property] __dask_optimize__
+        [property] __dask_scheduler__
+    }
+    package store {
+        abstract EOProductStore
+    }
+    EOProduct "1" o-- "1..*" EOGroup
+}
+
+EOProduct --|> MutableMapping
+
+EOProduct "1" *-- "1" EOProductStore
+@enduml

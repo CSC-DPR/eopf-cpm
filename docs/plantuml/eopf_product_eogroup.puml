@@ -1,0 +1,73 @@
+@startuml
+package "eopf.product" {
+
+    class EOGroup {
+        __ Methods __
+        __init__(self, name, *items [, coordinates, dims,
+            attrs, store]): Constructor
+        __getattr__(self, key): access to the given key as a member field
+        __str__(self) -> str: string readable representation
+        __repr__(self) -> str: unique identifying string
+        _repr_html_(self) -> html representation for jupyter notebook
+        _ipython_key_completions_(self) -> Iterable[str]: keys for completion by ipython
+        groups(self) -> Iterator[EOGroup]: like __iter__ but over EOGroup
+        variables(self) -> Iterator[EOGroup]: like __iter__ but over EOVariable
+        sel(): sous condition group terminaux -> xarray.dataset
+        isel(): sous condition group terminaux -> xarray.dataset
+
+        __ Property __
+        name: str
+        attrs: MutableMapping
+        metadata: MutableMapping
+        dims: tuple
+
+        __ Field Members __
+        _name : str
+        _attrs : MutableMapping
+        _store : MutableMapping
+        ' reading/writing mode
+        _mode : str
+        ' json description of the product structure : chunk, locked chunk , dimensions
+        _dims: tuple
+
+        __ Dask methods __
+        compute(self)
+        persiste(self)
+        __dask_tokenize__(self)
+        __dask_graph__(self)
+        __dask_keys__(self)
+        __dask_layers__(self)
+        __dask_postcompute__(self)
+        __dask_postpersist__(self)
+        _dask_postcompute(self, results) -> EOGroup
+        _dask_postpersist(self, dsk: Mapping, *[, rename]) -> EOGroup
+        [property] __dask_optimize__
+        [property] __dask_scheduler__
+    }
+
+    class EOVariable
+
+    package store
+    {
+        ' inspired by fsspec.spec.AbstractFileSystem
+        abstract EOProductStore
+    }
+
+    EOGroup "1" o-- "0..*" EOVariable
+    EOGroup "1" o-- "0..*" EOGroup
+    EOGroup "1" o-- "0..*" EOAttributes
+
+    EOGroup "1" *-- "1" EOProductStore
+
+}
+
+package collections.abc {
+    abstract MutableMapping
+    abstract Mapping
+    MutableMapping --|> Mapping
+}
+note bottom: Python legacy module
+
+EOGroup --|> MutableMapping
+
+@enduml
