@@ -4,15 +4,23 @@ package eopf.product.store
 
     ' inspired by fsspec.spec.AbstractFileSystem
     abstract EOProductStore {
-        __ Methods __
-        __init__(self[, target, mode, encoding, **kwargs]): Constructor
+        __ Abrastract Methods __
+        __init__(self[, url, mode, encoding, **kwargs]): Constructor
         __enter__(self): open the store on "with" statement
         __exit__(self, exc_type, exc_value, traceback): close the store on "with" statement
         open(self): open the store
         close(self): close the store
         listdir(self[, path]): list the given path or root
-        rmdir(self, ):
+        rmdir(self, ): rm the given path or self
         rename(self, src, dest): rename src by dest
+        save(self, path): save localy
+        clear(self): clear all the store
+        getsize(self[, path]): return the size of the given storage
+        dir_path(self[, path]): return the current path
+        save(self[, path]): save locally at the given path
+
+        __ Field Member __
+        map: fsspec.spec.FSMap
 
         __ Property __
         is_readable
@@ -25,4 +33,15 @@ package eopf.product.store
     EOCoGStore --|> EOProductStore
     EOHDF5Store --|> EOProductStore
 }
+
+
+package collections.abc {
+    abstract MutableMapping
+    abstract Mapping
+    MutableMapping --|> Mapping
+}
+note bottom: Python legacy module
+
+EOProductStore <|-- MutableMapping
+EOProductStore -- fsspec.spec.FSMap : uses
 @enduml

@@ -21,8 +21,6 @@ package eopf.product {
         _name : str
         _attrs : MutableMapping
         _store : MutableMapping
-        ' reading/writing mode
-        _mode : str
 
         __ Dask methods __
         compute(self)

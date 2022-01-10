@@ -25,9 +25,6 @@ package "eopf.product" {
         _name : str
         _attrs : MutableMapping
         _store : MutableMapping
-        ' reading/writing mode
-        _mode : str
-        ' json description of the product structure : chunk, locked chunk , dimensions
         _dims: tuple
 
         __ Dask methods __
