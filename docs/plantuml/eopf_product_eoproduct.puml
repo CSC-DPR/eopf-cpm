@@ -14,12 +14,10 @@ package eopf.product {
 
         __ Property __
         name: str
-        attrs: MutableMapping
         metadata: MutableMapping
 
         __ Field Members __
         _name : str
-        _attrs : MutableMapping
         _store : MutableMapping
 
         __ Dask methods __
