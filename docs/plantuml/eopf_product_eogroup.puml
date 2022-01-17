@@ -1,4 +1,5 @@
 @startuml
+left to right direction
 package "eopf.product" {
 
     class EOGroup {
@@ -12,8 +13,9 @@ package "eopf.product" {
         _ipython_key_completions_(self) -> Iterable[str]: keys for completion by ipython
         groups(self) -> Iterator[EOGroup]: like __iter__ but over EOGroup
         variables(self) -> Iterator[EOGroup]: like __iter__ but over EOVariable
-        sel(): sous condition group terminaux -> xarray.dataset
-        isel(): sous condition group terminaux -> xarray.dataset
+        sel(): can be used only by final groups -> xarray.dataset
+        isel(): can be used only by final groups -> xarray.dataset
+       
 
         __ Property __
         name: str
@@ -24,8 +26,9 @@ package "eopf.product" {
         __ Field Members __
         _name : str
         _attrs : MutableMapping
-        _store : MutableMapping
+        _store : EOProductStore
         _dims: tuple
+        _dataset : xarray.Dataset
 
         __ Dask methods __
         compute(self)
@@ -56,6 +59,7 @@ package "eopf.product" {
 
     EOGroup "1" *-- "1" EOProductStore
 
+
 }
 
 package collections.abc {
@@ -64,7 +68,8 @@ package collections.abc {
     MutableMapping --|> Mapping
 }
 note bottom: Python legacy module
-
 EOGroup --|> MutableMapping
+EOGroup "1" *-- "1" xarray.Dataset
+note right: Pypi module
 
 @enduml
