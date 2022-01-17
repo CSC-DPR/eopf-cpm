@@ -14,8 +14,7 @@ package "eopf.product" {
     class EOGroup
     class EOVariableOperatorsMixin
     class EOVariable
-
-    package store
+    package storage
     {
         ' inspired by fsspec.spec.AbstractFileSystem
         abstract EOProductStore
@@ -31,10 +30,11 @@ package "eopf.product" {
     EOGroup "1" o-- "0..*" EOAttributes
     EOVariableOperatorsMixin <|-- EOVariable
 
+    ' EOProduct -.- EOProductBuilder : uses
     EOProductStore <-- EOTools : uses
     EOProduct "1" *-- "1" EOProductStore
     EOGroup "1" *-- "1" EOProductStore
-    EOvariable "1" *-- "1" EOProductStore
+    EOVariable "1" *-- "1" EOProductStore
 
 }
 
@@ -52,7 +52,7 @@ note bottom: Python legacy module
 
 EOProduct --|> MutableMapping
 EOGroup --|> MutableMapping
-EOVariable --|> MutableMapping
+' EOVariable --|> MutableMapping
 EOProductStore --|> MutableMapping
 
 EOVariable "1" *-- "1" DataArray
