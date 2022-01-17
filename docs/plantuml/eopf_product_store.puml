@@ -1,5 +1,6 @@
 @startuml
-package eopf.product.store
+left to right direction
+package eopf.product.storage
 {
 
     ' inspired by fsspec.spec.AbstractFileSystem
@@ -42,6 +43,6 @@ package collections.abc {
 }
 note bottom: Python legacy module
 
-EOProductStore <|-- MutableMapping
-EOProductStore -- fsspec.spec.FSMap : uses
+EOProductStore --|> MutableMapping
+EOProductStore "1"*--"1" fsspec.spec.FSMap
 @enduml
