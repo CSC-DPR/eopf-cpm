@@ -59,9 +59,12 @@ package "eopf.product" {
         map_chunk(self, func, *args[ template, **kwargs]): apply fun  on each chunk
         sel(self[, indexers, method, tolerance, drop, **indexers_kwargs]): Return a new EOVariable whose data is given by selecting index labels along the specified dimension(s)
         isel(self[, indexers, drop, missing_dims, **indexers_kwargs]): Return a new EOVariable whose data is given by integer indexing along the specified dimension(s).
+        __array_function__(self, func, types, args, kwargs) : NEP 18
+        __array_ufunc__(self, ufunc, method, *inputs, **kwargs) : NEP 13
 
         __ Field Member __
         _data: xarray.DataArray
+        _store : EOProductStore
 
         __Property__
         chunksize: Mapping of the chunks sizes over each dims
@@ -105,14 +108,14 @@ package xarray {
 }
 note bottom: Pypi package
 
-package collections.abc {
-    abstract MutableMapping
-    abstract Mapping
-    MutableMapping --|> Mapping
-}
-note bottom: Python legacy module
+' package collections.abc {
+'     abstract MutableMapping
+'     abstract Mapping
+'     MutableMapping --|> Mapping
+' }
+' note bottom: Python legacy module
 
-EOVariable --|> MutableMapping
+' EOVariable --|> MutableMapping
 
 EOVariable "1" *-- "1" DataArray
 
