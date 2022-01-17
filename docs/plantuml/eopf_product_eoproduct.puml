@@ -11,14 +11,15 @@ package eopf.product {
         __repr__(self) -> str: unique identifying string
         _repr_html_(self) -> html representation for jupyter notebook
         _ipython_key_completions_(self) -> Iterable[str]: keys for completion by ipython
-
+         validate() : boolean ( check if the EOProduct follows the harmonized structure )
+        ' REQ-41 add selection rules ( bands , polarization, depending of the sensor)
         __ Property __
         name: str
         metadata: MutableMapping
 
         __ Field Members __
         _name : str
-        _store : MutableMapping
+        _store : EOProductStore
 
         __ Dask methods __
         compute(self)
@@ -41,6 +42,5 @@ package eopf.product {
 }
 
 EOProduct --|> MutableMapping
-
 EOProduct "1" *-- "1" EOProductStore
 @enduml
