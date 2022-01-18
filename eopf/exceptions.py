@@ -1,2 +1,0 @@
-class InitializeError(Exception):
-    pass

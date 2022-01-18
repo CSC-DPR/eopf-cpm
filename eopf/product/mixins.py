@@ -8,10 +8,10 @@ class EOVariableOperatorsMixin:
 
     def __apply_binary_ops__(self, other, ops, reflexive=False):
         if isinstance(other, EOVariableOperatorsMixin):
-            other_value = other._ndarray
+            other_value = other._data
         else:
             other_value = other
-        return type(self)(ops(self._ndarray, other_value) if not reflexive else ops(other_value, self._ndarray))
+        return type(self)(ops(self._data, other_value) if not reflexive else ops(other_value, self._data))
 
     def __add__(self, other):
         return self.__apply_binary_ops__(other, operator.add)
@@ -93,10 +93,10 @@ class EOVariableOperatorsMixin:
 
     def __apply_inplace_ops__(self, other, ops):
         if isinstance(other, EOVariableOperatorsMixin):
-            other_value = other._ndarray
+            other_value = other._data
         else:
             other_value = other
-        self._ndarray = ops(self._ndarray, other_value)
+        self._data = ops(self._data, other_value)
         return self
 
     def __iadd__(self, other):
@@ -130,7 +130,7 @@ class EOVariableOperatorsMixin:
         return self.__apply_inplace_ops__(other, operator.ior)
 
     def __apply_unary_ops__(self, ops, *args, **kwargs):
-        return type(self)(ops(self._ndarray), *args, **kwargs)
+        return type(self)(ops(self._data), *args, **kwargs)
 
     def __neg__(self):
         return self.__apply_unary_ops__(operator.neg)
@@ -145,16 +145,16 @@ class EOVariableOperatorsMixin:
         return self.__apply_unary_ops__(operator.invert)
 
     def round(self, *args, **kwargs):
-        return self.__apply_unary_ops__(self._ndarray.round_, *args, **kwargs)
+        return self.__apply_unary_ops__(self._data.round_, *args, **kwargs)
 
     def argsort(self, *args, **kwargs):
-        return self.__apply_unary_ops__(self._ndarray.argsort, *args, **kwargs)
+        return self.__apply_unary_ops__(self._data.argsort, *args, **kwargs)
 
     def conj(self, *args, **kwargs):
-        return self.__apply_unary_ops__(self._ndarray.conj, *args, **kwargs)
+        return self.__apply_unary_ops__(self._data.conj, *args, **kwargs)
 
     def conjugate(self, *args, **kwargs):
-        return self.__apply_unary_ops__(self._ndarray.conjugate, *args, **kwargs)
+        return self.__apply_unary_ops__(self._data.conjugate, *args, **kwargs)
 
     __add__.__doc__ = operator.add.__doc__
     __sub__.__doc__ = operator.sub.__doc__
