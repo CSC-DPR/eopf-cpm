@@ -2,7 +2,7 @@ import enum
 import warnings
 from abc import abstractmethod
 from collections.abc import MutableMapping
-from typing import Any, Optional
+from typing import Any, Iterable, Optional
 
 import fsspec
 import xarray
@@ -15,7 +15,7 @@ class StorageStatus(enum.Enum):
     CLOSE = "close"
 
 
-class EOProductStore(MutableMapping):
+class EOProductStore(MutableMapping[str, Any]):
     """"""
 
     sep: str = "/"
@@ -62,7 +62,7 @@ class EOProductStore(MutableMapping):
         self._status = StorageStatus.CLOSE
 
     @abstractmethod
-    def listdir(self, path: Optional[str] = None) -> None:
+    def listdir(self, path: Optional[str] = None) -> Iterable[str]:
         """"""
 
     @abstractmethod
@@ -97,5 +97,5 @@ class EOProductStore(MutableMapping):
     def add_variables(self, name: str, dataset: xarray.Dataset, relative_path: list[str] = []) -> None:
         """"""
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return id(self)

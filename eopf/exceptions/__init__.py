@@ -4,3 +4,7 @@ class InvalidProductError(Exception):
 
 class StoreNotDefinedError(Exception):
     pass
+
+
+class StoreNotOpenError(Exception):
+    pass
