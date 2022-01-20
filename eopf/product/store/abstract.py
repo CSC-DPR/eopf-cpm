@@ -2,7 +2,7 @@ import enum
 import warnings
 from abc import abstractmethod
 from collections.abc import MutableMapping
-from typing import Any, Iterable, Optional
+from typing import Any, Iterable, Iterator, Optional
 
 import fsspec
 import xarray
@@ -174,6 +174,10 @@ class EOProductStore(MutableMapping[str, Any]):
         relative_path: list[str], optional
             list of all parents from root
         """
+
+    @abstractmethod
+    def iter(self, path: str) -> Iterator[Any]:
+        """iter over the given path"""
 
     def __hash__(self) -> int:
         return id(self)

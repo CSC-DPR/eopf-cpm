@@ -389,7 +389,6 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
         key: str
             name of the eovariable or eogroup
         """
-
         if key in self._dataset:
             return EOVariable(key, self._dataset[key], self._product, relative_path=[*self._relative_path, self._name])
 
@@ -422,7 +421,8 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
 
     def __iter__(self) -> Iterator[str]:
         if self._store is not None:
-            for key in self._store[self._path]:  # pyre-ignore[16]
+            for key in self._store.iter(self._path):  # pyre-ignore[16]
+                # print(f'{self._store.url=} {self._path=} {key=} || {self._store[self._path]}')
                 if key not in self._items and key not in self._dataset:
                     yield key
         if self._dataset is not None:
@@ -567,7 +567,7 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
         if self._store is None:
             raise StoreNotDefinedError("Store must be defined")
         for name, item in self.groups:
-            if name not in self._store[self._path]:  # pyre-ignore[16]
+            if name not in self._store.iter([self._path]):  # pyre-ignore[16]
                 self._store.add_group(name, relative_path=[*self._relative_path, self._name])  # pyre-ignore[16]
             item.write()
         self._store.add_variables(self._name, self._dataset, relative_path=self._relative_path)  # pyre-ignore[16]

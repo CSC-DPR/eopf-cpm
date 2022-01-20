@@ -228,3 +228,6 @@ class EOZarrStore(EOProductStore):
             for key in self.listdir(path)
             if not key.startswith(".zarr")
         )
+
+    def iter(self, path: str):
+        return iter(self._root[path])
