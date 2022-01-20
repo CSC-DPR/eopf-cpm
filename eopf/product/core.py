@@ -1,7 +1,17 @@
 import weakref
 from collections.abc import MutableMapping
 from types import TracebackType
-from typing import Any, Callable, Hashable, Iterator, Mapping, Optional, Type, Union
+from typing import (
+    Any,
+    Callable,
+    Hashable,
+    Iterable,
+    Iterator,
+    Mapping,
+    Optional,
+    Type,
+    Union,
+)
 
 import xarray
 
@@ -33,15 +43,15 @@ class EOVariable(EOVariableOperatorsMixin):
     """
 
     def __init__(
-        self, name: str, data: Any, product: "EOProduct", relative_path: Optional[list[str]] = None, **kwargs: Any
+        self, name: str, data: Any, product: "EOProduct", relative_path: Optional[Iterable[str]] = None, **kwargs: Any
     ):
         self._data: xarray.DataArray
         self._name: str = name
         self._product: EOProduct = weakref.proxy(product) if not isinstance(product, weakref.ProxyType) else product
 
         if relative_path is None:
-            relative_path = list()
-        self._relative_path = relative_path
+            relative_path = tuple()
+        self._relative_path: tuple[str, ...] = tuple(relative_path)
 
         if isinstance(data, xarray.DataArray):
             self._data = data
@@ -78,7 +88,7 @@ class EOVariable(EOVariableOperatorsMixin):
     @property
     def coordinates(self) -> "EOGroup":
         """Coordinates of this variable"""
-        return self._product.coordinates[self.path]
+        return self._product.coordinates[self._path]
 
     @property
     def chunksizes(self) -> Mapping[Any, tuple[int, ...]]:
@@ -358,19 +368,19 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
         self,
         name: str,
         product: "EOProduct",
-        relative_path: Optional[list[str]] = None,
+        relative_path: Optional[Iterable[str]] = None,
         dataset: Optional[xarray.Dataset] = None,
         attrs: Optional[dict[str, Any]] = None,
     ) -> None:
         self._name = name
 
         if relative_path is None:
-            relative_path = []
+            relative_path = tuple()
 
         if dataset is None:
             dataset = xarray.Dataset()
 
-        self._relative_path: list[str] = relative_path
+        self._relative_path: tuple[str, ...] = tuple(relative_path)
         self._dataset: xarray.Dataset = dataset
         self._product: EOProduct = weakref.proxy(product) if not isinstance(product, weakref.ProxyType) else product
         self._items: dict[str, "EOGroup"] = {}

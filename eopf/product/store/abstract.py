@@ -164,7 +164,7 @@ class EOProductStore(MutableMapping[str, Any]):
         """
 
     @abstractmethod
-    def add_variables(self, name: str, dataset: xarray.Dataset, relative_path: list[str] = []) -> None:
+    def add_variables(self, name: str, dataset: xarray.Dataset, relative_path: Iterable[str] = []) -> None:
         """write variables over the store
 
         Parameters

@@ -1,4 +1,4 @@
-from typing import Any, Iterator, Optional
+from typing import Any, Iterable, Iterator, Optional
 
 import fsspec
 import xarray
@@ -189,28 +189,28 @@ class EOZarrStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         return iter(self._root)
 
-    def add_group(self, name: str, relative_path: list[str] = []) -> None:
+    def add_group(self, name: str, relative_path: Iterable[str] = []) -> None:
         """write a group over the store
 
         Parameters
         ----------
         name: str
             name of the group
-        relative_path: list[str], optional
+        relative_path: Iterable[str], optional
             list of all parents from root
         """
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         self._root.create_group(join_path(*relative_path, name, sep=self.sep))
 
-    def add_variables(self, name: str, dataset: xarray.Dataset, relative_path: list[str] = []) -> None:
+    def add_variables(self, name: str, dataset: xarray.Dataset, relative_path: Iterable[str] = []) -> None:
         """write variables over the store
 
         Parameters
         ----------
         name: str
             name of the dataset
-        relative_path: list[str], optional
+        relative_path: Iterable[str], optional
             list of all parents from root
         """
         dataset.to_zarr(store=join_path(self.url, *relative_path, name, sep=self.sep), mode="a")
