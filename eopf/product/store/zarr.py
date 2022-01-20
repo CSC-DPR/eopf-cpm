@@ -7,7 +7,6 @@ from zarr.hierarchy import Group
 from zarr.storage import FSStore, array_meta_key, contains_array, contains_group
 
 from eopf.exceptions import StoreNotOpenError
-from eopf.product.core import EOGroup
 from eopf.product.utils import join_path, weak_cache
 
 from .abstract import EOProductStore
@@ -150,7 +149,7 @@ class EOZarrStore(EOProductStore):
         if self.is_group(key):
             dataset = None
             group = self._root[key]  # pyre-ignore[16]
-            if self.has_variables(group):
+            if self.has_variables(group._path):
                 dataset = self.__get_dataset(key)
             return (name, relative_path, dataset, group.attrs.asdict())
         elif self.is_variable(key):
@@ -216,16 +215,16 @@ class EOZarrStore(EOProductStore):
         """
         dataset.to_zarr(store=join_path(self.url, *relative_path, name, sep=self.sep), mode="a")
 
-    def has_variables(self, container: EOGroup) -> bool:
-        """check if an EOGroup contain eovariables
+    def has_variables(self, path: str) -> bool:
+        """check if a path contains eovariables
 
         Parameters
         ----------
-        container: EOGroup
+        path: str
             container to check
         """
         return any(
-            array_meta_key in self.listdir(join_path(container._path, key))
-            for key in self.listdir(container._path)
+            array_meta_key in self.listdir(join_path(path, key))
+            for key in self.listdir(path)
             if not key.startswith(".zarr")
         )
