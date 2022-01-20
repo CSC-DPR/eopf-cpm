@@ -1,17 +1,7 @@
 import weakref
 from collections.abc import MutableMapping
 from types import TracebackType
-from typing import (
-    Any,
-    Callable,
-    Hashable,
-    Iterable,
-    Iterator,
-    Mapping,
-    Optional,
-    Type,
-    Union,
-)
+from typing import Any, Callable, Hashable, Iterator, Mapping, Optional, Type, Union
 
 import xarray
 
@@ -24,26 +14,71 @@ from .store.abstract import EOProductStore, StorageStatus
 
 
 class EOVariable(EOVariableOperatorsMixin):
-    def __init__(self, name: str, data: Any, product: "EOProduct", **kwargs: Any):
+    """Wrapper around xarray.DataArray to provide Multi dimensional Array (Tensor)
+    in earth observation context
+
+    Attributes
+    ----------
+    name
+    attrs
+    dims
+    coordinates
+    chunksizes
+    chunks
+    sizes
+    _data : xarray.DataArray
+        inner data
+    _product: EOProduct
+        product top level representation to access coordinates
+    """
+
+    def __init__(
+        self, name: str, data: Any, product: "EOProduct", relative_path: Optional[list[str]] = None, **kwargs: Any
+    ):
         self._data: xarray.DataArray
         self._name: str = name
         self._product: EOProduct = weakref.proxy(product) if not isinstance(product, weakref.ProxyType) else product
+
+        if relative_path is None:
+            relative_path = list()
+        self._relative_path = relative_path
+
         if isinstance(data, xarray.DataArray):
             self._data = data
         else:
-            self._data = xarray.DataArray(data=data, name=name)
+            self._data = xarray.DataArray(data=data, name=name, **kwargs)
+
+    @property
+    def _path(self) -> str:
+        """path from the top level product to this eovariable"""
+        if self._store is None:
+            raise StoreNotDefinedError("Store must be defined")
+        return join_path(*self._relative_path, self._name, sep=self._store.sep)
+
+    @property
+    def _store(self):
+        """direct accessor to the product store"""
+        return self._product._store
 
     @property
     def name(self) -> str:
+        """name of this variable"""
         return self._name
 
     @property
     def attrs(self) -> dict[Hashable, Any]:
+        """variable attributes"""
         return self._data.attrs
 
     @property
     def dims(self) -> tuple[Hashable, ...]:
+        """variable dimensions"""
         return self._data.dims
+
+    @property
+    def coordinates(self) -> "EOGroup":
+        """Coordinates of this variable"""
+        return self._product.coordinates[self.path]
 
     @property
     def chunksizes(self) -> Mapping[Any, tuple[int, ...]]:
@@ -207,6 +242,7 @@ class EOVariable(EOVariableOperatorsMixin):
                 **indexers_kwargs,
             ),
             self._product,
+            relative_path=self._relative_path,
         )
 
     def sel(
@@ -289,10 +325,11 @@ class EOVariable(EOVariableOperatorsMixin):
                 **indexers_kwargs,
             ),
             self._product,
+            relative_path=self._relative_path,
         )
 
     def __getitem__(self, key: Any) -> "EOVariable":
-        return EOVariable(key, self._data[key], self._product)
+        return EOVariable(key, self._data[key], self._product, relative_path=self._relative_path)
 
     def __setitem__(self, key: Any, value: Any) -> None:
         self._data[key] = value
@@ -302,7 +339,7 @@ class EOVariable(EOVariableOperatorsMixin):
 
     def __iter__(self) -> Iterator["EOVariable"]:
         for data in self._data:
-            yield EOVariable(data.name, data, self._product)
+            yield EOVariable(data.name, data, self._product, relative_path=self._relative_path)
 
     def __str__(self) -> str:
         return self.__repr__()
@@ -343,8 +380,18 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
         return self._get_item(key)
 
     def _get_item(self, key: str) -> Union[EOVariable, "EOGroup"]:
+        """find and return eovariable or eogroup from the given key.
+
+        if store is defined and key not already loaded in this group,
+        data is loaded from it.
+        Parameters
+        ----------
+        key: str
+            name of the eovariable or eogroup
+        """
+
         if key in self._dataset:
-            return EOVariable(key, self._dataset[key], self._product)
+            return EOVariable(key, self._dataset[key], self._product, relative_path=[*self._relative_path, self._name])
 
         item: EOGroup
         if key not in self._items and self._store is None:
@@ -376,8 +423,10 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
     def __iter__(self) -> Iterator[str]:
         if self._store is not None:
             for key in self._store[self._path]:  # pyre-ignore[16]
-                if key not in self._items:
+                if key not in self._items and key not in self._dataset:
                     yield key
+        if self._dataset is not None:
+            yield from self._dataset
         yield from self._items
 
     def __len__(self) -> int:
@@ -399,20 +448,29 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
         return renderer("group.html", group=self)
 
     def to_product(self) -> "EOProduct":
+        """Convert this group to a product"""
         ...
 
     @property
+    def coordinates(self) -> "EOGroup":
+        """Coordinates of this variable"""
+        return self._product.coordinates[self._path]
+
+    @property
     def _store(self) -> Optional[EOProductStore]:
+        """direct accessor to the product store"""
         return self._product._store
 
     @property
     def _path(self) -> str:
+        """path from the top level product to this eogroup"""
         if self._store is None:
             raise StoreNotDefinedError("Store must be defined")
         return join_path(*self._relative_path, self._name, sep=self._store.sep)
 
     @property
     def name(self) -> str:
+        """name of this eogroup"""
         return self._name
 
     @property
@@ -421,26 +479,52 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
 
     @property
     def dims(self) -> tuple[Hashable, ...]:
+        """dimension of this group"""
         return tuple(self._dataset.dims)
 
     @property
-    def groups(self) -> Iterable[tuple[str, "EOGroup"]]:
-        for key, value in self._items.items():
+    def groups(self) -> Iterator[tuple[str, "EOGroup"]]:
+        """iterator over the groups of this group"""
+        for key, value in self.items():
             if isinstance(value, EOGroup):
                 yield key, value
 
     @property
-    def variables(self) -> Iterable[tuple[str, EOVariable]]:
-        for key, value in self._items.items():
+    def variables(self) -> Iterator[tuple[str, EOVariable]]:
+        """iterator over the variables of this group"""
+        for key, value in self.items():
             if isinstance(value, EOVariable):
                 yield key, value
 
     def _relative_key(self, key: str) -> str:
+        """helper to construct path of sub object
+
+        Parameters
+        ----------
+        key: str
+            sub object name
+        Returns
+        -------
+        str
+            path value with store based separator
+        """
         if self._store is None:
             raise StoreNotDefinedError("Store must be defined")
         return join_path(*self._relative_path, self._name, key, sep=self._store.sep)
 
     def add_group(self, name: str) -> "EOGroup":
+        """Construct and add a eogroup to this group
+
+        if store is defined and open, the group it's directly write by the store.
+        Parameters
+        ----------
+        name: str
+            name of the future group
+        Returns
+        -------
+        EOGroup
+            newly created EOGroup
+        """
         relative_path = [*self._relative_path, self.name]
         group = EOGroup(name, self._product, relative_path=relative_path)
         self[name] = group
@@ -449,12 +533,37 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
         return group
 
     def add_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> EOVariable:
-        self._dataset[name] = xarray.DataArray(name=name, data=data, **kwargs)
+        """Construct and add an eovariable to this group
+
+        if store is defined and open, the eovariable it's directly write by the store.
+        Parameters
+        ----------
+        name: str
+            name of the future group
+        data: any, optional
+            data like object use to create dataarray or dataarray
+        **kwargs: any
+            DataArray extra parameters if data is not a dataarray
+        Returns
+        -------
+        EOVariable
+            newly created EOVariable
+        """
+        variable = EOVariable(name, data, self._product, relative_path=[*self._relative_path, self._name], **kwargs)
+        self._dataset[name] = variable._data
         if self._store is not None and self._store.status == StorageStatus.OPEN:
             self._store.add_variables(self._name, self._dataset, relative_path=self._relative_path)
-        return EOVariable(name, self._dataset[name], self._product)
+        return variable
 
     def write(self) -> None:
+        """
+        write non synchronized subgroups, variables to the store
+
+        the store must be opened to work
+        See Also
+        --------
+        EOProduct.open
+        """
         if self._store is None:
             raise StoreNotDefinedError("Store must be defined")
         for name, item in self.groups:
@@ -515,6 +624,15 @@ class EOProduct(MutableMapping[str, EOGroup]):
         return self[attr]
 
     def _get_group(self, group_name: str) -> EOGroup:
+        """find and return eogroup from the given key.
+
+        if store is defined and key not already loaded in this group,
+        data is loaded from it.
+        Parameters
+        ----------
+        key: str
+            name of the eogroup
+        """
         group = self._groups.get(group_name)
         if group is None:
             if self._store is None:
@@ -525,6 +643,18 @@ class EOProduct(MutableMapping[str, EOGroup]):
         return group
 
     def add_group(self, name: str) -> EOGroup:
+        """Construct and add a eogroup to this product
+
+        if store is defined and open, the group it's directly write by the store.
+        Parameters
+        ----------
+        name: str
+            name of the future group
+        Returns
+        -------
+        EOGroup
+            newly created EOGroup
+        """
         group = EOGroup(name, self, relative_path=[])
         self[name] = group
         if self._store is not None and self._store.status == StorageStatus.OPEN:
@@ -533,6 +663,7 @@ class EOProduct(MutableMapping[str, EOGroup]):
 
     @property
     def name(self) -> str:
+        """name of the product"""
         return self._name
 
     def __str__(self) -> str:
@@ -550,6 +681,19 @@ class EOProduct(MutableMapping[str, EOGroup]):
     def open(
         self, store_or_path_url: Optional[Union[EOProductStore, str]] = None, mode: str = "r", **kwargs: Any
     ) -> "EOProduct":
+        """setup the store to be readable or writable
+
+        if store_or_path_url is given, the store is overwrite by the new one.
+
+        Parameters
+        ----------
+        store_or_path_url: EOProductStore or str, optional
+            the new store or a path url the target file system
+        mode: str, optional
+            mode to open the store
+        **kwargs: Any
+            extra kwargs to open the store
+        """
         if store_or_path_url:
             self.__set_store(store_or_path_url=store_or_path_url)
         if self._store is None:
@@ -558,9 +702,18 @@ class EOProduct(MutableMapping[str, EOGroup]):
         return self
 
     def load(self) -> None:
+        """load all the product in memory"""
         ...
 
     def write(self) -> None:
+        """
+        write non synchronized subgroups, variables to the store
+
+        the store must be opened to work
+        See Also
+        --------
+        EOGroup.open
+        """
         if self._store is None:
             raise StoreNotDefinedError("Store must be defined")
         self.validate()
@@ -570,9 +723,19 @@ class EOProduct(MutableMapping[str, EOGroup]):
             group.write()
 
     def is_valid(self) -> bool:
-        return all(key in self for key in ("measurement", "coordinates", "attributes"))
+        """check if the product is a valid eopf product
+        See Also
+        --------
+        EOProduct.validate"""
+        return all(key in self for key in ("measurements", "coordinates", "attributes"))
 
     def validate(self) -> None:
+        """check if the product is a valid eopf product, raise an error if is not a valid one
+
+        See Also
+        --------
+        EOProduct.is_valid
+        """
         if not self.is_valid():
             raise InvalidProductError(f"Invalid product {self}, missing mandatory groups.")
 
