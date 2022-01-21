@@ -405,7 +405,7 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
         item: EOGroup
         if key not in self._items and self._store is None:
             raise KeyError(f"Invalide EOGroup item name {key}")
-        elif self._store is not None:
+        elif key not in self._items and self._store is not None:
             name, relative_path, dataset, attrs = self._store[self._relative_key(key)]
             item = EOGroup(name, self._product, relative_path=relative_path, dataset=dataset, attrs=attrs)
         else:
@@ -577,7 +577,7 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
         if self._store is None:
             raise StoreNotDefinedError("Store must be defined")
         for name, item in self.groups:
-            if name not in self._store.iter([self._path]):  # pyre-ignore[16]
+            if name not in self._store.iter(self._path):  # pyre-ignore[16]
                 self._store.add_group(name, relative_path=[*self._relative_path, self._name])  # pyre-ignore[16]
             item.write()
         self._store.add_variables(self._name, self._dataset, relative_path=self._relative_path)  # pyre-ignore[16]
