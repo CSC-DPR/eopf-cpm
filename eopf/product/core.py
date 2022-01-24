@@ -580,14 +580,20 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
             if name not in self._store.iter(self._path):  # pyre-ignore[16]
                 self._store.add_group(name, relative_path=[*self._relative_path, self._name])  # pyre-ignore[16]
             item.write()
-        self._store.add_variables(self._name, self._dataset, relative_path=self._relative_path)  # pyre-ignore[16]
+        if self._dataset is not None and len(self._dataset) > 0:
+            self._store.add_variables(self._name, self._dataset, relative_path=self._relative_path)  # pyre-ignore[16]
 
     def _ipython_key_completions_(self) -> list[str]:
         return [key for key in self.keys()]
 
+    def __contains__(self, key: str) -> bool:
+        return (key in self._items) or (self._store is not None and key in self._store.iter(self._path))
+
 
 class EOProduct(MutableMapping[str, EOGroup]):
     """"""
+
+    MANDATORY_FIELD = ("measurements", "coordinates", "attributes")
 
     def __init__(self, name: str, store_or_path_url: Optional[Union[str, EOProductStore]] = None) -> None:
         self._name: str = name
@@ -632,6 +638,9 @@ class EOProduct(MutableMapping[str, EOGroup]):
 
     def __getattr__(self, attr: str) -> EOGroup:
         return self[attr]
+
+    def __contains__(self, key: str) -> bool:
+        return (key in self._groups) or (self._store is not None and key in self._store)
 
     def _get_group(self, group_name: str) -> EOGroup:
         """find and return eogroup from the given key.
@@ -737,7 +746,7 @@ class EOProduct(MutableMapping[str, EOGroup]):
         See Also
         --------
         EOProduct.validate"""
-        return all(key in self for key in ("measurements", "coordinates", "attributes"))
+        return all(key in self for key in self.MANDATORY_FIELD)
 
     def validate(self) -> None:
         """check if the product is a valid eopf product, raise an error if is not a valid one
