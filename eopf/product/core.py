@@ -351,6 +351,9 @@ class EOVariable(EOVariableOperatorsMixin):
         for data in self._data:
             yield EOVariable(data.name, data, self._product, relative_path=self._relative_path)
 
+    def __len__(self) -> int:
+        return len(self._data)
+
     def __str__(self) -> str:
         return self.__repr__()
 
@@ -698,7 +701,7 @@ class EOProduct(MutableMapping[str, EOGroup]):
         return [key for key in self.keys()]
 
     def open(
-        self, store_or_path_url: Optional[Union[EOProductStore, str]] = None, mode: str = "r", **kwargs: Any
+        self, *, store_or_path_url: Optional[Union[EOProductStore, str]] = None, mode: str = "r", **kwargs: Any
     ) -> "EOProduct":
         """setup the store to be readable or writable
 
@@ -722,7 +725,9 @@ class EOProduct(MutableMapping[str, EOGroup]):
 
     def load(self) -> None:
         """load all the product in memory"""
-        ...
+        for key in self._store:
+            if key not in self._groups:
+                ...
 
     def write(self) -> None:
         """

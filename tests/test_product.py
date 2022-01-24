@@ -15,7 +15,7 @@ def test_create_product_on_memory(fs: FakeFilesystem):
 
 
 @pytest.mark.unit
-def test_create_product_on_fs(fs: FakeFilesystem):
+def test_write_product_on_fs(fs: FakeFilesystem):
     product = init_product("product_name", store_or_path_url="product_name")
 
     with product.open(mode="w"):
@@ -60,3 +60,17 @@ def test_product_must_have_mandatory_group(fs: FakeFilesystem):
 
     product.validate()
     assert product.is_valid()
+
+
+@pytest.mark.usecase
+def test_create_a_whole_product():
+    product = init_product("product_name")
+    product.measurements.add_group("subgroup")
+    product.measurements.subgroup.add_variable("my_variable", [[1, 2, 3, 4], [8, 9, 7, 5]])
+    assert (product_length := len(product)) == 3, f"number of product subgroups must be 3, current is {product_length}"
+    assert (
+        measurements_length := len(product.measurements)
+    ) == 1, f"number of product.measurements subgroups must be 1, current is {measurements_length}"
+    assert (
+        ndimensonal := len(product.measurements.subgroup.my_variable)
+    ) == 2, f"variable is a {ndimensonal} dimensional array, 2 was expected"
