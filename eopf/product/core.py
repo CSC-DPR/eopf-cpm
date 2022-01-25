@@ -449,7 +449,9 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
         return len(keys)
 
     def __getattr__(self, attr: str) -> Union[EOVariable, "EOGroup"]:
-        return self[attr]
+        if attr in self:
+            return self[attr]
+        raise AttributeError(attr)
 
     def __str__(self) -> str:
         return self.__repr__()
@@ -640,7 +642,9 @@ class EOProduct(MutableMapping[str, EOGroup]):
         return len(keys)
 
     def __getattr__(self, attr: str) -> EOGroup:
-        return self[attr]
+        if attr in self:
+            return self[attr]
+        raise AttributeError(attr)
 
     def __contains__(self, key: str) -> bool:
         return (key in self._groups) or (self._store is not None and key in self._store)

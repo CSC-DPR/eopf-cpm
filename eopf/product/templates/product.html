@@ -16,11 +16,13 @@
     {%endif%}
 
     </li>
-    {% for group in product %}
+    {% for group in product.values() %}
+    {% if group.name != "coordinates" %}
     <li class="eopf-section-item">
     {% with group=group %}
         {% include "group.html" %}
     {% endwith %}
     </li>
+    {% endif %}
     {% endfor %}
 {% endblock %}
