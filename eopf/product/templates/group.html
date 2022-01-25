@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block sections %}
-    {% for group in group.groups.values() %}
+    {% for _, group in group.groups %}
         <li class="eopf-section-item">
         {% with group=group, class_name="" %}
             {% include "group.html" %}
@@ -28,14 +28,7 @@
         </li>
     {% endfor %}
 
-    {% if group.coords %}
-        <li class="eopf-section-item">
-        {% with group=group.coords, class_name="coords" %}
-            {% include "group.html" %}
-        {% endwith %}
-        </li>
-    {% endif %}
-    {% for variable in group %}
+    {% for _, variable in group.variables %}
         <li class="eopf-section-item">
         {% with variable=variable %}
             {% include "variable.html" %}

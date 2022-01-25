@@ -14,14 +14,13 @@ package eopf.product.storage
         listdir(self[, path]): list the given path or root
         rmdir(self, ): rm the given path or self
         rename(self, src, dest): rename src by dest
-        save(self, path): save localy
         clear(self): clear all the store
         getsize(self[, path]): return the size of the given storage
         dir_path(self[, path]): return the current path
         save(self[, path]): save locally at the given path
 
         __ Field Member __
-        map: fsspec.spec.FSMap
+        map: fsspec.FSMap
 
         __ Property __
         is_readable

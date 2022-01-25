@@ -1,7 +1,8 @@
 import json
 import logging
 import logging.config
-from functools import lru_cache
+from functools import cache
+from typing import Any, Callable
 
 _DEFAULT_CONFIG = {
     "version": 1,
@@ -26,7 +27,7 @@ _DEFAULT_CONFIG = {
 }
 
 
-@lru_cache
+@cache
 def load_logger(config_filename: str = "", format: str = "json") -> None:
     if format == "json":
         if config_filename:
@@ -38,12 +39,12 @@ def load_logger(config_filename: str = "", format: str = "json") -> None:
     return logging.config.fileConfig(config_filename)
 
 
-def eopf_logger(msg: str = "{func} args={args} kwargs={kwargs}"):
+def eopf_logger(msg: str = "{func} args={args} kwargs={kwargs}") -> Callable[..., Any]:
     load_logger()
     logger = logging.getLogger("eopf")
 
-    def wrapper(func):
-        def apply(*args, **kwargs):
+    def wrapper(func: Callable[..., Any]) -> Callable[..., Any]:
+        def apply(*args: Any, **kwargs: Any) -> Any:
             logger.info(msg.format(func=func, args=args, kwargs=kwargs))
             return func(*args, **kwargs)
 

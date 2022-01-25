@@ -13,32 +13,6 @@
         <ul class='eopf-sections'>
             {% block sections %}
             {% endblock %}
-            {% if obj.attrs %}
-            <li class="eopf-section-item">
-                <input type="checkbox" class="eopf-section-summary-in" id="{{ obj|string }}_attrs" hidden>
-                <label for="{{ obj|string }}_attrs" class="eopf-section-summary eopf-header" >
-                    {% include "static/images/icons-svg-attributes.svg" %}
-                    Attributes
-                </label>
-                <div class='eopf-section-details'>
-                    <dl class='eopf-attrs'>
-                        {% for name, value in obj.attrs.items() %}
-                            <dt><span>{{name}} :</span></dt><dd>{{value}}</dd>
-                        {% endfor %}
-                    </dl>
-                </div>
-            </li>
-            {% endif %}
-            {% if obj.dims %}
-            <li class="eopf-section-item">
-                <input type="checkbox" class="eopf-section-summary-in" id="{{ obj|string }}_dims" disabled>
-                <label for="{{ obj|string }}_dims" class="eopf-section-summary eopf-header" >
-                    {% include "static/images/icons-svg-dims.svg" %}
-                    Dimension
-                </label>
-                <div class='eopf-section-inline-details'>{{obj.dims}}</div>
-            </li>
-            {% endif %}
         </ul>
     </div>
 </div>

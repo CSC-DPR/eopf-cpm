@@ -1,201 +1,94 @@
-"""
-Define core object compliant to the common data model
-and the Climat and Forecast convention.
-
-common data model: https://www.unidata.ucar.edu/software/netcdf/docs/netcdf_data_model.html#enhanced_model
-Climate and Forecast conventions: https://cfconventions.org/
-"""
-
-import itertools as it
-from abc import ABC, abstractmethod
+import weakref
 from collections.abc import MutableMapping
-from dataclasses import dataclass
-from os import PathLike
+from types import TracebackType
 from typing import (
     Any,
+    Callable,
+    Hashable,
     Iterable,
     Iterator,
-    KeysView,
     Mapping,
     Optional,
+    Type,
     Union,
-    ValuesView,
 )
 
-import numpy as np
-from dask.array.core import DaskMethodsMixin
-from xarray import DataArray
+import xarray
 
-from eopf import exceptions
-from eopf.product.formatting import renderer
+from eopf.exceptions import InvalidProductError, StoreNotDefinedError
+from eopf.product.utils import join_path
 
+from .formatting import renderer
 from .mixins import EOVariableOperatorsMixin
+from .store.abstract import EOProductStore, StorageStatus
 
 
-def search(eoobject: Union["EOGroup", "EOProduct"], path, already_done: Optional[list["EOGroup"]] = None):
-    """
-    Climate and forecast convention search mechanisme for group
-    https://cfconventions.org/Data/cf-conventions/cf-conventions-1.9/cf-conventions.html#_scope
-    """
-    already_done = already_done or []
-    already_done.append(eoobject)
+class EOVariable(EOVariableOperatorsMixin):
+    """Wrapper around xarray.DataArray to provide Multi dimensional Array (Tensor)
+    in earth observation context
 
-    root, _, subpaths = path.partition("/")
-    if not root:  # absolute path
-        if not isinstance(eoobject, EOProduct):
-            parent = eoobject.parent
-            while parent.parent is not None:
-                parent = parent.parent
-        else:
-            parent = eoobject
-        return parent.search(subpaths)
-    elif root and subpaths:  # relative path
-        current_item = eoobject.groups.get(root)
-        if current_item:
-            return current_item.search(subpaths)
-        return current_item
-    else:  # proximityTuple of dimension names associated with this array.
-        current_item = eoobject.get(root)
-        if current_item:
-            return current_item
-        for group in eoobject.parent.groups.values():
-            if group not in already_done:
-                find = group.search(root, already_done=already_done)
-                if find:
-                    return find
-    return
-
-
-class EOProperties(ABC):
-    """Common properties of the Common data model."""
-
-    @property
-    @abstractmethod
-    def name(self) -> Optional[str]:
-        """str: Name of this object"""
-
-    @property
-    @abstractmethod
-    def dims(self) -> tuple[str, ...]:
-        """
-        tuple[str, ...]: Tuple of dimension names associated with this object.
-        """
-
-    @property
-    @abstractmethod
-    def attrs(self) -> MutableMapping[str, Any]:
-        """
-        MutableMapping[str, Any]: Dictionary storing arbitrary metadata with this object.
-        """
-
-    @property
-    @abstractmethod
-    def parent(self) -> Union["EOProduct", "EOGroup", None]:
-        """
-        Union[EOProduct, EOGroup]: Direct parent object
-        """
-
-
-class EOVariable(EOProperties, EOVariableOperatorsMixin):
-    """Earth Observation Variable
-
-    EOVariable is a N-dimensional array (Tensor) with indexation and selection
-    capabilities and compliant with most of the python numerical object like:
-    - numpy array
-    - pandas object
-
-    Parameters
+    Attributes
     ----------
-        data: array_like
-            xarray.DataArray or array_like.
-        **kwargs: Any
-            if data is not a xarray.DataArray, you can provide
-            xarray.DataArray arguments to passing them here.
-
-    Examples
-    --------
-    Create EOVariable:
-
-    >>> data = np.random.normal(size=(10, 10))
-    >>> variable = EOVariable(data, name="normal_distribution")
+    name
+    attrs
+    dims
+    coordinates
+    chunksizes
+    chunks
+    sizes
+    _data : xarray.DataArray
+        inner data
+    _product: EOProduct
+        product top level representation to access coordinates
     """
 
-    __slots__ = (
-        "_ndarray",
-        "_parent",
-    )
+    def __init__(
+        self, name: str, data: Any, product: "EOProduct", relative_path: Optional[Iterable[str]] = None, **kwargs: Any
+    ):
+        self._data: xarray.DataArray
+        self._name: str = name
+        self._product: EOProduct = weakref.proxy(product) if not isinstance(product, weakref.ProxyType) else product
 
-    def __types__(self) -> None:
-        self._ndarray: DataArray
-        self._parent: Optional["EOGroup"] = None
+        if relative_path is None:
+            relative_path = tuple()
+        self._relative_path: tuple[str, ...] = tuple(relative_path)
 
-    def __init__(self, data: Any, **kwargs: Any):
-        self.__types__()
-        if isinstance(data, DataArray):
-            self._ndarray = data
+        if isinstance(data, xarray.DataArray):
+            self._data = data
         else:
-            self._ndarray = DataArray(
-                data=data,
-                **kwargs,
-            )
-
-    def __getitem__(self, key: Any) -> DataArray:
-        return EOVariable(self._ndarray[key])
-
-    def __setitem__(self, key: Any, value: Any) -> None:
-        self._ndarray[key] = value
-
-    def __delitem__(self, key: Any) -> None:
-        del self._ndarray[key]
-
-    def __str__(self):
-        return self.__repr__()
-
-    def __repr__(self) -> str:
-        return f"[EOVariable]{hex(id(self))}"
-
-    def _repr_html_(self):
-        return renderer("variable.html", variable=self)
+            self._data = xarray.DataArray(data=data, name=name, **kwargs)
 
     @property
-    def attrs(self) -> MutableMapping[str, Any]:
-        """
-        MutableMapping[str, Any]: Dictionary storing arbitrary metadata with this object.
-        """
-        return self._ndarray.attrs
+    def _path(self) -> str:
+        """path from the top level product to this eovariable"""
+        if self._store is None:
+            raise StoreNotDefinedError("Store must be defined")
+        return join_path(*self._relative_path, self._name, sep=self._store.sep)
 
     @property
-    def dims(self) -> tuple[str]:
-        """
-        tuple[str, ...]: Tuple of dimension names associated with this object.
-        """
-        return self._ndarray.dims
+    def _store(self):
+        """direct accessor to the product store"""
+        return self._product._store
 
     @property
-    def dtype(self) -> np.dtype:
-        return self._ndarray.dtype
+    def name(self) -> str:
+        """name of this variable"""
+        return self._name
 
     @property
-    def name(self) -> Optional[str]:
-        """str: Name of this object"""
-        return self._ndarray.name
+    def attrs(self) -> dict[Hashable, Any]:
+        """variable attributes"""
+        return self._data.attrs
 
     @property
-    def parent(self) -> "EOGroup":
-        """
-        Union[EOProduct, EOGroup]: Direct parent object
-        """
-        if self._parent is None:
-            raise exceptions.InitializeError("parent of the current EOVariable is not set.")
-        return self._parent
+    def dims(self) -> tuple[Hashable, ...]:
+        """variable dimensions"""
+        return self._data.dims
 
-    @parent.setter
-    def parent(self, value: "EOGroup"):
-        if not isinstance(value, EOGroup):
-            raise ValueError(
-                f"parent of EOVariable instance must be EOGroup instance, but your have send {type(value)} instance.",
-            )
-        self._parent = value
+    @property
+    def coordinates(self) -> "EOGroup":
+        """Coordinates of this variable"""
+        return self._product.coordinates[self._path]
 
     @property
     def chunksizes(self) -> Mapping[Any, tuple[int, ...]]:
@@ -203,61 +96,54 @@ class EOVariable(EOProperties, EOVariableOperatorsMixin):
         Mapping from dimension names to block lengths for this dataarray's data, or None if
         the underlying data is not a dask array.
         Cannot be modified directly, but can be modified by calling .chunk().
-
         Differs from EOVariable.chunks because it returns a mapping of dimensions to chunk shapes
         instead of a tuple of chunk shapes.
-
         See Also
         --------
         EOVariable.chunk
         EOVariable.chunks
         """
-        return self._ndarray.chunksizes
+        return self._data.chunksizes
 
     @property
     def chunks(self) -> Optional[tuple[tuple[int, ...], ...]]:
         """
         Tuple of block lengths for this dataarray's data, in order of dimensions, or None if
         the underlying data is not a dask array.
-
         See Also
         --------
         EOVariable.chunk
         EOVariable.chunksizes
         """
-        return self._ndarray.chunks
+        return self._data.chunks
 
     @property
-    def sizes(self) -> Mapping[str, int]:
+    def sizes(self) -> Mapping[Hashable, int]:
         """
         Ordered mapping from dimension names to lengths.
-
         Immutable.
         """
-        return self._ndarray.sizes
+        return self._data.sizes
 
     def chunk(
         self,
         chunks: Union[
-            Mapping[Any, Union[None, int, tuple[int, ...]]],
+            Mapping[Any, Optional[Union[int, tuple[int, ...]]]],
             int,
             tuple[int, ...],
             tuple[tuple[int, ...], ...],
         ] = {},
         name_prefix: str = "eopf-",
-        token: Union[str, None] = None,
+        token: Optional[str] = None,
         lock: bool = False,
     ) -> "EOVariable":
         """Coerce this array's data into a dask arrays with the given chunks.
-
         If this variable is a non-dask array, it will be converted to dask
         array. If it's a dask array, it will be rechunked to the given chunk
         sizes.
-
         If neither chunks is not provided for one or more dimensions, chunk
         sizes along that dimension will not be updated; non-dask arrays will be
         converted into dask arrays with a single block.
-
         Parameters
         ----------
         chunks : int, tuple of int or mapping of hashable to int, optional
@@ -270,21 +156,24 @@ class EOVariable(EOProperties, EOVariableOperatorsMixin):
         lock : optional
             Passed on to :py:func:`dask.array.from_array`, if the array is not
             already as dask array.
-
         Returns
         -------
         chunked : eopf.product.EOVariable
         """
-        self._ndarray = self._ndarray.chunk(chunks, name_prefix=name_prefix, token=token, lock=lock)
+        self._data = self._data.chunk(chunks, name_prefix=name_prefix, token=token, lock=lock)  # pyre-ignore[6]
         return self
 
-    def map_chunk(self, func, *args, template=None, **kwargs):
+    def map_chunk(
+        self,
+        func: Callable[..., xarray.DataArray],
+        *args: Any,
+        template: Optional[xarray.DataArray] = None,
+        **kwargs: Any,
+    ) -> "EOVariable":
         """
         Apply a function to each chunk of this EOVariable.
-
         .. warning::
             This method is based on the experimental method ``DataArray.map_blocks`` and its signature may change.
-
         Parameters
         ----------
         func : callable
@@ -292,9 +181,7 @@ class EOVariable(EOProperties, EOVariableOperatorsMixin):
             parameter. The function will receive a subset or 'block' of this EOVariable (see below),
             corresponding to one chunk along each chunked dimension. ``func`` will be
             executed as ``func(subset_dataarray, *subset_args, **kwargs)``.
-
             This function must return either a single EOVariable.
-
             This function cannot add a new chunked dimension.
         args : sequence
             Passed to func after unpacking and subsetting any eovariable objects by blocks.
@@ -310,70 +197,26 @@ class EOVariable(EOProperties, EOVariableOperatorsMixin):
             ``template`` must be provided if the function changes the size of existing dimensions.
             When provided, ``attrs`` on variables in `template` are copied over to the result. Any
             ``attrs`` set by ``func`` will be ignored.
-
         Returns
         -------
         A single DataArray or Dataset with dask backend, reassembled from the outputs of the
         function.
-
         See Also
         --------
         dask.array.map_blocks, xarray.apply_ufunc, xarray.Dataset.map_blocks, xarray.DataArray.map_blocks
         """
-        self._ndarray = self._ndarray.map_blocks(func, args, kwargs, template)
+        self._data = self._data.map_blocks(func, args, kwargs, template=template)  # pyre-ignore[6]
         return self
-
-    def compute(self, **kwargs):
-        """Manually trigger loading of this array's data from disk or a
-        remote source into memory and return a new array. The original is
-        left unaltered.
-
-        Normally, it should not be necessary to call this method in user code,
-        because all xarray functions should either work on deferred data or
-        load data automatically. However, this method can be necessary when
-        working with many file objects on disk.
-
-        Parameters
-        ----------
-        **kwargs : dict
-            Additional keyword arguments passed on to ``dask.compute``.
-
-        See Also
-        --------
-        xarray.DataArray.compute
-        dask.compute
-        """
-        return EOVariable(self._ndarray.compute(**kwargs))
-
-    def persiste(self, **kwargs):
-        """Trigger computation in constituent dask arrays
-
-        This keeps them as dask arrays but encourages them to keep data in
-        memory.  This is particularly useful when on a distributed machine.
-        When on a single machine consider using ``.compute()`` instead.
-
-        Parameters
-        ----------
-        **kwargs : dict
-            Additional keyword arguments passed on to ``dask.persist``.
-
-        See Also
-        --------
-        xarray.DataArray.persist
-        dask.persist
-        """
-        return EOVariable(self._ndarray.persiste(**kwargs))
 
     def isel(
         self,
-        indexers: Mapping[Any, Any] = None,
+        indexers: Optional[Mapping[Any, Any]] = None,
         drop: bool = False,
         missing_dims: str = "raise",
         **indexers_kwargs: Any,
-    ):
+    ) -> "EOVariable":
         """Return a new EOVariable whose data is given by integer indexing
         along the specified dimension(s).
-
         Parameters
         ----------
         indexers : dict, optional
@@ -394,7 +237,6 @@ class EOVariable(EOProperties, EOVariableOperatorsMixin):
             - "ignore": ignore the missing dimensions
         **indexers_kwargs : {dim: indexer, ...}, optional
             The keyword arguments form of ``indexers``.
-
         See Also
         --------
         DataArray.sel
@@ -402,50 +244,45 @@ class EOVariable(EOProperties, EOVariableOperatorsMixin):
         EOVariable.sel
         """
         return EOVariable(
-            self._ndarray.isel(
-                indexers=indexers,
+            self.name,
+            self._data.isel(
+                indexers=indexers,  # pyre-ignore[6]
                 drop=drop,
                 missing_dims=missing_dims,
                 **indexers_kwargs,
             ),
+            self._product,
+            relative_path=self._relative_path,
         )
 
     def sel(
         self,
-        indexers: Mapping[Any, Any] = None,
-        method: str = None,
-        tolerance=None,
+        indexers: Optional[Mapping[Any, Any]] = None,
+        method: Optional[str] = None,
+        tolerance: Any = None,
         drop: bool = False,
         **indexers_kwargs: Any,
-    ):
+    ) -> "EOVariable":
         """Return a new EOVariable whose data is given by selecting index
         labels along the specified dimension(s).
-
         In contrast to `EOVariable.isel`, indexers for this method should use
         labels instead of integers.
-
         Under the hood, this method is powered by using pandas's powerful Index
         objects. This makes label based indexing essentially just as fast as
         using integer indexing.
-
         It also means this method uses pandas's (well documented) logic for
         indexing. This means you can use string shortcuts for datetime indexes
         (e.g., '2000-01' to select all values in January 2000). It also means
         that slices are treated as inclusive of both the start and stop values,
         unlike normal Python indexing.
-
         .. warning::
-
           Do not try to assign values when using any of the indexing methods
           ``isel`` or ``sel``::
-
             da = xr.EOVariable([0, 1, 2, 3], dims=['x'])
             # DO NOT do this
             da.isel(x=[0, 1, 2])[1] = -1
-
           Assigning values with the chained indexing using ``.sel`` or
           ``.isel`` fails silently.
-
         Parameters
         ----------
         indexers : dict, optional
@@ -458,7 +295,6 @@ class EOVariable(EOProperties, EOVariableOperatorsMixin):
             One of indexers or indexers_kwargs must be provided.
         method : {None, "nearest", "pad", "ffill", "backfill", "bfill"}, optional
             Method to use for inexact matches:
-
             * None (default): only exact matches
             * pad / ffill: propagate last valid index value forward
             * backfill / bfill: propagate next valid index value backward
@@ -473,7 +309,6 @@ class EOVariable(EOProperties, EOVariableOperatorsMixin):
         **indexers_kwargs : {dim: indexer, ...}, optional
             The keyword arguments form of ``indexers``.
             One of indexers or indexers_kwargs must be provided.
-
         Returns
         -------
         obj : EOVariable
@@ -484,7 +319,6 @@ class EOVariable(EOProperties, EOVariableOperatorsMixin):
             In general, each array's data will be a view of the array's data
             in this EOVariable, unless vectorized indexing was triggered by using
             an array indexer, in which case the data will be a copy.
-
         See Also
         --------
         DataArray.isel
@@ -492,582 +326,452 @@ class EOVariable(EOProperties, EOVariableOperatorsMixin):
         EOVariable.isel
         """
         return EOVariable(
-            self._ndarray.sel(
-                indexers=indexers,
-                method=method,
+            self.name,
+            self._data.sel(
+                indexers=indexers,  # pyre-ignore[6]
+                method=method,  # pyre-ignore[6]
                 tolerance=tolerance,
                 drop=drop,
                 **indexers_kwargs,
             ),
+            self._product,
+            relative_path=self._relative_path,
         )
 
-    def __array_wrap__(self, obj, context=None) -> "EOVariable":
-        self._ndarray = self._ndarray.__array_wrap__(obj, context=context)
-        return self
+    def __getitem__(self, key: Any) -> "EOVariable":
+        return EOVariable(key, self._data[key], self._product, relative_path=self._relative_path)
 
-    def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
-        """Must be compliant to the NEP 13.
-        https://numpy.org/neps/nep-0013-ufunc-overrides.html
-        """
-        return self._ndarray.__array_ufunc__(ufunc, method, *inputs, **kwargs)
+    def __setitem__(self, key: Any, value: Any) -> None:
+        self._data[key] = value
 
-    def __array_function__(self, func, types, args, kwargs):
-        """Must be compliant to th NEP 18.
-        https://numpy.org/neps/nep-0018-array-function-protocol.html
-        """
-        # TODO: implement to be compliant with the NEP 18
-        raise NotImplementedError()
+    def __delitem__(self, key: Any) -> None:
+        del self._data[key]
 
-    def __dask_tokenize__(self):
-        from dask.base import normalize_token
+    def __iter__(self) -> Iterator["EOVariable"]:
+        for data in self._data:
+            yield EOVariable(data.name, data, self._product, relative_path=self._relative_path)
 
-        return normalize_token((type(self), self._ndarray))
+    def __len__(self) -> int:
+        return len(self._data)
 
-    def __dask_graph__(self):
-        return self._ndarray.__dask_graph__()
+    def __str__(self) -> str:
+        return self.__repr__()
 
-    def __dask_keys__(self):
-        return self._ndarray.__dask_keys__()
+    def __repr__(self) -> str:
+        return f"[EOVariable]{hex(id(self))}"
 
-    def __dask_layers__(self):
-        return self._ndarray.__dask_layers__()
-
-    @property
-    def __dask_optimize__(self):
-        return self._ndarray.__dask_optimize__
-
-    @property
-    def __dask_scheduler__(self):
-        return self._ndarray.__dask_scheduler__
-
-    def __dask_postcompute__(self):
-        finalize, extra_args = self._ndarray.__dask_postcompute__()
-
-        def finalize_wrapper(results, name, func, *args, **kwargs):
-            return EOVariable(finalize(results, name, func, *args, **kwargs))
-
-        return finalize_wrapper, extra_args
-
-    def __dask_postpersist__(self):
-        finalize, extra_args = self._ndarray.__dask_postpersist__()
-
-        def finalize_wrapper(results, name, func, *args, **kwargs):
-            return EOVariable(finalize(results, name, func, *args, **kwargs))
-
-        return finalize_wrapper, extra_args
+    def _repr_html_(self) -> str:
+        return renderer("variable.html", variable=self)
 
 
-class EOGroup(EOProperties, MutableMapping[str, EOVariable], DaskMethodsMixin):
-    """Earth Observation Group
-
-    A hierarchical object used to organised Earth observation data like EOVariable and
-    sub EOGroup.
-
-    Parameters
-    ----------
-    name: str
-        name of this group
-    *args: EOVariable
-        list of the EOVariables associated to this group
-    variables: Iterable[EOVariable], optional
-        list of the EOVariables associated to this group, like args
-    groups: Iterable[EOGroup], optional
-        list of the sub EOGroup
-    coords: EOGroup, optional, optional
-        coordinates EOGroup linked to this EOGroup
-    attrs: MutableMapping[str, Any], optional
-        Dictionnary like of metadatas
-    dims: Iterable[str], optional
-        Iterable corresponding to the name of each dimensions
-    """
-
-    __slots__ = (
-        "_name",
-        "_variables",
-        "_groups",
-        "_attrs",
-        "_dims",
-        "_coords",
-        "_parent",
-    )
-
-    def __types__(self) -> None:
-        self._name: int
-        self._variables: MutableMapping[str, EOVariable]
-        self._groups: MutableMapping[str, "EOGroup"]
-        self._attrs: MutableMapping[str, Any]
-        self._dims: tuple[str]
-        self._coords: Optional["EOGroup"] = None
-        self._parent: Optional[Union["EOGroup", "EOProduct"]] = None
+class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
+    """"""
 
     def __init__(
         self,
         name: str,
-        *args: EOVariable,
-        variables: Optional[Iterable[EOVariable]] = None,
-        groups: Optional[Iterable["EOGroup"]] = None,
-        coords: Optional["EOGroup"] = None,
-        attrs: Optional[MutableMapping[str, Any]] = None,
-        dims: Optional[Iterable[str]] = None,
+        product: "EOProduct",
+        relative_path: Optional[Iterable[str]] = None,
+        dataset: Optional[xarray.Dataset] = None,
+        attrs: Optional[dict[str, Any]] = None,
     ) -> None:
-        self.__types__()
         self._name = name
-        variables = [*args, *(variables or [])]
-        self._variables = {}
-        for variable in variables:
-            self[variable.name] = variable
 
-        self._groups = {group.name: group for group in (groups or [])}
-        if coords:
-            self._coords = coords
-            self._coords.parent = self
+        if relative_path is None:
+            relative_path = tuple()
 
-        self._attrs = {}
-        self._attrs.update(attrs or {})
+        if dataset is None:
+            dataset = xarray.Dataset()
 
-        self._dims = tuple(i for i in (dims or []))
+        self._relative_path: tuple[str, ...] = tuple(relative_path)
+        self._dataset: xarray.Dataset = dataset
+        self._product: EOProduct = weakref.proxy(product) if not isinstance(product, weakref.ProxyType) else product
+        self._items: dict[str, "EOGroup"] = {}
+        self._attrs = attrs or dict()
 
-    def __getitem__(self, key: str) -> EOVariable:
-        return self._variables[key]
+    def __getitem__(self, key: str) -> Union[EOVariable, "EOGroup"]:
+        return self._get_item(key)
 
-    def __setitem__(self, key: str, value: EOVariable) -> None:
-        self._variables[key] = value
-        value.parent = self
+    def _get_item(self, key: str) -> Union[EOVariable, "EOGroup"]:
+        """find and return eovariable or eogroup from the given key.
+
+        if store is defined and key not already loaded in this group,
+        data is loaded from it.
+        Parameters
+        ----------
+        key: str
+            name of the eovariable or eogroup
+        """
+        if key in self._dataset:
+            return EOVariable(key, self._dataset[key], self._product, relative_path=[*self._relative_path, self._name])
+
+        item: EOGroup
+        if key not in self._items and self._store is None:
+            raise KeyError(f"Invalide EOGroup item name {key}")
+        elif key not in self._items and self._store is not None:
+            name, relative_path, dataset, attrs = self._store[self._relative_key(key)]
+            item = EOGroup(name, self._product, relative_path=relative_path, dataset=dataset, attrs=attrs)
+        else:
+            item = self._items[key]
+        self[key] = item
+        return item
+
+    def __setitem__(self, key: str, value: Union[EOVariable, "EOGroup"]) -> None:
+        if isinstance(value, EOGroup):
+            self._items[key] = value
+        elif isinstance(value, EOVariable):
+            self._dataset[value.name] = value
+        else:
+            raise TypeError(f"Item assigment Impossible for type {type(value)}")
 
     def __delitem__(self, key: str) -> None:
-        del self._variables[key]
+        if key in self._items:
+            del self._items[key]
+        if key in self._dataset:
+            del self._dataset[key]
+        if self._store is not None and (store_key := self._relative_key(key)) in self._store:
+            del self._store[store_key]
+
+    def __iter__(self) -> Iterator[str]:
+        if self._store is not None:
+            for key in self._store.iter(self._path):  # pyre-ignore[16]
+                # print(f'{self._store.url=} {self._path=} {key=} || {self._store[self._path]}')
+                if key not in self._items and key not in self._dataset:
+                    yield key
+        if self._dataset is not None:
+            yield from self._dataset
+        yield from self._items
 
     def __len__(self) -> int:
-        return len(self._variables)
+        keys = set(self._items)
+        if self._store is not None:
+            keys |= set(self._store[self._path])
+        return len(keys)
 
-    def __iter__(self) -> Iterator[EOVariable]:
-        return iter(self._variables.values())
+    def __getattr__(self, attr: str) -> Union[EOVariable, "EOGroup"]:
+        return self[attr]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.__repr__()
 
     def __repr__(self) -> str:
         return f"[EOGroup]{hex(id(self))}"
 
-    def _repr_html_(self):
+    def _repr_html_(self) -> str:
         return renderer("group.html", group=self)
 
-    @property
-    def attrs(self):
-        """
-        MutableMapping[str, Any]: Dictionary storing arbitrary metadata with this object.
-        """
-        return self._attrs
+    def to_product(self) -> "EOProduct":
+        """Convert this group to a product"""
+        ...
 
     @property
-    def coords(self) -> "EOGroup":
-        """
-        EOGroup: coordinates representation of this eogroup
-        """
-        return self._coords
+    def coordinates(self) -> "EOGroup":
+        """Coordinates of this variable"""
+        return self._product.coordinates[self._path]
 
     @property
-    def dims(self) -> tuple[str]:
-        """
-        tuple[str, ...]: Tuple of dimension names associated with this object.
-        """
-        return self._dims
+    def _store(self) -> Optional[EOProductStore]:
+        """direct accessor to the product store"""
+        return self._product._store
 
     @property
-    def groups(self) -> MutableMapping[str, "EOGroup"]:
-        """
-        MutableMapping[str, EOGroup]: sub EOGroups
-        """
-        return self._groups
+    def _path(self) -> str:
+        """path from the top level product to this eogroup"""
+        if self._store is None:
+            raise StoreNotDefinedError("Store must be defined")
+        return join_path(*self._relative_path, self._name, sep=self._store.sep)
 
     @property
-    def name(self) -> Optional[str]:
-        """str: Name of this object"""
+    def name(self) -> str:
+        """name of this eogroup"""
         return self._name
 
     @property
-    def parent(self):
+    def attrs(self) -> dict[str, Any]:
+        return self._attrs
+
+    @property
+    def dims(self) -> tuple[Hashable, ...]:
+        """dimension of this group"""
+        return tuple(self._dataset.dims)
+
+    @property
+    def groups(self) -> Iterator[tuple[str, "EOGroup"]]:
+        """iterator over the groups of this group"""
+        for key, value in self.items():
+            if isinstance(value, EOGroup):
+                yield key, value
+
+    @property
+    def variables(self) -> Iterator[tuple[str, EOVariable]]:
+        """iterator over the variables of this group"""
+        for key, value in self.items():
+            if isinstance(value, EOVariable):
+                yield key, value
+
+    def _relative_key(self, key: str) -> str:
+        """helper to construct path of sub object
+
+        Parameters
+        ----------
+        key: str
+            sub object name
+        Returns
+        -------
+        str
+            path value with store based separator
         """
-        Union[EOProduct, EOGroup]: Direct parent object
+        if self._store is None:
+            raise StoreNotDefinedError("Store must be defined")
+        return join_path(*self._relative_path, self._name, key, sep=self._store.sep)
+
+    def add_group(self, name: str) -> "EOGroup":
+        """Construct and add a eogroup to this group
+
+        if store is defined and open, the group it's directly write by the store.
+        Parameters
+        ----------
+        name: str
+            name of the future group
+        Returns
+        -------
+        EOGroup
+            newly created EOGroup
         """
-        if self._parent is None:
-            raise exceptions.InitializeError("parent of the current EOGroup is not set.")
-        return self._parent
+        relative_path = [*self._relative_path, self.name]
+        group = EOGroup(name, self._product, relative_path=relative_path)
+        self[name] = group
+        if self._store is not None and self._store.status == StorageStatus.OPEN:
+            self._store.add_group(name, relative_path=relative_path)
+        return group
 
-    @parent.setter
-    def parent(self, value: Union["EOGroup", "EOProduct"]):
-        if not isinstance(value, (EOGroup, EOProduct)):
-            raise ValueError("parent of EOGroup instance must be EOGroup or EOProduct instance")
-        self._parent = value
+    def add_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> EOVariable:
+        """Construct and add an eovariable to this group
 
-    def keys(self) -> KeysView["EOGroup"]:
-        return self._variables.keys()
+        if store is defined and open, the eovariable it's directly write by the store.
+        Parameters
+        ----------
+        name: str
+            name of the future group
+        data: any, optional
+            data like object use to create dataarray or dataarray
+        **kwargs: any
+            DataArray extra parameters if data is not a dataarray
+        Returns
+        -------
+        EOVariable
+            newly created EOVariable
+        """
+        variable = EOVariable(name, data, self._product, relative_path=[*self._relative_path, self._name], **kwargs)
+        self._dataset[name] = variable._data
+        if self._store is not None and self._store.status == StorageStatus.OPEN:
+            self._store.add_variables(self._name, self._dataset, relative_path=self._relative_path)
+        return variable
 
-    def values(self) -> ValuesView["EOGroup"]:
-        return self._variables.values()
+    def write(self) -> None:
+        """
+        write non synchronized subgroups, variables to the store
 
-    def __dask_tokenize__(self):
-        from dask.base import normalize_token
+        the store must be opened to work
+        See Also
+        --------
+        EOProduct.open
+        """
+        if self._store is None:
+            raise StoreNotDefinedError("Store must be defined")
+        for name, item in self.groups:
+            if name not in self._store.iter(self._path):  # pyre-ignore[16]
+                self._store.add_group(name, relative_path=[*self._relative_path, self._name])  # pyre-ignore[16]
+            item.write()
+        if self._dataset is not None and len(self._dataset) > 0:
+            self._store.add_variables(self._name, self._dataset, relative_path=self._relative_path)  # pyre-ignore[16]
 
-        return normalize_token((type(self), self._variables, self._groups, self._attrs))
+    def _ipython_key_completions_(self) -> list[str]:
+        return [key for key in self.keys()]
 
-    def __dask_graph__(self):
-        v_graphs = (v.__dask_graph__() for v in self._variables.values())
-        variables = [v for v in v_graphs if v is not None]
-
-        g_graph = (g.__dask_graph__() for g in self._groups.values())
-        groups = [g for g in g_graph if g is not None]
-
-        coords = self._coords.__dask_graph__() if self._coords else None
-
-        if coords is not None:
-            groups.append(coords)
-
-        if not (variables or groups):
-            return None
-
-        from dask.highlevelgraph import HighLevelGraph
-
-        return HighLevelGraph.merge(*variables, *groups)
-
-    def __dask_keys__(self):
-        keys = [v.__dask_keys__() for v in self._variables.values()]
-        keys += [g.__dask_keys__() for g in self._groups.values()]
-        if self.coords:
-            keys.append(self.coords.__dask_keys__())
-        return keys
-
-    def __dask_layers__(self):
-        return sum(
-            self.__dask_keys__(),
-            (),
-        )
-
-    def __dask_postcompute__(self):
-        return self._dask_postcompute, ()
-
-    def __dask_postpersist__(self):
-        return self._dask_postpersist, ()
-
-    def _dask_postcompute(self, results: Iterable[EOVariable]) -> "EOGroup":
-        variables = []
-        groups = []
-        coords_results = None
-        coords_group = None
-        groups_results: MutableMapping[str, Iterable[EOVariable]] = {}
-
-        for result in results:
-            if (name := result.name) in self._variables:
-                v = self._variables.get(name)
-                rebuild, args = v.__dask_postcompute__()
-                variables.append(rebuild(result, *args))
-            else:
-                for group_name, group in self.groups.items():
-                    if result.__dask_tokenize__() in group.__dask_keys__():
-                        groups_results.setdefault(group_name, []).append(result)
-                        break
-                else:
-                    if self.coords and result.__dask_tokenize__() in self.coords.__dask_keys__():
-                        if coords_results is None:
-                            coords_results = []
-                        coords_results.append(result)
-
-        for group_name, group_results in groups_results.items():
-            group = self.groups.get(group_name)
-            rebuild, args = group.__dask_postcompute__()
-            groups.append(rebuild(group_results, *args))
-
-        if coords_results:
-            rebuild, args = self.coords.__dask_postcompute__()
-            coords_group = rebuild(coords_results, *args)
-
-        return EOGroup(
-            self.name,
-            *variables,
-            coords=coords_group,
-            groups=groups,
-            dims=self._dims,
-            attrs=self._attrs,
-        )
-
-    def _dask_postpersist(self, dsk: Mapping, *, rename: Mapping[str, str] = None) -> "EOGroup":
-        from dask.highlevelgraph import HighLevelGraph
-        from dask.optimization import cull
-
-        variables = []
-
-        for v in self._variables.values():
-            if isinstance(dsk, HighLevelGraph):
-                # dask >= 2021.3
-                # __dask_postpersist__() was called by dask.highlevelgraph.
-                # Don't use dsk.cull(), as we need to prevent partial layers:
-                # https://github.com/dask/dask/issues/7137
-                layers = v.__dask_layers__()
-                if rename:
-                    layers = [rename.get(k, k) for k in layers]
-                dsk2 = dsk.cull_layers(layers)
-            elif rename:  # pragma: nocover
-                # At the moment of writing, this is only for forward compatibility.
-                # replace_name_in_key requires dask >= 2021.3.
-                from dask.base import flatten, replace_name_in_key
-
-                keys = [replace_name_in_key(k, rename) for k in flatten(v.__dask_keys__())]
-                dsk2, _ = cull(dsk, keys)
-            else:
-                # __dask_postpersist__() was called by dask.optimize or dask.persist
-                dsk2, _ = cull(dsk, v.__dask_keys__())
-
-            rebuild, args = v.__dask_postpersist__()
-            # rename was added in dask 2021.3
-            kwargs = {"rename": rename} if rename else {}
-            variables.append(rebuild(dsk2, *args, **kwargs))
-
-        return EOGroup(
-            self.name,
-            *variables,
-            # coords=coords,
-            # groups=groups,
-            attrs=self._attrs,
-            dims=self.dims,
-        )
-
-    def _ipython_key_completions_(self):
-        return self.keys()
+    def __contains__(self, key: str) -> bool:
+        return (key in self._items) or (self._store is not None and key in self._store.iter(self._path))
 
 
-@dataclass
-class MetaData:
-    path: Union[str, PathLike]
+class EOProduct(MutableMapping[str, EOGroup]):
+    """"""
 
+    MANDATORY_FIELD = ("measurements", "coordinates", "attributes")
 
-class EOProduct(EOProperties, MutableMapping[str, EOGroup], DaskMethodsMixin):
-    """Earth Observation Product
+    def __init__(self, name: str, store_or_path_url: Optional[Union[str, EOProductStore]] = None) -> None:
+        self._name: str = name
+        self._groups: dict[str, EOGroup] = {}
+        self._store: Optional[EOProductStore] = None
+        self.__set_store(store_or_path_url=store_or_path_url)
 
-    Represent the top group level, called Product.
+    def __set_store(self, store_or_path_url: Optional[Union[str, EOProductStore]] = None) -> None:
+        from .store.zarr import EOZarrStore
 
-    Parameters
-    ----------
-    name: str
-        product name
-    coords: EOGroup
-        coordinates associated to this product
-    *args: EOGroup
-        sub EOGroup
-    group: Iterable[EOGroup], optional
-        sub EOGroups, like args
-    attrs: MutableMapping[str, Any]
-        Attribute key, value
-    """
-
-    __slots__ = ("_name", "_groups", "_coords", "_attrs", "_metadata")
-
-    def __types__(self):
-        self._name: str
-        self._groups: MutableMapping[str, EOGroup]
-        self._coords: EOGroup
-        self._attrs: MutableMapping[str, Any]
-        self._metadatas: Optional[Iterable[MetaData]] = None
-
-    def __init__(
-        self,
-        name: str,
-        coords: EOGroup,
-        *args: EOGroup,
-        groups: Optional[Iterable[EOGroup]] = None,
-        attrs: Optional[MutableMapping[str, Any]] = None,
-        metadatas: Optional[Iterable[MetaData]] = None,
-    ) -> None:
-        self.__types__()
-        self._name = name
-
-        self._coords = coords
-        self._coords.parent = self
-
-        groups = [*args, *(groups or [])]
-        self._groups = {}
-        for group in groups:
-            self[group.name] = group
-
-        self._attrs = {}
-        self._attrs.update(attrs or {})
-
-        self._metadatas = tuple(metadata for metadata in (metadatas or []))
+        if isinstance(store_or_path_url, str):
+            self._store = EOZarrStore(store_or_path_url)
+        elif isinstance(store_or_path_url, EOProductStore):
+            self._store = store_or_path_url
+        elif store_or_path_url is not None:
+            raise TypeError(f"{type(store_or_path_url)} can't be used to instantiate EOProductStore.")
 
     def __getitem__(self, key: str) -> EOGroup:
-        return self._groups[key]
+        return self._get_group(key)
 
     def __setitem__(self, key: str, value: EOGroup) -> None:
         self._groups[key] = value
-        value.parent = self
+
+    def __iter__(self) -> Iterator[str]:
+        if self._store is not None:
+            for key in self._store:  # pyre-ignore[16]
+                if key not in self._groups:
+                    yield key
+        yield from self._groups
 
     def __delitem__(self, key: str) -> None:
-        del self._groups[key]
+        if key in self._groups:
+            del self._groups[key]
+        if self._store and key in self._store:
+            del self._store[key]
 
     def __len__(self) -> int:
-        return len(self._groups)
+        keys = set(self._groups)
+        if self._store is not None:
+            keys |= set(self._store)
+        return len(keys)
 
-    def __iter__(self) -> Iterator[EOGroup]:
-        return iter(self._groups.values())
+    def __getattr__(self, attr: str) -> EOGroup:
+        return self[attr]
 
-    def __str__(self):
+    def __contains__(self, key: str) -> bool:
+        return (key in self._groups) or (self._store is not None and key in self._store)
+
+    def _get_group(self, group_name: str) -> EOGroup:
+        """find and return eogroup from the given key.
+
+        if store is defined and key not already loaded in this group,
+        data is loaded from it.
+        Parameters
+        ----------
+        key: str
+            name of the eogroup
+        """
+        group = self._groups.get(group_name)
+        if group is None:
+            if self._store is None:
+                raise KeyError(f"Invalide EOGroup name: {group_name}")
+            name, relative_path, dataset, attrs = self._store[group_name]
+            group = EOGroup(name, self, relative_path=relative_path, dataset=dataset, attrs=attrs)
+            self[group_name] = group
+        return group
+
+    def add_group(self, name: str) -> EOGroup:
+        """Construct and add a eogroup to this product
+
+        if store is defined and open, the group it's directly write by the store.
+        Parameters
+        ----------
+        name: str
+            name of the future group
+        Returns
+        -------
+        EOGroup
+            newly created EOGroup
+        """
+        group = EOGroup(name, self, relative_path=[])
+        self[name] = group
+        if self._store is not None and self._store.status == StorageStatus.OPEN:
+            self._store.add_group(name)
+        return group
+
+    @property
+    def name(self) -> str:
+        """name of the product"""
+        return self._name
+
+    def __str__(self) -> str:
         return self.__repr__()
 
     def __repr__(self) -> str:
         return f"[EOProduct]{hex(id(self))}"
 
-    def _repr_html_(self):
+    def _repr_html_(self) -> str:
         return renderer("product.html", product=self)
 
-    @property
-    def attrs(self) -> MutableMapping[str, Any]:
+    def _ipython_key_completions_(self) -> list[str]:
+        return [key for key in self.keys()]
+
+    def open(
+        self, *, store_or_path_url: Optional[Union[EOProductStore, str]] = None, mode: str = "r", **kwargs: Any
+    ) -> "EOProduct":
+        """setup the store to be readable or writable
+
+        if store_or_path_url is given, the store is overwrite by the new one.
+
+        Parameters
+        ----------
+        store_or_path_url: EOProductStore or str, optional
+            the new store or a path url the target file system
+        mode: str, optional
+            mode to open the store
+        **kwargs: Any
+            extra kwargs to open the store
         """
-        MutableMapping[str, Any]: Dictionary storing arbitrary metadata with this object.
+        if store_or_path_url:
+            self.__set_store(store_or_path_url=store_or_path_url)
+        if self._store is None:
+            raise StoreNotDefinedError("Store must be defined")
+        self._store.open(mode=mode, **kwargs)
+        return self
+
+    def load(self) -> None:
+        """load all the product in memory"""
+        for key in self._store:
+            if key not in self._groups:
+                ...
+
+    def write(self) -> None:
         """
-        return self._attrs
+        write non synchronized subgroups, variables to the store
 
-    @property
-    def coords(self) -> EOGroup:
+        the store must be opened to work
+        See Also
+        --------
+        EOGroup.open
         """
-        EOGroup: coordinates representation of this EOProduct
+        if self._store is None:
+            raise StoreNotDefinedError("Store must be defined")
+        self.validate()
+        for name, group in self._groups.items():
+            if name not in self._store:  # pyre-ignore[58]
+                self._store.add_group(name)  # pyre-ignore[16]
+            group.write()
+
+    def is_valid(self) -> bool:
+        """check if the product is a valid eopf product
+        See Also
+        --------
+        EOProduct.validate"""
+        return all(key in self for key in self.MANDATORY_FIELD)
+
+    def validate(self) -> None:
+        """check if the product is a valid eopf product, raise an error if is not a valid one
+
+        See Also
+        --------
+        EOProduct.is_valid
         """
-        return self._coords
+        if not self.is_valid():
+            raise InvalidProductError(f"Invalid product {self}, missing mandatory groups.")
 
-    @property
-    def dims(self) -> tuple[str]:
-        """
-        tuple: Empty tuple, an EOProduct does'nt have dimensions
-        """
-        return tuple()
+    def __enter__(self) -> "EOProduct":
+        return self
 
-    @property
-    def metadatas(self) -> Optional[MetaData]:
-        return self._metadata
-
-    @property
-    def name(self) -> str:
-        """str: Name of this object"""
-        return self._name
-
-    @property
-    def parent(self) -> None:
-        """
-        As top level, EOProduct does'nt have parent
-        """
-        return None
-
-    def keys(self) -> KeysView["EOProduct"]:
-        return self._groups.keys()
-
-    def values(self) -> KeysView["EOProduct"]:
-        return self._groups.values()
-
-    def __dask_tokenize__(self):
-        from dask.base import normalize_token
-
-        return normalize_token((type(self), self._groups, self._coords.name, self._attrs))
-
-    def __dask_graph__(self):
-        graphs = (v.__dask_graph__() for v in self._groups.values())
-        graphs = [v for v in graphs if v is not None]
-        coords_graph = self.coords.__dask_graph__()
-        if coords_graph:
-            graphs.append(coords_graph)
-        if not graphs:
-            return None
-
-        from dask.highlevelgraph import HighLevelGraph
-
-        return HighLevelGraph.merge(*graphs)
-
-    def __dask_keys__(self):
-        keys = [g.__dask_keys__() for g in self._groups.values()]
-        keys.append(self.coords.__dask_keys__())
-        return keys
-
-    def __dask_layers__(self):
-        return sum(
-            self.__dask_keys__(),
-            (),
-        )
-
-    @property
-    def __dask_optimize__(self):
-        import dask.array as da
-
-        return da.Array.__dask_optimize__
-
-    @property
-    def __dask_scheduler__(self):
-        import dask.array as da
-
-        return da.Array.__dask_scheduler__
-
-    def __dask_postcompute__(self):
-        return self._dask_postcompute, ()
-
-    def __dask_postpersist__(self):
-        return self._dask_postpersist, ()
-
-    def _dask_postcompute(self, results: Iterable[EOVariable]) -> "EOProduct":
-        groups = []
-        coords = None
-
-        for result in it.product(results):
-
-            if (name := result.name) in self._groups:
-                g = self._groups.get(name)
-                rebuild, args = g.__dask_postcompute__()
-                groups.append(rebuild(result, *args))
-            else:
-                if (name := result.name) == self.coords.name:
-                    rebuild, args = self.coords.__dask_postcompute__()
-                    coords = rebuild(result, *args)
-
-        return EOProduct(
-            self.name,
-            *groups,
-            coords=coords,
-            attrs=self._attrs,
-        )
-
-    def _dask_postpersist(self, dsk: Mapping, *, rename: Mapping[str, str] = None) -> "EOGroup":
-        from dask.highlevelgraph import HighLevelGraph
-        from dask.optimization import cull
-
-        groups = []
-
-        for v in self._groups.values():
-            if isinstance(dsk, HighLevelGraph):
-                # dask >= 2021.3
-                # __dask_postpersist__() was called by dask.highlevelgraph.
-                # Don't use dsk.cull(), as we need to prevent partial layers:
-                # https://github.com/dask/dask/issues/7137
-                layers = v.__dask_layers__()
-                if rename:
-                    layers = [rename.get(k, k) for k in layers]
-                dsk2 = dsk.cull_layers(layers)
-            elif rename:  # pragma: nocover
-                # At the moment of writing, this is only for forward compatibility.
-                # replace_name_in_key requires dask >= 2021.3.
-                from dask.base import flatten, replace_name_in_key
-
-                keys = [replace_name_in_key(k, rename) for k in flatten(v.__dask_keys__())]
-                dsk2, _ = cull(dsk, keys)
-            else:
-                # __dask_postpersist__() was called by dask.optimize or dask.persist
-                dsk2, _ = cull(dsk, v.__dask_keys__())
-
-            rebuild, args = v.__dask_postpersist__()
-            # rename was added in dask 2021.3
-            kwargs = {"rename": rename} if rename else {}
-            groups.append(rebuild(dsk2, *args, **kwargs))
-
-        return EOGroup(
-            self.name,
-            *groups,
-            # coords=coords,
-            attrs=self._attrs,
-        )
-
-    def _ipython_key_completions_(self):
-        return self.keys()
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_value: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> None:
+        if self._store is None:
+            raise StoreNotDefinedError("Store must be defined")
+        self._store.close()

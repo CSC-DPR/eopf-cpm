@@ -1,10 +1,11 @@
 import os
 from pathlib import Path
+from typing import Any
 
 from jinja2 import Environment, FileSystemLoader
 
 
-def renderer(template_name, **parameters):
+def renderer(template_name: str, **parameters: Any) -> str:
     dir_path = Path(__file__).resolve().parent
     file_loader = FileSystemLoader(os.path.join(dir_path, "templates"))
     env = Environment(loader=file_loader, autoescape=True)

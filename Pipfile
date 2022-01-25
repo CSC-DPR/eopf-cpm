@@ -25,6 +25,7 @@ jupyter-sphinx = "0.3.2"
 pre-commit = "2.16.0"
 bandit = "1.7.1"
 jinja2 = "2.11.3"
+pyfakefs = "===4.5.4"
 
 [requires]
 python_version = "3.9"

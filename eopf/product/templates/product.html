@@ -9,9 +9,12 @@
 
 {% block sections %}
     <li class="eopf-section-item">
-    {% with group=product.coords, class_name="coords"  %}
-        {% include "group.html" %}
-    {% endwith %}
+    {% if "coordinates" in product %}
+        {% with group=product.coordinates, class_name="coords"  %}
+            {% include "group.html" %}
+        {% endwith %}
+    {%endif%}
+
     </li>
     {% for group in product %}
     <li class="eopf-section-item">
