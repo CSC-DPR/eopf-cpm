@@ -26,3 +26,4 @@ dependencies:
     - yummy-sphinx-theme==0.1.1
     - jinja2==2.11.3
     - ipython==7.30.0
+    - isort==5.10.1
