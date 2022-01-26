@@ -3,7 +3,7 @@ from pyfakefs.fake_filesystem import FakeFilesystem
 
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError, StoreNotOpenError
 from eopf.product.conveniences import init_product
-from eopf.product.core import EOProduct
+from eopf.product.core import EOGroup, EOProduct
 
 
 @pytest.mark.unit
@@ -60,6 +60,16 @@ def test_product_must_have_mandatory_group(fs: FakeFilesystem):
 
     product.validate()
     assert product.is_valid()
+
+
+@pytest.mark.unit
+def test_add_group_hierarchy_from_path(fs: FakeFilesystem):
+    product = EOProduct("product_name")
+    assert product._store is None, "store must be None"
+
+    product.add_group("a/b/c")
+    assert isinstance(product.a.b.c, EOGroup)
+    assert product["a/b/c"].name == "c"
 
 
 @pytest.mark.usecase
