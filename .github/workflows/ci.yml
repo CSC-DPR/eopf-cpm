@@ -89,6 +89,10 @@ jobs:
         run: |
           mamba env update -f $CONDA_ENV_FILE
 
+      - name: update pip
+        run: |
+          python -m pip -U pip
+
       - name: Install eopf-cpm
         run: |
           python -m pip install --no-deps -e .
