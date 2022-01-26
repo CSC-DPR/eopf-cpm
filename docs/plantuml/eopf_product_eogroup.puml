@@ -15,7 +15,7 @@ package "eopf.product" {
         variables(self) -> Iterator[EOGroup]: like __iter__ but over EOVariable
         sel(): can be used only by final groups -> xarray.dataset
         isel(): can be used only by final groups -> xarray.dataset
-       
+
 
         __ Property __
         name: str

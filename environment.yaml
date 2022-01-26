@@ -20,6 +20,7 @@ dependencies:
   - fsspec=2021.11.1
   - zarr=2.10.3
   - pyfakefs=4.5.4
+  - mypy=0.931
   - pip
   - pip:
     - pyre-check==0.9.8
