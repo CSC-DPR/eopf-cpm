@@ -29,7 +29,11 @@ jobs:
 
       - name: install deps
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
-        run: pipenv install --deploy --dev
+        run: pipenv install --dev
+
+      - name: Install eopf-cpm
+        run: |
+          pipenv run pip install --no-deps -e .
 
       - name: Run tests
         run: pipenv run pytest
