@@ -19,7 +19,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install pipenv
-        run: python -m pip install -U pipenv
+        run: python -m pip install -U pipenv pip
 
       - id: cache-pipenv
         uses: actions/cache@v1
@@ -51,7 +51,10 @@ jobs:
         run: pipenv run black --check
 
       - name: security issues
-        run: pipenv run bandit -c bandit.yml
+        run: pipenv run bandit -c bandit.yml eopf
+
+      - name: typing
+        run: pipenv run mypy eopf
 
   conda:
     runs-on: ubuntu-latest
@@ -91,7 +94,7 @@ jobs:
 
       - name: update pip
         run: |
-          python -m pip -U pip
+          python -m pip install -U pip
 
       - name: Install eopf-cpm
         run: |
@@ -113,4 +116,7 @@ jobs:
         run: python -m black --check
 
       - name: security issues
-        run: python -m bandit -c bandit.yml
+        run: python -m bandit -c bandit.yml eopf
+
+      - name: typing
+        run: python -m mypy eopf
