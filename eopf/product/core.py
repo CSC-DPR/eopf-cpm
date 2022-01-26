@@ -382,9 +382,11 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
 
         if dataset is None:
             dataset = xarray.Dataset()
+        if not isinstance(dataset, xarray.Dataset):
+            raise TypeError("dataset parameters must be a xarray.Dataset instance")
 
+        self._dataset = dataset
         self._relative_path: tuple[str, ...] = tuple(relative_path)
-        self._dataset: xarray.Dataset = dataset
         self._product: EOProduct = weakref.proxy(product) if not isinstance(product, weakref.ProxyType) else product
         self._items: dict[str, "EOGroup"] = {}
         self._attrs = attrs or dict()
@@ -405,6 +407,10 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
         if key in self._dataset:
             return EOVariable(key, self._dataset[key], self._product, relative_path=[*self._relative_path, self._name])
 
+        subkey = None
+        if "/" in key:
+            key, _, subkey = key.partition("/")
+
         item: EOGroup
         if key not in self._items and self._store is None:
             raise KeyError(f"Invalide EOGroup item name {key}")
@@ -414,6 +420,8 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
         else:
             item = self._items[key]
         self[key] = item
+        if subkey is not None:
+            return item[subkey]
         return item
 
     def __setitem__(self, key: str, value: Union[EOVariable, "EOGroup"]) -> None:
@@ -435,7 +443,6 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
     def __iter__(self) -> Iterator[str]:
         if self._store is not None:
             for key in self._store.iter(self._path):  # pyre-ignore[16]
-                # print(f'{self._store.url=} {self._path=} {key=} || {self._store[self._path]}')
                 if key not in self._items and key not in self._dataset:
                     yield key
         if self._dataset is not None:
@@ -541,10 +548,16 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
             newly created EOGroup
         """
         relative_path = [*self._relative_path, self.name]
+        keys = None
+        if "/" in name:
+            name, _, keys = name.partition("/")
         group = EOGroup(name, self._product, relative_path=relative_path)
         self[name] = group
         if self._store is not None and self._store.status == StorageStatus.OPEN:
             self._store.add_group(name, relative_path=relative_path)
+
+        if keys is not None:
+            group = self[name].add_group(keys)
         return group
 
     def add_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> EOVariable:
@@ -592,7 +605,11 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
         return [key for key in self.keys()]
 
     def __contains__(self, key: str) -> bool:
-        return (key in self._items) or (self._store is not None and key in self._store.iter(self._path))
+        return (
+            (key in self._items)
+            or (key in self._dataset)
+            or (self._store is not None and key in self._store.iter(self._path))
+        )
 
 
 class EOProduct(MutableMapping[str, EOGroup]):
@@ -659,6 +676,11 @@ class EOProduct(MutableMapping[str, EOGroup]):
         key: str
             name of the eogroup
         """
+
+        subgroup_name = None
+        if "/" in group_name:
+            group_name, _, subgroup_name = group_name.partition("/")
+
         group = self._groups.get(group_name)
         if group is None:
             if self._store is None:
@@ -666,6 +688,9 @@ class EOProduct(MutableMapping[str, EOGroup]):
             name, relative_path, dataset, attrs = self._store[group_name]
             group = EOGroup(name, self, relative_path=relative_path, dataset=dataset, attrs=attrs)
             self[group_name] = group
+
+        if subgroup_name is not None:
+            return group[subgroup_name]
         return group
 
     def add_group(self, name: str) -> EOGroup:
@@ -681,10 +706,15 @@ class EOProduct(MutableMapping[str, EOGroup]):
         EOGroup
             newly created EOGroup
         """
+        keys = None
+        if "/" in name:
+            name, _, keys = name.partition("/")
         group = EOGroup(name, self, relative_path=[])
         self[name] = group
         if self._store is not None and self._store.status == StorageStatus.OPEN:
             self._store.add_group(name)
+        if keys is not None:
+            group = self[name].add_group(keys)
         return group
 
     @property

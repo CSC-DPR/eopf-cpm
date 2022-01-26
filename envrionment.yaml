@@ -19,6 +19,7 @@ dependencies:
   - bandit=1.7.1
   - fsspec=2021.11.1
   - zarr=2.10.3
+  - pyfakefs=4.5.4
   - pip
   - pip:
     - pyre-check==0.9.8
