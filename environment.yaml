@@ -1,6 +1,7 @@
 name: eopf-dev
 channels:
   - conda-forge
+  - anaconda
 dependencies:
   - bottleneck=1.3.2
   - dask=2021.11.2
@@ -20,7 +21,7 @@ dependencies:
   - zarr=2.10.3
   - pyfakefs=4.5.4
   - mypy=0.931
-  - pip
+  - pip=21.2.4
   - pip:
     - pyre-check==0.9.8
     - yummy-sphinx-theme==0.1.1
