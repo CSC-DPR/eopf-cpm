@@ -81,13 +81,8 @@ jobs:
         with:
           environment-file: environment.yaml
           activate-environment: eopf-dev
-          auto-activate-base: false
           python-version: ${{ matrix.python-version }}
           mamba-version: "*"
-
-      - name: Install conda dependencies
-        run: |
-          mamba env update -f environment.yaml
 
       - name: update pip
         run: pip install -U pip
