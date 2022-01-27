@@ -21,7 +21,7 @@ dependencies:
   - zarr=2.10.3
   - pyfakefs=4.5.4
   - mypy=0.931
-  - pip=21.2.4
+  - pip
   - pip:
     - pyre-check==0.9.8
     - yummy-sphinx-theme==0.1.1
