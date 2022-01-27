@@ -4,7 +4,7 @@ on: [pull_request]
 jobs:
   pipenv:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     strategy:
       matrix:
         python-version: ['3.9']
@@ -103,6 +103,9 @@ jobs:
 
       - name: security issues
         run: python -m bandit -c bandit.yml eopf
+
+      - name: typing
+        run: python -m mypy eopf
 
   build:
     runs-on: ubuntu-latest
