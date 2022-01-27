@@ -84,8 +84,12 @@ jobs:
           auto-activate-base: false
           python-version: ${{ matrix.python-version }}
 
-      - name: activate conda
-        run: conda activate eopf-dev
+      - name: Install conda dependencies
+        run: |
+          mamba env update -f environment.yaml
+
+      - name: update pip
+        run: pip install -U pip
 
       - name: Install eopf-cpm
         run: pip install --no-deps -e .
