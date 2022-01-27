@@ -1,159 +1,180 @@
 import operator
-
+from typing import Any, Callable, Generic, Optional, TypeVar
 import xarray as xr
 
 
-class EOVariableOperatorsMixin:
-    __slots__ = ()
+EOV_TYPE = TypeVar("EOV_TYPE", bound="EOVariableOperatorsMixin[Any]")
+# Type of EOVariable
 
-    def __apply_binary_ops__(self, other, ops, reflexive=False):
+
+class EOVariableOperatorsMixin(Generic[EOV_TYPE]):
+    """
+    Provide unary and binary operations on the _data of it's subtype EOV_TYPE.
+    All inheriting class must define the following attributes:
+    Attributes
+    ----------
+    _data : xarray.DataArray
+    """
+    __slots__ = ()
+    
+    def __apply_binary_ops__(self: EOV_TYPE, other: object, ops: Callable[[Any, Any], Any],
+                             reflexive: Optional[bool] = False) -> EOV_TYPE:
         if isinstance(other, EOVariableOperatorsMixin):
-            other_value = other._data
+            other_value = other._data  # type: ignore[has-type]
         else:
             other_value = other
-        return type(self)(ops(self._data, other_value) if not reflexive else ops(other_value, self._data))
+        data = self._data  # type: ignore[has-type]
+        # To remove the ignore[has-type] we must bound EOV_TYPE to a type defining _data (or move _data to this class)
 
-    def __add__(self, other):
+        # Ideally would see a constructor of the bound of EOV_TYPE. Or add # type: ignore[call-arg]
+        return type(self)(ops(data, other_value) if not reflexive else ops(other_value, data))
+
+    def __add__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.add)
 
-    def __sub__(self, other):
+    def __sub__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.sub)
 
-    def __mul__(self, other):
+    def __mul__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.mul)
 
-    def __pow__(self, other):
+    def __pow__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.pow)
 
-    def __truediv__(self, other):
+    def __truediv__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.truediv)
 
-    def __floordiv__(self, other):
+    def __floordiv__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.floordiv)
 
-    def __mod__(self, other):
+    def __mod__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.mod)
 
-    def __and__(self, other):
+    def __and__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.and_)
 
-    def __xor__(self, other):
+    def __xor__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.xor)
 
-    def __or__(self, other):
+    def __or__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.or_)
 
-    def __lt__(self, other):
+    def __lt__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.lt)
 
-    def __le__(self, other):
+    def __le__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.le)
 
-    def __gt__(self, other):
+    def __gt__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.gt)
 
-    def __ge__(self, other):
+    def __ge__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.ge)
 
-    def __eq__(self, other):
+    def __eq__(self: EOV_TYPE, other: Any) -> EOV_TYPE:  # type: ignore[override]
         return self.__apply_binary_ops__(other, operator.eq)
 
-    def __ne__(self, other):
+    def __ne__(self: EOV_TYPE, other: Any) -> EOV_TYPE:  # type: ignore[override]
         return self.__apply_binary_ops__(other, operator.ne)
 
-    def __radd__(self, other):
+    def __radd__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.add, reflexive=True)
 
-    def __rsub__(self, other):
+    def __rsub__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.sub, reflexive=True)
 
-    def __rmul__(self, other):
+    def __rmul__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.mul, reflexive=True)
 
-    def __rpow__(self, other):
+    def __rpow__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.pow, reflexive=True)
 
-    def __rtruediv__(self, other):
+    def __rtruediv__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.truediv, reflexive=True)
 
-    def __rfloordiv__(self, other):
+    def __rfloordiv__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.floordiv, reflexive=True)
 
-    def __rmod__(self, other):
+    def __rmod__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.mod, reflexive=True)
 
-    def __rand__(self, other):
+    def __rand__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.and_, reflexive=True)
 
-    def __rxor__(self, other):
+    def __rxor__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.xor, reflexive=True)
 
-    def __ror__(self, other):
+    def __ror__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.or_, reflexive=True)
 
-    def __apply_inplace_ops__(self, other, ops):
+    def __apply_inplace_ops__(self: EOV_TYPE, other: Any, ops: Callable[[Any, Any], Any]) -> EOV_TYPE:
         if isinstance(other, EOVariableOperatorsMixin):
-            other_value = other._data
+            other_value = other._data  # type: ignore[has-type]
         else:
             other_value = other
-        self._data = ops(self._data, other_value)
+
+        data = self._data  # type: ignore[has-type]
+        # To remove the ignore[has-type] we must bound EOV_TYPE to a type defining _data (or move _data to this class)
+
+        self._data = ops(data, other_value)
         return self
 
-    def __iadd__(self, other):
+    def __iadd__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_inplace_ops__(other, operator.iadd)
 
-    def __isub__(self, other):
+    def __isub__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_inplace_ops__(other, operator.isub)
 
-    def __imul__(self, other):
+    def __imul__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_inplace_ops__(other, operator.imul)
 
-    def __ipow__(self, other):
+    def __ipow__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_inplace_ops__(other, operator.ipow)
 
-    def __itruediv__(self, other):
+    def __itruediv__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_inplace_ops__(other, operator.itruediv)
 
-    def __ifloordiv__(self, other):
+    def __ifloordiv__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_inplace_ops__(other, operator.ifloordiv)
 
-    def __imod__(self, other):
+    def __imod__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_inplace_ops__(other, operator.imod)
 
-    def __iand__(self, other):
+    def __iand__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_inplace_ops__(other, operator.iand)
 
-    def __ixor__(self, other):
+    def __ixor__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_inplace_ops__(other, operator.ixor)
 
-    def __ior__(self, other):
+    def __ior__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_inplace_ops__(other, operator.ior)
 
-    def __apply_unary_ops__(self, ops, *args, **kwargs):
+    def __apply_unary_ops__(self: EOV_TYPE, ops: Callable[[Any], Any], *args: Any, **kwargs: Any) -> EOV_TYPE:
+        # Ideally would see a constructor of the bound of EOV_TYPE.  Or add # type: ignore[call-arg]
         return type(self)(ops(self._data), *args, **kwargs)
 
-    def __neg__(self):
+    def __neg__(self: EOV_TYPE) -> EOV_TYPE:
         return self.__apply_unary_ops__(operator.neg)
 
-    def __pos__(self):
+    def __pos__(self: EOV_TYPE) -> EOV_TYPE:
         return self.__apply_unary_ops__(operator.pos)
 
-    def __abs__(self):
+    def __abs__(self: EOV_TYPE) -> EOV_TYPE:
         return self.__apply_unary_ops__(operator.abs)
 
-    def __invert__(self):
+    def __invert__(self: EOV_TYPE) -> EOV_TYPE:
         return self.__apply_unary_ops__(operator.invert)
 
-    def round(self, *args, **kwargs):
+    def round(self: EOV_TYPE, *args:Any, **kwargs:Any) -> EOV_TYPE:
         return self.__apply_unary_ops__(self._data.round_, *args, **kwargs)
 
-    def argsort(self, *args, **kwargs):
+    def argsort(self: EOV_TYPE, *args:Any, **kwargs:Any) -> EOV_TYPE:
         return self.__apply_unary_ops__(self._data.argsort, *args, **kwargs)
 
-    def conj(self, *args, **kwargs):
+    def conj(self: EOV_TYPE, *args:Any, **kwargs:Any) -> EOV_TYPE:
         return self.__apply_unary_ops__(self._data.conj, *args, **kwargs)
 
-    def conjugate(self, *args, **kwargs):
+    def conjugate(self: EOV_TYPE, *args:Any, **kwargs:Any) -> EOV_TYPE:
         return self.__apply_unary_ops__(self._data.conjugate, *args, **kwargs)
 
     __add__.__doc__ = operator.add.__doc__

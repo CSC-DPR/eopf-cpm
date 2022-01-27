@@ -23,7 +23,7 @@ from .mixins import EOVariableOperatorsMixin
 from .store.abstract import EOProductStore, StorageStatus
 
 
-class EOVariable(EOVariableOperatorsMixin):
+class EOVariable(EOVariableOperatorsMixin["EOVariable"]):
     """Wrapper around xarray.DataArray to provide Multi dimensional Array (Tensor)
     in earth observation context
 
