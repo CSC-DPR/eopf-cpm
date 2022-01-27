@@ -84,8 +84,8 @@ jobs:
           auto-activate-base: false
           python-version: ${{ matrix.python-version }}
 
-      - name: Update pip
-        run: pip install -U pip
+      - name: activate conda
+        run: conda activate eopf-dev
 
       - name: Install eopf-cpm
         run: pip install --no-deps -e .
