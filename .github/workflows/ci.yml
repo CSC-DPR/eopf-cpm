@@ -83,6 +83,7 @@ jobs:
           activate-environment: eopf-dev
           auto-activate-base: false
           python-version: ${{ matrix.python-version }}
+          mamba-version: "*"
 
       - name: Install conda dependencies
         run: |
