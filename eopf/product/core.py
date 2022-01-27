@@ -66,7 +66,7 @@ class EOVariable(EOVariableOperatorsMixin):
         return join_path(*self._relative_path, self._name, sep=self._store.sep)
 
     @property
-    def _store(self):
+    def _store(self) -> Optional[EOProductStore]:
         """direct accessor to the product store"""
         return self._product._store
 
@@ -88,7 +88,10 @@ class EOVariable(EOVariableOperatorsMixin):
     @property
     def coordinates(self) -> "EOGroup":
         """Coordinates of this variable"""
-        return self._product.coordinates[self._path]
+        coord = self._product.coordinates[self._path]
+        if not isinstance(coord, EOGroup):
+            raise TypeError(f"EOVariable coordinates type must be EOGroup instead of {type(coord)}.")
+        return coord
 
     @property
     def chunksizes(self) -> Mapping[Any, tuple[int, ...]]:
@@ -475,8 +478,11 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
 
     @property
     def coordinates(self) -> "EOGroup":
-        """Coordinates of this variable"""
-        return self._product.coordinates[self._path]
+        """Coordinates of this group"""
+        coord = self._product.coordinates[self._path]
+        if not isinstance(coord, EOGroup):
+            raise TypeError(f"EOGroup coordinates type must be EOGroup instead of {type(coord)}.")
+        return coord
 
     @property
     def _store(self) -> Optional[EOProductStore]:
@@ -557,7 +563,8 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
             self._store.add_group(name, relative_path=relative_path)
 
         if keys is not None:
-            group = self[name].add_group(keys)
+            group = self[name].add_group(keys)  # type:ignore[union-attr]
+            # We juste created it, type shouldn't have changed.
         return group
 
     def add_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> EOVariable:
@@ -604,7 +611,7 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
     def _ipython_key_completions_(self) -> list[str]:
         return [key for key in self.keys()]
 
-    def __contains__(self, key: str) -> bool:
+    def __contains__(self, key: object) -> bool:
         return (
             (key in self._items)
             or (key in self._dataset)
@@ -663,7 +670,7 @@ class EOProduct(MutableMapping[str, EOGroup]):
             return self[attr]
         raise AttributeError(attr)
 
-    def __contains__(self, key: str) -> bool:
+    def __contains__(self, key: object) -> bool:
         return (key in self._groups) or (self._store is not None and key in self._store)
 
     def _get_group(self, group_name: str) -> EOGroup:
@@ -759,6 +766,8 @@ class EOProduct(MutableMapping[str, EOGroup]):
 
     def load(self) -> None:
         """load all the product in memory"""
+        if self._store is None:
+            raise StoreNotDefinedError("Store must be defined")
         for key in self._store:
             if key not in self._groups:
                 ...

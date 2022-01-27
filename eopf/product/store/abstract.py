@@ -176,7 +176,7 @@ class EOProductStore(MutableMapping[str, Any]):
         """
 
     @abstractmethod
-    def iter(self, path: str) -> Iterator[Any]:
+    def iter(self, path: str) -> Iterator[str]:
         """iter over the given path"""
 
     def __hash__(self) -> int:

@@ -4,7 +4,7 @@ from eopf.product import EOProduct
 from eopf.product.store.abstract import EOProductStore
 
 
-def init_product(product_name: str, *, store_or_path_url: Optional[Union[str, EOProductStore]] = None):
+def init_product(product_name: str, *, store_or_path_url: Optional[Union[str, EOProductStore]] = None) -> EOProduct:
     product = EOProduct(product_name, store_or_path_url=store_or_path_url)
 
     for group_name in product.MANDATORY_FIELD:

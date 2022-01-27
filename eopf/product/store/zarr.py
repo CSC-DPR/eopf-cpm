@@ -229,5 +229,7 @@ class EOZarrStore(EOProductStore):
             if not key.startswith(".zarr")
         )
 
-    def iter(self, path: str):
+    def iter(self, path: str) -> Iterator[str]:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
         return iter(self._root[path])
