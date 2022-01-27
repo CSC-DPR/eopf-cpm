@@ -362,7 +362,7 @@ class EOVariable(EOVariableOperatorsMixin["EOVariable"]):
         return self.__repr__()
 
     def __repr__(self) -> str:
-        return f"[EOVariable]{hex(id(self))}"
+        return f'{self._product!r} -> {"->".join(self._relative_path)} -> {self.name}'
 
     def _repr_html_(self) -> str:
         return renderer("variable.html", variable=self)
