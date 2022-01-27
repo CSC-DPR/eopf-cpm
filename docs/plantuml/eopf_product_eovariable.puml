@@ -65,6 +65,9 @@ package "eopf.product" {
         __ Field Member __
         _data: xarray.DataArray
         _store : EOProductStore
+        _relative_path: list[str], path from the product
+        _name: str
+        _product: EOProduct
 
         __Property__
         chunksize: Mapping of the chunks sizes over each dims
@@ -73,23 +76,11 @@ package "eopf.product" {
         name: str
         attrs: MutableMapping
         dims: tuple    ' this class will be used as set of functions
+        coordinates: coordinates from the eogroup coordinates in the product
     ' that giving access to the EOProducts
     ' just a design class and all methods should be available
     ' at the parent module level.
 
-        __ Dask methods __
-        compute(self)
-        persiste(self)
-        __dask_tokenize__(self)
-        __dask_graph__(self)
-        __dask_keys__(self)
-        __dask_layers__(self)
-        __dask_postcompute__(self)
-        __dask_postpersist__(self)
-        _dask_postcompute(self, results) -> EOVaribale
-        _dask_postpersist(self, dsk: Mapping, *[, rename]) -> EOVariable
-        [property] __dask_optimize__
-        [property] __dask_scheduler__
     }
 
     package store
