@@ -4,7 +4,7 @@ on: [pull_request]
 jobs:
   pipenv:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     strategy:
       matrix:
         python-version: ['3.9']
@@ -53,6 +53,9 @@ jobs:
       - name: security issues
         run: pipenv run bandit -c bandit.yml eopf
 
+      - name: typing
+        run: pipenv run mypy eopf
+
   conda:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -77,11 +80,13 @@ jobs:
         with:
           path: ~/conda_pkgs_dir
           key: ${{ runner.os }}-conda-py${{ matrix.python-version }}-${{ hashFiles('environment.yaml') }}
+
       - uses: conda-incubator/setup-miniconda@v2
         with:
           environment-file: environment.yaml
           activate-environment: eopf-dev
           mamba-version: "*"
+        if: steps.cache-conda.outputs.cache-hit != 'true'
 
       - name: Install eopf-cpm
         run: pip install --no-deps -e .
@@ -103,6 +108,9 @@ jobs:
 
       - name: security issues
         run: python -m bandit -c bandit.yml eopf
+
+      - name: typing
+        run: python -m mypy eopf
 
   build:
     runs-on: ubuntu-latest
