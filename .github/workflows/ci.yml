@@ -59,6 +59,9 @@ jobs:
   conda:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    defaults:
+      run:
+        shell: bash -l {0}
     strategy:
       matrix:
         python-version: ['3.9']
@@ -81,8 +84,10 @@ jobs:
         with:
           environment-file: environment.yaml
           activate-environment: eopf-dev
-          python-version: ${{ matrix.python-version }}
           mamba-version: "*"
+
+      - name: check python version
+        run: python --version
 
       - name: update pip
         run: pip install -U pip
