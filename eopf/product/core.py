@@ -385,6 +385,11 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
 
         if dataset is None:
             dataset = xarray.Dataset()
+        else:
+            for key in dataset:
+                if not isinstance(key, str):
+                    raise TypeError(f"The dataset key {str(key)} is type {type(key)} instead of str")
+            # It is supposed by EOGroup consumer that it's dataset only contain string keys.
         if not isinstance(dataset, xarray.Dataset):
             raise TypeError("dataset parameters must be a xarray.Dataset instance")
 
