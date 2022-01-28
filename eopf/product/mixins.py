@@ -16,7 +16,10 @@ class EOVariableOperatorsMixin(Generic[EOV_TYPE]):
     _data : xarray.DataArray
     """
     __slots__ = ()
-    
+
+    def _init_similar(self: EOV_TYPE, data: xr.DataArray) -> EOV_TYPE:
+        raise NotImplementedError
+
     def __apply_binary_ops__(self: EOV_TYPE, other: object, ops: Callable[[Any, Any], Any],
                              reflexive: Optional[bool] = False) -> EOV_TYPE:
         if isinstance(other, EOVariableOperatorsMixin):
@@ -26,8 +29,7 @@ class EOVariableOperatorsMixin(Generic[EOV_TYPE]):
         data = self._data  # type: ignore[has-type]
         # To remove the ignore[has-type] we must bound EOV_TYPE to a type defining _data (or move _data to this class)
 
-        # Ideally would see a constructor of the bound of EOV_TYPE. Or add # type: ignore[call-arg]
-        return type(self)(ops(data, other_value) if not reflexive else ops(other_value, data))
+        return self._init_similar(ops(data, other_value) if not reflexive else ops(other_value, data))
 
     def __add__(self: EOV_TYPE, other: Any) -> EOV_TYPE:
         return self.__apply_binary_ops__(other, operator.add)
@@ -150,8 +152,7 @@ class EOVariableOperatorsMixin(Generic[EOV_TYPE]):
         return self.__apply_inplace_ops__(other, operator.ior)
 
     def __apply_unary_ops__(self: EOV_TYPE, ops: Callable[[Any], Any], *args: Any, **kwargs: Any) -> EOV_TYPE:
-        # Ideally would see a constructor of the bound of EOV_TYPE.  Or add # type: ignore[call-arg]
-        return type(self)(ops(self._data), *args, **kwargs)
+        return self._init_similar(ops(self._data), *args, **kwargs)
 
     def __neg__(self: EOV_TYPE) -> EOV_TYPE:
         return self.__apply_unary_ops__(operator.neg)
