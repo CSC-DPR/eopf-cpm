@@ -1,7 +1,7 @@
 import operator
 from typing import Any, Callable, Generic, Optional, TypeVar
-import xarray as xr
 
+import xarray as xr
 
 EOV_TYPE = TypeVar("EOV_TYPE", bound="EOVariableOperatorsMixin[Any]")
 # Type of EOVariable
@@ -15,13 +15,18 @@ class EOVariableOperatorsMixin(Generic[EOV_TYPE]):
     ----------
     _data : xarray.DataArray
     """
+
     __slots__ = ()
 
     def _init_similar(self: EOV_TYPE, data: xr.DataArray) -> EOV_TYPE:
         raise NotImplementedError
 
-    def __apply_binary_ops__(self: EOV_TYPE, other: object, ops: Callable[[Any, Any], Any],
-                             reflexive: Optional[bool] = False) -> EOV_TYPE:
+    def __apply_binary_ops__(
+        self: EOV_TYPE,
+        other: object,
+        ops: Callable[[Any, Any], Any],
+        reflexive: Optional[bool] = False,
+    ) -> EOV_TYPE:
         if isinstance(other, EOVariableOperatorsMixin):
             other_value = other._data  # type: ignore[has-type]
         else:
@@ -166,16 +171,16 @@ class EOVariableOperatorsMixin(Generic[EOV_TYPE]):
     def __invert__(self: EOV_TYPE) -> EOV_TYPE:
         return self.__apply_unary_ops__(operator.invert)
 
-    def round(self: EOV_TYPE, *args:Any, **kwargs:Any) -> EOV_TYPE:
+    def round(self: EOV_TYPE, *args: Any, **kwargs: Any) -> EOV_TYPE:
         return self.__apply_unary_ops__(self._data.round_, *args, **kwargs)
 
-    def argsort(self: EOV_TYPE, *args:Any, **kwargs:Any) -> EOV_TYPE:
+    def argsort(self: EOV_TYPE, *args: Any, **kwargs: Any) -> EOV_TYPE:
         return self.__apply_unary_ops__(self._data.argsort, *args, **kwargs)
 
-    def conj(self: EOV_TYPE, *args:Any, **kwargs:Any) -> EOV_TYPE:
+    def conj(self: EOV_TYPE, *args: Any, **kwargs: Any) -> EOV_TYPE:
         return self.__apply_unary_ops__(self._data.conj, *args, **kwargs)
 
-    def conjugate(self: EOV_TYPE, *args:Any, **kwargs:Any) -> EOV_TYPE:
+    def conjugate(self: EOV_TYPE, *args: Any, **kwargs: Any) -> EOV_TYPE:
         return self.__apply_unary_ops__(self._data.conjugate, *args, **kwargs)
 
     __add__.__doc__ = operator.add.__doc__
