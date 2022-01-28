@@ -38,7 +38,7 @@ class EOZarrStore(EOProductStore):
     @property
     def map(self) -> Optional[fsspec.FSMap]:
         """FSMap accessor"""
-        return self._fs.map if self._fs is not None else None
+        return self._fs.map if self._fs is not None and hasattr(self._fs, "map") else None
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         """open the store in the given mode
@@ -213,6 +213,8 @@ class EOZarrStore(EOProductStore):
         relative_path: Iterable[str], optional
             list of all parents from root
         """
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
         dataset.to_zarr(store=join_path(self.url, *relative_path, name, sep=self.sep), mode="a")
 
     def has_variables(self, path: str) -> bool:
