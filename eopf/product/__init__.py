@@ -1,1 +1,1 @@
-from .core import EOProduct
+from .core import EOProduct as EOProduct

@@ -23,7 +23,7 @@ from .mixins import EOVariableOperatorsMixin
 from .store.abstract import EOProductStore, StorageStatus
 
 
-class EOVariable(EOVariableOperatorsMixin):
+class EOVariable(EOVariableOperatorsMixin["EOVariable"]):
     """Wrapper around xarray.DataArray to provide Multi dimensional Array (Tensor)
     in earth observation context
 
@@ -66,7 +66,7 @@ class EOVariable(EOVariableOperatorsMixin):
         return join_path(*self._relative_path, self._name, sep=self._store.sep)
 
     @property
-    def _store(self):
+    def _store(self) -> Optional[EOProductStore]:
         """direct accessor to the product store"""
         return self._product._store
 
@@ -88,7 +88,10 @@ class EOVariable(EOVariableOperatorsMixin):
     @property
     def coordinates(self) -> "EOGroup":
         """Coordinates of this variable"""
-        return self._product.coordinates[self._path]
+        coord = self._product.coordinates[self._path]
+        if not isinstance(coord, EOGroup):
+            raise TypeError(f"EOVariable coordinates type must be EOGroup instead of {type(coord)}.")
+        return coord
 
     @property
     def chunksizes(self) -> Mapping[Any, tuple[int, ...]]:
@@ -382,6 +385,11 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
 
         if dataset is None:
             dataset = xarray.Dataset()
+        else:
+            for key in dataset:
+                if not isinstance(key, str):
+                    raise TypeError(f"The dataset key {str(key)} is type {type(key)} instead of str")
+            # It is supposed by EOGroup consumer that it's dataset only contain string keys.
         if not isinstance(dataset, xarray.Dataset):
             raise TypeError("dataset parameters must be a xarray.Dataset instance")
 
@@ -446,7 +454,7 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
                 if key not in self._items and key not in self._dataset:
                     yield key
         if self._dataset is not None:
-            yield from self._dataset
+            yield from self._dataset  # type: ignore[misc]
         yield from self._items
 
     def __len__(self) -> int:
@@ -475,8 +483,11 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
 
     @property
     def coordinates(self) -> "EOGroup":
-        """Coordinates of this variable"""
-        return self._product.coordinates[self._path]
+        """Coordinates of this group"""
+        coord = self._product.coordinates[self._path]
+        if not isinstance(coord, EOGroup):
+            raise TypeError(f"EOGroup coordinates type must be EOGroup instead of {type(coord)}.")
+        return coord
 
     @property
     def _store(self) -> Optional[EOProductStore]:
@@ -557,7 +568,8 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
             self._store.add_group(name, relative_path=relative_path)
 
         if keys is not None:
-            group = self[name].add_group(keys)
+            group = self[name].add_group(keys)  # type:ignore[union-attr]
+            # We juste created it, type shouldn't have changed.
         return group
 
     def add_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> EOVariable:
@@ -604,15 +616,15 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
     def _ipython_key_completions_(self) -> list[str]:
         return [key for key in self.keys()]
 
-    def __contains__(self, key: str) -> bool:
+    def __contains__(self, key: object) -> bool:
         return (
             (key in self._items)
             or (key in self._dataset)
-            or (self._store is not None and key in self._store.iter(self._path))
+            or (self._store is not None and key in self._store.iter(self._path))  # type: ignore[operator]
         )
 
 
-class EOProduct(MutableMapping[str, EOGroup]):
+class EOProduct(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
     """"""
 
     MANDATORY_FIELD = ("measurements", "coordinates", "attributes")
@@ -633,10 +645,12 @@ class EOProduct(MutableMapping[str, EOGroup]):
         elif store_or_path_url is not None:
             raise TypeError(f"{type(store_or_path_url)} can't be used to instantiate EOProductStore.")
 
-    def __getitem__(self, key: str) -> EOGroup:
+    def __getitem__(self, key: str) -> Union[EOVariable, "EOGroup"]:
         return self._get_group(key)
 
-    def __setitem__(self, key: str, value: EOGroup) -> None:
+    def __setitem__(self, key: str, value: Union[EOVariable, "EOGroup"]) -> None:
+        if not isinstance(value, EOGroup):
+            raise NotImplementedError
         self._groups[key] = value
 
     def __iter__(self) -> Iterator[str]:
@@ -658,15 +672,15 @@ class EOProduct(MutableMapping[str, EOGroup]):
             keys |= set(self._store)
         return len(keys)
 
-    def __getattr__(self, attr: str) -> EOGroup:
+    def __getattr__(self, attr: str) -> Union[EOVariable, "EOGroup"]:
         if attr in self:
             return self[attr]
         raise AttributeError(attr)
 
-    def __contains__(self, key: str) -> bool:
+    def __contains__(self, key: object) -> bool:
         return (key in self._groups) or (self._store is not None and key in self._store)
 
-    def _get_group(self, group_name: str) -> EOGroup:
+    def _get_group(self, group_name: str) -> Union[EOVariable, "EOGroup"]:
         """find and return eogroup from the given key.
 
         if store is defined and key not already loaded in this group,
@@ -714,7 +728,7 @@ class EOProduct(MutableMapping[str, EOGroup]):
         if self._store is not None and self._store.status == StorageStatus.OPEN:
             self._store.add_group(name)
         if keys is not None:
-            group = self[name].add_group(keys)
+            group = self[name].add_group(keys)  # type:ignore[union-attr]
         return group
 
     @property
@@ -759,6 +773,8 @@ class EOProduct(MutableMapping[str, EOGroup]):
 
     def load(self) -> None:
         """load all the product in memory"""
+        if self._store is None:
+            raise StoreNotDefinedError("Store must be defined")
         for key in self._store:
             if key not in self._groups:
                 ...

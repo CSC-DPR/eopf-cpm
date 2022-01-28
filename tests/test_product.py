@@ -3,7 +3,7 @@ from pyfakefs.fake_filesystem import FakeFilesystem
 
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError, StoreNotOpenError
 from eopf.product.conveniences import init_product
-from eopf.product.core import EOGroup, EOProduct
+from eopf.product.core import EOGroup, EOProduct, EOVariable
 
 
 @pytest.mark.unit
@@ -16,7 +16,8 @@ def test_create_product_on_memory(fs: FakeFilesystem):
 
 @pytest.mark.unit
 def test_write_product_on_fs(fs: FakeFilesystem):
-    product = init_product("product_name", store_or_path_url="product_name")
+    product = init_product("product_name", store_or_path_url="file://product_name")
+    product.measurements.add_variable("a_variables")
 
     with product.open(mode="w"):
         product.write()
@@ -26,7 +27,7 @@ def test_write_product_on_fs(fs: FakeFilesystem):
 
 @pytest.mark.unit
 def test_cannot_write_without_open(fs: FakeFilesystem):
-    product = init_product("product_name", store_or_path_url="product_name")
+    product = init_product("product_name", store_or_path_url="file://product_name")
     assert product._store is not None, "store must be set"
 
     with pytest.raises(StoreNotOpenError):
@@ -40,10 +41,24 @@ def test_cannot_write_without_fs(fs: FakeFilesystem):
     product = init_product("product_name")
     assert product._store is None, "store must be None"
 
-    with pytest.raises(StoreNotDefinedError), product.open(mode="w"):
+    with pytest.raises(StoreNotDefinedError):
+        product.open(mode="w")
+
+    with pytest.raises(StoreNotDefinedError):
         product.write()
 
+    with pytest.raises(StoreNotDefinedError):
+        product.load()
+
     assert not (fs.isdir(product.name) or fs.isfile(product.name)), "Product must not create any thing on fs"
+
+    product.add_group("a_subgroup")
+
+    with pytest.raises(StoreNotDefinedError):
+        product.a_subgroup.write()
+
+    with pytest.raises(StoreNotDefinedError):
+        product.a_subgroup._relative_key("sub_key")
 
 
 @pytest.mark.unit
@@ -84,3 +99,13 @@ def test_create_a_whole_product():
     assert (
         ndimensonal := len(product.measurements.subgroup.my_variable)
     ) == 2, f"variable is a {ndimensonal} dimensional array, 2 was expected"
+
+    for key, value in product.measurements.groups:
+        assert isinstance(key, str)
+        assert isinstance(value, EOGroup)
+        assert value.name == key
+
+    for key, value in product.measurements.subgroup.variables:
+        assert isinstance(key, str)
+        assert isinstance(value, EOVariable)
+        assert value.name == key
