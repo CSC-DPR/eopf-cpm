@@ -454,7 +454,7 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
                 if key not in self._items and key not in self._dataset:
                     yield key
         if self._dataset is not None:
-            yield from self._dataset # type: ignore[misc]
+            yield from self._dataset  # type: ignore[misc]
         yield from self._items
 
     def __len__(self) -> int:

@@ -7,7 +7,6 @@ EOV_TYPE = TypeVar("EOV_TYPE", bound="EOVariableOperatorsMixin[Any]")
 # Type of EOVariable, could be replaced by PEP 673 -- Self Type, starting with Python 3.11
 
 
-
 class EOVariableOperatorsMixin(Generic[EOV_TYPE]):
     """
     Provide unary and binary operations on the _data of it's subtype EOV_TYPE.
@@ -167,16 +166,16 @@ class EOVariableOperatorsMixin(Generic[EOV_TYPE]):
     def __invert__(self: EOV_TYPE) -> EOV_TYPE:
         return self.__apply_unary_ops__(operator.invert)
 
-    def round(self: EOV_TYPE, *args:Any, **kwargs:Any) -> EOV_TYPE:
+    def round(self: EOV_TYPE, *args: Any, **kwargs: Any) -> EOV_TYPE:
         return self.__apply_unary_ops__(self._data.round_, *args, **kwargs)
 
-    def argsort(self: EOV_TYPE, *args:Any, **kwargs:Any) -> EOV_TYPE:
+    def argsort(self: EOV_TYPE, *args: Any, **kwargs: Any) -> EOV_TYPE:
         return self.__apply_unary_ops__(self._data.argsort, *args, **kwargs)
 
-    def conj(self: EOV_TYPE, *args:Any, **kwargs:Any) -> EOV_TYPE:
+    def conj(self: EOV_TYPE, *args: Any, **kwargs: Any) -> EOV_TYPE:
         return self.__apply_unary_ops__(self._data.conj, *args, **kwargs)
 
-    def conjugate(self: EOV_TYPE, *args:Any, **kwargs:Any) -> EOV_TYPE:
+    def conjugate(self: EOV_TYPE, *args: Any, **kwargs: Any) -> EOV_TYPE:
         return self.__apply_unary_ops__(self._data.conjugate, *args, **kwargs)
 
     __add__.__doc__ = operator.add.__doc__
