@@ -449,7 +449,7 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
                 if key not in self._items and key not in self._dataset:
                     yield key
         if self._dataset is not None:
-            yield from self._dataset
+            yield from self._dataset # type: ignore[misc]
         yield from self._items
 
     def __len__(self) -> int:
@@ -615,11 +615,11 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
         return (
             (key in self._items)
             or (key in self._dataset)
-            or (self._store is not None and key in self._store.iter(self._path))
+            or (self._store is not None and key in self._store.iter(self._path))  # type: ignore[operator]
         )
 
 
-class EOProduct(MutableMapping[str, EOGroup]):
+class EOProduct(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
     """"""
 
     MANDATORY_FIELD = ("measurements", "coordinates", "attributes")
@@ -640,10 +640,12 @@ class EOProduct(MutableMapping[str, EOGroup]):
         elif store_or_path_url is not None:
             raise TypeError(f"{type(store_or_path_url)} can't be used to instantiate EOProductStore.")
 
-    def __getitem__(self, key: str) -> EOGroup:
+    def __getitem__(self, key: str) -> Union[EOVariable, "EOGroup"]:
         return self._get_group(key)
 
-    def __setitem__(self, key: str, value: EOGroup) -> None:
+    def __setitem__(self, key: str, value: Union[EOVariable, "EOGroup"]) -> None:
+        if not isinstance(value, EOGroup):
+            raise NotImplementedError
         self._groups[key] = value
 
     def __iter__(self) -> Iterator[str]:
@@ -665,7 +667,7 @@ class EOProduct(MutableMapping[str, EOGroup]):
             keys |= set(self._store)
         return len(keys)
 
-    def __getattr__(self, attr: str) -> EOGroup:
+    def __getattr__(self, attr: str) -> Union[EOVariable, "EOGroup"]:
         if attr in self:
             return self[attr]
         raise AttributeError(attr)
@@ -673,7 +675,7 @@ class EOProduct(MutableMapping[str, EOGroup]):
     def __contains__(self, key: object) -> bool:
         return (key in self._groups) or (self._store is not None and key in self._store)
 
-    def _get_group(self, group_name: str) -> EOGroup:
+    def _get_group(self, group_name: str) -> Union[EOVariable, "EOGroup"]:
         """find and return eogroup from the given key.
 
         if store is defined and key not already loaded in this group,
@@ -721,7 +723,7 @@ class EOProduct(MutableMapping[str, EOGroup]):
         if self._store is not None and self._store.status == StorageStatus.OPEN:
             self._store.add_group(name)
         if keys is not None:
-            group = self[name].add_group(keys)
+            group = self[name].add_group(keys)  # type:ignore[union-attr]
         return group
 
     @property
