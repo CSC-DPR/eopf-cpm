@@ -4,7 +4,8 @@ import xarray as xr
 
 
 EOV_TYPE = TypeVar("EOV_TYPE", bound="EOVariableOperatorsMixin[Any]")
-# Type of EOVariable
+# Type of EOVariable, could be replaced by PEP 673 -- Self Type, starting with Python 3.11
+
 
 
 class EOVariableOperatorsMixin(Generic[EOV_TYPE]):
