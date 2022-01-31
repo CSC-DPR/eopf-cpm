@@ -18,12 +18,14 @@ import xarray
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError
 from eopf.product.utils import join_path
 
+from .container import EOContainer
 from .formatting import renderer
 from .mixins import EOVariableOperatorsMixin
+from .object import EOObject
 from .store.abstract import EOProductStore, StorageStatus
 
 
-class EOVariable(EOVariableOperatorsMixin["EOVariable"]):
+class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
     """Wrapper around xarray.DataArray to provide Multi dimensional Array (Tensor)
     in earth observation context
 
@@ -383,7 +385,7 @@ class EOVariable(EOVariableOperatorsMixin["EOVariable"]):
         return renderer("variable.html", variable=self)
 
 
-class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
+class EOGroup(EOContainer, EOObject, MutableMapping[str, Union[EOVariable, "EOGroup"]]):
     """"""
 
     def __init__(
@@ -640,7 +642,7 @@ class EOGroup(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
         )
 
 
-class EOProduct(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
+class EOProduct(EOContainer, MutableMapping[str, Union[EOVariable, "EOGroup"]]):
     """"""
 
     MANDATORY_FIELD = ("measurements", "coordinates", "attributes")
