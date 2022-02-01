@@ -2,16 +2,18 @@ import weakref
 from typing import TYPE_CHECKING, Any, Iterable, Optional
 
 from eopf.exceptions import StoreNotDefinedError
+from eopf.product.core.eo_abstract import EOAbstract
+from eopf.product.core.eo_container import EOContainer
+from eopf.product.store.abstract import EOProductStore
 from eopf.product.utils import join_path
 
-from .container import EOContainer
-from .store.abstract import EOProductStore
-
 if TYPE_CHECKING:
-    from .core import EOGroup, EOProduct, EOVariable
+    from eopf.product.core.eo_group import EOGroup
+    from eopf.product.core.eo_product import EOProduct
+    from eopf.product.core.eo_variable import EOVariable
 
 
-class EOObject:
+class EOObject(EOAbstract):
     def __init__(
         self,
         name: str,

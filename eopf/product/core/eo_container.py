@@ -1,41 +1,11 @@
-from abc import ABC, abstractmethod
 from collections.abc import MutableMapping
-from typing import Iterable
 
 from eopf.exceptions import StoreNotDefinedError
-from eopf.product.core import EOProduct
-from eopf.product.object import EOObject
-
-from .core import EOGroup
-from .store import EOProductStore, StorageStatus
-from .utils import join_path, parse_path
-
-
-class EOAbstract(ABC):
-    @abstractmethod
-    @property
-    def product(self) -> EOProduct:
-        ...
-
-    @abstractmethod
-    @property
-    def store(self) -> EOProductStore:
-        ...
-
-    @abstractmethod
-    @property
-    def path(self) -> str:
-        ...
-
-    @abstractmethod
-    @property
-    def relative_path(self) -> Iterable[str]:
-        ...
-
-    @abstractmethod
-    @property
-    def name(self) -> str:
-        ...
+from eopf.product.core.eo_abstract import EOAbstract
+from eopf.product.core.eo_group import EOGroup
+from eopf.product.core.eo_object import EOObject
+from eopf.product.store import StorageStatus
+from eopf.product.utils import join_path, parse_path
 
 
 class EOContainer(EOAbstract, MutableMapping[str, EOObject]):
@@ -147,6 +117,4 @@ class EOContainer(EOAbstract, MutableMapping[str, EOObject]):
         return [key for key in self.keys()]
 
     def __contains__(self, key: object) -> bool:
-        return (key in self._groups) or (
-            self.store is not None and key in self.store.iter(self.path)
-        )  # type: ignore[operator]
+        return (key in self._groups) or (self.store is not None and key in self.store.iter(self.path))
