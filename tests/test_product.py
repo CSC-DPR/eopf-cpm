@@ -111,6 +111,7 @@ def test_create_a_whole_product():
         assert isinstance(value, EOVariable)
         assert value.name == key
 
+
 @pytest.mark.unit
 def test_generate_hierarchy_tree():
     product = init_product("product_name")
