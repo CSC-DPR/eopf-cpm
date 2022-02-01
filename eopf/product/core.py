@@ -826,5 +826,5 @@ class EOProduct(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
             raise StoreNotDefinedError("Store must be defined")
         self._store.close()
 
-    def tree(self):
+    def tree(self) -> str:
         return self._repr_html_()

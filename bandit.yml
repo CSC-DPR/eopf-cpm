@@ -1,6 +1,4 @@
 assert_used:
   skips: ["tests/*.py"]
-blacklist_imports:
-  skips: ["tests/*.py"]
 exclude_dirs:
   - "tests/*.py"
