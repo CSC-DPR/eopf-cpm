@@ -1,4 +1,5 @@
 import pytest
+from lxml import etree
 from pyfakefs.fake_filesystem import FakeFilesystem
 
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError, StoreNotOpenError
@@ -109,3 +110,20 @@ def test_create_a_whole_product():
         assert isinstance(key, str)
         assert isinstance(value, EOVariable)
         assert value.name == key
+
+@pytest.mark.unit
+def test_generate_hierarchy_tree():
+    product = init_product("product_name")
+    product.measurements.add_group("subgroup1")
+    product.measurements.subgroup1.add_variable("variable1", [1, 2, 3], attrs={"name": "some name"})
+    product.measurements.subgroup1.add_variable("variable2", [4, 5, 6], attrs={"name": "second variable"})
+    parser = etree.HTMLParser()
+    tree = etree.fromstring(product.tree(), parser)
+    attribute_name = tree.xpath(
+        "/html/body/div/div/ul/li[2]/div/div/ul/li[2]/div/div/ul/li[2]/div/div/ul/li[1]/div/dl/dt/span/text()",
+    )[0]
+    assert attribute_name == "name :"
+    attribute_value = tree.xpath(
+        "/html/body/div/div/ul/li[2]/div/div/ul/li[2]/div/div/ul/li[2]/div/div/ul/li[1]/div/dl/dd/text()",
+    )[0]
+    assert attribute_value == "some name"

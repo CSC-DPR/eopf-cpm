@@ -14,7 +14,6 @@ from typing import (
 )
 
 import xarray
-from IPython.display import IFrame
 
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError
 from eopf.product.utils import join_path
@@ -827,7 +826,5 @@ class EOProduct(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
             raise StoreNotDefinedError("Store must be defined")
         self._store.close()
 
-    def tree(self, file_path, width, height):
-        with open(file_path, "w") as file:
-            file.write(self._repr_html_())
-        return IFrame(src=file_path, width=width, height=height)
+    def tree(self):
+        return self._repr_html_()
