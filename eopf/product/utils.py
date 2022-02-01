@@ -7,6 +7,10 @@ def join_path(*subpath: str, sep: str = "/") -> str:
     return sep.join(subpath)
 
 
+def split_path(path: str, sep: str = "/") -> list[str]:
+    return path.split(sep)
+
+
 def weak_cache(func: Callable[..., Any]) -> Callable[..., Any]:
     @functools.cache
     def _func(_self: Any, *args: Any, **kwargs: Any) -> Any:

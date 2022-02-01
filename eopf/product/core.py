@@ -1,4 +1,3 @@
-import weakref
 from collections.abc import MutableMapping
 from types import TracebackType
 from typing import (
@@ -16,7 +15,7 @@ from typing import (
 import xarray
 
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError
-from eopf.product.utils import join_path
+from eopf.product.utils import join_path, split_path
 
 from .container import EOContainer
 from .formatting import renderer
@@ -47,53 +46,15 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
     def __init__(
         self, name: str, data: Any, product: "EOProduct", relative_path: Optional[Iterable[str]] = None, **kwargs: Any
     ):
-        self._data: xarray.DataArray
-        self._name: str = name
-        self._product: EOProduct = weakref.proxy(product) if not isinstance(product, weakref.ProxyType) else product
-
-        if relative_path is None:
-            relative_path = tuple()
-        self._relative_path: tuple[str, ...] = tuple(relative_path)
-
-        if isinstance(data, xarray.DataArray):
-            self._data = data
-        else:
-            self._data = xarray.DataArray(data=data, name=name, **kwargs)
-
-    @property
-    def _path(self) -> str:
-        """path from the top level product to this eovariable"""
-        if self._store is None:
-            raise StoreNotDefinedError("Store must be defined")
-        return join_path(*self._relative_path, self._name, sep=self._store.sep)
-
-    @property
-    def _store(self) -> Optional[EOProductStore]:
-        """direct accessor to the product store"""
-        return self._product._store
-
-    @property
-    def name(self) -> str:
-        """name of this variable"""
-        return self._name
-
-    @property
-    def attrs(self) -> dict[Hashable, Any]:
-        """variable attributes"""
-        return self._data.attrs
+        if not isinstance(data, xarray.DataArray):
+            data = xarray.DataArray(data=data, name=name, **kwargs)
+        EOObject.__init__(self, name, product, relative_path, data.attrs)
+        self._data: xarray.DataArray = data
 
     @property
     def dims(self) -> tuple[Hashable, ...]:
         """variable dimensions"""
         return self._data.dims
-
-    @property
-    def coordinates(self) -> "EOGroup":
-        """Coordinates of this variable"""
-        coord = self._product.coordinates[self._path]
-        if not isinstance(coord, EOGroup):
-            raise TypeError(f"EOVariable coordinates type must be EOGroup instead of {type(coord)}.")
-        return coord
 
     @property
     def chunksizes(self) -> Mapping[Any, tuple[int, ...]]:
@@ -396,10 +357,7 @@ class EOGroup(EOContainer, EOObject, MutableMapping[str, Union[EOVariable, "EOGr
         dataset: Optional[xarray.Dataset] = None,
         attrs: Optional[dict[str, Any]] = None,
     ) -> None:
-        self._name = name
-
-        if relative_path is None:
-            relative_path = tuple()
+        EOObject.__init__(self, name, product, relative_path, attrs)
 
         if dataset is None:
             dataset = xarray.Dataset()
@@ -412,10 +370,7 @@ class EOGroup(EOContainer, EOObject, MutableMapping[str, Union[EOVariable, "EOGr
             raise TypeError("dataset parameters must be a xarray.Dataset instance")
 
         self._dataset = dataset
-        self._relative_path: tuple[str, ...] = tuple(relative_path)
-        self._product: EOProduct = weakref.proxy(product) if not isinstance(product, weakref.ProxyType) else product
         self._items: dict[str, "EOGroup"] = {}
-        self._attrs = attrs or dict()
 
     def __getitem__(self, key: str) -> Union[EOVariable, "EOGroup"]:
         return self._get_item(key)
@@ -498,35 +453,6 @@ class EOGroup(EOContainer, EOObject, MutableMapping[str, Union[EOVariable, "EOGr
     def to_product(self) -> "EOProduct":
         """Convert this group to a product"""
         ...
-
-    @property
-    def coordinates(self) -> "EOGroup":
-        """Coordinates of this group"""
-        coord = self._product.coordinates[self._path]
-        if not isinstance(coord, EOGroup):
-            raise TypeError(f"EOGroup coordinates type must be EOGroup instead of {type(coord)}.")
-        return coord
-
-    @property
-    def _store(self) -> Optional[EOProductStore]:
-        """direct accessor to the product store"""
-        return self._product._store
-
-    @property
-    def _path(self) -> str:
-        """path from the top level product to this eogroup"""
-        if self._store is None:
-            raise StoreNotDefinedError("Store must be defined")
-        return join_path(*self._relative_path, self._name, sep=self._store.sep)
-
-    @property
-    def name(self) -> str:
-        """name of this eogroup"""
-        return self._name
-
-    @property
-    def attrs(self) -> dict[str, Any]:
-        return self._attrs
 
     @property
     def dims(self) -> tuple[Hashable, ...]:
@@ -874,3 +800,26 @@ class EOProduct(EOContainer, MutableMapping[str, Union[EOVariable, "EOGroup"]]):
             print(f"├── {name}")
             self._create_structure(group, level=2)
         return None
+
+    def get_coordinate(self, name: str, context: str) -> EOVariable:
+        """Get coordinate name in the path context (context default to this object).
+        Consider coordinate inheritance.
+        """
+        if self._store is None:
+            sep = "/"
+        else:
+            sep = self._store.sep
+
+        context_split = split_path(context, sep=sep)
+        if context_split[0] != "coordinates":
+            context_split = ["coordinates"] + context_split
+        while len(context_split) > 0:
+            try:
+                coord = self[join_path(*context_split, context, sep=sep)]
+                if isinstance(coord, EOVariable):
+                    # It is valid to have a subgroup with the name of a coordinate of an ancestor.
+                    # ex : /coordinate/coord_name et /coordinate/group1/coord_name/obj
+                    return coord
+            except KeyError:
+                pass
+        raise KeyError(f"Unknown coordinate {name} in context {context} .")
