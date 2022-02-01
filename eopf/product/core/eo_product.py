@@ -1,6 +1,6 @@
 from collections.abc import MutableMapping
 from types import TracebackType
-from typing import Any, Iterator, Optional, Type, Union
+from typing import Any, Iterable, Iterator, Optional, Type, Union
 
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError
 from eopf.product.utils import join_path, split_path
@@ -23,6 +23,29 @@ class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]
         self._store: Optional[EOProductStore] = None
         self.__set_store(store_or_path_url=store_or_path_url)
 
+    @property
+    def product(self) -> "EOProduct":
+        return self
+
+    @property
+    def store(self) -> EOProductStore:
+        if self._store is None:
+            raise StoreNotDefinedError("Store must be defined")
+        return self._store
+
+    @property
+    def path(self) -> str:
+        return ""
+
+    @property
+    def relative_path(self) -> Optional[Iterable[str]]:
+        return None
+
+    @property
+    def name(self) -> str:
+        """name of the product"""
+        return self._name
+
     def __set_store(self, store_or_path_url: Optional[Union[str, EOProductStore]] = None) -> None:
         from .store.zarr import EOZarrStore
 
@@ -42,22 +65,20 @@ class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]
         self._groups[key] = value
 
     def __iter__(self) -> Iterator[str]:
-        if self._store is not None:
-            for key in self._store:  # pyre-ignore[16]
-                if key not in self._groups:
-                    yield key
+        for key in self.store:  # pyre-ignore[16]
+            if key not in self._groups:
+                yield key
         yield from self._groups
 
     def __delitem__(self, key: str) -> None:
         if key in self._groups:
             del self._groups[key]
-        if self._store and key in self._store:
-            del self._store[key]
+        if key in self.store:
+            del self.store[key]
 
     def __len__(self) -> int:
         keys = set(self._groups)
-        if self._store is not None:
-            keys |= set(self._store)
+        keys |= set(self.store)
         return len(keys)
 
     def __getattr__(self, attr: str) -> Union[EOVariable, "EOGroup"]:
@@ -66,7 +87,7 @@ class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]
         raise AttributeError(attr)
 
     def __contains__(self, key: object) -> bool:
-        return (key in self._groups) or (self._store is not None and key in self._store)
+        return (key in self._groups) or (key in self.store)
 
     def _get_group(self, group_name: str) -> Union[EOVariable, "EOGroup"]:
         """find and return eogroup from the given key.
@@ -85,9 +106,7 @@ class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]
 
         group = self._groups.get(group_name)
         if group is None:
-            if self._store is None:
-                raise KeyError(f"Invalide EOGroup name: {group_name}")
-            name, relative_path, dataset, attrs = self._store[group_name]
+            name, relative_path, dataset, attrs = self.store[group_name]
             group = EOGroup(name, self, relative_path=relative_path, dataset=dataset, attrs=attrs)
             self[group_name] = group
 
@@ -113,16 +132,11 @@ class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]
             name, _, keys = name.partition("/")
         group = EOGroup(name, self, relative_path=[])
         self[name] = group
-        if self._store is not None and self._store.status == StorageStatus.OPEN:
-            self._store.add_group(name)
+        if self.store.status == StorageStatus.OPEN:
+            self.store.add_group(name)
         if keys is not None:
             group = self[name].add_group(keys)  # type:ignore[union-attr]
         return group
-
-    @property
-    def name(self) -> str:
-        """name of the product"""
-        return self._name
 
     def __str__(self) -> str:
         return self.__repr__()
@@ -154,16 +168,12 @@ class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]
         """
         if store_or_path_url:
             self.__set_store(store_or_path_url=store_or_path_url)
-        if self._store is None:
-            raise StoreNotDefinedError("Store must be defined")
-        self._store.open(mode=mode, **kwargs)
+        self.store.open(mode=mode, **kwargs)
         return self
 
     def load(self) -> None:
         """load all the product in memory"""
-        if self._store is None:
-            raise StoreNotDefinedError("Store must be defined")
-        for key in self._store:
+        for key in self.store:
             if key not in self._groups:
                 ...
 
@@ -176,12 +186,10 @@ class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]
         --------
         EOGroup.open
         """
-        if self._store is None:
-            raise StoreNotDefinedError("Store must be defined")
         self.validate()
         for name, group in self._groups.items():
-            if name not in self._store:  # pyre-ignore[58]
-                self._store.add_group(name)  # pyre-ignore[16]
+            if name not in self.store:  # pyre-ignore[58]
+                self.store.add_group(name)  # pyre-ignore[16]
             group.write()
 
     def is_valid(self) -> bool:
@@ -210,19 +218,13 @@ class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]
         exc_value: Optional[BaseException],
         traceback: Optional[TracebackType],
     ) -> None:
-        if self._store is None:
-            raise StoreNotDefinedError("Store must be defined")
-        self._store.close()
+        self.store.close()
 
     def get_coordinate(self, name: str, context: str) -> EOVariable:
         """Get coordinate name in the path context (context default to this object).
         Consider coordinate inheritance.
         """
-        if self._store is None:
-            sep = "/"
-        else:
-            sep = self._store.sep
-
+        sep = self.store.sep
         context_split = split_path(context, sep=sep)
         if context_split[0] != "coordinates":
             context_split = ["coordinates"] + context_split
