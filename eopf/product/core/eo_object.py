@@ -32,21 +32,30 @@ class EOObject(EOAbstract):
         return self._name
 
     @property
-    def _path(self) -> str:
+    def path(self) -> str:
         """path from the top level product to this EOObject"""
-        if self._store is None:
+        if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
-        return join_path(*self._relative_path, self._name, sep=self._store.sep)
+        return join_path(*self._relative_path, self._name, sep=self.store.sep)
 
     @property
-    def _store(self) -> Optional[EOProductStore]:
+    def product(self) -> "EOProduct":
+        return self._product
+
+    @property
+    def relative_path(self) -> Optional[Iterable[str]]:
+        """relative path of this EOObject"""
+        return self._relative_path
+
+    @property
+    def store(self) -> EOProductStore:
         """direct accessor to the product store"""
-        return self._product._store
+        return self.product.store
 
     @property
     def coordinates(self) -> "EOGroup":
         """Coordinates defined by this object (does not consider inheritance)."""
-        coord = self._product.coordinates[self._path]
+        coord = self._product.coordinates[self.path]
         if not isinstance(coord, EOContainer):
             raise TypeError(f"EOVariable coordinates type must be EOGroup instead of {type(coord)}.")
         return coord
@@ -56,7 +65,7 @@ class EOObject(EOAbstract):
         Consider coordinate inheritance.
         """
         if context is None:
-            context = self._path
+            context = self.path
         return self._product.get_coordinate(name, context)
 
     @property

@@ -56,18 +56,18 @@ class EOGroup(EOContainer, EOObject, MutableMapping[str, Union[EOVariable, "EOGr
             name of the eovariable or eogroup
         """
         if key in self._dataset:
-            return EOVariable(key, self._dataset[key], self._product, relative_path=[*self._relative_path, self._name])
+            return EOVariable(key, self._dataset[key], self.product, relative_path=[*self._relative_path, self._name])
 
         subkey = None
         if "/" in key:
             key, _, subkey = key.partition("/")
 
         item: EOGroup
-        if key not in self._items and self._store is None:
+        if key not in self._items and self.store is None:
             raise KeyError(f"Invalide EOGroup item name {key}")
-        elif key not in self._items and self._store is not None:
-            name, relative_path, dataset, attrs = self._store[self._relative_key(key)]
-            item = EOGroup(name, self._product, relative_path=relative_path, dataset=dataset, attrs=attrs)
+        elif key not in self._items and self.store is not None:
+            name, relative_path, dataset, attrs = self.store[self._relative_key(key)]
+            item = EOGroup(name, self.product, relative_path=relative_path, dataset=dataset, attrs=attrs)
         else:
             item = self._items[key]
         self[key] = item
@@ -88,12 +88,12 @@ class EOGroup(EOContainer, EOObject, MutableMapping[str, Union[EOVariable, "EOGr
             del self._items[key]
         if key in self._dataset:
             del self._dataset[key]
-        if self._store is not None and (store_key := self._relative_key(key)) in self._store:
-            del self._store[store_key]
+        if self.store is not None and (store_key := self._relative_key(key)) in self.store:
+            del self.store[store_key]
 
     def __iter__(self) -> Iterator[str]:
-        if self._store is not None:
-            for key in self._store.iter(self._path):  # pyre-ignore[16]
+        if self.store is not None:
+            for key in self.store.iter(self.path):  # pyre-ignore[16]
                 if key not in self._items and key not in self._dataset:
                     yield key
         if self._dataset is not None:
@@ -102,8 +102,8 @@ class EOGroup(EOContainer, EOObject, MutableMapping[str, Union[EOVariable, "EOGr
 
     def __len__(self) -> int:
         keys = set(self._items)
-        if self._store is not None:
-            keys |= set(self._store[self._path])
+        if self.store is not None:
+            keys |= set(self.store[self.path])
         return len(keys)
 
     def __getattr__(self, attr: str) -> Union[EOVariable, "EOGroup"]:
@@ -155,9 +155,9 @@ class EOGroup(EOContainer, EOObject, MutableMapping[str, Union[EOVariable, "EOGr
         str
             path value with store based separator
         """
-        if self._store is None:
+        if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
-        return join_path(*self._relative_path, self._name, key, sep=self._store.sep)
+        return join_path(*self._relative_path, self._name, key, sep=self.store.sep)
 
     def add_group(self, name: str) -> "EOGroup":
         """Construct and add a eogroup to this group
@@ -176,10 +176,10 @@ class EOGroup(EOContainer, EOObject, MutableMapping[str, Union[EOVariable, "EOGr
         keys = None
         if "/" in name:
             name, _, keys = name.partition("/")
-        group = EOGroup(name, self._product, relative_path=relative_path)
+        group = EOGroup(name, self.product, relative_path=relative_path)
         self[name] = group
-        if self._store is not None and self._store.status == StorageStatus.OPEN:
-            self._store.add_group(name, relative_path=relative_path)
+        if self.store is not None and self.store.status == StorageStatus.OPEN:
+            self.store.add_group(name, relative_path=relative_path)
 
         if keys is not None:
             group = self[name].add_group(keys)  # type:ignore[union-attr]
@@ -203,10 +203,10 @@ class EOGroup(EOContainer, EOObject, MutableMapping[str, Union[EOVariable, "EOGr
         EOVariable
             newly created EOVariable
         """
-        variable = EOVariable(name, data, self._product, relative_path=[*self._relative_path, self._name], **kwargs)
+        variable = EOVariable(name, data, self.product, relative_path=[*self._relative_path, self._name], **kwargs)
         self._dataset[name] = variable._data
-        if self._store is not None and self._store.status == StorageStatus.OPEN:
-            self._store.add_variables(self._name, self._dataset, relative_path=self._relative_path)
+        if self.store is not None and self.store.status == StorageStatus.OPEN:
+            self.store.add_variables(self._name, self._dataset, relative_path=self._relative_path)
         return variable
 
     def write(self) -> None:
@@ -218,14 +218,14 @@ class EOGroup(EOContainer, EOObject, MutableMapping[str, Union[EOVariable, "EOGr
         --------
         EOProduct.open
         """
-        if self._store is None:
+        if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
         for name, item in self.groups:
-            if name not in self._store.iter(self._path):  # pyre-ignore[16]
-                self._store.add_group(name, relative_path=[*self._relative_path, self._name])  # pyre-ignore[16]
+            if name not in self.store.iter(self.path):  # pyre-ignore[16]
+                self.store.add_group(name, relative_path=[*self._relative_path, self._name])  # pyre-ignore[16]
             item.write()
         if self._dataset is not None and len(self._dataset) > 0:
-            self._store.add_variables(self._name, self._dataset, relative_path=self._relative_path)  # pyre-ignore[16]
+            self.store.add_variables(self._name, self._dataset, relative_path=self._relative_path)  # pyre-ignore[16]
 
     def _ipython_key_completions_(self) -> list[str]:
         return [key for key in self.keys()]
@@ -234,5 +234,5 @@ class EOGroup(EOContainer, EOObject, MutableMapping[str, Union[EOVariable, "EOGr
         return (
             (key in self._items)
             or (key in self._dataset)
-            or (self._store is not None and key in self._store.iter(self._path))  # type: ignore[operator]
+            or (self.store is not None and key in self.store.iter(self.path))  # type: ignore[operator]
         )
