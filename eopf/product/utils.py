@@ -1,6 +1,13 @@
 import functools
 import weakref
-from typing import Any, Callable
+from typing import Any, Callable, Optional
+
+
+def parse_path(key: str) -> tuple[str, Optional[str]]:
+    subkey = None
+    if "/" in key:
+        key, _, subkey = key.partition("/")
+    return key, subkey
 
 
 def join_path(*subpath: str, sep: str = "/") -> str:

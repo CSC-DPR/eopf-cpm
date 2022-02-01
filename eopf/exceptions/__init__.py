@@ -8,3 +8,7 @@ class StoreNotDefinedError(Exception):
 
 class StoreNotOpenError(Exception):
     pass
+
+
+class InvalidStructureError(Exception):
+    pass
