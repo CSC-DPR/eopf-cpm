@@ -50,7 +50,7 @@ jobs:
         run: pipenv run isort eopf tests --check --diff
 
       - name: formatter
-        run: pipenv run black --check
+        run: pipenv run black --check .
 
       - name: security issues
         run: pipenv run bandit -c bandit.yml eopf
@@ -108,7 +108,7 @@ jobs:
         run: python -m isort eopf tests --check --diff
 
       - name: formatter
-        run: python -m black --check
+        run: python -m black --check .
 
       - name: security issues
         run: python -m bandit -c bandit.yml eopf
