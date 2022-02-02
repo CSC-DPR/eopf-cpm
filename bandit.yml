@@ -1,4 +1,2 @@
-assert_used:
-  skips: ["tests/*.py"]
 exclude_dirs:
   - "tests/*.py"
