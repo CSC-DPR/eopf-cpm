@@ -1,6 +1,7 @@
 import pytest
 from lxml import etree
 from pyfakefs.fake_filesystem import FakeFilesystem
+from utils import compute_tree_structure
 
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError, StoreNotOpenError
 from eopf.product.conveniences import init_product
@@ -120,11 +121,83 @@ def test_generate_hierarchy_tree():
     product.measurements.subgroup1.add_variable("variable2", [4, 5, 6], attrs={"name": "second variable"})
     parser = etree.HTMLParser()
     tree = etree.fromstring(product.tree(), parser)
-    attribute_name = tree.xpath(
-        "/html/body/div/div/ul/li[2]/div/div/ul/li[2]/div/div/ul/li[2]/div/div/ul/li[1]/div/dl/dt/span/text()",
-    )[0]
-    assert attribute_name == "name :"
-    attribute_value = tree.xpath(
-        "/html/body/div/div/ul/li[2]/div/div/ul/li[2]/div/div/ul/li[2]/div/div/ul/li[1]/div/dl/dd/text()",
-    )[0]
-    assert attribute_value == "some name"
+    tree_structure = compute_tree_structure(tree)
+    assert tree_structure == {
+        "name": "product_name",
+        "groups": {
+            "coordinates": {"Attributes": {}},
+            "measurements": {
+                "Attributes": {},
+                "subgroup1": {
+                    "Attributes": {},
+                    "variable1": {"Attributes": {"name :": "some name"}},
+                    "variable2": {"Attributes": {"name :": "second variable"}},
+                },
+            },
+            "attributes": {"Attributes": {}},
+        },
+    }
+
+
+@pytest.mark.unit
+def test_generate_hierarchy_tree2():
+    product = init_product("product")
+    product.measurements.add_group("subgroup1")
+    product.measurements.add_group("subgroup2")
+    product.measurements.subgroup1.add_variable("variable11", [1, 2, 3], attrs={"name": "some name"})
+    product.measurements.subgroup1.add_variable("variable12", [4, 5, 6], attrs={"name": "second variable"})
+    product.measurements.subgroup2.add_variable("variable21", [1, 2, 3], attrs={"name": "value"})
+    product.add_group("conditions")
+    parser = etree.HTMLParser()
+    tree = etree.fromstring(product.tree(), parser)
+    tree_structure = compute_tree_structure(tree)
+    assert tree_structure == {
+        "name": "product",
+        "groups": {
+            "coordinates": {"Attributes": {}},
+            "measurements": {
+                "Attributes": {},
+                "subgroup1": {
+                    "Attributes": {},
+                    "variable11": {"Attributes": {"name :": "some name"}},
+                    "variable12": {"Attributes": {"name :": "second variable"}},
+                },
+                "subgroup2": {"Attributes": {}, "variable21": {"Attributes": {"name :": "value"}}},
+            },
+            "attributes": {"Attributes": {}},
+            "conditions": {"Attributes": {}},
+        },
+    }
+
+
+@pytest.mark.unit
+def test_generate_hierarchy_tree3():
+    product = init_product("product")
+    product.measurements.add_group("subgroup1")
+    product.measurements.add_group("subgroup2")
+    product.measurements.subgroup1.add_variable("variable11", [1, 2, 3], attrs={"name": "some name"})
+    product.measurements.subgroup1.add_variable("variable12", [4, 5, 6], attrs={"name": "second variable"})
+    product.measurements.subgroup2.add_variable("variable21", [1, 2, 3], attrs={"name": "value"})
+    product.add_group("conditions")
+    product.conditions.add_group("subgroup3")
+    product.conditions.subgroup3.add_group("subsubgroup1")
+    parser = etree.HTMLParser()
+    tree = etree.fromstring(product.tree(), parser)
+    tree_structure = compute_tree_structure(tree)
+    assert tree_structure == {
+        "name": "product",
+        "groups": {
+            "coordinates": {"Attributes": {}},
+            "measurements": {
+                "Attributes": {},
+                "subgroup1": {
+                    "Attributes": {},
+                    "variable11": {"Attributes": {"name :": "some name"}},
+                    "variable12": {"Attributes": {"name :": "second variable"}},
+                },
+                "subgroup2": {"Attributes": {}, "variable21": {"Attributes": {"name :": "value"}}},
+            },
+            "attributes": {"Attributes": {}},
+            "conditions": {"Attributes": {}, "subgroup3": {"Attributes": {}, "subsubgroup1": {"Attributes": {}}}},
+        },
+    }
