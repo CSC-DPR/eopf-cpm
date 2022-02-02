@@ -1,9 +1,9 @@
 import weakref
+from abc import abstractmethod
 from typing import TYPE_CHECKING, Any, Iterable, Optional
 
 from eopf.exceptions import StoreNotDefinedError
 from eopf.product.core.eo_abstract import EOAbstract
-from eopf.product.core.eo_container import EOContainer
 from eopf.product.store.abstract import EOProductStore
 from eopf.product.utils import join_path
 
@@ -19,12 +19,15 @@ class EOObject(EOAbstract):
         name: str,
         product: "EOProduct",
         relative_path: Optional[Iterable[str]] = None,
-        attrs: Optional[dict[str, Any]] = None,
     ) -> None:
         self._name: str = name
         self._relative_path: tuple[str, ...] = tuple(relative_path) if relative_path is not None else tuple()
         self._product: EOProduct = weakref.proxy(product) if not isinstance(product, weakref.ProxyType) else product
-        self._attrs: dict[str, Any] = attrs or dict()
+
+    @property
+    @abstractmethod
+    def attrs(self) -> dict[str, Any]:
+        ...
 
     @property
     def name(self) -> str:
@@ -36,14 +39,14 @@ class EOObject(EOAbstract):
         """path from the top level product to this EOObject"""
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
-        return join_path(*self._relative_path, self._name, sep=self.store.sep)
+        return join_path(*self.relative_path, self.name, sep=self.store.sep)
 
     @property
     def product(self) -> "EOProduct":
         return self._product
 
     @property
-    def relative_path(self) -> Optional[Iterable[str]]:
+    def relative_path(self) -> Iterable[str]:
         """relative path of this EOObject"""
         return self._relative_path
 
@@ -55,8 +58,10 @@ class EOObject(EOAbstract):
     @property
     def coordinates(self) -> "EOGroup":
         """Coordinates defined by this object (does not consider inheritance)."""
-        coord = self._product.coordinates[self.path]
-        if not isinstance(coord, EOContainer):
+        from .eo_group import EOGroup
+
+        coord = self.product.coordinates[self.path]
+        if not isinstance(coord, EOGroup):
             raise TypeError(f"EOVariable coordinates type must be EOGroup instead of {type(coord)}.")
         return coord
 
@@ -66,9 +71,4 @@ class EOObject(EOAbstract):
         """
         if context is None:
             context = self.path
-        return self._product.get_coordinate(name, context)
-
-    @property
-    def attrs(self) -> dict[str, Any]:
-        """Attributes defined by this object (does not consider inheritance)."""
-        return self._attrs
+        return self.product.get_coordinate(name, context)

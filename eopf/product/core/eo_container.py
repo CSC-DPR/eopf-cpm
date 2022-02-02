@@ -1,21 +1,44 @@
 from collections.abc import MutableMapping
+from typing import TYPE_CHECKING, Iterator, Union
 
 from eopf.exceptions import StoreNotDefinedError
 from eopf.product.core.eo_abstract import EOAbstract
-from eopf.product.core.eo_group import EOGroup
-from eopf.product.core.eo_object import EOObject
 from eopf.product.store import StorageStatus
 from eopf.product.utils import join_path, parse_path
 
+if TYPE_CHECKING:
+    from .eo_group import EOGroup
+    from .eo_variable import EOVariable
 
-class EOContainer(EOAbstract, MutableMapping[str, EOObject]):
-    def __init__(self):
+
+class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]]):
+    def __init__(self) -> None:
         self._groups: dict[str, "EOGroup"] = {}
 
-    def __getitem__(self, key: str) -> EOObject:
+    def __getitem__(self, key: str) -> Union["EOGroup", "EOVariable"]:
         return self._get_item(key)
 
-    def _get_item(self, key: str) -> EOObject:
+    def __setitem__(self, key: str, value: Union["EOGroup", "EOVariable"]) -> None:
+        from .eo_group import EOGroup
+
+        key, subkeys = parse_path(key)
+        if subkeys:
+            self[key][subkeys] = value
+            return
+
+        if isinstance(value, EOGroup):
+            self._groups[key] = value
+        else:
+            raise TypeError(f"Item assigment Impossible for type {type(value)}")
+
+    def __iter__(self) -> Iterator[str]:
+        if self.store is not None:
+            for key in self.store.iter(self.path):
+                if key not in self._groups:
+                    yield key
+        yield from self._groups
+
+    def _get_item(self, key: str) -> Union["EOGroup", "EOVariable"]:
         """find and return eovariable or eogroup from the given key.
 
         if store is defined and key not already loaded in this group,
@@ -52,10 +75,15 @@ class EOContainer(EOAbstract, MutableMapping[str, EOObject]):
             keys |= set(self.store[self.path])
         return len(keys)
 
-    def __getattr__(self, attr: str) -> EOObject:
+    def __getattr__(self, attr: str) -> Union["EOGroup", "EOVariable"]:
         if attr in self:
             return self[attr]
         raise AttributeError(attr)
+
+    def __contains__(self, key: object) -> bool:
+        return (key in self._groups) or (
+            self.store is not None and any(key == store_key for store_key in self.store.iter(self.path))
+        )
 
     def _relative_key(self, key: str) -> str:
         """helper to construct path of sub object
@@ -86,6 +114,8 @@ class EOContainer(EOAbstract, MutableMapping[str, EOObject]):
         EOGroup
             newly created EOGroup
         """
+        from .eo_group import EOGroup
+
         relative_path = [*self.relative_path, self.name]
         name, keys = parse_path(name)
         group = EOGroup(name, self.product, relative_path=relative_path)
@@ -109,12 +139,9 @@ class EOContainer(EOAbstract, MutableMapping[str, EOObject]):
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
         for name, item in self._groups.items():
-            if name not in self.store.iter(self.path):  # pyre-ignore[16]
-                self.store.add_group(name, relative_path=[*self.relative_path, self.name])  # pyre-ignore[16]
+            if name not in self.store.iter(self.path):
+                self.store.add_group(name, relative_path=[*self.relative_path, self.name])
             item.write()
 
     def _ipython_key_completions_(self) -> list[str]:
         return [key for key in self.keys()]
-
-    def __contains__(self, key: object) -> bool:
-        return (key in self._groups) or (self.store is not None and key in self.store.iter(self.path))

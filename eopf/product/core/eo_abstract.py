@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Iterable, Optional
+from typing import TYPE_CHECKING, Iterable
 
 from eopf.product.store import EOProductStore
 
@@ -25,7 +25,7 @@ class EOAbstract(ABC):
 
     @property
     @abstractmethod
-    def relative_path(self) -> Optional[Iterable[str]]:
+    def relative_path(self) -> Iterable[str]:
         ...
 
     @property

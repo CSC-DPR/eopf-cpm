@@ -1,12 +1,12 @@
 from collections.abc import MutableMapping
 from types import TracebackType
-from typing import Any, Iterable, Iterator, Optional, Type, Union
+from typing import Any, Iterable, Optional, Type, Union
 
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError
 from eopf.product.utils import join_path, split_path
 
 from ..formatting import renderer
-from ..store.abstract import EOProductStore, StorageStatus
+from ..store.abstract import EOProductStore
 from .eo_container import EOContainer
 from .eo_group import EOGroup
 from .eo_variable import EOVariable
@@ -18,8 +18,8 @@ class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]
     MANDATORY_FIELD = ("measurements", "coordinates", "attributes")
 
     def __init__(self, name: str, store_or_path_url: Optional[Union[str, EOProductStore]] = None) -> None:
+        EOContainer.__init__(self)
         self._name: str = name
-        self._groups: dict[str, EOGroup] = {}
         self._store: Optional[EOProductStore] = None
         self.__set_store(store_or_path_url=store_or_path_url)
 
@@ -29,17 +29,15 @@ class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]
 
     @property
     def store(self) -> EOProductStore:
-        if self._store is None:
-            raise StoreNotDefinedError("Store must be defined")
         return self._store
 
     @property
     def path(self) -> str:
-        return ""
+        return "/"
 
     @property
-    def relative_path(self) -> Optional[Iterable[str]]:
-        return None
+    def relative_path(self) -> Iterable[str]:
+        return []
 
     @property
     def name(self) -> str:
@@ -47,7 +45,7 @@ class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]
         return self._name
 
     def __set_store(self, store_or_path_url: Optional[Union[str, EOProductStore]] = None) -> None:
-        from .store.zarr import EOZarrStore
+        from ..store.zarr import EOZarrStore
 
         if isinstance(store_or_path_url, str):
             self._store = EOZarrStore(store_or_path_url)
@@ -55,88 +53,6 @@ class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]
             self._store = store_or_path_url
         elif store_or_path_url is not None:
             raise TypeError(f"{type(store_or_path_url)} can't be used to instantiate EOProductStore.")
-
-    def __getitem__(self, key: str) -> Union[EOVariable, "EOGroup"]:
-        return self._get_group(key)
-
-    def __setitem__(self, key: str, value: Union[EOVariable, "EOGroup"]) -> None:
-        if not isinstance(value, EOGroup):
-            raise NotImplementedError
-        self._groups[key] = value
-
-    def __iter__(self) -> Iterator[str]:
-        for key in self.store:  # pyre-ignore[16]
-            if key not in self._groups:
-                yield key
-        yield from self._groups
-
-    def __delitem__(self, key: str) -> None:
-        if key in self._groups:
-            del self._groups[key]
-        if key in self.store:
-            del self.store[key]
-
-    def __len__(self) -> int:
-        keys = set(self._groups)
-        keys |= set(self.store)
-        return len(keys)
-
-    def __getattr__(self, attr: str) -> Union[EOVariable, "EOGroup"]:
-        if attr in self:
-            return self[attr]
-        raise AttributeError(attr)
-
-    def __contains__(self, key: object) -> bool:
-        return (key in self._groups) or (key in self.store)
-
-    def _get_group(self, group_name: str) -> Union[EOVariable, "EOGroup"]:
-        """find and return eogroup from the given key.
-
-        if store is defined and key not already loaded in this group,
-        data is loaded from it.
-        Parameters
-        ----------
-        key: str
-            name of the eogroup
-        """
-
-        subgroup_name = None
-        if "/" in group_name:
-            group_name, _, subgroup_name = group_name.partition("/")
-
-        group = self._groups.get(group_name)
-        if group is None:
-            name, relative_path, dataset, attrs = self.store[group_name]
-            group = EOGroup(name, self, relative_path=relative_path, dataset=dataset, attrs=attrs)
-            self[group_name] = group
-
-        if subgroup_name is not None:
-            return group[subgroup_name]
-        return group
-
-    def add_group(self, name: str) -> EOGroup:
-        """Construct and add a eogroup to this product
-
-        if store is defined and open, the group it's directly write by the store.
-        Parameters
-        ----------
-        name: str
-            name of the future group
-        Returns
-        -------
-        EOGroup
-            newly created EOGroup
-        """
-        keys = None
-        if "/" in name:
-            name, _, keys = name.partition("/")
-        group = EOGroup(name, self, relative_path=[])
-        self[name] = group
-        if self.store.status == StorageStatus.OPEN:
-            self.store.add_group(name)
-        if keys is not None:
-            group = self[name].add_group(keys)  # type:ignore[union-attr]
-        return group
 
     def __str__(self) -> str:
         return self.__repr__()
@@ -146,9 +62,6 @@ class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]
 
     def _repr_html_(self) -> str:
         return renderer("product.html", product=self)
-
-    def _ipython_key_completions_(self) -> list[str]:
-        return [key for key in self.keys()]
 
     def open(
         self, *, store_or_path_url: Optional[Union[EOProductStore, str]] = None, mode: str = "r", **kwargs: Any
@@ -168,29 +81,18 @@ class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]
         """
         if store_or_path_url:
             self.__set_store(store_or_path_url=store_or_path_url)
+        if self.store is None:
+            raise StoreNotDefinedError("Store must be defined")
         self.store.open(mode=mode, **kwargs)
         return self
 
     def load(self) -> None:
         """load all the product in memory"""
+        if self.store is None:
+            raise StoreNotDefinedError("Store must be defined")
         for key in self.store:
             if key not in self._groups:
                 ...
-
-    def write(self) -> None:
-        """
-        write non synchronized subgroups, variables to the store
-
-        the store must be opened to work
-        See Also
-        --------
-        EOGroup.open
-        """
-        self.validate()
-        for name, group in self._groups.items():
-            if name not in self.store:  # pyre-ignore[58]
-                self.store.add_group(name)  # pyre-ignore[16]
-            group.write()
 
     def is_valid(self) -> bool:
         """check if the product is a valid eopf product

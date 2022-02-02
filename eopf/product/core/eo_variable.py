@@ -41,12 +41,22 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
     """
 
     def __init__(
-        self, name: str, data: Any, product: "EOProduct", relative_path: Optional[Iterable[str]] = None, **kwargs: Any
+        self,
+        name: str,
+        data: Any,
+        product: "EOProduct",
+        relative_path: Optional[Iterable[str]] = None,
+        attrs: Optional[dict[str, Any]] = None,
+        **kwargs: Any,
     ):
         if not isinstance(data, xarray.DataArray):
-            data = xarray.DataArray(data=data, name=name, **kwargs)
-        EOObject.__init__(self, name, product, relative_path, data.attrs)
+            data = xarray.DataArray(data=data, name=name, attrs=attrs, **kwargs)
+        EOObject.__init__(self, name, product, relative_path)
         self._data: xarray.DataArray = data
+
+    @property
+    def attrs(self) -> dict[str, Any]:
+        return self._data.attrs
 
     @property
     def dims(self) -> tuple[Hashable, ...]:
