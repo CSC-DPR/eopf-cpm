@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Any, Hashable, Iterable, Iterator, Optional, U
 
 import xarray
 
+from eopf.exceptions import StoreNotDefinedError
 from eopf.product.core.eo_container import EOContainer
 from eopf.product.core.eo_object import EOObject
 
@@ -130,7 +131,7 @@ class EOGroup(EOContainer, EOObject, MutableMapping[str, Union[EOVariable, "EOGr
             self.store.add_variables(self._name, self._dataset, relative_path=self._relative_path)
         return variable
 
-    def write(self) -> None:
+    def write(self, erase: bool = False) -> None:
         """
         write non synchronized subgroups, variables to the store
 
@@ -139,7 +140,9 @@ class EOGroup(EOContainer, EOObject, MutableMapping[str, Union[EOVariable, "EOGr
         --------
         EOProduct.open
         """
-        super().write()
+        if self.store is None:
+            raise StoreNotDefinedError("Store must be defined")
+        super().write(erase=erase)
         if self._dataset is not None and len(self._dataset) > 0:
             self.store.add_variables(self.name, self._dataset, relative_path=self.relative_path)
 

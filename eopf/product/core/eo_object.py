@@ -51,7 +51,7 @@ class EOObject(EOAbstract):
         return self._relative_path
 
     @property
-    def store(self) -> EOProductStore:
+    def store(self) -> Optional[EOProductStore]:
         """direct accessor to the product store"""
         return self.product.store
 

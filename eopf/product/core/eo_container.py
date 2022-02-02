@@ -72,7 +72,7 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
     def __len__(self) -> int:
         keys = set(self._groups)
         if self.store is not None:
-            keys |= set(self.store[self.path])
+            keys |= set(_ for _ in self.store.iter(self.path))
         return len(keys)
 
     def __getattr__(self, attr: str) -> Union["EOGroup", "EOVariable"]:
@@ -99,7 +99,7 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         """
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
-        return join_path(*self.relative_path, self.name, key, sep=self.store.sep)
+        return join_path(self.path, key, sep=self.store.sep)
 
     def add_group(self, name: str) -> "EOGroup":
         """Construct and add a eogroup to this group
@@ -131,7 +131,7 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
             group = group.add_group(keys)
         return group
 
-    def write(self) -> None:
+    def write(self, erase: bool = False) -> None:
         """
         write non synchronized subgroups, variables to the store
 
@@ -143,9 +143,22 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
         for name, item in self._groups.items():
-            if name not in self.store.iter(self.path):
-                self.store.add_group(name, relative_path=[*self.relative_path, self.name])
-            item.write()
+            if not erase and name in self.store.iter(self.path):
+                continue
+            self.store.add_group(name, relative_path=[*self.relative_path, self.name])
+            item.write(erase=erase)
+
+    def load(self, erase: bool = False) -> None:
+        """load all the product in memory"""
+        if self.store is None:
+            raise StoreNotDefinedError("Store must be defined")
+        for key in self.store.iter(self.path):
+            if not erase and key in self._groups:
+                continue
+            name, relative_path, dataset, attrs = self.store[self._relative_key(key)]
+            group = EOGroup(name, self.product, relative_path=relative_path, dataset=dataset, attrs=attrs)
+            self._groups[key] = group
+            group.load(erase=erase)
 
     def _ipython_key_completions_(self) -> list[str]:
         return [key for key in self.keys()]

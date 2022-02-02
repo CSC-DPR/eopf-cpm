@@ -28,7 +28,7 @@ class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]
         return self
 
     @property
-    def store(self) -> EOProductStore:
+    def store(self) -> Optional[EOProductStore]:
         return self._store
 
     @property
@@ -86,14 +86,6 @@ class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]
         self.store.open(mode=mode, **kwargs)
         return self
 
-    def load(self) -> None:
-        """load all the product in memory"""
-        if self.store is None:
-            raise StoreNotDefinedError("Store must be defined")
-        for key in self.store:
-            if key not in self._groups:
-                ...
-
     def is_valid(self) -> bool:
         """check if the product is a valid eopf product
         See Also
@@ -120,12 +112,16 @@ class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]
         exc_value: Optional[BaseException],
         traceback: Optional[TracebackType],
     ) -> None:
+        if self.store is None:
+            raise StoreNotDefinedError("Store must be defined")
         self.store.close()
 
     def get_coordinate(self, name: str, context: str) -> EOVariable:
         """Get coordinate name in the path context (context default to this object).
         Consider coordinate inheritance.
         """
+        if self.store is None:
+            raise StoreNotDefinedError("Store must be defined")
         sep = self.store.sep
         context_split = split_path(context, sep=sep)
         if context_split[0] != "coordinates":
