@@ -1,7 +1,7 @@
 from collections.abc import MutableMapping
 from typing import TYPE_CHECKING, Iterator, Union
 
-from eopf.exceptions import StoreNotDefinedError
+from eopf.exceptions import GroupExistError, StoreNotDefinedError
 from eopf.product.core.eo_abstract import EOAbstract
 from eopf.product.store import StorageStatus
 from eopf.product.utils import join_path, parse_path
@@ -118,6 +118,10 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
 
         relative_path = [*self.relative_path, self.name]
         name, keys = parse_path(name)
+
+        if name and not keys and name in self._groups:
+            raise GroupExistError(f"Group {name} already exist in {self.name}")
+
         group = EOGroup(name, self.product, relative_path=relative_path)
         self[name] = group
         if self.store is not None and self.store.status == StorageStatus.OPEN:

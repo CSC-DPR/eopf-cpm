@@ -12,3 +12,7 @@ class StoreNotOpenError(Exception):
 
 class InvalidStructureError(Exception):
     pass
+
+
+class GroupExistError(Exception):
+    pass
