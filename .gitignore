@@ -130,8 +130,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Jupyter Notebooks
-*.ipynb
 
-# Any example data
-/data/*
+/data
+/notebooks
+*.ipynb
