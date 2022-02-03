@@ -70,10 +70,10 @@ class S3L1EOPConverter:
         """build coordinates eog mandatory"""
 
     @abc.abstractmethod
-    def build_eop(self) -> bool:
+    def read(self) -> bool:
         """build product mandatory"""
 
-    def write_eop(self, store_or_path_url: Union[EOProductStore, str, None]) -> None:
+    def write(self, store_or_path_url: Union[EOProductStore, str, None]) -> None:
         """write product mandatory"""
 
         try:
@@ -207,7 +207,7 @@ class OLCIL1EOPConverter(S3L1EOPConverter):
             for key, value in xrd_to_eovs(xrd):
                 instrument_data.add_variable(str(key), data=value)
 
-    def build_eop(self) -> bool:
+    def read(self) -> bool:
         """build product mandatory"""
 
         if self._check_input():
