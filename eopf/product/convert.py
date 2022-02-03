@@ -18,11 +18,11 @@ from eopf.product.conveniences import (
 from eopf.product.core import EOGroup, EOProduct
 
 from .constants import (
-    CF_MAP_OLCI,
+    CF_MAP_OLCI_L1,
     CF_MAP_SLSTR_L1,
-    EOP_MAP_OLCI,
+    EOP_MAP_OLCI_L1,
     EOP_MAP_SLSTR_L1,
-    NAMESPACES_OLCI,
+    NAMESPACES_OLCI_L1,
     NAMESPACES_SLSTR_L1,
 )
 from .store.abstract import EOProductStore
@@ -105,8 +105,10 @@ class OLCIL1EOPConverter(S3L1EOPConverter):
         tree = ET.parse(xml_path)
         root = tree.getroot()
         xfdu = etree_to_dict(root[1])
-        cf = {attr: apply_xpath(xfdu_dom, CF_MAP_OLCI[attr], NAMESPACES_OLCI) for attr in CF_MAP_OLCI}
-        eop = {attr: translate_structure(EOP_MAP_OLCI[attr], xfdu_dom, NAMESPACES_OLCI) for attr in EOP_MAP_OLCI}
+        cf = {attr: apply_xpath(xfdu_dom, CF_MAP_OLCI_L1[attr], NAMESPACES_OLCI_L1) for attr in CF_MAP_OLCI_L1}
+        eop = {
+            attr: translate_structure(EOP_MAP_OLCI_L1[attr], xfdu_dom, NAMESPACES_OLCI_L1) for attr in EOP_MAP_OLCI_L1
+        }
         attributes_eog = EOGroup("attributes", product=self.eop, attrs={"CF": cf, "OM-EOP": eop, "XFDU": xfdu})
         self.eop.add_group("attributes")
         self.eop["attributes"] = attributes_eog
@@ -117,7 +119,7 @@ class OLCIL1EOPConverter(S3L1EOPConverter):
         coordinates: EOGroup = self.eop.add_group("coordinates")
 
         # group by ImageGrid
-        eog_name = "ImageGrid"
+        eog_name = "image_grid"
         image_grid = coordinates.add_group(eog_name)
         file_names = ["time_coordinates", "geo_coordinates"]
         files = filter_files_by(self.nc_files, file_names)
@@ -127,7 +129,7 @@ class OLCIL1EOPConverter(S3L1EOPConverter):
                 image_grid.add_variable(str(key), data=value)
 
         # group by TiePointGrid
-        eog_name = "TiePointGrid"
+        eog_name = "tie_point_grid"
         tie_point_grid = coordinates.add_group(eog_name)
         file_names = ["tie_geo_coordinates"]
         files = filter_files_by(self.nc_files, file_names)
@@ -141,7 +143,7 @@ class OLCIL1EOPConverter(S3L1EOPConverter):
         measurements = self.eop.add_group("measurements")
 
         # group by Radiances
-        eog_name = "Radiances"
+        eog_name = "radiances"
         radiances = measurements.add_group(eog_name)
         file_names = ["Oa%02d_radiance" % r for r in range(1, 22)]
         files = filter_files_by(self.nc_files, file_names)
@@ -151,7 +153,7 @@ class OLCIL1EOPConverter(S3L1EOPConverter):
             for key, value in xrd_to_eovs(xrd):
                 radiances.add_variable(str(key), data=value)
 
-        eog_name = "Orphans"
+        eog_name = "orphans"
         orphans = measurements.add_group(eog_name)
         file_names = ["removed_pixels"]
         files = filter_files_by(self.nc_files, file_names)
@@ -176,7 +178,7 @@ class OLCIL1EOPConverter(S3L1EOPConverter):
         conditions = self.eop.add_group("conditions")
 
         # group by Geometry
-        eog_name = "Geometry"
+        eog_name = "geometry"
         geometry = conditions.add_group(eog_name)
         file_names = ["tie_geometries"]
         files = filter_files_by(self.nc_files, file_names)
@@ -186,7 +188,7 @@ class OLCIL1EOPConverter(S3L1EOPConverter):
                 geometry.add_variable(str(key), data=value)
 
         # group by Meteo
-        eog_name = "Meteo"
+        eog_name = "meteo"
         meteo = conditions.add_group(eog_name)
         file_names = ["tie_meteo"]
         files = filter_files_by(self.nc_files, file_names)
@@ -196,7 +198,7 @@ class OLCIL1EOPConverter(S3L1EOPConverter):
                 meteo.add_variable(str(key), data=value)
 
         # group by InstrumentData
-        eog_name = "InstrumentData"
+        eog_name = "instrument_data"
         instrument_data = conditions.add_group(eog_name)
         file_names = ["instrument_data"]
         files = filter_files_by(self.nc_files, file_names)
@@ -428,7 +430,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
             xrd = read_xrd(files, skip=to_skip)
             if xrd:
                 for key, value in xrd_to_eovs(xrd):
-                    flags_g_eog.add_variable(str(key), data=value)
+                    flags1km_g_eog.add_variable(str(key), data=value)
 
         # group flags by RASTER_EXT_3O0M
         for g in self.RASTER_EXT_3O0M:
@@ -497,7 +499,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
             xrd = read_xrd(files, skip=to_skip)
             if xrd:
                 for key, value in xrd_to_eovs(xrd):
-                    g_eog.add_variable(str(key), data=value)
+                    g1km_eog.add_variable(str(key), data=value)
 
         # group orphans by RASTER_EXT_3O0M
         for g in self.RASTER_EXT_3O0M:
