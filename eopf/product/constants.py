@@ -2,7 +2,7 @@ from typing import Any
 
 # flake8: noqa
 
-CF_MAP_OLCI = {
+CF_MAP_OLCI_L1 = {
     "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName/text())",
     "history": "concat(metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/sentinel-safe:software/@name,"
     + "' ',metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/sentinel-safe:software/@version,"
@@ -18,7 +18,7 @@ CF_MAP_OLCI = {
     + " https://sentinels.copernicus.eu/web/sentinel/user-guides/sentinel-3-olci/processing-levels/level-1'",
     "Conventions": "'CF-1.9'",
 }
-EOP_MAP_OLCI: dict[Any, Any] = {
+EOP_MAP_OLCI_L1: dict[Any, Any] = {
     "phenomenonTime": {
         "beginPosition": "metadataSection/metadataObject[@ID='acquisitionPeriod']//sentinel-safe:acquisitionPeriod/sentinel-safe:startTime",
         "endPosition": "metadataSection/metadataObject[@ID='acquisitionPeriod']//sentinel-safe:acquisitionPeriod/sentinel-safe:stopTime",
@@ -72,7 +72,7 @@ EOP_MAP_OLCI: dict[Any, Any] = {
         },
     },
 }
-NAMESPACES_OLCI = {
+NAMESPACES_OLCI_L1 = {
     "xfdu": "urn:ccsds:schema:xfdu:1",
     "gml": "http://www.opengis.net/gml",
     "sentinel-safe": "http://www.esa.int/safe/sentinel/1.1",
@@ -97,7 +97,7 @@ CF_MAP_SLSTR_L1 = {
     "Conventions": "'CF-1.9'",
 }
 
-EOP_MAP_SLSTR_L1: dict[Any, Any]  = {
+EOP_MAP_SLSTR_L1: dict[Any, Any] = {
     "phenomenonTime": {
         "beginPosition": "metadataSection/metadataObject[@ID='acquisitionPeriod']//sentinel-safe:acquisitionPeriod/sentinel-safe:startTime",
         "endPosition": "metadataSection/metadataObject[@ID='acquisitionPeriod']//sentinel-safe:acquisitionPeriod/sentinel-safe:stopTime",
