@@ -33,7 +33,7 @@ class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]
 
     @property
     def path(self) -> str:
-        return "/"
+        return ""
 
     @property
     def relative_path(self) -> Iterable[str]:
@@ -92,6 +92,9 @@ class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]
         --------
         EOProduct.validate"""
         return all(key in self for key in self.MANDATORY_FIELD)
+
+    def _add_local_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> EOVariable:
+        raise InvalidProductError("Products can't directly store variables.")
 
     def validate(self) -> None:
         """check if the product is a valid eopf product, raise an error if is not a valid one

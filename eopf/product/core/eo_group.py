@@ -108,7 +108,7 @@ class EOGroup(EOContainer, EOObject, MutableMapping[str, Union[EOVariable, "EOGr
             if isinstance(value, EOVariable):
                 yield key, value
 
-    def add_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> EOVariable:
+    def _add_local_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> EOVariable:
         """Construct and add an eovariable to this group
 
         if store is defined and open, the eovariable it's directly write by the store.

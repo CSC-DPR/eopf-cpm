@@ -1,10 +1,11 @@
+from abc import abstractmethod
 from collections.abc import MutableMapping
-from typing import TYPE_CHECKING, Iterator, Union
+from typing import TYPE_CHECKING, Any, Callable, Iterator, Optional, Union
 
 from eopf.exceptions import GroupExistError, StoreNotDefinedError
 from eopf.product.core.eo_abstract import EOAbstract
 from eopf.product.store import StorageStatus
-from eopf.product.utils import join_path, parse_path
+from eopf.product.utils import join_path, parse_path, split_path
 
 if TYPE_CHECKING:
     from .eo_group import EOGroup
@@ -102,9 +103,9 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         return join_path(self.path, key, sep=self.store.sep)
 
     def add_group(self, name: str) -> "EOGroup":
-        """Construct and add a eogroup to this group
+        """Construct and add an EOGroup to this container
 
-        if store is defined and open, the group it's directly write by the store.
+        if store is defined and open, the group is directly writen by the store.
         Parameters
         ----------
         name: str
@@ -114,22 +115,57 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         EOGroup
             newly created EOGroup
         """
-        from .eo_group import EOGroup
 
-        relative_path = [*self.relative_path, self.name]
+        def local_adder(subcontainer: EOContainer, name: str) -> "EOGroup":
+            return subcontainer._add_local_group(name)
+
+        # We want the method of the subtype.
+        return self._recursive_add(name, local_adder)
+
+    def add_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> "EOGroup":
+        """Construct and add an EOVariable to this container
+
+        if store is defined and open, the variable is directly writen by the store.
+        Parameters
+        ----------
+        name: str
+            name of the future variable
+        Returns
+        -------
+        EOVariable
+            newly created EOVariable
+        """
+
+        def local_adder(subcontainer: EOContainer, name: str, data: Optional[Any], **kwargs: Any) -> "EOVariable":
+            return subcontainer._add_local_variable(name, data, **kwargs)
+
+        # We want the method of the subtype.
+        return self._recursive_add(name, local_adder, data, **kwargs)
+
+    def _recursive_add(self, name: str, add_local_method: Callable[..., Any], *argc: Any, **argv: Any) -> Any:
         name, keys = parse_path(name)
 
-        if name and not keys and name in self._groups:
-            raise GroupExistError(f"Group {name} already exist in {self.name}")
+        if keys is None:
+            if name in self:
+                raise GroupExistError(f"Object {name} already exist in {self.name}")
+            return add_local_method(self, name, *argc, **argv)
+        else:
+            group = self._add_local_group(name)
+            return group._recursive_add(keys, add_local_method, *argc, **argv)
 
+    def _add_local_group(self, name: str) -> "EOGroup":
+        from .eo_group import EOGroup
+
+        relative_path = split_path(self.path, "/")
         group = EOGroup(name, self.product, relative_path=relative_path)
         self[name] = group
         if self.store is not None and self.store.status == StorageStatus.OPEN:
             self.store.add_group(name, relative_path=relative_path)
-
-        if keys is not None:
-            group = group.add_group(keys)
         return group
+
+    @abstractmethod
+    def _add_local_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> "EOVariable":
+        ...
 
     def write(self, erase: bool = False) -> None:
         """
