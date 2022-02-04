@@ -12,7 +12,7 @@ from eopf.product.convert import OLCIL1EOPConverter, SLSTRL1EOPConverter
 
 @pytest.mark.unit
 def test_verify_non_duplicate_variables_persistence_olci_l1():
-    olci_path = glob.glob("../data/S3A_OL_1*.SEN3")[0]
+    olci_path = glob.glob("data/S3A_OL_1*.SEN3")[0]
     olci_vars = get_s3_vars(olci_path)
     olci_duplicates = get_duplicate_s3_vars(olci_path)
     olci_eop = OLCIL1EOPConverter(olci_path)
@@ -24,7 +24,7 @@ def test_verify_non_duplicate_variables_persistence_olci_l1():
 
 
 def test_verify_duplicate_variables_persistence_olci_l1():
-    olci_path = glob.glob("../data/S3A_OL_1*.SEN3")[0]
+    olci_path = glob.glob("data/S3A_OL_1*.SEN3")[0]
     olci_duplicates = get_duplicate_s3_vars(olci_path)
     olci_eop = OLCIL1EOPConverter(olci_path)
     _ = olci_eop.read()
@@ -144,7 +144,7 @@ def test_verify_duplicate_variables_persistence_olci_l1():
     olci_file = os.path.join(olci_path, s3_var_file)
     file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
     s3_var = file_ds.get(s3_var_name)
-    eop_var = olci_eop.eop.measurements.radiances.Oa01_radiance._data
+    eop_var = olci_eop.eop.measurements.radiances.Oa07_radiance._data
     assert s3_var.equals(eop_var)
 
     s3_var_file = "removed_pixels.nc"
@@ -540,7 +540,7 @@ def test_verify_non_duplicate_variables_persistence_slstr_l1():
     slstr_path = glob.glob("data/S3A_SL_1_RBT*.SEN3")[0]
     slstr_vars = get_s3_vars(slstr_path)
     slstr_duplicates = get_duplicate_s3_vars(slstr_path)
-    slstr_eop = OLCIL1EOPConverter(slstr_path)
+    slstr_eop = SLSTRL1EOPConverter(slstr_path)
     _ = slstr_eop.read()
     # assert read_ok, "The product should be read"
     slstr_eop_vars = get_eop_vars(slstr_eop.eop)
@@ -549,7 +549,7 @@ def test_verify_non_duplicate_variables_persistence_slstr_l1():
 
 
 def test_verify_duplicate_variables_persistence_slstr_l1():
-    slstr_path = glob.glob("../data/S3A_SL_1_RBT*.SEN3")[0]
+    slstr_path = glob.glob("data/S3A_SL_1_RBT*.SEN3")[0]
     slstr_duplicates = get_duplicate_s3_vars(slstr_path)
     slstr_eop = SLSTRL1EOPConverter(slstr_path)
     _ = slstr_eop.read()
