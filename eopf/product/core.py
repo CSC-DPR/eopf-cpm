@@ -14,7 +14,6 @@ from typing import (
 )
 
 import xarray
-from IPython import get_ipython
 
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError
 from eopf.product.utils import join_path
@@ -855,9 +854,14 @@ class EOProduct(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
         Instance of EOProduct if the environment is interactive (e.g. Jupyter Notebook)
         Oterwise, returns None.
         """
-        if get_ipython():
-            return self
-        for name, group in self._groups.items():
-            print(f"├── {name}")
-            self._create_structure(group, level=2)
+        try:
+            from IPython import get_ipython
+
+            if get_ipython():
+                return self
+            for name, group in self._groups.items():
+                print(f"├── {name}")
+                self._create_structure(group, level=2)
+        except ModuleNotFoundError:
+            print("IPython cannot be found.")
         return None
