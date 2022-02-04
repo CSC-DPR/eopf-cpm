@@ -848,11 +848,16 @@ class EOProduct(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
             self._create_structure(g, level + 2)
 
     def tree(self) -> Union["EOProduct", None]:
-        ip = get_ipython()
-        if ip:
+        """Display the hierarchy of the product.
+
+        Returns
+        ------
+        Instance of EOProduct if the environment is interactive (e.g. Jupyter Notebook)
+        Oterwise, returns None.
+        """
+        if get_ipython():
             return self
-        level = 2
         for name, group in self._groups.items():
             print(f"├── {name}")
-            self._create_structure(group, level)
+            self._create_structure(group, level=2)
         return None
