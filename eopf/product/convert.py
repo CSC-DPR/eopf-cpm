@@ -123,6 +123,9 @@ class OLCIL1EOPConverter(S3L1EOPConverter):
         image_grid = coordinates.add_group(eog_name)
         file_names = ["time_coordinates", "geo_coordinates"]
         files = filter_files_by(self.nc_files, file_names)
+        for f in files:
+            if "tie_geo_coordinates" in f:
+                files.remove(f)
         xrd = read_xrd(files)
         if xrd:
             for key, value in xrd_to_eovs(xrd):
