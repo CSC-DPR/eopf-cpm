@@ -3,7 +3,7 @@ import os
 
 import pytest
 import xarray as xr
-from utils import diff_vars, get_duplicate_s3_vars, get_eop_vars, get_s3_vars
+from utils import diff_s3_eop, get_duplicate_s3_vars, get_eop_vars, get_s3_vars
 
 from eopf.product.convert import OLCIL1EOPConverter, SLSTRL1EOPConverter
 
@@ -19,7 +19,7 @@ def test_verify_non_duplicate_variables_persistence_olci_l1():
     _ = olci_eop.read()
     # assert read_ok, "The product should be read"
     olci_eop_vars = get_eop_vars(olci_eop.eop)
-    _, vars_not_found = diff_vars(olci_vars, olci_eop_vars, olci_duplicates)
+    _, vars_not_found = diff_s3_eop(olci_vars, olci_eop_vars, olci_duplicates)
     assert len(vars_not_found) == 0, "There should be no elements in list vars_not_found"
 
 
@@ -544,7 +544,7 @@ def test_verify_non_duplicate_variables_persistence_slstr_l1():
     _ = slstr_eop.read()
     # assert read_ok, "The product should be read"
     slstr_eop_vars = get_eop_vars(slstr_eop.eop)
-    _, vars_not_found = diff_vars(slstr_vars, slstr_eop_vars, slstr_duplicates)
+    _, vars_not_found = diff_s3_eop(slstr_vars, slstr_eop_vars, slstr_duplicates)
     assert len(vars_not_found) == 0, "There should be no elements in list vars_not_found"
 
 
