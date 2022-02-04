@@ -120,7 +120,7 @@ def test_generate_hierarchy_tree():
     product.measurements.subgroup1.add_variable("variable1", [1, 2, 3], attrs={"name": "some name"})
     product.measurements.subgroup1.add_variable("variable2", [4, 5, 6], attrs={"name": "second variable"})
     parser = etree.HTMLParser()
-    tree = etree.fromstring(product.tree(), parser)
+    tree = etree.fromstring(product._repr_html_(), parser)
     tree_structure = compute_tree_structure(tree)
     assert tree_structure == {
         "name": "product_name",
@@ -149,7 +149,7 @@ def test_generate_hierarchy_tree2():
     product.measurements.subgroup2.add_variable("variable21", [1, 2, 3], attrs={"name": "value"})
     product.add_group("conditions")
     parser = etree.HTMLParser()
-    tree = etree.fromstring(product.tree(), parser)
+    tree = etree.fromstring(product._repr_html_(), parser)
     tree_structure = compute_tree_structure(tree)
     assert tree_structure == {
         "name": "product",
@@ -182,7 +182,7 @@ def test_generate_hierarchy_tree3():
     product.conditions.add_group("subgroup3")
     product.conditions.subgroup3.add_group("subsubgroup1")
     parser = etree.HTMLParser()
-    tree = etree.fromstring(product.tree(), parser)
+    tree = etree.fromstring(product._repr_html_(), parser)
     tree_structure = compute_tree_structure(tree)
     assert tree_structure == {
         "name": "product",
