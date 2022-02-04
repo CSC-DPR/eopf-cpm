@@ -14,6 +14,7 @@ from typing import (
 )
 
 import xarray
+from IPython import get_ipython
 
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError
 from eopf.product.utils import join_path
@@ -340,6 +341,17 @@ class EOVariable(EOVariableOperatorsMixin["EOVariable"]):
             self._product,
             relative_path=self._relative_path,
         )
+
+    def plot(self, **kwargs) -> None:
+        """Wrapper around the xarray plotting functionality.
+        Parameters
+        ----------
+        The parameters MUST follow the xarray.DataArray.plot() options.
+        See Also
+        --------
+        DataArray.plot
+        """
+        self._data.plot(**kwargs)
 
     def __getitem__(self, key: Any) -> "EOVariable":
         return EOVariable(key, self._data[key], self._product, relative_path=self._relative_path)
@@ -826,5 +838,21 @@ class EOProduct(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
             raise StoreNotDefinedError("Store must be defined")
         self._store.close()
 
-    def tree(self) -> str:
-        return self._repr_html_()
+    def _create_structure(self, group: Union[EOGroup, tuple[str, EOGroup]], level: int) -> None:
+        if isinstance(group, tuple):
+            group = group[1]
+        for v in group.variables:
+            print("|" + " " * level + "└──", v[0])
+        for g in group.groups:
+            print("|" + " " * level + "├──", g[0])
+            self._create_structure(g, level + 2)
+
+    def tree(self) -> Union["EOProduct", None]:
+        ip = get_ipython()
+        if ip:
+            return self
+        level = 2
+        for name, group in self._groups.items():
+            print(f"├── {name}")
+            self._create_structure(group, level)
+        return None
