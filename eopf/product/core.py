@@ -342,7 +342,7 @@ class EOVariable(EOVariableOperatorsMixin["EOVariable"]):
             relative_path=self._relative_path,
         )
 
-    def plot(self, **kwargs) -> None:
+    def plot(self, **kwargs: dict[Any, Any]) -> None:
         """Wrapper around the xarray plotting functionality.
         Parameters
         ----------

@@ -90,6 +90,20 @@ def test_add_group_hierarchy_from_path(fs: FakeFilesystem):
 
 
 @pytest.mark.usecase
+def test_product_tree(capsys):
+    product = init_product("product_name")
+    product.measurements.add_group("subgroup1")
+    product.measurements.subgroup1.add_variable("variable1", [1, 2, 3], attrs={"name": "some name"})
+    product.measurements.subgroup1.add_variable("variable2", [4, 5, 6], attrs={"name": "second variable"})
+    product.tree()
+    captured = capsys.readouterr()
+    assert (
+        captured.out
+        == "├── measurements\n|  ├── subgroup1\n|    └── variable1\n|    └── variable2\n├── coordinates\n├── attributes\n"  # noqa
+    )
+
+
+@pytest.mark.usecase
 def test_create_a_whole_product():
     product = init_product("product_name")
     product.measurements.add_group("subgroup")
