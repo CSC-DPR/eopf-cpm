@@ -1,6 +1,8 @@
 import functools
 import weakref
-from typing import Any, Callable, Optional
+from os import path
+from pathlib import PurePosixPath
+from typing import Any, Callable, Optional, Tuple
 
 
 def parse_path(key: str) -> tuple[str, Optional[str]]:
@@ -14,8 +16,8 @@ def join_path(*subpath: str, sep: str = "/") -> str:
     return sep.join(subpath)
 
 
-def split_path(path: str, sep: str = "/") -> list[str]:
-    return path.split(sep)
+def split_path(path_str: str, sep: str = "/") -> list[str]:
+    return path_str.split(sep)
 
 
 def weak_cache(func: Callable[..., Any]) -> Callable[..., Any]:
@@ -28,3 +30,88 @@ def weak_cache(func: Callable[..., Any]) -> Callable[..., Any]:
         return _func(weakref.proxy(self), *args, **kwargs)
 
     return inner
+
+
+# We need to use a mix of os.path (normpath) and pathlib (partition) in the eo_path methods.
+# As we work with strings we use os.path as much as possible.
+
+
+def norm_eo_path(eo_path: str) -> str:
+    """
+    Normalize an eo object path.
+    Parameters
+    ----------
+    eo_path
+
+    Returns
+    -------
+
+    """
+    eo_path = path.normpath(eo_path)  # Do not use pathlib (does not remove ..)
+    if eo_path.startswith("//"):  # text is a special path so it's not normalised by normpath
+        eo_path = eo_path[1:]
+    return eo_path
+
+
+def join_eo_path(*subpaths: str) -> str:
+    """
+    Join eo object paths.
+    Parameters
+    ----------
+    subpaths sub eo path to join
+
+    Returns
+    -------
+    eo path string
+    """
+    return norm_eo_path(path.join(*subpaths))
+
+
+def partition_eo_path(eo_path: str) -> Tuple[str, ...]:
+    return PurePosixPath(eo_path).parts
+
+
+def upsplit_eo_path(eo_path: str) -> Tuple[str, str]:
+    return path.split(eo_path)
+
+
+def downsplit_eo_path(eo_path: str) -> Tuple[str, str]:
+    folder_name = partition_eo_path(eo_path)[0]
+    sub_path = path.relpath(eo_path, start=folder_name)
+    if sub_path == ".":
+        sub_path = None
+    return folder_name, sub_path
+
+
+def is_absolute_eo_path(eo_path: str) -> bool:
+    """
+
+    Parameters
+    ----------
+    eo_path
+
+    Returns
+    -------
+
+    """
+    eo_path = norm_eo_path(eo_path)
+    first_level, _ = downsplit_eo_path(eo_path)
+    return first_level == "/" or first_level == ".."
+
+
+def product_relative_path(eo_context: str, eo_path: str) -> str:
+    """
+    Return eo_path relative to the product (an absolute path without the leading /).
+    Parameters
+    ----------
+    eo_context
+    eo_path
+
+    Returns
+    -------
+
+    """
+    absolute_path = join_eo_path(eo_context, eo_path)
+    if absolute_path == "/":
+        return ""
+    return downsplit_eo_path(absolute_path)[1]
