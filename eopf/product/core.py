@@ -859,9 +859,11 @@ class EOProduct(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
 
             if get_ipython():
                 return self
-            for name, group in self._groups.items():
-                print(f"├── {name}")
-                self._create_structure(group, level=2)
         except ModuleNotFoundError:
-            print("IPython cannot be found.")
+            import warnings
+
+            warnings.warn("IPython not found")
+        for name, group in self._groups.items():
+            print(f"├── {name}")
+            self._create_structure(group, level=2)
         return None
