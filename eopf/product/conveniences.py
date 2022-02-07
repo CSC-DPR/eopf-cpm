@@ -253,7 +253,7 @@ def etree_to_dict(t: etree._Element) -> dict[Any, Any]:
 
     Returns
     -------
-    Corresponding dictionaty to the tree : dict
+    Corresponding dictionary to the tree : dict
     """
     d: dict[Any, Any] = {t.tag: {} if t.attrib else None}
     children = list(t)
