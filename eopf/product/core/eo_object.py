@@ -7,7 +7,7 @@ from eopf.product.core.eo_abstract import EOAbstract
 from eopf.product.store.abstract import EOProductStore
 from eopf.product.utils import join_eo_path
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_group import EOGroup
     from eopf.product.core.eo_product import EOProduct
     from eopf.product.core.eo_variable import EOVariable

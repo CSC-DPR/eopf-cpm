@@ -11,7 +11,7 @@ from ..formatting import renderer
 from ..store.abstract import StorageStatus
 from .eo_variable import EOVariable
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_product import EOProduct
 
 
@@ -76,7 +76,7 @@ class EOGroup(EOContainer, EOObject, MutableMapping[str, Union[EOVariable, "EOGr
 
     def to_product(self) -> "EOProduct":
         """Convert this group to a product"""
-        ...
+        raise NotImplementedError
 
     @property
     def attrs(self) -> dict[str, Any]:

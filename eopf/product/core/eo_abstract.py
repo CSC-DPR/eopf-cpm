@@ -3,11 +3,11 @@ from typing import TYPE_CHECKING, Iterable, Optional
 
 from eopf.product.store import EOProductStore
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_product import EOProduct
 
 
-class EOAbstract(ABC):
+class EOAbstract(ABC):  # pragma: no cover
     @property
     @abstractmethod  # Order of these matter, you must make abstract then read-only.
     def product(self) -> "EOProduct":

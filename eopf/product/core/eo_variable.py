@@ -17,7 +17,7 @@ from eopf.product.core.eo_object import EOObject
 
 from ..formatting import renderer
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_product import EOProduct
 
 

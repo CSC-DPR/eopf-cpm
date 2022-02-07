@@ -14,7 +14,7 @@ from eopf.product.utils import (
     product_relative_path,
 )
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from .eo_group import EOGroup
     from .eo_variable import EOVariable
 
@@ -191,7 +191,9 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         return self[name]
 
     @abstractmethod
-    def _add_local_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> "EOVariable":
+    def _add_local_variable(
+        self, name: str, data: Optional[Any] = None, **kwargs: Any
+    ) -> "EOVariable":  # pragma: no cover
         ...
 
     def write(self, erase: bool = False) -> None:
