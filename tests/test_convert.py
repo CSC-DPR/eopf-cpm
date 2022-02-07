@@ -12,6 +12,9 @@ from eopf.product.convert import OLCIL1EOPConverter, SLSTRL1EOPConverter
 
 @pytest.mark.unit
 def test_verify_non_duplicate_variables_persistence_olci_l1():
+    # Tested on the product:
+    # S3A_OL_1_EFR____20220116T092821_20220116T093121_20220117T134858_0179_081_036_2160_LN1_O_NT_002.SEN3
+    # On 7th February 2022
     olci_path = glob.glob("data/S3A_OL_1*.SEN3")[0]
     olci_vars = get_s3_vars(olci_path)
     olci_duplicates = get_duplicate_s3_vars(olci_path)
@@ -24,6 +27,9 @@ def test_verify_non_duplicate_variables_persistence_olci_l1():
 
 
 def test_verify_duplicate_variables_persistence_olci_l1():
+    # Tested on the product:
+    # S3A_OL_1_EFR____20220116T092821_20220116T093121_20220117T134858_0179_081_036_2160_LN1_O_NT_002.SEN3
+    # On 7th February 2022
     olci_path = glob.glob("data/S3A_OL_1*.SEN3")[0]
     olci_duplicates = get_duplicate_s3_vars(olci_path)
     olci_eop = OLCIL1EOPConverter(olci_path)
@@ -549,6 +555,9 @@ def test_verify_non_duplicate_variables_persistence_slstr_l1():
 
 
 def test_verify_duplicate_variables_persistence_slstr_l1():
+    # Tested on the product:
+    # S3A_SL_1_RBT____20220118T083600_20220118T083900_20220118T110259_0179_081_064_2160_LN2_O_NR_004.SEN3
+    # On 7th February 2022
     slstr_path = glob.glob("data/S3A_SL_1_RBT*.SEN3")[0]
     slstr_duplicates = get_duplicate_s3_vars(slstr_path)
     slstr_eop = SLSTRL1EOPConverter(slstr_path)
