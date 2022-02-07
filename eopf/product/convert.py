@@ -255,7 +255,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
             for attr in EOP_MAP_SLSTR_L1
         }
         attributes_eog = EOGroup("attributes", product=self.eop, attrs={"CF": cf, "OM-EOP": eop, "XFDU": xfdu})
-        self.eop["Attributes"] = attributes_eog
+        self.eop["attributes"] = attributes_eog
 
     def _build_coordinates_eog(self) -> None:
         """build coordinates eog mandatory"""
