@@ -1,10 +1,11 @@
 from typing import Any, Iterable, Iterator, Optional
 
 import fsspec
+import numpy as np
 import pytest
 import xarray
 
-from eopf.exceptions import GroupExistError, InvalidProductError
+from eopf.exceptions import EOObjectExistError, InvalidProductError
 from eopf.product.conveniences import init_product
 from eopf.product.core import EOGroup, EOProduct, EOVariable
 from eopf.product.core.eo_container import EOContainer
@@ -20,7 +21,7 @@ class EmptyTestStore(EOProductStore):
         return iter()
 
     def __getitem__(self, k: Any) -> Any:
-        raise IndexError()
+        raise KeyError()
 
     def __len__(self) -> int:
         return 0
@@ -29,17 +30,17 @@ class EmptyTestStore(EOProductStore):
         pass
 
     def __delitem__(self, v: Any) -> None:
-        raise IndexError()
+        raise KeyError()
 
     @property
     def map(self) -> fsspec.FSMap:
-        raise IndexError()
+        raise KeyError()
 
     def listdir(self, path: Optional[str] = None) -> Iterable[str]:
         return iter([])
 
     def rmdir(self, path: Optional[str] = None) -> None:
-        raise IndexError()
+        raise KeyError()
 
     def clear(self) -> None:
         pass
@@ -51,10 +52,10 @@ class EmptyTestStore(EOProductStore):
         raise NotImplementedError()
 
     def is_group(self, path: str) -> bool:
-        raise IndexError()
+        raise KeyError()
 
     def is_variable(self, path: str) -> bool:
-        raise IndexError()
+        raise KeyError()
 
     def add_group(self, name: str, relative_path: list[str] = []) -> None:
         pass
@@ -77,9 +78,9 @@ def fill_test_product() -> EOProduct:
     product["measurements"]["group1"]["group2"].add_variable("variable_c")
     product.add_variable("measurements/group1/group2/variable_d")
 
-    product.measurements["group1"].add_group("group_2b")
-    product.measurements["group1"].add_group("group_2b/group_3")
-    product.add_group("measurements/group1/group_2b/group_3b")
+    product.measurements["group1"].add_group("group2b")
+    product.measurements["group1"].add_group("group2b/group3")
+    product.add_group("measurements/group1/group2b/group3b")
 
     return product
 
@@ -98,28 +99,29 @@ def test_add_group_var():
     assert_contain(product, "measurements/group1", EOGroup)
     assert_contain(product, "measurements/group1/group2", EOGroup)
     assert_contain(product, "measurements/group1/group2b", EOGroup)
-    assert_contain(product, "measurements/group1/group2b/group_3b", EOGroup)
-    assert_contain(product, "measurements/group1/group2b/group_3b/", EOGroup)
+    assert_contain(product, "measurements/group1/group2b/group3b", EOGroup)
     assert_contain(product, "measurements/group1/variable_a", EOVariable)
     assert_contain(product, "measurements/group1/group2/variable_b", EOVariable)
     assert_contain(product, "measurements/group1/group2/variable_c", EOVariable)
     assert_contain(product, "measurements/group1/group2/variable_d", EOVariable)
 
-    with pytest.raises(IndexError):
+    with pytest.raises(KeyError):
         assert_contain(product, "measurements/group2", EOGroup)
-    with pytest.raises(IndexError):
+    with pytest.raises(KeyError):
         assert_contain(product, "measurements/group1/variable_d", EOVariable)
 
 
 @pytest.mark.unit
 def test_invalids_add():
     product = fill_test_product()
-    product.add_variable("measurements/group1/group2/variable_c")
-    product["measurements/group1/group2"].add_variable("variable_d")
-    with pytest.raises(GroupExistError):
-        product.add_group("measurements/group1/group_2b")
-    with pytest.raises(GroupExistError):
-        product.measurements["group1"].add_group("group_2b")
+    with pytest.raises(EOObjectExistError):
+        product.add_variable("measurements/group1/group2/variable_c")
+    with pytest.raises(EOObjectExistError):
+        product["measurements/group1/group2"].add_variable("variable_d")
+    with pytest.raises(EOObjectExistError):
+        product.add_group("measurements/group1/group2b")
+    with pytest.raises(EOObjectExistError):
+        product.measurements["group1"].add_group("group2b")
     with pytest.raises(InvalidProductError):
         product.add_variable("direct_var")
 
@@ -127,28 +129,32 @@ def test_invalids_add():
 @pytest.mark.unit
 def test_coordinates():
     product = fill_test_product()
-    paths = [
-        "/",
-        "measurements",
-        "measurements/group1",
-        "measurements/group1/group2",
-        "measurements/group1/group2/variable_c",
-    ]
-    c1 = {p: product.add_variable("coordinates/" + p + "/c1") for p in paths}
+    paths = {
+        "/": [0],
+        "measurements": [1],
+        "measurements/group1": [2],
+        "measurements/group1/group2": [3],
+        "measurements/group1/group2/variable_c": [4],
+    }
+    c1 = {p: product.add_variable("coordinates/" + p + "/c1", paths[p]) for p in paths}
 
-    c2 = product.add_variable("coordinates/measurements/group1/c_2")
+    c2 = product.add_variable("coordinates/measurements/group1/c2")
 
-    expected_dict = {"c_1": c1[paths[2]], "c_2": c2}
-    assert product[paths[2]].coordinates == dict(expected_dict)
+    expected_dict = {"c1": c1["measurements/group1"], "c2": c2}
+    c2_level_keys = expected_dict.keys()
+    assert set(product["coordinates/measurements/group1/"].coordinates.keys()) == {"c1", "c2", "group2"}
+    assert np.all(
+        product["coordinates/measurements/group1/"].coordinates[coord_name] == expected_dict[coord_name]
+        for coord_name in c2_level_keys
+    )
     for p in paths:
-        assert product[p].get_coordinate("c1") == c1[p]
-
-    for p in paths:
-        if paths[2] in p:
-            assert product[p].get_coordinate("c2") == c2
+        container = product[p] if p != "/" else product
+        assert container.get_coordinate("c1") == c1[p]
+        if "measurements/group1" in p:
+            assert container.get_coordinate("c2").path == c2.path
         else:
-            with pytest.raises(IndexError):
-                product[p].get_coordinate("c2")
+            with pytest.raises(KeyError):
+                container.get_coordinate("c2")
 
 
 @pytest.mark.unit

@@ -14,5 +14,5 @@ class InvalidStructureError(Exception):
     pass
 
 
-class GroupExistError(Exception):
+class EOObjectExistError(Exception):
     pass

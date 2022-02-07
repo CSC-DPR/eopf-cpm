@@ -75,9 +75,9 @@ def upsplit_eo_path(eo_path: str) -> Tuple[str, str]:
     return path.split(eo_path)
 
 
-def downsplit_eo_path(eo_path: str) -> Tuple[str, str]:
+def downsplit_eo_path(eo_path: str) -> Tuple[str, Optional[str]]:
     folder_name = partition_eo_path(eo_path)[0]
-    sub_path = path.relpath(eo_path, start=folder_name)
+    sub_path: Optional[str] = path.relpath(eo_path, start=folder_name)
     if sub_path == ".":
         sub_path = None
     return folder_name, sub_path
@@ -112,6 +112,7 @@ def product_relative_path(eo_context: str, eo_path: str) -> str:
 
     """
     absolute_path = join_eo_path(eo_context, eo_path)
-    if absolute_path == "/":
+    first_level_relative_path = downsplit_eo_path(absolute_path)[1]
+    if first_level_relative_path is None:
         return ""
-    return downsplit_eo_path(absolute_path)[1]
+    return first_level_relative_path

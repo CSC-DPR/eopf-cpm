@@ -44,7 +44,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         self,
         name: str,
         data: Any,
-        product: "EOProduct",
+        product: "Optional[EOProduct]" = None,
         relative_path: Optional[Iterable[str]] = None,
         attrs: Optional[dict[str, Any]] = None,
         **kwargs: Any,
@@ -53,6 +53,9 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
             data = xarray.DataArray(data=data, name=name, attrs=attrs, **kwargs)
         EOObject.__init__(self, name, product, relative_path)
         self._data: xarray.DataArray = data
+
+    def _init_similar(self, data: xarray.DataArray) -> "EOVariable":
+        return EOVariable("", data, None)
 
     @property
     def attrs(self) -> dict[str, Any]:

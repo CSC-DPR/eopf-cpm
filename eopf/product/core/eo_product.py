@@ -3,7 +3,7 @@ from types import TracebackType
 from typing import Any, Iterable, Optional, Type, Union
 
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError
-from eopf.product.utils import join_path, split_path
+from eopf.product.utils import join_eo_path, partition_eo_path, product_relative_path
 
 from ..formatting import renderer
 from ..store.abstract import EOProductStore
@@ -33,7 +33,7 @@ class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]
 
     @property
     def path(self) -> str:
-        return ""
+        return "/"
 
     @property
     def relative_path(self) -> Iterable[str]:
@@ -119,25 +119,25 @@ class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]
             raise StoreNotDefinedError("Store must be defined")
         self.store.close()
 
-    def get_coordinate(self, name: str, context: str) -> EOVariable:
+    def get_coordinate(self, name: str, context: Optional[str] = None) -> EOVariable:
         """Get coordinate name in the path context (context default to this object).
         Consider coordinate inheritance.
         """
-        if self.store is None:
-            raise StoreNotDefinedError("Store must be defined")
-        sep = self.store.sep
-        context_split = split_path(context, sep=sep)
-        if context_split[0] != "coordinates":
+        if context is None:
+            context = self.path
+        context_split = list(partition_eo_path(product_relative_path(context, name)))
+        if len(context_split) == 0 or context_split[0] != "coordinates":
             context_split = ["coordinates"] + context_split
         while len(context_split) > 0:
             try:
-                coord = self[join_path(*context_split, context, sep=sep)]
+                coord = self[join_eo_path(*context_split, name)]
                 if isinstance(coord, EOVariable):
                     # It is valid to have a subgroup with the name of a coordinate of an ancestor.
                     # ex : /coordinate/coord_name et /coordinate/group1/coord_name/obj
                     return coord
             except KeyError:
                 pass
+            context_split.pop()
         raise KeyError(f"Unknown coordinate {name} in context {context} .")
 
     def _create_structure(self, group: Union[EOGroup, tuple[str, EOGroup]], level: int) -> None:

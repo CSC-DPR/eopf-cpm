@@ -2,10 +2,10 @@ import weakref
 from abc import abstractmethod
 from typing import TYPE_CHECKING, Any, Iterable, Optional
 
-from eopf.exceptions import StoreNotDefinedError
+from eopf.exceptions import InvalidProductError
 from eopf.product.core.eo_abstract import EOAbstract
 from eopf.product.store.abstract import EOProductStore
-from eopf.product.utils import join_path
+from eopf.product.utils import join_eo_path
 
 if TYPE_CHECKING:
     from eopf.product.core.eo_group import EOGroup
@@ -17,12 +17,14 @@ class EOObject(EOAbstract):
     def __init__(
         self,
         name: str,
-        product: "EOProduct",
+        product: "Optional[EOProduct]" = None,
         relative_path: Optional[Iterable[str]] = None,
     ) -> None:
         self._name: str = name
         self._relative_path: tuple[str, ...] = tuple(relative_path) if relative_path is not None else tuple()
-        self._product: EOProduct = weakref.proxy(product) if not isinstance(product, weakref.ProxyType) else product
+        if product is not None and not isinstance(product, weakref.ProxyType):
+            product = weakref.proxy(product)
+        self._product: "Optional[EOProduct]" = product
 
     @property
     @abstractmethod
@@ -37,12 +39,12 @@ class EOObject(EOAbstract):
     @property
     def path(self) -> str:
         """path from the top level product to this EOObject"""
-        if self.store is None:
-            raise StoreNotDefinedError("Store must be defined")
-        return join_path(*self.relative_path, self.name, sep=self.store.sep)
+        return join_eo_path(*self.relative_path, self.name)
 
     @property
     def product(self) -> "EOProduct":
+        if self._product is None:
+            raise InvalidProductError("Undefined product")
         return self._product
 
     @property
