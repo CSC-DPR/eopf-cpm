@@ -3,8 +3,8 @@ import os
 from collections import defaultdict
 from typing import Any, Dict, Hashable, Iterable, MutableMapping, Optional, Tuple, Union
 
-import defusedxml.ElementTree as etree
 import xarray as xr
+from lxml import etree
 
 from eopf.product.core import EOProduct
 from eopf.product.store.abstract import EOProductStore

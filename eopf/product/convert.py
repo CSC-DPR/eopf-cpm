@@ -1,8 +1,7 @@
 import abc
 import os
+import xml.etree.ElementTree as ET
 from typing import Union
-
-import defusedxml.ElementTree as ET
 
 from eopf.exceptions import StoreNotDefinedError
 from eopf.product.conveniences import (
