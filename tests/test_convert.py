@@ -34,7 +34,7 @@ def test_verify_duplicate_variables_persistence_olci_l1_in_eop_format():
     olci_duplicates = get_duplicate_s3_vars(olci_path)
     olci_eop = OLCIL1EOPConverter(olci_path)
     read_ok = olci_eop.read()
-    assert read_ok == True, "The product should be read"
+    assert read_ok, "The product should be read"
 
     s3_var_file = "Oa01_radiance.nc"
     s3_var_name = "Oa01_radiance"
@@ -562,7 +562,7 @@ def test_verify_duplicate_variables_persistence_slstr_l1_in_eop_format():
     slstr_duplicates = get_duplicate_s3_vars(slstr_path)
     slstr_eop = SLSTRL1EOPConverter(slstr_path)
     read_ok = slstr_eop.read()
-    assert read_ok == True, "The product should be read"
+    assert read_ok, "The product should be read"
 
     s3_var_file = "time_an.nc"
     s3_var_name = "SCANSYNC"
@@ -590,3 +590,19 @@ def test_verify_duplicate_variables_persistence_slstr_l1_in_eop_format():
     s3_var = file_ds.get(s3_var_name)
     eop_var = slstr_eop.eop.conditions.time_i.SCANSYNC._data
     assert s3_var.equals(eop_var)
+
+
+@pytest.mark.unit
+def test_verify_non_duplicate_variables_persistence_olci_l1_in_zarr_format():
+    # Tested on the product:
+    # S3A_OL_1_EFR____20220116T092821_20220116T093121_20220117T134858_0179_081_036_2160_LN1_O_NT_002.SEN3
+    # On 7th February 2022
+    olci_path = glob.glob("data/S3A_OL_1*.SEN3")[0]
+    olci_vars = get_s3_vars(olci_path)
+    olci_duplicates = get_duplicate_s3_vars(olci_path)
+    olci_eop = OLCIL1EOPConverter(olci_path)
+    read_ok = olci_eop.read()
+    assert read_ok, "The product should be read"
+    olci_eop_vars = get_eop_vars(olci_eop.eop)
+    _, vars_not_found = diff_s3_eop(olci_vars, olci_eop_vars, olci_duplicates)
+    assert len(vars_not_found) == 0, "There should be no elements in list vars_not_found"
