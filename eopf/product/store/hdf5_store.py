@@ -148,7 +148,7 @@ class EOHDF5Store():
                 with h5py.File(self._store, "r") as ff:
                     self._descend_obj_var(ff.get(group))
 
-    def _get_dict_group(self, obj:h5py.Group, gr : Dict[str,str] = {})->Any:
+    def _get_dict_group(self, obj:h5py.Group, gr_dict : Dict[str,str] = {})->Dict[str,str]:
         """
         Iterate through groups in a HDF5 file and creates a dictionary of groups
         Parameters
@@ -162,9 +162,11 @@ class EOHDF5Store():
 
         if type(obj) in [h5py._hl.group.Group, h5py._hl.files.File]:
             name = obj.name
-            gr[name] = name
+            gr_dict[name] = name
             for key in obj.keys():
-                gr = self._get_dict_group(obj[key], gr)
+                gr_dict = self._get_dict_group(obj[key], gr_dict)
+            
+
 
     def _get_dict_vars(self, obj:h5py.Group, vars : Dict[str,str] = {})->Dict[str,str]:
         """
@@ -320,4 +322,3 @@ class EOHDF5Store():
         """
 #        cluster.close()
 #        client.close()
-EOProduct
