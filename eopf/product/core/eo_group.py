@@ -20,8 +20,8 @@ class EOGroup(EOContainer, EOObject, MutableMapping[str, Union[EOVariable, "EOGr
 
     def __init__(
         self,
-        name: str,
-        product: "EOProduct",
+        name: str = "",
+        product: "Optional[EOProduct]" = None,
         relative_path: Optional[Iterable[str]] = None,
         dataset: Optional[xarray.Dataset] = None,
         attrs: Optional[dict[str, Any]] = None,
@@ -53,12 +53,6 @@ class EOGroup(EOContainer, EOObject, MutableMapping[str, Union[EOVariable, "EOGr
         if key in self._dataset:
             return EOVariable(key, self._dataset[key], self.product, relative_path=[*self._relative_path, self._name])
         return super()._get_item(key)
-
-    def __setitem__(self, key: str, value: Union[EOVariable, "EOGroup"]) -> None:
-        if "/" not in key and isinstance(value, EOVariable):
-            self._dataset[value.name] = value
-        else:
-            return super().__setitem__(key, value)
 
     def __delitem__(self, key: str) -> None:
         if key in self._dataset:

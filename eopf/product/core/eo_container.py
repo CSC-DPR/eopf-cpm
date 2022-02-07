@@ -39,12 +39,12 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         if subkeys:
             self[key][subkeys] = value
             return
-
+        item_rel_path = partition_eo_path(self.path)
+        value._repath(key, self.product, item_rel_path)
         if isinstance(value, EOGroup):
             self._groups[key] = value
-            return
         else:
-            raise TypeError(f"Item assigment Impossible for type {type(value)}")
+            self._add_local_variable(key, value)
 
     def __iter__(self) -> Iterator[str]:
         if self.store is not None:
@@ -185,12 +185,10 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
     def _add_local_group(self, name: str) -> "EOGroup":
         from .eo_group import EOGroup
 
-        relative_path = partition_eo_path(self.path)
-        group = EOGroup(name, self.product, relative_path=relative_path)
-        self[name] = group
+        self[name] = EOGroup()
         if self.store is not None and self.store.status == StorageStatus.OPEN:
-            self.store.add_group(name, relative_path=relative_path)
-        return group
+            self.store.add_group(name, relative_path=self[name].relative_path)
+        return self[name]
 
     @abstractmethod
     def _add_local_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> "EOVariable":

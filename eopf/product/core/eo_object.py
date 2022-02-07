@@ -2,7 +2,7 @@ import weakref
 from abc import abstractmethod
 from typing import TYPE_CHECKING, Any, Iterable, Optional
 
-from eopf.exceptions import InvalidProductError
+from eopf.exceptions import EOObjectMultipleParentError, InvalidProductError
 from eopf.product.core.eo_abstract import EOAbstract
 from eopf.product.store.abstract import EOProductStore
 from eopf.product.utils import join_eo_path
@@ -20,11 +20,28 @@ class EOObject(EOAbstract):
         product: "Optional[EOProduct]" = None,
         relative_path: Optional[Iterable[str]] = None,
     ) -> None:
-        self._name: str = name
-        self._relative_path: tuple[str, ...] = tuple(relative_path) if relative_path is not None else tuple()
+        self._name: str = ""
+        self._relative_path: tuple[str, ...] = tuple()
+        self._product: "Optional[EOProduct]" = None
+        self._repath(name, product, relative_path)
+
+    def _repath(self, name, product, relative_path):
         if product is not None and not isinstance(product, weakref.ProxyType):
             product = weakref.proxy(product)
-        self._product: "Optional[EOProduct]" = product
+        # weakref.proxy is only work with another proxy
+        if self._product is not None:
+            if self._name != "" and self._name != name:
+                raise EOObjectMultipleParentError("The EOObject name does not match it's new path")
+            if self._relative_path != tuple() and self._relative_path != relative_path:
+                raise EOObjectMultipleParentError("The EOObject path does not match it's new parent")
+            if self._product is not product:
+                raise EOObjectMultipleParentError("The EOObject product does not match it's new parent")
+
+        self._name = name
+        self._relative_path = tuple(relative_path) if relative_path is not None else tuple()
+        if product is not None and not isinstance(product, weakref.ProxyType):
+            product = weakref.proxy(product)
+        self._product = product
 
     @property
     @abstractmethod

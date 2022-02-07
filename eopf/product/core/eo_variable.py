@@ -49,7 +49,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         attrs: Optional[dict[str, Any]] = None,
         **kwargs: Any,
     ):
-        if not isinstance(data, xarray.DataArray):
+        if not isinstance(data, xarray.DataArray) and data is not None:
             data = xarray.DataArray(data=data, name=name, attrs=attrs, **kwargs)
         EOObject.__init__(self, name, product, relative_path)
         self._data: xarray.DataArray = data

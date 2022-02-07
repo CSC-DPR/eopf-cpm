@@ -16,3 +16,7 @@ class InvalidStructureError(Exception):
 
 class EOObjectExistError(Exception):
     pass
+
+
+class EOObjectMultipleParentError(Exception):
+    pass
