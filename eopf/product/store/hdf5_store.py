@@ -4,31 +4,31 @@ Define HDF5 Store Object for EOProduct.
 
 import contextlib
 from abc import abstractclassmethod, abstractmethod
-from typing import Type
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Hashable,
+    Iterable,
+    Iterator,
+    Mapping,
+    Optional,
+    Type,
+    Union,
+)
 
 import h5py
 import numpy as np
 import xarray as xr
 
-from ..core import EOGroup, EOVariable, EOProduct
-from typing import (
-Any,
-Dict,
-Callable,
-Hashable,
-Iterable,
-Iterator,
-Mapping,
-Optional,
-Type,
-Union,
-)
+from ..core import EOGroup, EOProduct, EOVariable
 
-#import dask
-#from dask.distributed import LocalCluster, Client
+# import dask
+# from dask.distributed import LocalCluster, Client
 
-class EOHDF5Store():
-    def __init__(self, store : str = '')->None:
+
+class EOHDF5Store:
+    def __init__(self, store: str = "") -> None:
         """
         Init of the EOHDF5Store object
         Parameters:
@@ -39,7 +39,7 @@ class EOHDF5Store():
         self._store = store
         # self.cluster = LocalCluster( scheduler_port = 8786 , n_workers = 2 )
 
-    def _set_attr(self, h5_node: h5py.Group, attrs: Any)->None:
+    def _set_attr(self, h5_node: h5py.Group, attrs: Any) -> None:
         """
         Set attributes to a node
         Parameters:
@@ -52,7 +52,7 @@ class EOHDF5Store():
             h5_node.attrs[attr] = attrs[attr]
 
     # @dask.delayed
-    def _descend_obj_all(self, obj:h5py.Group, sep: str ="\t")->None:
+    def _descend_obj_all(self, obj: h5py.Group, sep: str = "\t") -> None:
         """
         Iterate through groups in a HDF5 file and prints the groups and datasets names and datasets attributes
         Parameters:
@@ -70,7 +70,7 @@ class EOHDF5Store():
                 print(sep + "\t", "-", key, ":", obj.attrs[key])
 
     # @dask.delayed
-    def _descend_obj_gr(self, obj:h5py.Group, sep: str ="\t")->None:
+    def _descend_obj_gr(self, obj: h5py.Group, sep: str = "\t") -> None:
         """
         Iterate through groups in a HDF5 file and prints the name of groups
         Parameters:
@@ -85,7 +85,7 @@ class EOHDF5Store():
                 self._descend_obj_gr(obj[key], sep=sep + "\t")
 
     # @dask.delayed
-    def _descend_obj_var(self, obj:h5py.Group, sep: str ="\t")->None:
+    def _descend_obj_var(self, obj: h5py.Group, sep: str = "\t") -> None:
         """
         Iterate through groups in a HDF5 file and prints the variables and datasets attributes
         Parameters:
@@ -105,7 +105,7 @@ class EOHDF5Store():
                 print(sep + "\t", "-", key, ":", obj.attrs[key])
 
     # @dask.delayed
-    def h5dump(self, output_file_path : str ="", dump_type : str ="all", group : str ="/")->None:
+    def h5dump(self, output_file_path: str = "", dump_type: str = "all", group: str = "/") -> None:
         """
         Print HDF5 file metadata
         Parameters:
@@ -148,7 +148,7 @@ class EOHDF5Store():
                 with h5py.File(self._store, "r") as ff:
                     self._descend_obj_var(ff.get(group))
 
-    def _get_dict_group(self, obj:h5py.Group, gr_dict : Dict[str,str] = {})->Dict[str,str]:
+    def _get_dict_group(self, obj: h5py.Group, gr_dict: Dict[str, str] = {}) -> Dict[str, str]:
         """
         Iterate through groups in a HDF5 file and creates a dictionary of groups
         Parameters
@@ -165,10 +165,10 @@ class EOHDF5Store():
             gr_dict[name] = name
             for key in obj.keys():
                 gr_dict = self._get_dict_group(obj[key], gr_dict)
-            
 
+        return gr_dict
 
-    def _get_dict_vars(self, obj:h5py.Group, vars : Dict[str,str] = {})->Dict[str,str]:
+    def _get_dict_vars(self, obj: h5py.Group, vars: Dict[str, str] = {}) -> Dict[str, str]:
         """
         Iterate through group(s) in a HDF5 file and creates a dictionary of variables
         Parameters:
@@ -185,10 +185,10 @@ class EOHDF5Store():
                 if type(obj[key]) == h5py._hl.dataset.Dataset:
                     vars[key] = key
                 vars = self._get_dict_vars(obj[key], vars)
-        
+
         return vars
 
-    def h5dict(self, dump_type : str = 'var', group : str = '/')->Dict[str,str]:
+    def h5dict(self, dump_type: str = "var", group: str = "/") -> Dict[str, str]:
         """
         Creates a dictionary of items from HDF5 file
         group: the group where become the dictionary; you can give a specific group, defaults to the root group
@@ -203,17 +203,17 @@ class EOHDF5Store():
         ----------
         """
         dict = EOHDF5Store.json_dict()
-        if dump_type == 'var':
+        if dump_type == "var":
             with h5py.File(self._store, "r") as f:
                 vrs = EOHDF5Store.json_dict()
                 dict = self._get_dict_vars(f.get(group), vrs)
-        elif dump_type == 'gr':
+        elif dump_type == "gr":
             with h5py.File(self._store, "r") as f:
                 gr = EOHDF5Store.json_dict()
                 dict = self._get_dict_group(f.get(group), gr)
         return dict
 
-    def _h5_group(self, f:h5py.File, parent_node: h5py.Group, eogroup: EOGroup)->None:
+    def _h5_group(self, f: h5py.File, parent_node: h5py.Group, eogroup: EOGroup) -> None:
         """
         Iterate through groups in EOProduct and creates hdf5 groups, variables, datasets and attributes
         Parameters
@@ -245,7 +245,7 @@ class EOHDF5Store():
             for key, g in eogroup.groups:
                 self._h5_group(f, current_node, g)
 
-    def write(self, product: EOProduct)->None:
+    def write(self, product: EOProduct) -> None:
         """
         Creates HDF5 file from groups in EOProduct by iteration for each group in rout of EOProduct
         Parameters
@@ -258,20 +258,20 @@ class EOHDF5Store():
 
         # eogroup = product.__getitem__('attributes')
         # self._h5_group(f, root, eogroup)
-        eogroup = product._get_group("coordinates")
-        self._h5_group(f, root, eogroup)
-        eogroup = product._get_group("measurements")
-        self._h5_group(f, root, eogroup)
-        eogroup = product._get_group("quality")
-        if eogroup != None:
-            self._h5_group(f, root, eogroup)
-        eogroup = product._get_group("conditions")
-        if eogroup != None:
-            self._h5_group(f, root, eogroup)
+        eogroup1: EOGroup = product._get_group("coordinates")
+        self._h5_group(f, root, eogroup1)
+        eogroup2: EOGroup = product._get_group("measurements")
+        self._h5_group(f, root, eogroup2)
+        eogroup3: EOGroup = product._get_group("quality")
+        if eogroup3 != None:
+            self._h5_group(f, root, eogroup3)
+        eogroup4: EOGroup = product._get_group("conditions")
+        if eogroup4 is not None:
+            self._h5_group(f, root, eogroup4)
         f.close()
 
     @staticmethod
-    def json_serializable_dict_of(attrs: Any)->Any:
+    def json_serializable_dict_of(attrs: Any) -> Any:
         """
         Creates a JSON dict from attributes
         Parameters
@@ -292,33 +292,35 @@ class EOHDF5Store():
         return result
 
     @staticmethod
-    def json_dict()->Any:
+    def json_dict() -> Any:
         """
         Creates an empty JSON dict
         """
         result = dict()
-        #result = {}
-        result[''] = ''
+        # result = {}
+        result[""] = ""
         return result
 
-#    @staticmethod
-#    def create_cluster_client()->None:
+        #    @staticmethod
+        #    def create_cluster_client()->None:
         """
         Creates a cluster and client dask and return them
         """
-#        print("Create cluster")
-#        cluster = LocalCluster( scheduler_port = 33211 , n_workers = 2 )
-#        print("Create client")
-#         client = Client(cluster)
-#         return cluster, client
+        #        print("Create cluster")
+        #        cluster = LocalCluster( scheduler_port = 33211 , n_workers = 2 )
+        #        print("Create client")
+        #         client = Client(cluster)
+        #         return cluster, client
 
-#    @staticmethod
-#    def close_cluster_client(cluster: LocalCluster, client: Client)->None:
+        #    @staticmethod
+        #    def close_cluster_client(cluster: LocalCluster, client: Client)->None:
         """
         Closes a cluster and client dask
         Parameters
         ----------
         cluster: the cluster to be closed
         """
+
+
 #        cluster.close()
 #        client.close()
