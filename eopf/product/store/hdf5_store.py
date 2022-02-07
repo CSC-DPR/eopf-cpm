@@ -116,7 +116,7 @@ class EOHDF5Store:
                    - gr - print the name of group(s)
                    - var - print all variables and datasets attributes
         output_file_path: the dump file
-                            - '' - dump to console
+                            - "" - dump to console
                             - specific path to a text file
         ---------
         """
@@ -195,9 +195,6 @@ class EOHDF5Store:
         dump_type: the type of dump:
                    - gr - for group(s)
                    - var - for variables (default)
-        output_file_path: the dump file
-                            - '' - dump to console
-                            - specific path to a text file
         ---------
         Return: dictionary
         ----------
@@ -256,17 +253,20 @@ class EOHDF5Store:
         f = h5py.File(self._store, "w")
         root = f.create_group(self._store)
 
-        # eogroup = product.__getitem__('attributes')
-        # self._h5_group(f, root, eogroup)
-        eogroup1: EOGroup = product._get_group("coordinates")
-        self._h5_group(f, root, eogroup1)
-        eogroup2: EOGroup = product._get_group("measurements")
-        self._h5_group(f, root, eogroup2)
-        eogroup3: EOGroup = product._get_group("quality")
-        if eogroup3 != None:
+        #eogroup: Union[EOVariable, "EOGroup"] = product._get_group("attributes")
+        #if isinstance(eogroup, EOGroup) and eogroup is not None:
+        #    self._h5_group(f, root, eogroup)
+        eogroup1: Union[EOVariable, "EOGroup"] = product._get_group("coordinates")
+        if isinstance(eogroup1, EOGroup):
+            self._h5_group(f, root, eogroup1)
+        eogroup2: Union[EOVariable, "EOGroup"] = product._get_group("measurements")
+        if isinstance(eogroup2, EOGroup):
+            self._h5_group(f, root, eogroup2)
+        eogroup3: Union[EOVariable, "EOGroup"] = product._get_group("quality")
+        if isinstance(eogroup3, EOGroup) and eogroup3 is not None:
             self._h5_group(f, root, eogroup3)
-        eogroup4: EOGroup = product._get_group("conditions")
-        if eogroup4 is not None:
+        eogroup4: Union[EOVariable, "EOGroup"] = product._get_group("conditions")
+        if isinstance(eogroup4, EOGroup) and eogroup4 is not None:
             self._h5_group(f, root, eogroup4)
         f.close()
 
