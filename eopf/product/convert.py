@@ -254,7 +254,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
             attr: translate_structure(EOP_MAP_SLSTR_L1[attr], xfdu_dom, NAMESPACES_SLSTR_L1)
             for attr in EOP_MAP_SLSTR_L1
         }
-        attributes_eog = EOGroup("Attributes", product=self.eop, attrs={"CF": cf, "OM-EOP": eop, "XFDU": xfdu})
+        attributes_eog = EOGroup("attributes", product=self.eop, attrs={"CF": cf, "OM-EOP": eop, "XFDU": xfdu})
         self.eop["Attributes"] = attributes_eog
 
     def _build_coordinates_eog(self) -> None:
