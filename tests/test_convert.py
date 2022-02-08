@@ -1176,7 +1176,7 @@ def test_verify_duplicate_variables_persistence_olci_l1_in_zarr_format():
 
     s3_var_file = "geo_coordinates.nc"
     s3_var_name = "latitude"
-    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    s3_zarr_path = os.path.join(zarr_path, "coordinates/image_grid")
     assert s3_var_name in olci_duplicates
     olci_file = os.path.join(olci_path, s3_var_file)
     file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
