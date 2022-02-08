@@ -4,6 +4,7 @@ import os
 import pytest
 import xarray as xr
 from utils import (
+    cmp_s3_zarr_var,
     diff_s3_eop,
     diff_s3_zarr,
     get_duplicate_s3_vars,
@@ -638,3 +639,49 @@ def test_verify_non_duplicate_variables_persistence_slstr_l1_in_zarr_format():
     slstr_zarr_vars = get_zarr_vars(zarr_path)
     _, vars_not_found = diff_s3_zarr(slstr_vars, slstr_zarr_vars, slstr_duplicates)
     assert len(vars_not_found) == 0, "There should be no elements in list vars_not_found"
+
+
+def test_verify_duplicate_variables_persistence_slstr_l1_in_zarr_format():
+    # Tested on the product:
+    # S3A_SL_1_RBT____20220118T083600_20220118T083900_20220118T110259_0179_081_064_2160_LN2_O_NR_004.SEN3
+    # On 7th February 2022
+    slstr_path = glob.glob("data/S3A_SL_1_RBT*.SEN3")[0]
+    slstr_duplicates = get_duplicate_s3_vars(slstr_path)
+    slstr_eop = SLSTRL1EOPConverter(slstr_path)
+    read_ok = slstr_eop.read()
+    assert read_ok, "The product should be read"
+    zarr_path = "data/slstr_zarr"
+    slstr_eop.write(zarr_path)
+
+    s3_var_file = "time_an.nc"
+    s3_var_name = "SCANSYNC"
+    s3_zarr_path = os.path.join(zarr_path, "conditions/time_a")
+    assert s3_var_name in slstr_duplicates
+    olci_file = os.path.join(slstr_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "time_bn.nc"
+    s3_var_name = "SCANSYNC"
+    s3_zarr_path = os.path.join(zarr_path, "conditions/time_b")
+    assert s3_var_name in slstr_duplicates
+    olci_file = os.path.join(slstr_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "time_in.nc"
+    s3_var_name = "SCANSYNC"
+    s3_zarr_path = os.path.join(zarr_path, "conditions/time_i")
+    assert s3_var_name in slstr_duplicates
+    olci_file = os.path.join(slstr_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
