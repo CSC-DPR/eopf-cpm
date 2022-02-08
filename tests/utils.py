@@ -80,6 +80,27 @@ def diff_s3_eop(dict_s3, dict_eop, duplicates):
     return vars_found, vars_not_found
 
 
+def cmp_s3_zarr_var_attrs(s3_var, zarr_var):
+    """compares attributes between a s3 var and a zarr var"""
+
+    return (xr.Dataset(s3_var.attrs)).equals(xr.Dataset(zarr_var.attrs))
+
+
+def cmp_s3_zarr_var_data(s3_var, zarr_var):
+    """compares data between a s3 var and a zarr var"""
+
+    if (s3_var.data == zarr_var.data).all:
+        return True
+    else:
+        False
+
+
+def cmp_s3_zarr_var(s3_var, zarr_var):
+    """compares data and attributes between a s3 var and a zarr var"""
+
+    return cmp_s3_zarr_var_data(s3_var, zarr_var) and cmp_s3_zarr_var_attrs(s3_var, zarr_var)
+
+
 def diff_s3_zarr(dict_s3, dict_zarr, duplicates):
     """verify if variables from dict_s3 are equal in name and data with those in dict_zarr"""
 
@@ -92,7 +113,7 @@ def diff_s3_zarr(dict_s3, dict_zarr, duplicates):
         found = False
         for zarr_var in dict_zarr.keys():
             if s3_var == zarr_var:
-                if dict_s3[s3_var].equals(dict_zarr[zarr_var]):
+                if cmp_s3_zarr_var(dict_s3[s3_var], dict_zarr[zarr_var]):
                     found = True
                 break
 
@@ -105,6 +126,7 @@ def diff_s3_zarr(dict_s3, dict_zarr, duplicates):
 
 
 def get_dirs_with_zarr_vars(zarr_prod_path):
+    """returns a list of directory where zarr variables can be found"""
 
     dirs_with_zarr_vars = []
     for root, dirs, files in os.walk(zarr_prod_path):
@@ -122,6 +144,7 @@ def get_dirs_with_zarr_vars(zarr_prod_path):
 
 
 def get_zarr_vars(path):
+    """returns a dictionary of all variables in zarr format at path"""
 
     zarr_vars = {}
     dirs_with_zarr_vars = get_dirs_with_zarr_vars(path)
