@@ -79,12 +79,12 @@ def fill_test_product() -> EOProduct:
     product.add_group("group0")
 
     product.measurements["group1"].add_variable("variable_a")
-    product["measurements/group1"].add_variable("group2/variable_b")
-    product["measurements"]["group1"]["group2"].add_variable("variable_c")
+    product["/measurements/group1"].add_variable("group2/variable_b")
+    product["measurements/group1"]["group2"].add_variable("/measurements/group1/group2/variable_c")
     product.add_variable("measurements/group1/group2/variable_d")
 
-    product.measurements["group1"].add_group("group2b")
-    product.measurements["group1"].add_group("group2b/group3")
+    product["measurements"]["group1"].add_group("group2b")
+    product.measurements["group1"].add_group("/measurements/group1/group2b/group3")
     product.add_group("measurements/group1/group2b/group3b")
 
     return product
@@ -117,6 +117,22 @@ def test_add_group_var():
 
 
 @pytest.mark.unit
+def test_get_getattr():
+    product = fill_test_product()
+
+    assert product["measurements/group1"] is product.measurements.group1
+    assert product["measurements/group1/variable_a"].path == product.measurements.group1.variable_a.path
+    with pytest.raises(AttributeError):
+        product.measurements.group1.variable_99
+    with pytest.raises(AttributeError):
+        product.measurements.groupz
+    with pytest.raises(AttributeError):
+        product.groupz
+    with pytest.raises(AttributeError):
+        product.variable_99
+
+
+@pytest.mark.unit
 def test_invalids_add():
     product = fill_test_product()
     with pytest.raises(EOObjectExistError):
@@ -129,6 +145,10 @@ def test_invalids_add():
         product.measurements["group1"].add_group("group2b")
     with pytest.raises(InvalidProductError):
         product.add_variable("direct_var")
+    with pytest.raises(KeyError):
+        product.add_variable("")
+    with pytest.raises(KeyError):
+        product.add_group("")
 
 
 @pytest.mark.unit
@@ -178,32 +198,64 @@ def test_attributes():
 @pytest.mark.unit
 def test_setitem():
     product = fill_test_product()
-    product_bis = fill_test_product()
 
-    product["measurements/group1b"] = EOGroup("group1b", None)
-    product["group1c"] = EOGroup("group1c", None)
+    product["measurements/group1b/"] = EOGroup("group1b", None)
+
+    group1c = EOGroup("group1c", None)
+    with pytest.raises(InvalidProductError):
+        group1c.product
+    product["group1c"] = group1c
+    assert group1c.product == product
+    assert group1c.path == "/group1c"
+
     product["group1d"] = EOGroup("group1b", None)
     product["group1e"] = EOGroup("group1c", None)
-    product["measurements/group1b"] = EOGroup("group1b", None)
+    product["/measurements/"]["/measurements/group1b"] = EOGroup("group1b", None)
     product["group1f"] = EOGroup("group1f", product)
-    with pytest.raises(EOObjectMultipleParentError):
-        product["group1g"] = EOGroup("group1g", product, ("/", "measurements", "group1b"))
     product["measurements/group1h"] = EOGroup("group1h", product, ["/", "measurements"])
-    with pytest.raises(EOObjectMultipleParentError):
-        product["group1h"] = EOGroup("group1i", product_bis)
-    with pytest.raises(EOObjectMultipleParentError):
-        product["group1i"] = EOGroup("group1i", product_bis, ("measurements", "group1i"))
     product["measurements/group1/variable_v1"] = EOVariable("variable_v1", None)
-    product["measurements/group1/variable_v2"] = EOVariable("variable_v1", None)
+    product["/measurements/group1/variable_v2"] = EOVariable("variable_v1", None)
     product["measurements/group1"]["variable_v3"] = EOVariable("variable_v3", None)
     product["measurements/group1"]["variable_v3"] = EOVariable("variable_v3", None)
-    product["measurements/group1"]["variable_v4"] = EOVariable("variable_v4", None, product)
+    product["measurements/group1"]["/measurements/group1/variable_v4"] = EOVariable("variable_v4", None, product)
     product["measurements/group1"]["variable_v5"] = EOVariable(
         "variable_v5",
         [1, 2],
         product,
         ["/", "measurements", "group1"],
     )
+    with pytest.raises(KeyError):
+        product["measurements/group1"][""] = EOVariable("", None)
+
+    path_asserts = [
+        "/measurements/group1b",
+        "/group1c",
+        "/group1d",
+        "/group1e",
+        "/group1f",
+        "/measurements/group1h",
+        "/measurements/group1/variable_v1",
+        "/measurements/group1/variable_v2",
+        "/measurements/group1/variable_v3",
+        "/measurements/group1/variable_v4",
+    ]
+    for path in path_asserts:
+        assert product[path].path == path
+        assert product[path].product == product
+        assert product[path].name == upsplit_eo_path(path)[1]
+    np.testing.assert_equal(product["measurements/group1"]["variable_v5"], [1, 2])
+
+
+@pytest.mark.unit
+def test_multipleparent_setitem():
+    product = fill_test_product()
+    product_bis = fill_test_product()
+    with pytest.raises(EOObjectMultipleParentError):
+        product["group1g"] = EOGroup("group1g", product, ("/", "measurements", "group1b"))
+    with pytest.raises(EOObjectMultipleParentError):
+        product["group1h"] = EOGroup("group1i", product_bis)
+    with pytest.raises(EOObjectMultipleParentError):
+        product["group1i"] = EOGroup("group1i", product_bis, ("measurements", "group1i"))
     with pytest.raises(EOObjectMultipleParentError):
         var = EOVariable("variable_v6", None, product_bis)
         product["measurements/group1"]["variable_v6"] = var
@@ -222,20 +274,43 @@ def test_setitem():
             product,
             ["/", "measurements", "group2"],
         )
-    path_asserts = [
-        "/measurements/group1b",
-        "/group1c",
-        "/group1d",
-        "/group1e",
-        "/group1f",
-        "/measurements/group1h",
-        "/measurements/group1/variable_v1",
-        "/measurements/group1/variable_v2",
-        "/measurements/group1/variable_v3",
-        "/measurements/group1/variable_v4",
-    ]
-    for path in path_asserts:
-        assert product[path].path == path
-        assert product[path].product == product
-        assert product[path].name == upsplit_eo_path(path)[1]
-    np.testing.assert_equal(product["measurements/group1"]["variable_v5"], [1, 2])
+
+
+@pytest.mark.unit
+def test_delitem():
+    product = fill_test_product()
+    del product["group0"]
+    with pytest.raises(KeyError):
+        product["group0"]
+    product["measurements"]
+    product["measurements/group1/group2/variable_b"]
+
+    del product["measurements/group1/group2/variable_b"]
+    with pytest.raises(KeyError):
+        product["measurements/group1/group2/variable_b"]
+
+    del product["measurements/group1/"]["group2/variable_c"]
+    with pytest.raises(KeyError):
+        product["measurements/group1/group2/variable_b"]
+    product["measurements/group1/group2"]
+    del product.measurements["group1/group2b"]
+    with pytest.raises(KeyError):
+        product["measurements/group1/group2b"]
+    del product.measurements["group1/group2"]
+    with pytest.raises(KeyError):
+        product["measurements/group1/group2"]
+    product2 = fill_test_product()
+
+    with pytest.raises(KeyError):
+        del product2.measurements["/measurements/group1"]
+    del product2.measurements["group1"]
+
+    with pytest.raises(KeyError):
+        product["measurements/group1/group2"]
+
+
+@pytest.mark.unit
+def test_invalid_dataset():
+    with pytest.raises(TypeError):
+        EOGroup(dataset=xarray.Dataset({1: ("a", np.array([3]))}))
+    EOGroup(dataset=xarray.Dataset({"1": ("a", np.array([3]))}))
