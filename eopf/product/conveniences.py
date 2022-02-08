@@ -23,14 +23,14 @@ def filter_files_by(file_paths: list[str], filters: list[str]) -> list[str]:
 
     Parameters
     ----------
-    file_paths : list[os.PathLike]
+    file_paths : list[str]
         Directories in which the search is performed.
     filters : list[str]
         Tokens to be contained in the filename.
 
     Returns
     -------
-    filtered files : list[os.PathLike]
+    filtered files : list[str]
     """
     filtered_file_paths: list[str] = []
 
@@ -48,7 +48,7 @@ def get_dir_files(dir_path: str, glob_pattern: str = "*") -> list[str]:
 
     Parameters
     ----------
-    dir_path : os.PathLike
+    dir_path : str
         Path to the directory.
 
     glob_pattern : str, optional:
@@ -57,7 +57,7 @@ def get_dir_files(dir_path: str, glob_pattern: str = "*") -> list[str]:
 
     Returns:
     -------
-    list of files: list[os.PathLike]
+    list of files: list[str]
     """
     dir_files: list[str] = []
 
@@ -84,12 +84,12 @@ def read_xrd(
 
     Parameters
     ----------
-    files : list[os.PathLike]:
+    files : list[str]:
         Paths of the files to be read from.
     skip : list[str], optional
-        Filenames which should not be read from . Defaults to [].
+        Variables which should not be read from . Defaults to [].
     pick : list[str], optional
-        Files which should be read from. Defaults to [].
+        Variables which should be read from. Defaults to [].
     decode_times : bool, optional
         If True, decode variables and coordinates with time units into timedelta objects.
         If False, leave them encoded as numbers.
@@ -151,7 +151,7 @@ def parse_xml(path_to_product: str, glob_pattern: str) -> Any:
 
     Parameters
     ----------
-    path_to_product : os.PathLike
+    path_to_product : str
         Path to the directory of the product
     glob_pattern : str
         Token identifying the file of interest
