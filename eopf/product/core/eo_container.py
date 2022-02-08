@@ -69,7 +69,7 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         key, subkey = downsplit_eo_path(key)
         item: EOGroup
         if key not in self._groups and self.store is None:
-            raise KeyError(f"Invalide EOGroup item name {key}")
+            raise KeyError(f"Invalid EOGroup item name {key}")
         elif key in self._groups:
             item = self._groups[key]
         elif self.store is not None:
@@ -83,10 +83,15 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
     def __delitem__(self, key: str) -> None:
         if is_absolute_eo_path(key):
             raise KeyError("__delitem__ can't take an absolute path as argument")
-        if key in self._groups:
-            del self._groups[key]
-        if self.store is not None and (store_key := self._relative_key(key)) in self.store:
-            del self.store[store_key]
+        name, keys = downsplit_eo_path(key)
+
+        if keys is None:
+            if name in self._groups:
+                del self._groups[name]
+            if self.store is not None and (store_key := self._relative_key(name)) in self.store:
+                del self.store[store_key]
+        else:
+            del self[name][keys]
 
     def __len__(self) -> int:
         keys = set(self._groups)
