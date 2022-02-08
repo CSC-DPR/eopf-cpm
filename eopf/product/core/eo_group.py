@@ -1,4 +1,3 @@
-from collections.abc import MutableMapping
 from typing import TYPE_CHECKING, Any, Hashable, Iterable, Iterator, Optional, Union
 
 import xarray
@@ -15,8 +14,15 @@ if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_product import EOProduct
 
 
-class EOGroup(EOContainer, EOObject, MutableMapping[str, Union[EOVariable, "EOGroup"]]):
-    """"""
+class EOGroup(EOContainer, EOObject):
+    """
+    A group of EOVariable and sub EOGroup, linked to their EOProduct's EOProductStore (if existing).
+
+    Read and write both dynamically, or on demand to the EOProductStore.
+    Can be used in a dictionary like manner with relatives and absolutes paths.
+    Has personal attributes and both personal and inherited coordinates.
+
+    """
 
     def __init__(
         self,
@@ -41,14 +47,14 @@ class EOGroup(EOContainer, EOObject, MutableMapping[str, Union[EOVariable, "EOGr
         self._dataset = dataset
 
     def _get_item(self, key: str) -> Union[EOVariable, "EOGroup"]:
-        """find and return eovariable or eogroup from the given key.
+        """Find and return an EOVariable or EOGroup from the given key.
 
-        if store is defined and key not already loaded in this group,
-        data is loaded from it.
+        If store is defined and key not already loaded in this group,
+        the object data is loaded from it.
         Parameters
         ----------
         key: str
-            name of the eovariable or eogroup
+            path of the EOVariable or EOGroup
         """
         if key in self._dataset:
             return EOVariable(key, self._dataset[key], self.product, relative_path=[*self._relative_path, self._name])
@@ -85,40 +91,24 @@ class EOGroup(EOContainer, EOObject, MutableMapping[str, Union[EOVariable, "EOGr
 
     @property
     def dims(self) -> tuple[Hashable, ...]:
-        """dimension of this group"""
+        """Dimension of this group."""
         return tuple(self._dataset.dims)
 
     @property
     def groups(self) -> Iterator[tuple[str, "EOGroup"]]:
-        """iterator over the groups of this group"""
+        """Iterator over the sub EOGroup of this EOGroup"""
         for key, value in self.items():
             if isinstance(value, EOGroup):
                 yield key, value
 
     @property
     def variables(self) -> Iterator[tuple[str, EOVariable]]:
-        """iterator over the variables of this group"""
+        """Iterator over the couples variable_name, EOVariable of this EOGroup"""
         for key, value in self.items():
             if isinstance(value, EOVariable):
                 yield key, value
 
     def _add_local_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> EOVariable:
-        """Construct and add an eovariable to this group
-
-        if store is defined and open, the eovariable it's directly write by the store.
-        Parameters
-        ----------
-        name: str
-            name of the future group
-        data: any, optional
-            data like object use to create dataarray or dataarray
-        **kwargs: any
-            DataArray extra parameters if data is not a dataarray
-        Returns
-        -------
-        EOVariable
-            newly created EOVariable
-        """
         variable = EOVariable(name, data, self.product, relative_path=[*self._relative_path, self._name], **kwargs)
         self._dataset[name] = variable._data
         if self.store is not None and self.store.status == StorageStatus.OPEN:

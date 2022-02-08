@@ -20,6 +20,13 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]]):
+    """
+    Abstract class implemented by EOProduct and EOGroup.
+    Storage of EOVariable and EOGroup, linked to their EOProduct's EOProductStore (if existing).
+    Read and write both dynamically, or on demand to the EOProductStore.
+    Can be used in a dictionary like manner with relatives and absolutes paths.
+    """
+
     def __init__(self) -> None:
         self._groups: dict[str, "EOGroup"] = {}
 
@@ -112,7 +119,7 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         )
 
     def _relative_key(self, key: str) -> str:
-        """helper to construct store path of sub object
+        """Helper to construct a store specific path of a sub object.
 
         Parameters
         ----------
@@ -122,13 +129,17 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         -------
         str
             path value with store based separator
+        Raises
+        ------
+        StoreNotDefinedError
+            If this object doesn't have a Store.
         """
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
         return join_path(self.path, key, sep=self.store.sep)
 
     def add_group(self, name: str) -> "EOGroup":
-        """Construct and add an EOGroup to this container
+        """Construct and add an EOGroup to this container.
 
         if store is defined and open, the group is directly writen by the store.
         Parameters
@@ -139,6 +150,10 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         -------
         EOGroup
             newly created EOGroup
+        Raises
+        ------
+        EOObjectExistError
+            If an object already exist at this path.
         """
 
         def local_adder(subcontainer: EOContainer, name: str) -> "EOGroup":
@@ -151,9 +166,9 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         return self._recursive_add(norm_eo_path(name), local_adder)
 
     def add_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> "EOVariable":
-        """Construct and add an EOVariable to this container
+        """Construct and add an EOVariable to this container.
 
-        if store is defined and open, the variable is directly writen by the store.
+        If store is defined and open, the variable is directly writen by the store.
         Parameters
         ----------
         name: str
@@ -162,6 +177,10 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         -------
         EOVariable
             newly created EOVariable
+        Raises
+        ------
+        EOObjectExistError
+            If an object already exist at this path.
         """
 
         def local_adder(subcontainer: EOContainer, name: str, data: Optional[Any], **kwargs: Any) -> "EOVariable":
@@ -173,21 +192,62 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         # We want the method of the subtype.
         return self._recursive_add(norm_eo_path(name), local_adder, data, **kwargs)
 
-    def _recursive_add(self, name: str, add_local_method: Callable[..., Any], *argc: Any, **argv: Any) -> Any:
-        name, keys = downsplit_eo_path(name)
+    def _recursive_add(self, path: str, add_local_method: Callable[..., Any], *argc: Any, **argv: Any) -> Any:
+        """
+        Recursively got through the path , adding group as needed,
+        then add it to the local container using add_local_method
+
+        Parameters
+        ----------
+        path: str
+            path of the new EOObject.
+        add_local_method: Callable[..., Any]
+            methode used to add locally the new EOObject
+        *argc: Any
+            Positionals arguments of add_local_method additional to the name
+        **argv
+            Named arguments of add_local_method additional to the name
+
+        Returns
+        -------
+        EOObject
+            newly created EOObject.
+        Raises
+        ------
+        EOObjectExistError
+            If an object already exist at this path.
+        """
+        path, keys = downsplit_eo_path(path)
 
         if keys is None:
-            if name in self:
-                raise EOObjectExistError(f"Object {name} already exist in {self.name}")
-            return add_local_method(self, name, *argc, **argv)
+            if path in self:
+                raise EOObjectExistError(f"Object {path} already exist in {self.name}")
+            return add_local_method(self, path, *argc, **argv)
         else:
-            if name in self._groups:
-                group = self._groups[name]
+            if path in self._groups:
+                group = self._groups[path]
             else:
-                group = self._add_local_group(name)
+                group = self._add_local_group(path)
             return group._recursive_add(keys, add_local_method, *argc, **argv)
 
     def _add_local_group(self, name: str) -> "EOGroup":
+        """
+        Add a group local to the EOContainer. Does not support paths and recursively adding subgroups.
+        Parameters
+        ----------
+        name:
+            Name of the subgroup to add.
+
+        Returns
+        -------
+        EOGroup
+            newly created EOGroup
+        Raises
+        ------
+        EOObjectExistError
+            If an object already exist at this path.
+
+        """
         from .eo_group import EOGroup
 
         group = EOGroup()
@@ -200,6 +260,28 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
     def _add_local_variable(
         self, name: str, data: Optional[Any] = None, **kwargs: Any
     ) -> "EOVariable":  # pragma: no cover
+        """
+        Add a variable local to the EOVariable. Does not support paths and recursively adding subgroups.
+        Parameters
+        ----------
+        name:
+            Name of the variable to add.
+
+        Returns
+        -------
+        EOVariable
+            newly created EOVariable
+        data: any, optional
+            data like object from which the EOVariable dataarray is filled
+        **kwargs: any
+            DataArray extra parameters if data is not a dataarray
+        Raises
+        ------
+        EOObjectExistError
+            If an object already exist at this path.
+        InvalidProductError
+            If you store a variable locally to a product.
+        """
         ...
 
     def write(self, erase: bool = False) -> None:

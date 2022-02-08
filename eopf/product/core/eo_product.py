@@ -1,4 +1,3 @@
-from collections.abc import MutableMapping
 from types import TracebackType
 from typing import Any, Iterable, Optional, Type, Union
 
@@ -8,12 +7,17 @@ from eopf.product.utils import join_eo_path, partition_eo_path, product_relative
 from ..formatting import renderer
 from ..store.abstract import EOProductStore
 from .eo_container import EOContainer
-from .eo_group import EOGroup
 from .eo_variable import EOVariable
 
 
-class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]):
-    """"""
+class EOProduct(EOContainer):
+    """
+    A EOProduct containing EOGroups (and throught them their EOVariable), linked to it's EOProductStore (if existing).
+
+    Read and write both dynamically, or on demand to the EOProductStore.
+    Can be used in a dictionary like manner with relatives and absolutes paths.
+    Has personal attributes and both personal and inherited coordinates.
+    """
 
     MANDATORY_FIELD = ("measurements", "coordinates", "attributes")
 
@@ -41,7 +45,6 @@ class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]
 
     @property
     def name(self) -> str:
-        """name of the product"""
         return self._name
 
     def __set_store(self, store_or_path_url: Optional[Union[str, EOProductStore]] = None) -> None:
@@ -120,9 +123,6 @@ class EOProduct(EOContainer, MutableMapping[str, Union["EOVariable", "EOGroup"]]
         self.store.close()
 
     def get_coordinate(self, name: str, context: Optional[str] = None) -> EOVariable:
-        """Get coordinate name in the path context (context default to this object).
-        Consider coordinate inheritance.
-        """
         if context is None:
             context = self.path
         context_split = list(partition_eo_path(product_relative_path(context, name)))
