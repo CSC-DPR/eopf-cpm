@@ -622,6 +622,636 @@ def test_verify_non_duplicate_variables_persistence_olci_l1_in_zarr_format():
     assert len(vars_not_found) == 0, "There should be no elements in list vars_not_found"
 
 
+def test_verify_duplicate_variables_persistence_olci_l1_in_zarr_format():
+    # Tested on the product:
+    # S3A_OL_1_EFR____20220116T092821_20220116T093121_20220117T134858_0179_081_036_2160_LN1_O_NT_002.SEN3
+    # The persistence of variables coordinates is not checked since they are not yet populated in zarr
+    # On 8th February 2022
+    olci_path = glob.glob("data/S3A_OL_1*.SEN3")[0]
+    olci_duplicates = get_duplicate_s3_vars(olci_path)
+    olci_eop = OLCIL1EOPConverter(olci_path)
+    read_ok = olci_eop.read()
+    assert read_ok, "The product should be read"
+    zarr_path = "data/slstr_zarr"
+    olci_eop.write(zarr_path)
+
+    s3_var_file = "Oa01_radiance.nc"
+    s3_var_name = "Oa01_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/radiances")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "Oa01_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "Oa02_radiance.nc"
+    s3_var_name = "Oa02_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/radiances")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "Oa02_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "Oa03_radiance.nc"
+    s3_var_name = "Oa03_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/radiances")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "Oa03_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "Oa04_radiance.nc"
+    s3_var_name = "Oa04_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/radiances")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "Oa04_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "Oa05_radiance.nc"
+    s3_var_name = "Oa05_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/radiances")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "Oa05_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "Oa06_radiance.nc"
+    s3_var_name = "Oa06_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/radiances")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "Oa06_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "Oa07_radiance.nc"
+    s3_var_name = "Oa07_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/radiances")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "Oa07_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "Oa08_radiance.nc"
+    s3_var_name = "Oa08_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/radiances")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "Oa08_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "Oa09_radiance.nc"
+    s3_var_name = "Oa09_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/radiances")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "Oa09_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "Oa10_radiance.nc"
+    s3_var_name = "Oa10_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/radiances")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "Oa10_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "Oa11_radiance.nc"
+    s3_var_name = "Oa11_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/radiances")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "Oa11_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "Oa12_radiance.nc"
+    s3_var_name = "Oa12_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/radiances")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "Oa12_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "Oa13_radiance.nc"
+    s3_var_name = "Oa13_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/radiances")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "Oa13_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "Oa14_radiance.nc"
+    s3_var_name = "Oa14_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/radiances")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "Oa14_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "Oa15_radiance.nc"
+    s3_var_name = "Oa15_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/radiances")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "Oa15_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "Oa16_radiance.nc"
+    s3_var_name = "Oa16_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/radiances")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "Oa16_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "Oa17_radiance.nc"
+    s3_var_name = "Oa17_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/radiances")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "Oa17_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "Oa18_radiance.nc"
+    s3_var_name = "Oa18_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/radiances")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "Oa18_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "Oa19_radiance.nc"
+    s3_var_name = "Oa19_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/radiances")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "Oa19_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "Oa20_radiance.nc"
+    s3_var_name = "Oa20_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/radiances")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "Oa20_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "Oa21_radiance.nc"
+    s3_var_name = "Oa21_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/radiances")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "Oa21_radiance"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "tie_geometries.nc"
+    s3_var_name = "SZA"
+    s3_zarr_path = os.path.join(zarr_path, "conditions/geometry")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "SZA"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "geo_coordinates.nc"
+    s3_var_name = "altitude"
+    s3_zarr_path = os.path.join(zarr_path, "coordinates/image_grid")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "altitude"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "geo_coordinates.nc"
+    s3_var_name = "longitude"
+    s3_zarr_path = os.path.join(zarr_path, "coordinates/image_grid")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "tie_geo_coordinates.nc"
+    s3_var_name = "longitude"
+    s3_zarr_path = os.path.join(zarr_path, "coordinates/tie_point_grid")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "longitude"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "geo_coordinates.nc"
+    s3_var_name = "latitude"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "tie_geo_coordinates.nc"
+    s3_var_name = "latitude"
+    s3_zarr_path = os.path.join(zarr_path, "coordinates/tie_point_grid")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "latitude"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "instrument_data.nc"
+    s3_var_name = "detector_index"
+    s3_zarr_path = os.path.join(zarr_path, "conditions/instrument_data")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "detector_index"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "qualityFlags.nc"
+    s3_var_name = "quality_flags"
+    s3_zarr_path = os.path.join(zarr_path, "quality")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+    s3_var_file = "removed_pixels.nc"
+    s3_var_name = "quality_flags"
+    s3_zarr_path = os.path.join(zarr_path, "measurements/orphans")
+    assert s3_var_name in olci_duplicates
+    olci_file = os.path.join(olci_path, s3_var_file)
+    file_ds = xr.open_dataset(olci_file, decode_times=False, mask_and_scale=False)
+    s3_var = file_ds.get(s3_var_name)
+    zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
+    zarr_var = zarr_ds.get(s3_var_name)
+    assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+
 @pytest.mark.unit
 def test_verify_non_duplicate_variables_persistence_slstr_l1_in_zarr_format():
     # Tested on the product:
@@ -644,7 +1274,8 @@ def test_verify_non_duplicate_variables_persistence_slstr_l1_in_zarr_format():
 def test_verify_duplicate_variables_persistence_slstr_l1_in_zarr_format():
     # Tested on the product:
     # S3A_SL_1_RBT____20220118T083600_20220118T083900_20220118T110259_0179_081_064_2160_LN2_O_NR_004.SEN3
-    # On 7th February 2022
+    # The persistence of variables coordinates is not checked since they are not yet populated in zarr
+    # On 8th February 2022
     slstr_path = glob.glob("data/S3A_SL_1_RBT*.SEN3")[0]
     slstr_duplicates = get_duplicate_s3_vars(slstr_path)
     slstr_eop = SLSTRL1EOPConverter(slstr_path)
