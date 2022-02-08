@@ -47,6 +47,8 @@ def norm_eo_path(eo_path: str) -> str:
     -------
 
     """
+    if eo_path == "":
+        raise KeyError("Invalid empty eo_path")
     eo_path = path.normpath(eo_path)  # Do not use pathlib (does not remove ..)
     if eo_path.startswith("//"):  # text is a special path so it's not normalised by normpath
         eo_path = eo_path[1:]

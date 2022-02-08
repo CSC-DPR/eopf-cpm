@@ -25,9 +25,10 @@ class EOObject(EOAbstract):
         self._product: "Optional[EOProduct]" = None
         self._repath(name, product, relative_path)
 
-    def _repath(self, name, product, relative_path):
+    def _repath(self, name: str, product: "Optional[EOProduct]", relative_path: Optional[Iterable[str]]) -> None:
         if product is not None and not isinstance(product, weakref.ProxyType):
             product = weakref.proxy(product)
+        relative_path = tuple(relative_path) if relative_path is not None else tuple()
         # weakref.proxy is only work with another proxy
         if self._product is not None:
             if self._name != "" and self._name != name:
@@ -38,14 +39,12 @@ class EOObject(EOAbstract):
                 raise EOObjectMultipleParentError("The EOObject product does not match it's new parent")
 
         self._name = name
-        self._relative_path = tuple(relative_path) if relative_path is not None else tuple()
-        if product is not None and not isinstance(product, weakref.ProxyType):
-            product = weakref.proxy(product)
+        self._relative_path = relative_path
         self._product = product
 
     @property
     @abstractmethod
-    def attrs(self) -> dict[str, Any]:
+    def attrs(self) -> dict[str, Any]:  # pragma: no cover
         ...
 
     @property

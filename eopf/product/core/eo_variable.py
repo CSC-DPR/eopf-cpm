@@ -42,8 +42,8 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
 
     def __init__(
         self,
-        name: str,
-        data: Any,
+        name: str = "",
+        data: Optional[Any] = None,
         product: "Optional[EOProduct]" = None,
         relative_path: Optional[Iterable[str]] = None,
         attrs: Optional[dict[str, Any]] = None,

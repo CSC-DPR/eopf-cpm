@@ -190,10 +190,11 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
     def _add_local_group(self, name: str) -> "EOGroup":
         from .eo_group import EOGroup
 
-        self[name] = EOGroup()
+        group = EOGroup()
+        self[name] = group
         if self.store is not None and self.store.status == StorageStatus.OPEN:
-            self.store.add_group(name, relative_path=self[name].relative_path)
-        return self[name]
+            self.store.add_group(name, relative_path=group.relative_path)
+        return group
 
     @abstractmethod
     def _add_local_variable(
