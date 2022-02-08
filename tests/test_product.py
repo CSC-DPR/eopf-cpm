@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 import pytest
 from lxml import etree
 from pyfakefs.fake_filesystem import FakeFilesystem
@@ -215,3 +217,19 @@ def test_generate_hierarchy_tree3():
             "conditions": {"Attributes": {}, "subgroup3": {"Attributes": {}, "subsubgroup1": {"Attributes": {}}}},
         },
     }
+
+
+@pytest.mark.unit
+def test_eovariable_plot():
+    product = init_product("product_name")
+    product.measurements.add_group("subgroup")
+    product.measurements.subgroup.add_variable("my_variable", [[1, 2, 3, 4], [8, 9, 7, 5]])
+    product.measurements.add_variable("demo", data=[])
+    product.measurements.subgroup.add_group("another_group")
+    product.measurements.subgroup.another_group.add_variable("my_variable", [[1, 2, 3, 4], [8, 9, 7, 5]])
+
+    with patch.object(EOVariable, "plot", return_value=None) as mock_method:
+        variable = product.measurements.demo
+        variable.plot(yincrease=False)
+
+    mock_method.assert_called_once_with(yincrease=False)

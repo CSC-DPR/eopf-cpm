@@ -350,7 +350,12 @@ class EOVariable(EOVariableOperatorsMixin["EOVariable"]):
         --------
         DataArray.plot
         """
-        self._data.plot(**kwargs)
+        import warnings
+
+        try:
+            self._data.plot(**kwargs)
+        except Exception as e:
+            warnings.warn(f"Cannot display plot. Error {e}")
 
     def __getitem__(self, key: Any) -> "EOVariable":
         return EOVariable(key, self._data[key], self._product, relative_path=self._relative_path)
