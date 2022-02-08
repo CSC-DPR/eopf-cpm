@@ -15,6 +15,7 @@ from eopf.product.conveniences import (
     apply_xpath,
     etree_to_dict,
     filter_paths_by,
+    get_dir_files,
     parse_xml,
     translate_structure,
 )
@@ -212,3 +213,47 @@ def test_filter_paths_by_7():
         "data/filters_files_by_tests/empty_dir/file_a",
         "data/filters_files_by_tests/empty_dir/file_b",
     ]
+
+
+@pytest.mark.unit
+def test_get_dir_files_1(tmpdir):
+    assert get_dir_files(dir_path=tmpdir) == []
+
+
+@pytest.mark.unit
+def test_get_dir_files_2(tmpdir):
+    file_path = os.path.join(tmpdir, "filename")
+    open(file_path, "a").close()
+    assert get_dir_files(dir_path=tmpdir) == [file_path]
+
+
+@pytest.mark.unit
+def test_get_dir_files_3(tmpdir):
+    file_path = os.path.join(tmpdir, "filename")
+    open(file_path, "a").close()
+    assert get_dir_files(dir_path=tmpdir, glob_pattern="*.txt") == []
+
+
+@pytest.mark.unit
+def test_get_dir_files_4(tmpdir):
+    file_path = os.path.join(tmpdir, "filename.txt")
+    open(file_path, "a").close()
+    assert get_dir_files(dir_path=tmpdir, glob_pattern="*.txt") == [file_path]
+
+
+@pytest.mark.unit
+def test_get_dir_files_5(tmpdir):
+    file_path1 = os.path.join(tmpdir, "filename1.txt")
+    open(file_path1, "a").close()
+    file_path2 = os.path.join(tmpdir, "filename2.xml")
+    open(file_path2, "a").close()
+    assert get_dir_files(dir_path=tmpdir, glob_pattern="*.txt") == [file_path1]
+
+
+@pytest.mark.unit
+def test_get_dir_files_6(tmpdir):
+    file_path1 = os.path.join(tmpdir, "filename1.txt")
+    open(file_path1, "a").close()
+    file_path2 = os.path.join(tmpdir, "filename2.txt")
+    open(file_path2, "a").close()
+    assert sorted(get_dir_files(dir_path=tmpdir, glob_pattern="*.txt")) == sorted([file_path1, file_path2])
