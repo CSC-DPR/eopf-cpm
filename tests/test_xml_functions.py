@@ -14,6 +14,7 @@ from eopf.product.constants import (
 from eopf.product.conveniences import (
     apply_xpath,
     etree_to_dict,
+    filter_paths_by,
     parse_xml,
     translate_structure,
 )
@@ -166,3 +167,48 @@ def test_xml_persistance_slstr():
     assert xfdu_dict == xfdu_eop_dict
     assert cf_dict == cf_eop_dict
     assert eop_dict == om_eop_dict
+
+
+@pytest.mark.unit
+def test_filter_paths_by_1():
+    assert filter_paths_by(paths=[], filters=[]) == []
+
+
+@pytest.mark.unit
+def test_filter_paths_by_2():
+    assert filter_paths_by(paths=None, filters=None) == []
+
+
+@pytest.mark.unit
+def test_filter_paths_by_3():
+    assert filter_paths_by(paths=[], filters=["xml"]) == []
+
+
+@pytest.mark.unit
+def test_filter_paths_by_4():
+    paths = ["data/filters_files_by_tests/empty_dir"]
+    assert filter_paths_by(paths=paths, filters=[]) == []
+
+
+@pytest.mark.unit
+def test_filter_paths_by_5():
+    paths = ["data/filters_files_by_tests/empty_dir/file_a"]
+    filters = ["file"]
+    assert filter_paths_by(paths=paths, filters=filters) == ["data/filters_files_by_tests/empty_dir/file_a"]
+
+
+@pytest.mark.unit
+def test_filter_paths_by_6():
+    paths = ["data/filters_files_by_tests/empty_dir/file_a"]
+    filters = ["file_b"]
+    assert filter_paths_by(paths=paths, filters=filters) == []
+
+
+@pytest.mark.unit
+def test_filter_paths_by_7():
+    paths = ["data/filters_files_by_tests/empty_dir/file_a", "data/filters_files_by_tests/empty_dir/file_b"]
+    filters = ["file"]
+    assert filter_paths_by(paths=paths, filters=filters) == [
+        "data/filters_files_by_tests/empty_dir/file_a",
+        "data/filters_files_by_tests/empty_dir/file_b",
+    ]

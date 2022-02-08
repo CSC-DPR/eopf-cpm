@@ -18,7 +18,7 @@ def init_product(product_name: str, *, store_or_path_url: Optional[Union[str, EO
     return product
 
 
-def filter_files_by(file_paths: list[str], filters: list[str]) -> list[str]:
+def filter_paths_by(paths: list[str], filters: list[str]) -> list[str]:
     """Filter the files in a list of folders by taking into account given filters.
 
     Parameters
@@ -34,11 +34,15 @@ def filter_files_by(file_paths: list[str], filters: list[str]) -> list[str]:
     """
     filtered_file_paths: list[str] = []
 
-    for path in file_paths:
-        file_name = os.path.basename(path)
-        for filter in filters:
-            if filter in file_name:
-                filtered_file_paths.append(path)
+    try:
+        for path in paths:
+            file_name = os.path.basename(path)
+            for filter in filters:
+                if filter in file_name:
+                    filtered_file_paths.append(path)
+    except Exception as e:
+        print(f"Exception encountered while filtering files: {e} ")
+        return []
 
     return filtered_file_paths
 

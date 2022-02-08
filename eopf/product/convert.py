@@ -7,7 +7,7 @@ from eopf.exceptions import StoreNotDefinedError
 from eopf.product.conveniences import (
     apply_xpath,
     etree_to_dict,
-    filter_files_by,
+    filter_paths_by,
     get_dir_files,
     parse_xml,
     read_xrd,
@@ -121,7 +121,7 @@ class OLCIL1EOPConverter(S3L1EOPConverter):
         eog_name = "image_grid"
         image_grid = coordinates.add_group(eog_name)
         file_names = ["time_coordinates", "geo_coordinates"]
-        files = filter_files_by(self.nc_files, file_names)
+        files = filter_paths_by(self.nc_files, file_names)
         for f in files:
             if "tie_geo_coordinates" in f:
                 files.remove(f)
@@ -134,7 +134,7 @@ class OLCIL1EOPConverter(S3L1EOPConverter):
         eog_name = "tie_point_grid"
         tie_point_grid = coordinates.add_group(eog_name)
         file_names = ["tie_geo_coordinates"]
-        files = filter_files_by(self.nc_files, file_names)
+        files = filter_paths_by(self.nc_files, file_names)
         xrd = read_xrd(files)
         if xrd:
             for key, value in xrd_to_eovs(xrd):
@@ -148,7 +148,7 @@ class OLCIL1EOPConverter(S3L1EOPConverter):
         eog_name = "radiances"
         radiances = measurements.add_group(eog_name)
         file_names = ["Oa%02d_radiance" % r for r in range(1, 22)]
-        files = filter_files_by(self.nc_files, file_names)
+        files = filter_paths_by(self.nc_files, file_names)
         to_skip = ["orphan"]
         xrd = read_xrd(files, skip=to_skip)
         if xrd:
@@ -158,7 +158,7 @@ class OLCIL1EOPConverter(S3L1EOPConverter):
         eog_name = "orphans"
         orphans = measurements.add_group(eog_name)
         file_names = ["removed_pixels"]
-        files = filter_files_by(self.nc_files, file_names)
+        files = filter_paths_by(self.nc_files, file_names)
         xrd = read_xrd(files)
         if xrd:
             for key, value in xrd_to_eovs(xrd):
@@ -169,7 +169,7 @@ class OLCIL1EOPConverter(S3L1EOPConverter):
         quality = self.eop.add_group("quality")
 
         file_names = ["qualityFlags"]
-        files = filter_files_by(self.nc_files, file_names)
+        files = filter_paths_by(self.nc_files, file_names)
         xrd = read_xrd(files)
         if xrd:
             for key, value in xrd_to_eovs(xrd):
@@ -183,7 +183,7 @@ class OLCIL1EOPConverter(S3L1EOPConverter):
         eog_name = "geometry"
         geometry = conditions.add_group(eog_name)
         file_names = ["tie_geometries"]
-        files = filter_files_by(self.nc_files, file_names)
+        files = filter_paths_by(self.nc_files, file_names)
         xrd = read_xrd(files)
         if xrd:
             for key, value in xrd_to_eovs(xrd):
@@ -193,7 +193,7 @@ class OLCIL1EOPConverter(S3L1EOPConverter):
         eog_name = "meteo"
         meteo = conditions.add_group(eog_name)
         file_names = ["tie_meteo"]
-        files = filter_files_by(self.nc_files, file_names)
+        files = filter_paths_by(self.nc_files, file_names)
         xrd = read_xrd(files)
         if xrd:
             for key, value in xrd_to_eovs(xrd):
@@ -203,7 +203,7 @@ class OLCIL1EOPConverter(S3L1EOPConverter):
         eog_name = "instrument_data"
         instrument_data = conditions.add_group(eog_name)
         file_names = ["instrument_data"]
-        files = filter_files_by(self.nc_files, file_names)
+        files = filter_paths_by(self.nc_files, file_names)
         xrd = read_xrd(files)
         if xrd:
             for key, value in xrd_to_eovs(xrd):
@@ -264,7 +264,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
         # group by self.RASTER_EXT
         for g in self.RASTER_EXT:
             file_names = [file_pattern.format(g=g) for file_pattern in ["cartesian_{g}", "geodetic_{g}"]]
-            files = filter_files_by(self.nc_files, file_names)
+            files = filter_paths_by(self.nc_files, file_names)
             to_skip = [
                 var_pattern.format(g=g)
                 for var_pattern in [
@@ -287,7 +287,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
         image_grid_orphan_eog: EOGroup = coordinates_eog.add_group("image_grid_orphan")
         for g in self.RASTER_EXT:
             file_names = [file_pattern.format(g=g) for file_pattern in ["cartesian_{g}", "geodetic_{g}"]]
-            files = filter_files_by(self.nc_files, file_names)
+            files = filter_paths_by(self.nc_files, file_names)
             to_skip = [
                 var_pattern.format(g=g)
                 for var_pattern in [
@@ -308,7 +308,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
         # tiepoints
         tie_point_grid_eog = coordinates_eog.add_group("tie_point_grid")
         file_names = ["cartesian_tx", "geodetic_tx"]
-        files = filter_files_by(self.nc_files, file_names)
+        files = filter_paths_by(self.nc_files, file_names)
         xrd = read_xrd(files)
         if xrd:
             for key, value in xrd_to_eovs(xrd):
@@ -319,7 +319,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
             eog_name = "Time_{g}".format(g=g)
             time_g_eog: EOGroup = coordinates_eog.add_group(eog_name)
             file_names = ["time_{g}n".format(g=g)]
-            files = filter_files_by(self.nc_files, file_names)
+            files = filter_paths_by(self.nc_files, file_names)
             to_pick = ["time_stamp_{g}".format(g=g)]
             xrd = read_xrd(files, pick=to_pick)
             if xrd:
@@ -336,7 +336,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
             btg_eog = measurements_eog.add_group(eog_name)
             for ch in self.BT_CHANNELS:
                 file_names = ["{ch}_BT_{g}".format(ch=ch, g=g)]
-                files = filter_files_by(self.nc_files, file_names)
+                files = filter_paths_by(self.nc_files, file_names)
                 to_skip = [
                     var_pattern.format(ch=ch, g=g)
                     for var_pattern in ["{ch}_exception_{g}", "{ch}_BT_orphan_{g}", "{ch}_exception_orphan_{g}"]
@@ -352,7 +352,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
             rad_g_eog: EOGroup = measurements_eog.add_group(eog_name)
             for ch in self.RAD_CHANNELS:
                 file_names = ["{ch}_radiance_{g}".format(ch=ch, g=g)]
-                files = filter_files_by(self.nc_files, file_names)
+                files = filter_paths_by(self.nc_files, file_names)
                 to_skip = [
                     var_pattern.format(ch=ch, g=g)
                     for var_pattern in ["{ch}_exception_{g}", "{ch}_radiance_orphan_{g}", "{ch}_exception_orphan_{g}"]
@@ -370,7 +370,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
             bto_g_eog: EOGroup = bto_eog.add_group(eog_raster_name)
             for ch in self.BT_CHANNELS:
                 file_names = ["{ch}_BT_{g}".format(ch=ch, g=g)]
-                files = filter_files_by(self.nc_files, file_names)
+                files = filter_paths_by(self.nc_files, file_names)
                 to_skip = [
                     var_pattern.format(ch=ch, g=g)
                     for var_pattern in ["{ch}_exception_{g}", "{ch}_BT_{g}", "{ch}_exception_orphan_{g}"]
@@ -388,7 +388,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
             g_eog: EOGroup = rado_eog.add_group(eog_raster_name)
             for ch in self.RAD_CHANNELS:
                 file_names = ["{ch}_radiance_{g}".format(ch=ch, g=g)]
-                files = filter_files_by(self.nc_files, file_names)
+                files = filter_paths_by(self.nc_files, file_names)
                 to_skip = [
                     var_pattern.format(ch=ch, g=g)
                     for var_pattern in ["{ch}_exception_{g}", "{ch}_radiance_{g}", "{ch}_exception_orphan_{g}"]
@@ -410,7 +410,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
             # read from ch_BT_g files
             for ch in self.BT_CHANNELS:
                 file_names = ["{ch}_BT_{g}".format(ch=ch, g=g)]
-                files = filter_files_by(self.nc_files, file_names)
+                files = filter_paths_by(self.nc_files, file_names)
                 to_pick = ["{ch}_exception_{g}".format(ch=ch, g=g)]
                 xrd = read_xrd(files, pick=to_pick)
                 if xrd:
@@ -419,7 +419,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
 
             # read from flags_g files
             file_names = ["flags_{g}".format(g=g)]
-            files = filter_files_by(self.nc_files, file_names)
+            files = filter_paths_by(self.nc_files, file_names)
             to_skip = [
                 var_pattern.format(g=g)
                 for var_pattern in [
@@ -442,7 +442,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
             # read from ch_radiance_g files
             for ch in self.RAD_CHANNELS:
                 file_names = ["{ch}_radiance_{g}".format(ch=ch, g=g)]
-                files = filter_files_by(self.nc_files, file_names)
+                files = filter_paths_by(self.nc_files, file_names)
                 to_pick = ["{ch}_exception_{g}".format(ch=ch, g=g)]
                 xrd = read_xrd(files, pick=to_pick)
                 if xrd:
@@ -451,7 +451,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
 
             # read from flags_g files
             file_names = ["flags_{g}".format(g=g)]
-            files = filter_files_by(self.nc_files, file_names)
+            files = filter_paths_by(self.nc_files, file_names)
             to_skip = [
                 var_pattern.format(g=g)
                 for var_pattern in [
@@ -477,7 +477,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
             # read from ch_BT_g files
             for ch in self.BT_CHANNELS:
                 file_names = ["{ch}_BT_{g}".format(ch=ch, g=g)]
-                files = filter_files_by(self.nc_files, file_names)
+                files = filter_paths_by(self.nc_files, file_names)
                 to_pick = ["{ch}_exception_orphan_{g}".format(ch=ch, g=g)]
                 xrd = read_xrd(files, pick=to_pick)
                 if xrd:
@@ -486,7 +486,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
 
             # read from flags_g files
             file_names = ["flags_{g}".format(g=g)]
-            files = filter_files_by(self.nc_files, file_names)
+            files = filter_paths_by(self.nc_files, file_names)
             to_skip = [
                 var_pattern.format(g=g)
                 for var_pattern in [
@@ -512,7 +512,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
             rad_bt_channels = self.BT_CHANNELS + self.RAD_CHANNELS
             for ch in rad_bt_channels:
                 file_names = ["{ch}_radiance_{g}".format(ch=ch, g=g)]
-                files = filter_files_by(self.nc_files, file_names)
+                files = filter_paths_by(self.nc_files, file_names)
                 to_pick = ["{ch}_exception_orphan_{g}".format(ch=ch, g=g)]
                 xrd = read_xrd(files, pick=to_pick)
                 if xrd:
@@ -521,7 +521,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
 
             # read from flags_g files
             file_names = ["flags_{g}".format(g=g)]
-            files = filter_files_by(self.nc_files, file_names)
+            files = filter_paths_by(self.nc_files, file_names)
             to_skip = [
                 var_pattern.format(g=g)
                 for var_pattern in [
@@ -547,7 +547,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
             eog_name = "geodetic_{g}".format(g=g)
             geodetic_g_eog: EOGroup = conditions_eog.add_group(eog_name)
             file_names = ["geodetic_{g}".format(g=g)]
-            files = filter_files_by(self.nc_files, file_names)
+            files = filter_paths_by(self.nc_files, file_names)
             to_skip = [
                 var_pattern.format(g=g)
                 for var_pattern in [
@@ -570,7 +570,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
             eog_raster_name = g
             g_eog: EOGroup = geodetico_eog.add_group(eog_raster_name)
             file_names = ["geodetic_{g}".format(g=g)]
-            files = filter_files_by(self.nc_files, file_names)
+            files = filter_paths_by(self.nc_files, file_names)
             to_pick = ["elevation_orphan_{g}".format(g=g)]
             xrd = read_xrd(files, pick=to_pick)
             if xrd:
@@ -582,7 +582,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
             eog_name = "Geometry_{g}".format(g=g)
             geometry_g_eog: EOGroup = conditions_eog.add_group(eog_name)
             file_names = ["geometry_{g}".format(g=g)]
-            files = filter_files_by(self.nc_files, file_names)
+            files = filter_paths_by(self.nc_files, file_names)
             xrd = read_xrd(files)
             if xrd:
                 for key, value in xrd_to_eovs(xrd):
@@ -595,7 +595,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
             instrumentdata1km_g_eog: EOGroup = conditions_eog.add_group(eog_raster_name)
             for ch in self.BT_CHANNELS:
                 file_names = ["{ch}_quality_{g}".format(ch=ch, g=g)]
-                files = filter_files_by(self.nc_files, file_names)
+                files = filter_paths_by(self.nc_files, file_names)
                 xrd = read_xrd(files)
                 if xrd:
                     eog_name = ch
@@ -611,7 +611,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
                 eog_name = ch
                 chrad_g: EOGroup = instrumentdata_anao_g_eog.add_group(eog_name)
                 file_names = ["{ch}_quality_{g}".format(ch=ch, g=g)]
-                files = filter_files_by(self.nc_files, file_names)
+                files = filter_paths_by(self.nc_files, file_names)
                 xrd = read_xrd(files, file_names)
                 if xrd:
                     for key, value in xrd_to_eovs(xrd):
@@ -625,7 +625,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
                 eog_name = ch
                 chs_g: EOGroup = instrumentdata_g_eog.add_group(eog_name)
                 file_names = ["{ch}_quality_{g}".format(ch=ch, g=g)]
-                files = filter_files_by(self.nc_files, file_names)
+                files = filter_paths_by(self.nc_files, file_names)
                 xrd = read_xrd(files, file_names)
                 if xrd:
                     for key, value in xrd_to_eovs(xrd):
@@ -636,7 +636,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
             eog_name = "processing_data_{g}".format(g=g)
             pdg_eog: EOGroup = conditions_eog.add_group(eog_name)
             file_names = ["indices_{g}".format(g=g)]
-            files = filter_files_by(self.nc_files, file_names)
+            files = filter_paths_by(self.nc_files, file_names)
             to_skip = [
                 var_pattern.format(g=g)
                 for var_pattern in ["detector_orphan_{g}", "pixel_orphan_{g}", "scan_orphan_{g}"]
@@ -655,7 +655,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
             eog_name = g
             ch_g: EOGroup = pdo_eog.add_group(eog_name)
             file_names = ["indices_{g}".format(g=g)]
-            files = filter_files_by(self.nc_files, file_names)
+            files = filter_paths_by(self.nc_files, file_names)
             to_skip = [
                 var_pattern.format(g=g)
                 for var_pattern in ["detector_{g}", "pixel_{g}", "scan_{g}", "l0_scan_offset_{g}"]
@@ -670,7 +670,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
             eog_name = "time_{g}".format(g=g)
             time_g_eog: EOGroup = conditions_eog.add_group(eog_name)
             file_names = ["time_{g}n".format(g=g)]
-            files = filter_files_by(self.nc_files, file_names)
+            files = filter_paths_by(self.nc_files, file_names)
             to_skip = ["time_stamp_{g}".format(g=g)]
             xrd = read_xrd(files, skip=to_skip)
             if xrd:
@@ -681,7 +681,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
         eog_name = "viscal"
         viscal_eog: EOGroup = conditions_eog.add_group(eog_name)
         file_names = ["viscal"]
-        files = filter_files_by(self.nc_files, file_names)
+        files = filter_paths_by(self.nc_files, file_names)
         xrd = read_xrd(files)
         if xrd:
             for key, value in xrd_to_eovs(xrd):
@@ -691,7 +691,7 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
         eog_name = "meteo"
         meteo_eog: EOGroup = conditions_eog.add_group(eog_name)
         file_names = ["met_tx"]
-        files = filter_files_by(self.nc_files, file_names)
+        files = filter_paths_by(self.nc_files, file_names)
         xrd = read_xrd(files)
         if xrd:
             for key, value in xrd_to_eovs(xrd):
