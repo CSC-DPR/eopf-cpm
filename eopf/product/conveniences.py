@@ -80,8 +80,6 @@ def read_xrd(
     files: list[str],
     skip: list[str] = [],
     pick: list[str] = [],
-    decode_times: bool = False,
-    mask_and_scale: bool = False,
 ) -> Union[xr.Dataset, None]:
     """Read multiple xarray.Dataset from files.
     Optionally, filter the variables based on name.
@@ -114,19 +112,25 @@ def read_xrd(
     """
     variables: MutableMapping[Any, Any] = {}
 
-    for file in files:
-        file_ds = xr.open_dataset(file, decode_times=decode_times, mask_and_scale=mask_and_scale)
-        for k in file_ds.variables.keys():
-            if k in skip:
-                continue
-            if pick and (k not in pick):
-                continue
-            variables[k] = file_ds.get(k)
+    try:
+        for file in files:
+            file_ds = xr.open_dataset(file, decode_times=False, mask_and_scale=False)
 
-    if variables == {}:
+            for k in file_ds.variables.keys():
+                if k in skip:
+                    continue
+                if pick and (k not in pick):
+                    continue
+                variables[k] = file_ds.get(k)
+
+        if variables == {}:
+            return None
+
+        return xr.Dataset(data_vars=variables)
+
+    except Exception as e:
+        print(f"Exception encountered: {e}")
         return None
-
-    return xr.Dataset(data_vars=variables)
 
 
 def xrd_to_eovs(xrd: xr.Dataset) -> Iterable[Tuple[Hashable, xr.Variable]]:
