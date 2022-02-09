@@ -118,7 +118,6 @@ class EOGroup(EOContainer, EOObject):
         EOVariable
             newly created EOVariable
         """
-        variable = EOVariable(name, data, self.product, relative_path=[*self._relative_path, self._name], **kwargs)
 
         if not isinstance(data, EOVariable):
             variable = EOVariable(name, data, self.product, relative_path=[*self._relative_path, self._name], **kwargs)
