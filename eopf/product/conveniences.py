@@ -19,7 +19,7 @@ def init_product(product_name: str, *, store_or_path_url: Optional[Union[str, EO
 
 
 def filter_paths_by(paths: list[str], filters: list[str]) -> list[str]:
-    """Filter the files in a list of folders by taking into account given filters.
+    """Filter the paths basename in a list of paths by taking into account given filters.
 
     Parameters
     ----------
@@ -36,7 +36,10 @@ def filter_paths_by(paths: list[str], filters: list[str]) -> list[str]:
 
     try:
         for path in paths:
-            file_name = os.path.basename(path)
+            if path[-1] == os.path.sep:
+                file_name = os.path.basename(path[:-1])
+            else:
+                file_name = os.path.basename(path)
             for filter in filters:
                 if filter in file_name:
                     filtered_file_paths.append(path)
