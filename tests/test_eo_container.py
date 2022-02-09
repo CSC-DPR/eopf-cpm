@@ -62,7 +62,7 @@ class EmptyTestStore(EOProductStore):
     def is_variable(self, path: str) -> bool:
         raise KeyError()
 
-    def add_group(self, name: str, relative_path: list[str] = []) -> None:
+    def add_group(self, name: str, relative_path: list[str] = [], attrs: dict[str, Any] = {}) -> None:
         pass
 
     def add_variables(self, name: str, dataset: xarray.Dataset, relative_path: Iterable[str] = []) -> None:

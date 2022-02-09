@@ -277,10 +277,10 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         from .eo_group import EOGroup
 
         group = self[name] = EOGroup(attrs=attrs)
-        group.assign_coords(coords)
+        group.assign_coords(coords=coords)
         group.assign_dims(dims)
         if self.store is not None and self.store.status == StorageStatus.OPEN:
-            self.store.add_group(name, relative_path=group.relative_path)
+            self.store.add_group(name, relative_path=group.relative_path, attrs=group.attrs)
         return group
 
     @abstractmethod
@@ -325,7 +325,7 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         for name, item in self._groups.items():
             if not erase and name in self.store.iter(self.path):
                 continue
-            self.store.add_group(name, relative_path=[*self.relative_path, self.name])
+            self.store.add_group(name, relative_path=item.relative_path, attrs=item.attrs)
             item.write(erase=erase)
 
     def load(self, erase: bool = False) -> None:

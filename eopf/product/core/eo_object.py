@@ -32,6 +32,7 @@ class EOObject(EOAbstract):
         coords: MutableMapping[str, Any] = {},
         retrieve_dims: tuple[str, ...] = tuple(),
     ) -> None:
+
         self._name: str = ""
         self._relative_path: tuple[str, ...] = tuple()
         self._product: Optional["EOProduct"] = None

@@ -238,4 +238,4 @@ class EOZarrStore(EOProductStore):
     def iter(self, path: str) -> Iterator[str]:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        return iter(self._root[path])
+        return iter(self._root.get(path, []))
