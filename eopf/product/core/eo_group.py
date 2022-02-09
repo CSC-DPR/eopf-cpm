@@ -1,5 +1,5 @@
 from collections.abc import MutableMapping
-from typing import TYPE_CHECKING, Any, Iterable, Iterator, Optional, Union
+from typing import TYPE_CHECKING, Any, Hashable, Iterable, Iterator, Optional, Union
 
 import xarray
 
@@ -31,7 +31,7 @@ class EOGroup(EOContainer, EOObject):
         product: "Optional[EOProduct]" = None,
         relative_path: Optional[Iterable[str]] = None,
         dataset: Optional[xarray.Dataset] = None,
-        attrs: Optional[dict[str, Any]] = None,
+        attrs: Optional[dict[Hashable, Any]] = None,
         coords: MutableMapping[str, Any] = {},
         dims: tuple[str, ...] = tuple(),
     ) -> None:

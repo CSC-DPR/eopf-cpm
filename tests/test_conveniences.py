@@ -138,9 +138,9 @@ def test_xml_persistance_olci():
     eop_dict = {attr: translate_structure(EOP_MAP_OLCI_L1[attr], tree, NAMESPACES_OLCI_L1) for attr in EOP_MAP_OLCI_L1}
 
     # EOProduct attributes
-    cf_eop_dict = olci_eop.eop.attributes.attrs["CF"]
-    om_eop_dict = olci_eop.eop.attributes.attrs["OM-EOP"]
-    xfdu_eop_dict = olci_eop.eop.attributes.attrs["XFDU"]
+    cf_eop_dict = olci_eop.eop.attrs["CF"]
+    om_eop_dict = olci_eop.eop.attrs["OM-EOP"]
+    xfdu_eop_dict = olci_eop.eop.attrs["XFDU"]
 
     assert xfdu_dict == xfdu_eop_dict
     assert cf_dict == cf_eop_dict
@@ -163,9 +163,9 @@ def test_xml_persistance_slstr():
     }  # noqa
 
     # EOProduct attributes
-    cf_eop_dict = slstr_eop.eop.attributes.attrs["CF"]
-    om_eop_dict = slstr_eop.eop.attributes.attrs["OM-EOP"]
-    xfdu_eop_dict = slstr_eop.eop.attributes.attrs["XFDU"]
+    cf_eop_dict = slstr_eop.eop.attrs["CF"]
+    om_eop_dict = slstr_eop.eop.attrs["OM-EOP"]
+    xfdu_eop_dict = slstr_eop.eop.attrs["XFDU"]
 
     assert xfdu_dict == xfdu_eop_dict
     assert cf_dict == cf_eop_dict

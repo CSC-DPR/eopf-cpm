@@ -1,7 +1,7 @@
 import warnings
 from abc import abstractmethod
 from collections.abc import MutableMapping
-from typing import TYPE_CHECKING, Any, Callable, Iterator, Optional, Union
+from typing import TYPE_CHECKING, Any, Callable, Hashable, Iterator, Optional, Union
 
 from eopf.exceptions import EOObjectExistError, StoreNotDefinedError
 from eopf.product.core.eo_abstract import EOAbstract
@@ -28,9 +28,9 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
     Can be used in a dictionary like manner with relatives and absolutes paths.
     """
 
-    def __init__(self, attrs: Optional[dict[str, Any]] = None) -> None:
+    def __init__(self, attrs: Optional[dict[Hashable, Any]] = None) -> None:
         self._groups: dict[str, "EOGroup"] = {}
-        self._attrs: dict[str, Any] = attrs or dict()
+        self._attrs: dict[Hashable, Any] = attrs or dict()
 
     def __getitem__(self, key: str) -> Union["EOGroup", "EOVariable"]:
         return self._get_item(key)
@@ -154,7 +154,7 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
     def add_group(
         self,
         name: str,
-        attrs: dict[str, Any] = {},
+        attrs: dict[Hashable, Any] = {},
         coords: MutableMapping[str, Any] = {},
         dims: tuple[str, ...] = tuple(),
     ) -> "EOGroup":
@@ -252,7 +252,7 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
     def _add_local_group(
         self,
         name: str,
-        attrs: dict[str, Any] = {},
+        attrs: dict[Hashable, Any] = {},
         coords: MutableMapping[str, Any] = {},
         dims: tuple[str, ...] = tuple(),
     ) -> "EOGroup":
@@ -344,6 +344,6 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         return [key for key in self.keys()]
 
     @property
-    def attrs(self) -> dict[str, Any]:
+    def attrs(self) -> dict[Hashable, Any]:
         """Attributes defined by this object (does not consider inheritance)."""
         return self._attrs

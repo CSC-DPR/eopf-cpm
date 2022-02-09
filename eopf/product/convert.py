@@ -108,9 +108,9 @@ class OLCIL1EOPConverter(S3L1EOPConverter):
         eop = {
             attr: translate_structure(EOP_MAP_OLCI_L1[attr], xfdu_dom, NAMESPACES_OLCI_L1) for attr in EOP_MAP_OLCI_L1
         }
-        attributes_eog = EOGroup("attributes", product=self.eop, attrs={"CF": cf, "OM-EOP": eop, "XFDU": xfdu})
-        self.eop.add_group("attributes")
-        self.eop["attributes"] = attributes_eog
+        self.eop.attributes["CF"] = cf
+        self.eop.attributes["OM-EOP"] = eop
+        self.eop.attributes["XFDU"] = xfdu
 
     def _build_coordinates_eog(self) -> None:
         """build coordinates eog mandatory"""
@@ -254,8 +254,10 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
             attr: translate_structure(EOP_MAP_SLSTR_L1[attr], xfdu_dom, NAMESPACES_SLSTR_L1)
             for attr in EOP_MAP_SLSTR_L1
         }
-        attributes_eog = EOGroup("attributes", product=self.eop, attrs={"CF": cf, "OM-EOP": eop, "XFDU": xfdu})
-        self.eop["attributes"] = attributes_eog
+        self.eop.attributes["CF"] = cf
+        self.eop.attributes["OM-EOP"] = eop
+        self.eop.attributes["XFDU"] = xfdu
+        # self.eop.attributes = {"CF": cf, "OM-EOP": eop, "XFDU": xfdu}
 
     def _build_coordinates_eog(self) -> None:
         """build coordinates eog mandatory"""

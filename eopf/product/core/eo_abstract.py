@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Iterable, Optional
+from typing import TYPE_CHECKING, Any, Hashable, Iterable, Optional
 
 from eopf.product.store import EOProductStore
 
@@ -88,7 +88,7 @@ class EOAbstract(ABC):  # pragma: no cover
 
     @property
     @abstractmethod
-    def attrs(self) -> dict[str, Any]:
+    def attrs(self) -> dict[Hashable, Any]:
         """
         Dictionary of this EOObject attributes.
         """
