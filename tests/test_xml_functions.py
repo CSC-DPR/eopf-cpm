@@ -1,8 +1,8 @@
 import glob
 import os
-import xarray as xr
 
 import pytest
+import xarray as xr
 
 from eopf.product.constants import (
     CF_MAP_OLCI_L1,
@@ -18,8 +18,8 @@ from eopf.product.conveniences import (
     filter_paths_by,
     get_dir_files,
     parse_xml,
-    translate_structure,
     read_xrd,
+    translate_structure,
 )
 from eopf.product.convert import OLCIL1EOPConverter, SLSTRL1EOPConverter
 
@@ -294,9 +294,11 @@ def test_read_xrd_4():
     s3_file_name = "Oa11_radiance.nc"
     s3_file_path = os.path.join(s3_prod_path, s3_file_name)
     files = [s3_file_path]
-    skip =["Oa11_radiance"]
+    skip = ["Oa11_radiance"]
     out_ds = read_xrd(files=files, skip=skip)
-    assert out_ds is None, "The funtion must return None since the only variable available in s3 file is the one skipped"
+    assert (
+        out_ds is None
+    ), "The funtion must return None since the only variable available in s3 file is the one skipped"
 
 
 @pytest.mark.unit
@@ -318,7 +320,6 @@ def test_read_xrd_6():
     s3_prod_path = glob.glob("data/S3A_OL_1*.SEN3")[0]
     s3_file_name = "tie_geo_coordinates.nc"
     s3_file_path = os.path.join(s3_prod_path, s3_file_name)
-    s3_file_ds = xr.open_dataset(s3_file_path, decode_times=False, mask_and_scale=False)
     files = [s3_file_path]
     pick = ["latitude"]
     skip = ["latitude"]
@@ -363,7 +364,7 @@ def test_read_xrd_8():
 
 
 @pytest.mark.unit
-def test_read_xrd_8():
+def test_read_xrd_9():
     s3_prod_path = glob.glob("data/S3A_OL_1*.SEN3")[0]
 
     s3_file_name_1 = "Oa10_radiance.nc"
@@ -374,4 +375,4 @@ def test_read_xrd_8():
 
     files = [s3_file_path_1, s3_file_path_2]
     out_ds = read_xrd(files=files)
-    assert out_ds is None, "The datasets must be equal"
+    assert out_ds is None, "The output should be None since one of the files is missing"
