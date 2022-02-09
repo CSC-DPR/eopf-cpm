@@ -2,7 +2,7 @@ import enum
 import warnings
 from abc import abstractmethod
 from collections.abc import MutableMapping
-from typing import Any, Iterable, Iterator, Optional
+from typing import Any, Hashable, Iterable, Iterator, Optional
 
 import fsspec
 import xarray
@@ -152,7 +152,12 @@ class EOProductStore(MutableMapping[str, Any]):
         """
 
     @abstractmethod
-    def add_group(self, name: str, relative_path: Iterable[str] = [], attrs: MutableMapping[str, Any] = {}) -> None:
+    def add_group(
+        self,
+        name: str,
+        relative_path: Iterable[str] = [],
+        attrs: MutableMapping[Hashable, Any] = {},
+    ) -> None:
         """write a group over the store
 
         Parameters

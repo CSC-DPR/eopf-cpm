@@ -1,5 +1,5 @@
 from types import TracebackType
-from typing import Any, Hashable, Iterable, Optional, Type, Union
+from typing import Any, Hashable, Iterable, MutableMapping, Optional, Type, Union
 
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError
 from eopf.product.utils import join_eo_path, partition_eo_path, product_relative_path
@@ -26,7 +26,7 @@ class EOProduct(EOContainer):
         self,
         name: str,
         store_or_path_url: Optional[Union[str, EOProductStore]] = None,
-        attrs: Optional[dict[Hashable, Any]] = None,
+        attrs: Optional[MutableMapping[Hashable, Any]] = None,
     ) -> None:
         EOContainer.__init__(self, attrs=attrs)
         self._name: str = name
@@ -34,7 +34,7 @@ class EOProduct(EOContainer):
         self.__set_store(store_or_path_url=store_or_path_url)
 
     @property
-    def attributes(self) -> dict[Hashable, Any]:
+    def attributes(self) -> MutableMapping[Hashable, Any]:
         return self.attrs
 
     @property

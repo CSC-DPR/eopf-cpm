@@ -1,4 +1,4 @@
-from typing import Any, Iterable, Iterator, MutableMapping, Optional
+from typing import Any, Hashable, Iterable, Iterator, MutableMapping, Optional
 
 import fsspec
 import xarray
@@ -193,7 +193,12 @@ class EOZarrStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         return iter(self._root)
 
-    def add_group(self, name: str, relative_path: Iterable[str] = [], attrs: MutableMapping[str, Any] = {}) -> None:
+    def add_group(
+        self,
+        name: str,
+        relative_path: Iterable[str] = [],
+        attrs: MutableMapping[Hashable, Any] = {},
+    ) -> None:
         """write a group over the store
 
         Parameters
@@ -238,4 +243,4 @@ class EOZarrStore(EOProductStore):
     def iter(self, path: str) -> Iterator[str]:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        return iter(self._root[path])
+        return iter(self._root.get(path, []))

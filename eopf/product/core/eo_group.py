@@ -31,7 +31,7 @@ class EOGroup(EOContainer, EOObject):
         product: "Optional[EOProduct]" = None,
         relative_path: Optional[Iterable[str]] = None,
         dataset: Optional[xarray.Dataset] = None,
-        attrs: Optional[dict[Hashable, Any]] = None,
+        attrs: Optional[MutableMapping[Hashable, Any]] = None,
         coords: MutableMapping[str, Any] = {},
         dims: tuple[str, ...] = tuple(),
     ) -> None:
@@ -118,7 +118,6 @@ class EOGroup(EOContainer, EOObject):
         EOVariable
             newly created EOVariable
         """
-        variable = EOVariable(name, data, self.product, relative_path=[*self._relative_path, self._name], **kwargs)
 
         if not isinstance(data, EOVariable):
             variable = EOVariable(name, data, self.product, relative_path=[*self._relative_path, self._name], **kwargs)
