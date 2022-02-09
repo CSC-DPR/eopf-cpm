@@ -103,7 +103,7 @@ def test_product_tree(capsys):
     captured = capsys.readouterr()
     assert (
         captured.out
-        == "├── measurements\n|  ├── subgroup1\n|    └── variable1\n|    └── variable2\n├── coordinates\n├── attributes\n"  # noqa
+        == "├── measurements\n|  ├── subgroup1\n|    └── variable1\n|    └── variable2\n├── coordinates\n"  # noqa
     )
 
 
@@ -154,7 +154,6 @@ def test_generate_hierarchy_tree():
                     "variable2": {"Attributes": {"name :": "second variable"}},
                 },
             },
-            "attributes": {"Attributes": {}},
         },
     }
 
@@ -184,7 +183,6 @@ def test_generate_hierarchy_tree2():
                 },
                 "subgroup2": {"Attributes": {}, "variable21": {"Attributes": {"name :": "value"}}},
             },
-            "attributes": {"Attributes": {}},
             "conditions": {"Attributes": {}},
         },
     }
@@ -217,7 +215,6 @@ def test_generate_hierarchy_tree3():
                 },
                 "subgroup2": {"Attributes": {}, "variable21": {"Attributes": {"name :": "value"}}},
             },
-            "attributes": {"Attributes": {}},
             "conditions": {"Attributes": {}, "subgroup3": {"Attributes": {}, "subsubgroup1": {"Attributes": {}}}},
         },
     }

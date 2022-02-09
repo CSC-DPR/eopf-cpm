@@ -315,6 +315,22 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
             relative_path=self._relative_path,
         )
 
+    def plot(self, **kwargs: dict[Any, Any]) -> None:
+        """Wrapper around the xarray plotting functionality.
+        Parameters
+        ----------
+        The parameters MUST follow the xarray.DataArray.plot() options.
+        See Also
+        --------
+        DataArray.plot
+        """
+        import warnings
+
+        try:
+            self._data.plot(**kwargs)
+        except Exception as e:
+            warnings.warn(f"Cannot display plot. Error {e}")
+
     def __getitem__(self, key: Any) -> "EOVariable":
         return EOVariable(key, self._data[key], self._product, relative_path=self._relative_path)
 
@@ -335,7 +351,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return self.__repr__()
 
     def __repr__(self) -> str:
-        return f"[EOVariable]{hex(id(self))}"
+        return f'{self._product!r} -> {"->".join(self._relative_path)} -> {self.name}'
 
     def _repr_html_(self) -> str:
         return renderer("variable.html", variable=self)
