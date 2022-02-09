@@ -112,7 +112,9 @@ def test_create_a_whole_product():
     product = init_product("product_name")
     product.measurements.add_group("subgroup")
     product.measurements.subgroup.add_variable("my_variable", [[1, 2, 3, 4], [8, 9, 7, 5]])
-    assert (product_length := len(product)) == 3, f"number of product subgroups must be 3, current is {product_length}"
+    assert (product_length := len(product)) == len(
+        product.MANDATORY_FIELD,
+    ), f"number of product subgroups must be 3, current is {product_length}"
     assert (
         measurements_length := len(product.measurements)
     ) == 1, f"number of product.measurements subgroups must be 1, current is {measurements_length}"

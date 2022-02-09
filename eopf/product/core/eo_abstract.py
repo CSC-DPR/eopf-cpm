@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Iterable, Optional
+from typing import TYPE_CHECKING, Any, Iterable, Optional
 
 from eopf.product.store import EOProductStore
 
@@ -83,5 +83,13 @@ class EOAbstract(ABC):  # pragma: no cover
             If this object doesn't have a (valid) product.
         KeyError
             If there is no coordinate name in the context
+        """
+        ...
+
+    @property
+    @abstractmethod
+    def attrs(self) -> dict[str, Any]:
+        """
+        Dictionary of this EOObject attributes.
         """
         ...

@@ -6,6 +6,7 @@ from typing import (
     Iterable,
     Iterator,
     Mapping,
+    MutableMapping,
     Optional,
     Union,
 )
@@ -44,27 +45,27 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         self,
         name: str = "",
         data: Optional[Any] = None,
-        product: "Optional[EOProduct]" = None,
+        product: Optional["EOProduct"] = None,
         relative_path: Optional[Iterable[str]] = None,
         attrs: Optional[dict[str, Any]] = None,
+        coords: MutableMapping[str, Any] = {},
+        dims: tuple[str, ...] = tuple(),
         **kwargs: Any,
     ):
-        if not isinstance(data, xarray.DataArray) and data is not None:
+
+        if not isinstance(data, (xarray.DataArray, EOVariable)) and data is not None:
             data = xarray.DataArray(data=data, name=name, attrs=attrs, **kwargs)
-        EOObject.__init__(self, name, product, relative_path)
+        if data is None:
+            data = xarray.DataArray()
         self._data: xarray.DataArray = data
+        EOObject.__init__(self, name, product, relative_path=relative_path, coords=coords, retrieve_dims=dims)
 
     def _init_similar(self, data: xarray.DataArray) -> "EOVariable":
-        return EOVariable("", data, None)
+        return EOVariable(name="", data=data)
 
     @property
     def attrs(self) -> dict[str, Any]:
         return self._data.attrs
-
-    @property
-    def dims(self) -> tuple[Hashable, ...]:
-        """variable dimensions"""
-        return self._data.dims
 
     @property
     def chunksizes(self) -> Mapping[Any, tuple[int, ...]]:

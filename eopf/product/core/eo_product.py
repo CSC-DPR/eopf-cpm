@@ -7,6 +7,7 @@ from eopf.product.utils import join_eo_path, partition_eo_path, product_relative
 from ..formatting import renderer
 from ..store.abstract import EOProductStore
 from .eo_container import EOContainer
+from .eo_group import EOGroup
 from .eo_variable import EOVariable
 
 
@@ -19,13 +20,22 @@ class EOProduct(EOContainer):
     Has personal attributes and both personal and inherited coordinates.
     """
 
-    MANDATORY_FIELD = ("measurements", "coordinates", "attributes")
+    MANDATORY_FIELD = ("measurements", "coordinates")
 
-    def __init__(self, name: str, store_or_path_url: Optional[Union[str, EOProductStore]] = None) -> None:
-        EOContainer.__init__(self)
+    def __init__(
+        self,
+        name: str,
+        store_or_path_url: Optional[Union[str, EOProductStore]] = None,
+        attrs: Optional[dict[str, Any]] = None,
+    ) -> None:
+        EOContainer.__init__(self, attrs=attrs)
         self._name: str = name
         self._store: Optional[EOProductStore] = None
         self.__set_store(store_or_path_url=store_or_path_url)
+
+    @property
+    def attributes(self) -> dict[str, Any]:
+        return self.attrs
 
     @property
     def product(self) -> "EOProduct":
@@ -170,3 +180,10 @@ class EOProduct(EOContainer):
             print(f"├── {name}")
             self._create_structure(group, level=2)
         return None
+
+    @property
+    def coordinates(self) -> EOGroup:
+        coords = self.get("coordinates")
+        if not isinstance(coords, EOGroup):
+            raise InvalidProductError("coordinates must be defined at product level and must be an EOGroup")
+        return coords

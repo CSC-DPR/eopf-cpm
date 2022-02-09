@@ -23,11 +23,11 @@ def split_path(path_str: str, sep: str = "/") -> list[str]:
 def weak_cache(func: Callable[..., Any]) -> Callable[..., Any]:
     @functools.cache
     def _func(_self: Any, *args: Any, **kwargs: Any) -> Any:
-        return func(_self, *args, **kwargs)
+        return func(_self(), *args, **kwargs)
 
     @functools.wraps(func)
     def inner(self: Any, *args: Any, **kwargs: Any) -> Any:
-        return _func(weakref.proxy(self), *args, **kwargs)
+        return _func(weakref.ref(self), *args, **kwargs)
 
     return inner
 
@@ -98,7 +98,7 @@ def is_absolute_eo_path(eo_path: str) -> bool:
     """
     eo_path = norm_eo_path(eo_path)
     first_level, _ = downsplit_eo_path(eo_path)
-    return first_level == "/" or first_level == ".."
+    return first_level in ["/", ".."]
 
 
 def product_relative_path(eo_context: str, eo_path: str) -> str:

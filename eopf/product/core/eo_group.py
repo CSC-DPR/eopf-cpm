@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING, Any, Hashable, Iterable, Iterator, Optional, Union
+from collections.abc import MutableMapping
+from typing import TYPE_CHECKING, Any, Iterable, Iterator, Optional, Union
 
 import xarray
 
@@ -31,9 +32,10 @@ class EOGroup(EOContainer, EOObject):
         relative_path: Optional[Iterable[str]] = None,
         dataset: Optional[xarray.Dataset] = None,
         attrs: Optional[dict[str, Any]] = None,
+        coords: MutableMapping[str, Any] = {},
+        dims: tuple[str, ...] = tuple(),
     ) -> None:
-        EOContainer.__init__(self)
-        EOObject.__init__(self, name, product, relative_path)
+        EOContainer.__init__(self, attrs=attrs)
 
         if dataset is None:
             dataset = xarray.Dataset()
@@ -43,8 +45,8 @@ class EOGroup(EOContainer, EOObject):
                     raise TypeError(f"The dataset key {str(key)} is type {type(key)} instead of str")
         if not isinstance(dataset, xarray.Dataset):
             raise TypeError("dataset parameters must be a xarray.Dataset instance")
-        self._attrs: dict[str, Any] = attrs or dict()
         self._dataset = dataset
+        EOObject.__init__(self, name, product, relative_path, coords=coords, retrieve_dims=dims)
 
     def _get_item(self, key: str) -> Union[EOVariable, "EOGroup"]:
         """Find and return an EOVariable or EOGroup from the given key.
@@ -85,16 +87,6 @@ class EOGroup(EOContainer, EOObject):
         raise NotImplementedError
 
     @property
-    def attrs(self) -> dict[str, Any]:
-        """Attributes defined by this object (does not consider inheritance)."""
-        return self._attrs
-
-    @property
-    def dims(self) -> tuple[Hashable, ...]:
-        """Dimension of this group."""
-        return tuple(self._dataset.dims)
-
-    @property
     def groups(self) -> Iterator[tuple[str, "EOGroup"]]:
         """Iterator over the sub EOGroup of this EOGroup"""
         for key, value in self.items():
@@ -109,7 +101,29 @@ class EOGroup(EOContainer, EOObject):
                 yield key, value
 
     def _add_local_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> EOVariable:
+
+        """Construct and add an eovariable to this group
+
+        if store is defined and open, the eovariable it's directly write by the store.
+        Parameters
+        ----------
+        name: str
+            name of the future group
+        data: any, optional
+            data like object use to create dataarray or dataarray
+        **kwargs: any
+            DataArray extra parameters if data is not a dataarray
+        Returns
+        -------
+        EOVariable
+            newly created EOVariable
+        """
         variable = EOVariable(name, data, self.product, relative_path=[*self._relative_path, self._name], **kwargs)
+
+        if not isinstance(data, EOVariable):
+            variable = EOVariable(name, data, self.product, relative_path=[*self._relative_path, self._name], **kwargs)
+        else:
+            variable = data
         self._dataset[name] = variable._data
         if self.store is not None and self.store.status == StorageStatus.OPEN:
             self.store.add_variables(self._name, self._dataset, relative_path=self._relative_path)

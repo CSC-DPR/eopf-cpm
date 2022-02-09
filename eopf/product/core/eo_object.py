@@ -1,16 +1,20 @@
+import itertools as it
 import weakref
-from abc import abstractmethod
-from typing import TYPE_CHECKING, Any, Iterable, Optional
+from types import MappingProxyType
+from typing import TYPE_CHECKING, Any, Iterable, MutableMapping, Optional
 
 from eopf.exceptions import EOObjectMultipleParentError, InvalidProductError
 from eopf.product.core.eo_abstract import EOAbstract
 from eopf.product.store.abstract import EOProductStore
-from eopf.product.utils import join_eo_path
+from eopf.product.utils import join_eo_path, join_path
 
 if TYPE_CHECKING:  # pragma: no cover
-    from eopf.product.core.eo_group import EOGroup
     from eopf.product.core.eo_product import EOProduct
     from eopf.product.core.eo_variable import EOVariable
+
+
+_DIMENSIONS_PATHS = "_EOPF_DIMENSIONS_PATHS"
+_DIMENSIONS_NAME = "_EOPF_DIMENSIONS"
 
 
 class EOObject(EOAbstract):
@@ -23,13 +27,28 @@ class EOObject(EOAbstract):
     def __init__(
         self,
         name: str,
-        product: "Optional[EOProduct]" = None,
+        product: Optional["EOProduct"] = None,
         relative_path: Optional[Iterable[str]] = None,
+        coords: MutableMapping[str, Any] = {},
+        retrieve_dims: tuple[str, ...] = tuple(),
     ) -> None:
         self._name: str = ""
         self._relative_path: tuple[str, ...] = tuple()
-        self._product: "Optional[EOProduct]" = None
+        self._product: Optional["EOProduct"] = None
         self._repath(name, product, relative_path)
+        self.assign_coords(coords=coords)
+        self.assign_dims(retrieve_dims=retrieve_dims)
+
+    def assign_dims(self, retrieve_dims: Iterable[str]) -> None:
+        for key in retrieve_dims:
+            path, _, dim = key.rpartition("/")
+            self.attrs.setdefault(_DIMENSIONS_PATHS, []).append(path)
+            self.attrs.setdefault(_DIMENSIONS_NAME, []).append(dim)
+
+    def assign_coords(self, coords: MutableMapping[str, Any] = {}, **kwargs: Any) -> None:
+        for path, coords_value in it.chain(coords.items(), kwargs.items()):
+            self.product.coordinates.add_variable(path, data=coords_value)
+            self.assign_dims([path])
 
     def _repath(self, name: str, product: "Optional[EOProduct]", relative_path: Optional[Iterable[str]]) -> None:
         """
@@ -66,12 +85,8 @@ class EOObject(EOAbstract):
         self._product = product
 
     @property
-    @abstractmethod
-    def attrs(self) -> dict[str, Any]:  # pragma: no cover
-        """
-        Dictionary of this EOObject attributes.
-        """
-        ...
+    def dims(self) -> tuple[str, ...]:
+        return self.attrs.get(_DIMENSIONS_NAME, tuple())
 
     @property
     def name(self) -> str:
@@ -96,23 +111,16 @@ class EOObject(EOAbstract):
         return self.product.store
 
     @property
-    def coordinates(self) -> "EOGroup":
-        """Coordinates group local to this object (does not consider inheritance).
-        Allow adding, removing and modifying coordinates.
-
-        Raises
-        ------
-        InvalidProductError
-            If this object doesn't have a (valid) product.
-        KeyError
-            If there is no coordinate name in the context
-        """
-        from .eo_group import EOGroup
-
-        coord = self.product.coordinates[self.path]
-        if not isinstance(coord, EOGroup):
-            raise TypeError(f"EOVariable coordinates type must be EOGroup instead of {type(coord)}.")
-        return coord
+    def coordinates(self) -> MappingProxyType[str, Any]:
+        """Coordinates defined by this object (does not consider inheritance)."""
+        dims = self.dims
+        coords_group = self.product.coordinates
+        return MappingProxyType(
+            {
+                join_path(coord_path, dim): coords_group[join_eo_path(coord_path, dim)]
+                for coord_path, dim in zip(self.attrs.get(_DIMENSIONS_PATHS, ["/"] * len(dims)), dims)
+            },
+        )
 
     def get_coordinate(self, name: str, context: Optional[str] = None) -> "EOVariable":
         if context is None:

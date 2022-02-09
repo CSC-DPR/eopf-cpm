@@ -71,16 +71,21 @@ class EmptyTestStore(EOProductStore):
     def iter(self, path: str) -> Iterator[str]:
         return iter([])
 
+    def get_data(self, key: str) -> tuple:
+        raise KeyError()
+
 
 def fill_test_product() -> EOProduct:
     product: EOProduct = init_product("product_name", store_or_path_url=EmptyTestStore(""))
     product.open(mode="r")
-    product.add_group("measurements/group1")
+    product.add_group("measurements/group1", coords={"c1": [2], "c2": [3], "group2": [4]})
     product.add_group("group0")
 
     product.measurements["group1"].add_variable("variable_a")
-    product["/measurements/group1"].add_variable("group2/variable_b")
-    product["measurements/group1"]["group2"].add_variable("/measurements/group1/group2/variable_c")
+
+    product["measurements/group1"].add_variable("group2/variable_b")
+    product["measurements/group1"]["group2"].add_variable("/measurements/group1/group2/variable_c", dims=["c1"])
+    product.measurements.group1.group2.assign_dims(["c1"])
     product.add_variable("measurements/group1/group2/variable_d")
 
     product["measurements"]["group1"].add_group("group2b")
@@ -154,32 +159,28 @@ def test_invalids_add():
 @pytest.mark.unit
 def test_coordinates():
     product = fill_test_product()
-    paths = {
-        "/": [0],
-        "measurements": [1],
-        "measurements/group1": [2],
-        "measurements/group1/group2": [3],
-        "measurements/group1/group2/variable_c": [4],
-    }
-    c1 = {p: product.add_variable("coordinates/" + p + "/c1", paths[p]) for p in paths}
+    paths = [
+        "measurements",
+        "measurements/group1",
+        "measurements/group1/group2",
+        "measurements/group1/group2/variable_c",
+    ]
+    product.measurements.assign_dims(["c1"])
 
-    c2 = product.add_variable("coordinates/measurements/group1/c2")
+    c1 = {p: product[p].coordinates["/c1"] for p in paths}
+    c2 = product.measurements.group1.coordinates["/c2"]
 
-    expected_dict = {"c1": c1["measurements/group1"], "c2": c2}
-    c2_level_keys = expected_dict.keys()
-    assert set(product["coordinates/measurements/group1/"].coordinates.keys()) == {"c1", "c2", "group2"}
-    assert np.all(
-        product["coordinates/measurements/group1/"].coordinates[coord_name] == expected_dict[coord_name]
-        for coord_name in c2_level_keys
-    )
+    assert set(product["measurements/group1"].coordinates.keys()) == {"/c1", "/c2", "/group2"}
+    assert np.all(product.coordinates[key] == value for key, value in product.measurements.group1.coordinates.items())
     for p in paths:
         container = product[p] if p != "/" else product
         assert container.get_coordinate("c1") == c1[p]
-        if "measurements/group1" in p:
-            assert container.get_coordinate("c2").path == c2.path
-        else:
+        coord = container.get_coordinate("c2")
+        assert coord.path == c2.path
+        assert coord == c2
+        if "group1" not in p:
             with pytest.raises(KeyError):
-                container.get_coordinate("c2")
+                container.coordinates["c2"]
 
 
 @pytest.mark.unit

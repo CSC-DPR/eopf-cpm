@@ -1,4 +1,4 @@
-from typing import Any, Iterable, Iterator, Optional
+from typing import Any, Iterable, Iterator, MutableMapping, Optional
 
 import fsspec
 import xarray
@@ -142,19 +142,23 @@ class EOZarrStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         return contains_array(self._fs, path=path)
 
-    def __getitem__(self, key: str) -> tuple[str, list[str], Optional[Any], Any]:
+    def get_data(self, key: str) -> tuple[Any, ...]:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        *relative_path, name = key.split("/")
         if self.is_group(key):
             dataset = None
-            group = self._root[key]  # pyre-ignore[16]
-            if self.has_variables(group._path):
+            group = self[key]
+            if self.has_variables(group.path):
                 dataset = self.__get_dataset(key)
-            return (name, relative_path, dataset, group.attrs.asdict())
+            return (dataset, group.attrs.asdict())
         elif self.is_variable(key):
             raise TypeError("EOVariable must be loaded from EOGroup dataset, not EOProductStore")
         raise KeyError(f"Invalid name {key}")
+
+    def __getitem__(self, key: str) -> Any:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        return self._root[key]
 
     @weak_cache
     def __get_dataset(self, path: str) -> Any:
@@ -189,7 +193,7 @@ class EOZarrStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         return iter(self._root)
 
-    def add_group(self, name: str, relative_path: Iterable[str] = []) -> None:
+    def add_group(self, name: str, relative_path: Iterable[str] = [], attrs: MutableMapping[str, Any] = {}) -> None:
         """write a group over the store
 
         Parameters
@@ -201,7 +205,7 @@ class EOZarrStore(EOProductStore):
         """
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        self._root.create_group(join_path(*relative_path, name, sep=self.sep))
+        self._root.create_group(join_path(*relative_path, name, sep=self.sep)).attrs.update(attrs)
 
     def add_variables(self, name: str, dataset: xarray.Dataset, relative_path: Iterable[str] = []) -> None:
         """write variables over the store
