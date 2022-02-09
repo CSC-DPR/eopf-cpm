@@ -21,6 +21,7 @@ dependencies:
   - zarr=2.10.3
   - pyfakefs=4.5.4
   - mypy=0.931
+  - lxml=4.7.1
   - pip
   - pip:
     - pyre-check==0.9.8

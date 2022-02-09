@@ -27,6 +27,7 @@ bandit = "1.7.1"
 pyfakefs = "4.5.4"
 mypy = "0.931"
 isort= "5.10.1"
+lxml= "4.7.1"
 yummy-sphinx-theme = "0.1.1"
 
 [requires]

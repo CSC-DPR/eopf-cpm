@@ -9,20 +9,20 @@
 
 {% block sections %}
     <li class="eopf-section-item">
-    {% if "coordinates" in product %}
-        {% with group=product.coordinates, class_name="coords"  %}
-            {% include "group.html" %}
-        {% endwith %}
-    {%endif%}
+        {% if "coordinates" in product %}
+            {% with group=product.coordinates, class_name="coords"  %}
+                {% include "group.html" %}
+            {% endwith %}
+        {%endif%}
+    </li>
 
-    </li>
     {% for group in product.values() %}
-    {% if group.name != "coordinates" %}
-    <li class="eopf-section-item">
-    {% with group=group %}
-        {% include "group.html" %}
-    {% endwith %}
-    </li>
-    {% endif %}
+        {% if group.name != "coordinates" %}
+            <li class="eopf-section-item">
+                {% with group=group %}
+                    {% include "group.html" %}
+                {% endwith %}
+            </li>
+        {% endif %}
     {% endfor %}
 {% endblock %}

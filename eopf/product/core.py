@@ -341,6 +341,22 @@ class EOVariable(EOVariableOperatorsMixin["EOVariable"]):
             relative_path=self._relative_path,
         )
 
+    def plot(self, **kwargs: dict[Any, Any]) -> None:
+        """Wrapper around the xarray plotting functionality.
+        Parameters
+        ----------
+        The parameters MUST follow the xarray.DataArray.plot() options.
+        See Also
+        --------
+        DataArray.plot
+        """
+        import warnings
+
+        try:
+            self._data.plot(**kwargs)
+        except Exception as e:
+            warnings.warn(f"Cannot display plot. Error {e}")
+
     def __getitem__(self, key: Any) -> "EOVariable":
         return EOVariable(key, self._data[key], self._product, relative_path=self._relative_path)
 
@@ -361,7 +377,7 @@ class EOVariable(EOVariableOperatorsMixin["EOVariable"]):
         return self.__repr__()
 
     def __repr__(self) -> str:
-        return f"[EOVariable]{hex(id(self))}"
+        return f'{self._product!r} -> {"->".join(self._relative_path)} -> {self.name}'
 
     def _repr_html_(self) -> str:
         return renderer("variable.html", variable=self)
@@ -825,3 +841,34 @@ class EOProduct(MutableMapping[str, Union[EOVariable, "EOGroup"]]):
         if self._store is None:
             raise StoreNotDefinedError("Store must be defined")
         self._store.close()
+
+    def _create_structure(self, group: Union[EOGroup, tuple[str, EOGroup]], level: int) -> None:
+        if isinstance(group, tuple):
+            group = group[1]
+        for v in group.variables:
+            print("|" + " " * level + "└──", v[0])
+        for g in group.groups:
+            print("|" + " " * level + "├──", g[0])
+            self._create_structure(g, level + 2)
+
+    def tree(self) -> Union["EOProduct", None]:
+        """Display the hierarchy of the product.
+
+        Returns
+        ------
+        Instance of EOProduct if the environment is interactive (e.g. Jupyter Notebook)
+        Oterwise, returns None.
+        """
+        try:
+            from IPython import get_ipython
+
+            if get_ipython():
+                return self
+        except ModuleNotFoundError:
+            import warnings
+
+            warnings.warn("IPython not found")
+        for name, group in self._groups.items():
+            print(f"├── {name}")
+            self._create_structure(group, level=2)
+        return None
