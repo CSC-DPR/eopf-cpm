@@ -16,7 +16,6 @@ def group_details(section_detail: dict, section_structure: dict) -> None:
         if attr_name and attr_value:
             item_structure[attr_name[0]] = attr_value[0]
             section_structure[item_name] = item_structure
-            print(f"{attr_name[0]} {attr_value[0]}")
         else:
             section_structure[item_name] = {}
     subgroups = section_detail.xpath("div/div/ul/li")

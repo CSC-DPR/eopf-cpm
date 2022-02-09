@@ -103,7 +103,7 @@ def test_product_tree(capsys):
     captured = capsys.readouterr()
     assert (
         captured.out
-        == "├── measurements\n|  ├── subgroup1\n|    └── variable1\n|    └── variable2\n├── coordinates\n├── attributes\n"  # noqa
+        == "├── measurements\n|  ├── subgroup1\n|    └── variable1\n|    └── variable2\n├── coordinates\n"  # noqa
     )
 
 
@@ -112,7 +112,9 @@ def test_create_a_whole_product():
     product = init_product("product_name")
     product.measurements.add_group("subgroup")
     product.measurements.subgroup.add_variable("my_variable", [[1, 2, 3, 4], [8, 9, 7, 5]])
-    assert (product_length := len(product)) == 3, f"number of product subgroups must be 3, current is {product_length}"
+    assert (product_length := len(product)) == len(
+        product.MANDATORY_FIELD,
+    ), f"number of product subgroups must be 3, current is {product_length}"
     assert (
         measurements_length := len(product.measurements)
     ) == 1, f"number of product.measurements subgroups must be 1, current is {measurements_length}"
@@ -152,7 +154,6 @@ def test_generate_hierarchy_tree():
                     "variable2": {"Attributes": {"name :": "second variable"}},
                 },
             },
-            "attributes": {"Attributes": {}},
         },
     }
 
@@ -182,7 +183,6 @@ def test_generate_hierarchy_tree2():
                 },
                 "subgroup2": {"Attributes": {}, "variable21": {"Attributes": {"name :": "value"}}},
             },
-            "attributes": {"Attributes": {}},
             "conditions": {"Attributes": {}},
         },
     }
@@ -215,7 +215,6 @@ def test_generate_hierarchy_tree3():
                 },
                 "subgroup2": {"Attributes": {}, "variable21": {"Attributes": {"name :": "value"}}},
             },
-            "attributes": {"Attributes": {}},
             "conditions": {"Attributes": {}, "subgroup3": {"Attributes": {}, "subsubgroup1": {"Attributes": {}}}},
         },
     }

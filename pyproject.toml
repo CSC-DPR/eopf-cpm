@@ -56,4 +56,5 @@ target-version = ['py39']
 [tool.pytest.ini_options]
 markers = [
     "unit",
+    "usecase",
 ]

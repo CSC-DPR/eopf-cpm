@@ -152,7 +152,7 @@ class EOProductStore(MutableMapping[str, Any]):
         """
 
     @abstractmethod
-    def add_group(self, name: str, relative_path: list[str] = []) -> None:
+    def add_group(self, name: str, relative_path: Iterable[str] = [], attrs: MutableMapping[str, Any] = {}) -> None:
         """write a group over the store
 
         Parameters
@@ -178,6 +178,10 @@ class EOProductStore(MutableMapping[str, Any]):
     @abstractmethod
     def iter(self, path: str) -> Iterator[str]:
         """iter over the given path"""
+
+    @abstractmethod
+    def get_data(self, key: str) -> tuple[Any, ...]:
+        ...
 
     def __hash__(self) -> int:
         return id(self)
