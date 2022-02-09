@@ -3,7 +3,10 @@ import os
 
 import pytest
 import xarray as xr
-from utils import (
+
+from eopf.product.convert import OLCIL1EOPConverter, SLSTRL1EOPConverter
+
+from .utils import (
     cmp_s3_zarr_var,
     diff_s3_eop,
     diff_s3_zarr,
@@ -12,8 +15,6 @@ from utils import (
     get_s3_vars,
     get_zarr_vars,
 )
-
-from eopf.product.convert import OLCIL1EOPConverter, SLSTRL1EOPConverter
 
 # python3 -m pytest -v test_convert.py
 

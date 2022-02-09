@@ -79,6 +79,7 @@ def diff_s3_eop(dict_s3, dict_eop, duplicates):
 
     return vars_found, vars_not_found
 
+
 def group_details(section_detail: dict, section_structure: dict) -> None:
     subgroup_structure = {}
     item_structure = {}
@@ -119,6 +120,7 @@ def compute_tree_structure(tree) -> dict:
             group_details(section_detail, section_structure)
             product_structure["groups"][section_name] = section_structure
     return product_structure
+
 
 def cmp_s3_zarr_var_attrs(s3_var, zarr_var):
     """compares attributes between a s3 var and a zarr var"""
