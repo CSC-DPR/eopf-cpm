@@ -98,7 +98,7 @@ def test_hdf5_descend_obj_all():
     f = h5py.File(path_to_hdf5_file, "r")
     with open(path_to_output_file, "w") as ff:
         with contextlib.redirect_stdout(ff):
-            EOHDF5Store._descend_obj_all(ff.get('/'))
+            EOHDF5Store._descend_obj_all(f.get('/'))
     check_result = check_item("coordinates")
     assert not check_result, "coordinates group is not in HDF5 file"
 
@@ -107,7 +107,7 @@ def test_hdf5_descend_obj_gr():
     f = h5py.File(path_to_hdf5_file, "r")
     with open(path_to_output_file, "w") as ff:
         with contextlib.redirect_stdout(ff):
-            EOHDF5Store._descend_obj_gr(ff.get('/'))
+            EOHDF5Store._descend_obj_gr(f.get('/'))
     check_result = check_item("coordinates")
     assert not check_result, "coordinates group is not in HDF5 file"
 
@@ -116,7 +116,7 @@ def test_hdf5_descend_obj_var():
     f = h5py.File(path_to_hdf5_file, "r")
     with open(path_to_output_file, "w") as ff:
         with contextlib.redirect_stdout(ff):
-            EOHDF5Store._descend_obj_var(ff.get('/'))
+            EOHDF5Store._descend_obj_var(f.get('/'))
     check_result = check_item("altitude")
     assert not check_result, "altitude variable is not in HDF5 file"
 
