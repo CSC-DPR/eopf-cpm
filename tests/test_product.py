@@ -1,13 +1,15 @@
 from unittest.mock import patch
 
 import pytest
+import xarray
 from lxml import etree
 from pyfakefs.fake_filesystem import FakeFilesystem
-from utils import compute_tree_structure
 
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError, StoreNotOpenError
 from eopf.product.conveniences import init_product
 from eopf.product.core import EOGroup, EOProduct, EOVariable
+
+from .utils import compute_tree_structure
 
 
 @pytest.mark.unit
@@ -228,7 +230,7 @@ def test_eovariable_plot():
     product.measurements.subgroup.add_group("another_group")
     product.measurements.subgroup.another_group.add_variable("my_variable", [[1, 2, 3, 4], [8, 9, 7, 5]])
 
-    with patch.object(EOVariable, "plot", return_value=None) as mock_method:
+    with patch.object(xarray.DataArray, "plot", return_value=None) as mock_method:
         variable = product.measurements.demo
         variable.plot(yincrease=False)
 
