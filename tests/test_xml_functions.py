@@ -1,5 +1,6 @@
 import glob
 import os
+import xarray as xr
 
 import pytest
 
@@ -18,6 +19,7 @@ from eopf.product.conveniences import (
     get_dir_files,
     parse_xml,
     translate_structure,
+    read_xrd,
 )
 from eopf.product.convert import OLCIL1EOPConverter, SLSTRL1EOPConverter
 
@@ -257,3 +259,119 @@ def test_get_dir_files_6(tmpdir):
     file_path2 = os.path.join(tmpdir, "filename2.txt")
     open(file_path2, "a").close()
     assert sorted(get_dir_files(dir_path=tmpdir, glob_pattern="*.txt")) == sorted([file_path1, file_path2])
+
+
+@pytest.mark.unit
+def test_read_xrd_1():
+    s3_prod_path = "data/"
+    s3_file_name = "empty_file"
+    s3_file_path = os.path.join(s3_prod_path, s3_file_name)
+    files = [s3_file_path]
+    out_ds = read_xrd(files=files)
+    assert out_ds is None, "The funtion must return None since the file is not a supported format"
+
+
+@pytest.mark.unit
+def test_read_xrd_2():
+    s3_prod_path = glob.glob("data/S3A_OL_1*.SEN3")[0]
+    s3_file_name = "Oa22_radiance.nc"
+    s3_file_path = os.path.join(s3_prod_path, s3_file_name)
+    files = [s3_file_path]
+    out_ds = read_xrd(files=files)
+    assert out_ds is None, "The funtion must return None since the file does not exist"
+
+
+@pytest.mark.unit
+def test_read_xrd_3():
+    files = []
+    out_ds = read_xrd(files=files)
+    assert out_ds is None, "The funtion must return None since no files are given"
+
+
+@pytest.mark.unit
+def test_read_xrd_4():
+    s3_prod_path = glob.glob("data/S3A_OL_1*.SEN3")[0]
+    s3_file_name = "Oa11_radiance.nc"
+    s3_file_path = os.path.join(s3_prod_path, s3_file_name)
+    files = [s3_file_path]
+    skip =["Oa11_radiance"]
+    out_ds = read_xrd(files=files, skip=skip)
+    assert out_ds is None, "The funtion must return None since the only variable available in s3 file is the one skipped"
+
+
+@pytest.mark.unit
+def test_read_xrd_5():
+    s3_prod_path = glob.glob("data/S3A_OL_1*.SEN3")[0]
+    s3_file_name = "Oa11_radiance.nc"
+    s3_file_path = os.path.join(s3_prod_path, s3_file_name)
+    s3_file_ds = xr.open_dataset(s3_file_path, decode_times=False, mask_and_scale=False)
+    s3_vars = {}
+    s3_vars["Oa11_radiance"] = s3_file_ds.get("Oa11_radiance")
+    s3_ds = xr.Dataset(data_vars=s3_vars)
+    files = [s3_file_path]
+    out_ds = read_xrd(files=files)
+    assert s3_ds.equals(out_ds), "The datasets must be equal"
+
+
+@pytest.mark.unit
+def test_read_xrd_6():
+    s3_prod_path = glob.glob("data/S3A_OL_1*.SEN3")[0]
+    s3_file_name = "tie_geo_coordinates.nc"
+    s3_file_path = os.path.join(s3_prod_path, s3_file_name)
+    s3_file_ds = xr.open_dataset(s3_file_path, decode_times=False, mask_and_scale=False)
+    files = [s3_file_path]
+    pick = ["latitude"]
+    skip = ["latitude"]
+    out_ds = read_xrd(files=files, pick=pick, skip=skip)
+    assert out_ds is None, "The output should be None since skip has precedence over pick"
+
+
+@pytest.mark.unit
+def test_read_xrd_7():
+    s3_prod_path = glob.glob("data/S3A_OL_1*.SEN3")[0]
+    s3_file_name = "tie_geo_coordinates.nc"
+    s3_file_path = os.path.join(s3_prod_path, s3_file_name)
+    s3_file_ds = xr.open_dataset(s3_file_path, decode_times=False, mask_and_scale=False)
+    s3_vars = {}
+    s3_vars["latitude"] = s3_file_ds.get("latitude")
+    s3_ds = xr.Dataset(data_vars=s3_vars)
+    files = [s3_file_path]
+    pick = ["latitude"]
+    out_ds = read_xrd(files=files, pick=pick)
+    assert s3_ds.equals(out_ds), "The datasets must be equal"
+
+
+@pytest.mark.unit
+def test_read_xrd_8():
+    s3_prod_path = glob.glob("data/S3A_OL_1*.SEN3")[0]
+    s3_vars = {}
+
+    s3_file_name_1 = "Oa10_radiance.nc"
+    s3_file_path_1 = os.path.join(s3_prod_path, s3_file_name_1)
+    s3_file_ds_1 = xr.open_dataset(s3_file_path_1, decode_times=False, mask_and_scale=False)
+    s3_vars["Oa10_radiance"] = s3_file_ds_1.get("Oa10_radiance")
+
+    s3_file_name_2 = "Oa11_radiance.nc"
+    s3_file_path_2 = os.path.join(s3_prod_path, s3_file_name_2)
+    s3_file_ds_2 = xr.open_dataset(s3_file_path_2, decode_times=False, mask_and_scale=False)
+    s3_vars["Oa11_radiance"] = s3_file_ds_2.get("Oa11_radiance")
+    s3_ds = xr.Dataset(data_vars=s3_vars)
+
+    files = [s3_file_path_1, s3_file_path_2]
+    out_ds = read_xrd(files=files)
+    assert s3_ds.equals(out_ds), "The datasets must be equal"
+
+
+@pytest.mark.unit
+def test_read_xrd_8():
+    s3_prod_path = glob.glob("data/S3A_OL_1*.SEN3")[0]
+
+    s3_file_name_1 = "Oa10_radiance.nc"
+    s3_file_path_1 = os.path.join(s3_prod_path, s3_file_name_1)
+
+    s3_file_name_2 = "Oa22_radiance.nc"
+    s3_file_path_2 = os.path.join(s3_prod_path, s3_file_name_2)
+
+    files = [s3_file_path_1, s3_file_path_2]
+    out_ds = read_xrd(files=files)
+    assert out_ds is None, "The datasets must be equal"
