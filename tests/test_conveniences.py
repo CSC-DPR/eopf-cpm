@@ -262,11 +262,10 @@ def test_get_dir_files_6(tmpdir):
 
 
 @pytest.mark.unit
-def test_read_xrd_1():
-    s3_prod_path = "data/"
-    s3_file_name = "empty_file"
-    s3_file_path = os.path.join(s3_prod_path, s3_file_name)
-    files = [s3_file_path]
+def test_read_xrd_1(tmpdir):
+    file_path1 = os.path.join(tmpdir, "filename1.txt")
+    open(file_path1, "a").close()
+    files = [file_path1]
     out_ds = read_xrd(files=files)
     assert out_ds is None, "The funtion must return None since the file is not a supported format"
 
