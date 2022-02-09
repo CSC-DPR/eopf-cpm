@@ -209,11 +209,11 @@ def test_filter_paths_by_6():
 
 @pytest.mark.unit
 def test_filter_paths_by_7():
-    paths = ["data/filters_files_by_tests/empty_dir/file_a", "data/filters_files_by_tests/empty_dir/file_b"]
+    paths = ["data/filters_files_by_tests/empty_dir/file_a", "data/filters_files_by_tests/empty_dir/file_b/"]
     filters = ["file"]
     assert filter_paths_by(paths=paths, filters=filters) == [
         "data/filters_files_by_tests/empty_dir/file_a",
-        "data/filters_files_by_tests/empty_dir/file_b",
+        "data/filters_files_by_tests/empty_dir/file_b/",
     ]
 
 
