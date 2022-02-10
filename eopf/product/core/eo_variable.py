@@ -68,12 +68,8 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return self._data.attrs
 
     @property
-    def dims(self) -> tuple[str, ...]:
-        return self._data.dims
-
-    @property
     def coords(self) -> MutableMapping[str, Any]:
-        return self._data.coords
+        return self.coordinates.values()
 
     @property
     def chunksizes(self) -> Mapping[Any, tuple[int, ...]]:

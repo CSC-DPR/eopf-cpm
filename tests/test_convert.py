@@ -4,6 +4,20 @@ import os
 import pytest
 import xarray as xr
 
+from eopf.product.constants import (
+    CF_MAP_OLCI_L1,
+    CF_MAP_SLSTR_L1,
+    EOP_MAP_OLCI_L1,
+    EOP_MAP_SLSTR_L1,
+    NAMESPACES_OLCI_L1,
+    NAMESPACES_SLSTR_L1,
+)
+from eopf.product.conveniences import (
+    apply_xpath,
+    etree_to_dict,
+    parse_xml,
+    translate_structure,
+)
 from eopf.product.convert import OLCIL1EOPConverter, SLSTRL1EOPConverter
 
 from .utils import (
@@ -1431,3 +1445,57 @@ def test_verify_duplicate_variables_persistence_slstr_l1_in_zarr_format():
     zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
     zarr_var = zarr_ds.get(s3_var_name)
     assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+
+@pytest.mark.unit
+def test_xml_persistance_olci():
+    """Gigen a legacy OLCI L1 product,
+    the legacy information from the xfdumanifest must persist in the built eop"""
+
+    olci_path = glob.glob("data/S3A_OL_1*.SEN3")[0]
+    olci_eop = OLCIL1EOPConverter(olci_path)
+    olci_eop.read()
+
+    # Legacy attributes
+    tree = parse_xml(olci_path, "xfdumanifest.xml")
+    root = tree.getroot()
+    xfdu_dict = etree_to_dict(root[1])
+    cf_dict = {attr: apply_xpath(tree, CF_MAP_OLCI_L1[attr], NAMESPACES_OLCI_L1) for attr in CF_MAP_OLCI_L1}
+    eop_dict = {attr: translate_structure(EOP_MAP_OLCI_L1[attr], tree, NAMESPACES_OLCI_L1) for attr in EOP_MAP_OLCI_L1}
+
+    # EOProduct attributes
+    cf_eop_dict = olci_eop.eop.attrs["CF"]
+    om_eop_dict = olci_eop.eop.attrs["OM-EOP"]
+    xfdu_eop_dict = olci_eop.eop.attrs["XFDU"]
+
+    assert xfdu_dict == xfdu_eop_dict
+    assert cf_dict == cf_eop_dict
+    assert eop_dict == om_eop_dict
+
+
+@pytest.mark.unit
+def test_xml_persistance_slstr():
+    """Gigen a legacy SLSTR L1 product,
+    the legacy information from the xfdumanifest must persist in the built eop"""
+
+    slstr_path = glob.glob("data/S3A_SL_1_RBT*.SEN3")[0]
+    slstr_eop = SLSTRL1EOPConverter(slstr_path)
+    slstr_eop.read()
+
+    # Legacy attributes
+    tree = parse_xml(slstr_path, "xfdumanifest.xml")
+    root = tree.getroot()
+    xfdu_dict = etree_to_dict(root[1])
+    cf_dict = {attr: apply_xpath(tree, CF_MAP_SLSTR_L1[attr], NAMESPACES_SLSTR_L1) for attr in CF_MAP_SLSTR_L1}
+    eop_dict = {
+        attr: translate_structure(EOP_MAP_SLSTR_L1[attr], tree, NAMESPACES_SLSTR_L1) for attr in EOP_MAP_SLSTR_L1
+    }  # noqa
+
+    # EOProduct attributes
+    cf_eop_dict = slstr_eop.eop.attrs["CF"]
+    om_eop_dict = slstr_eop.eop.attrs["OM-EOP"]
+    xfdu_eop_dict = slstr_eop.eop.attrs["XFDU"]
+
+    assert xfdu_dict == xfdu_eop_dict
+    assert cf_dict == cf_eop_dict
+    assert eop_dict == om_eop_dict
