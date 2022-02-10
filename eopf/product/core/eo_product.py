@@ -1,11 +1,11 @@
 from types import TracebackType
 from typing import Any, Iterable, Optional, Type, Union
 
-from eopf.exceptions import InvalidProductError, StoreNotDefinedError
+from eopf.exceptions import InvalidProductError, StoreNotDefinedError, StoreNotOpenError
 from eopf.product.utils import join_eo_path, partition_eo_path, product_relative_path
 
 from ..formatting import renderer
-from ..store.abstract import EOProductStore
+from ..store.abstract import EOProductStore, StorageStatus
 from .eo_container import EOContainer
 from .eo_group import EOGroup
 from .eo_variable import EOVariable
@@ -92,7 +92,7 @@ class EOProduct(EOContainer):
         **kwargs: Any
             extra kwargs to open the store
         """
-        if store_or_path_url:
+        if store_or_path_url is not None:
             self.__set_store(store_or_path_url=store_or_path_url)
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
@@ -187,3 +187,20 @@ class EOProduct(EOContainer):
         if not isinstance(coords, EOGroup):
             raise InvalidProductError("coordinates must be defined at product level and must be an EOGroup")
         return coords
+
+    def write(self, erase: bool = False) -> None:
+        if self.store is None:
+            raise StoreNotDefinedError("Store must be defined")
+        if self.store.status == StorageStatus.CLOSE:
+            raise StoreNotOpenError("Store must be open")
+        self.store.update_attrs("", attrs=self.attrs)
+        return super().write(erase=erase)
+
+    def load(self, erase: bool = False) -> None:
+        if self.store is None:
+            raise StoreNotDefinedError("Store must be defined")
+        if self.store.status == StorageStatus.CLOSE:
+            raise StoreNotOpenError("Store must be open")
+        _, attrs = self.store.get_data("")
+        self.attrs.update(attrs)
+        return super().load(erase)

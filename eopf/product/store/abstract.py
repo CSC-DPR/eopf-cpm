@@ -176,6 +176,14 @@ class EOProductStore(MutableMapping[str, Any]):
         """
 
     @abstractmethod
+    def update_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}):
+        ...
+
+    @abstractmethod
+    def delete_attr(self, group_path: str, attr_name: str):
+        ...
+
+    @abstractmethod
     def iter(self, path: str) -> Iterator[str]:
         """iter over the given path"""
 
