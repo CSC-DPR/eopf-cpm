@@ -42,10 +42,10 @@
             {% include "static/images/icons-svg-coords.svg" %}
             Coordinates
         </label>
-        {# TODO:
-            <div class='eopf-section-details'>
-                {{"TO DO"}}
-            </div>
-        #}
+        <div class='eopf-section-details'>
+            {% with coordinates=obj.coords %}
+                <div class='eopf-section-inline-details'>{{coordinates}}</div>
+            {% endwith %}
+        </div>
     </li>
 {% endblock %}

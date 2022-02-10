@@ -68,6 +68,14 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return self._data.attrs
 
     @property
+    def dims(self) -> tuple[str, ...]:
+        return self._data.dims
+
+    @property
+    def coords(self) -> MutableMapping[str, Any]:
+        return self._data.coords
+
+    @property
     def chunksizes(self) -> Mapping[Any, tuple[int, ...]]:
         """
         Mapping from dimension names to block lengths for this dataarray's data, or None if
