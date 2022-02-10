@@ -16,7 +16,22 @@ from .utils import (
     get_zarr_vars,
 )
 
-# python3 -m pytest -v test_convert.py
+
+@pytest.mark.unit
+def test_harmozied_structure_olci_l1_in_eop_format():
+    """Given a legacy OLCI L1 product,
+    the eop must respect the harmozied data structure"""
+
+    olci_path = glob.glob("data/S3A_OL_1*.SEN3")[0]
+    olci_eop = OLCIL1EOPConverter(olci_path)
+    read_ok = olci_eop.read()
+    assert read_ok, "The product should be read"
+    olci_eop_top_level_groups = olci_eop.eop._groups.keys()
+    assert "measurements" in olci_eop_top_level_groups
+    assert "coordinates" in olci_eop_top_level_groups
+    allowed_top_level_groups = ["measurements", "coordinates", "quality", "conditions"]
+    for group in olci_eop_top_level_groups:
+        assert group in allowed_top_level_groups
 
 
 @pytest.mark.unit
@@ -557,6 +572,23 @@ def test_verify_duplicate_variables_persistence_olci_l1_in_eop_format():
 
 
 @pytest.mark.unit
+def test_harmozied_structure_slstr_l1_in_eop_format():
+    """Given a legacy SLSTR L1 product,
+    the eop must respect the harmozied data structure"""
+
+    slstr_path = glob.glob("data/S3A_SL_1_RBT*.SEN3")[0]
+    slstr_eop = SLSTRL1EOPConverter(slstr_path)
+    read_ok = slstr_eop.read()
+    assert read_ok, "The product should be read"
+    slstr_eop_top_level_groups = slstr_eop.eop._groups.keys()
+    assert "measurements" in slstr_eop_top_level_groups
+    assert "coordinates" in slstr_eop_top_level_groups
+    allowed_top_level_groups = ["measurements", "coordinates", "quality", "conditions"]
+    for group in slstr_eop_top_level_groups:
+        assert group in allowed_top_level_groups
+
+
+@pytest.mark.unit
 def test_verify_non_duplicate_variables_persistence_slstr_l1_in_eop_format():
     """Given a legacy SLSTR L1 product, considering only variables that are unique by name,
     the information from these variables must persist in the built eop: name, attributes, coordinates and data"""
@@ -614,6 +646,35 @@ def test_verify_duplicate_variables_persistence_slstr_l1_in_eop_format():
     s3_var = file_ds.get(s3_var_name)
     eop_var = slstr_eop.eop.conditions.time_i.SCANSYNC._data
     assert s3_var.equals(eop_var)
+
+
+def test_harmozied_structure_olci_l1_in_zarr_format():
+    """Given a legacy OLCI L1 product,
+    the zarr must respect the harmozied data structure"""
+
+    olci_path = glob.glob("data/S3A_OL_1*.SEN3")[0]
+    olci_eop = OLCIL1EOPConverter(olci_path)
+    read_ok = olci_eop.read()
+    assert read_ok, "The product should be read"
+    zarr_path = "data/olci_zarr"
+    olci_eop.write(zarr_path)
+
+    top_level_zarr_groups_pattern = os.path.join(zarr_path, "*")
+    top_level_zarr_groups = glob.glob(top_level_zarr_groups_pattern)
+    group_names = []
+    for group_path in top_level_zarr_groups:
+        assert os.path.isdir(group_path), "Must be a directory"
+        if group_path[-1] == os.path.sep:
+            group_name = os.path.basename(group_path[:-1])
+        else:
+            group_name = os.path.basename(group_path)
+        group_names.append(group_name)
+
+    assert "measurements" in group_names
+    assert "coordinates" in group_names
+    allowed_top_level_groups = ["measurements", "coordinates", "quality", "conditions"]
+    for group in group_names:
+        assert group in allowed_top_level_groups
 
 
 @pytest.mark.unit
@@ -1269,6 +1330,35 @@ def test_verify_duplicate_variables_persistence_olci_l1_in_zarr_format():
     zarr_ds = xr.open_zarr(s3_zarr_path, decode_times=False, mask_and_scale=False)
     zarr_var = zarr_ds.get(s3_var_name)
     assert cmp_s3_zarr_var(s3_var, zarr_var)
+
+
+def test_harmozied_structure_slstr_l1_in_zarr_format():
+    """Given a legacy OLCI L1 product,
+    the zarr must respect the harmozied data structure"""
+
+    slstr_path = glob.glob("data/S3A_SL_1_RBT*.SEN3")[0]
+    slstr_eop = SLSTRL1EOPConverter(slstr_path)
+    read_ok = slstr_eop.read()
+    assert read_ok, "The product should be read"
+    zarr_path = "data/olci_zarr"
+    slstr_eop.write(zarr_path)
+
+    top_level_zarr_groups_pattern = os.path.join(zarr_path, "*")
+    top_level_zarr_groups = glob.glob(top_level_zarr_groups_pattern)
+    group_names = []
+    for group_path in top_level_zarr_groups:
+        assert os.path.isdir(group_path), "Must be a directory"
+        if group_path[-1] == os.path.sep:
+            group_name = os.path.basename(group_path[:-1])
+        else:
+            group_name = os.path.basename(group_path)
+        group_names.append(group_name)
+
+    assert "measurements" in group_names
+    assert "coordinates" in group_names
+    allowed_top_level_groups = ["measurements", "coordinates", "quality", "conditions"]
+    for group in group_names:
+        assert group in allowed_top_level_groups
 
 
 @pytest.mark.unit
