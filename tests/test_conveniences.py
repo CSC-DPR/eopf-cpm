@@ -138,6 +138,9 @@ def test_etree_to_dict():
 
 @pytest.mark.unit
 def test_xml_persistance_olci():
+    """Gigen a legacy OLCI L1 product, 
+    the legacy information from the xfdumanifest must persist in the built eop"""
+
     olci_path = glob.glob("data/S3A_OL_1*.SEN3")[0]
     olci_eop = OLCIL1EOPConverter(olci_path)
     olci_eop.read()
@@ -161,6 +164,9 @@ def test_xml_persistance_olci():
 
 @pytest.mark.unit
 def test_xml_persistance_slstr():
+    """Gigen a legacy SLSTR L1 product, 
+    the legacy information from the xfdumanifest must persist in the built eop"""
+
     slstr_path = glob.glob("data/S3A_SL_1_RBT*.SEN3")[0]
     slstr_eop = SLSTRL1EOPConverter(slstr_path)
     slstr_eop.read()
