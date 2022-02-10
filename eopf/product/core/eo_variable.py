@@ -9,6 +9,7 @@ from typing import (
     MutableMapping,
     Optional,
     Union,
+    ValuesView,
 )
 
 import xarray
@@ -68,7 +69,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return self._data.attrs
 
     @property
-    def coords(self) -> MutableMapping[str, Any]:
+    def coords(self) -> ValuesView[Any]:
         return self.coordinates.values()
 
     @property
