@@ -21,6 +21,9 @@ from .utils import (
 
 @pytest.mark.unit
 def test_verify_non_duplicate_variables_persistence_olci_l1_in_eop_format():
+    """Given a legacy OLCI L1 product, considering only variables that are unique by name,
+    the information from these variables must persist in the built eop: name, attributes, coordinates and data"""
+
     # Tested on the product:
     # S3A_OL_1_EFR____20220116T092821_20220116T093121_20220117T134858_0179_081_036_2160_LN1_O_NT_002.SEN3
     # On 7th February 2022
@@ -36,6 +39,9 @@ def test_verify_non_duplicate_variables_persistence_olci_l1_in_eop_format():
 
 
 def test_verify_duplicate_variables_persistence_olci_l1_in_eop_format():
+    """Given a legacy OLCI L1 product, considering only variables that are not unique by name,
+    the information from these variables must persist in the built eop: name, attributes, coordinates and data"""
+
     # Tested on the product:
     # S3A_OL_1_EFR____20220116T092821_20220116T093121_20220117T134858_0179_081_036_2160_LN1_O_NT_002.SEN3
     # On 7th February 2022
@@ -552,6 +558,9 @@ def test_verify_duplicate_variables_persistence_olci_l1_in_eop_format():
 
 @pytest.mark.unit
 def test_verify_non_duplicate_variables_persistence_slstr_l1_in_eop_format():
+    """Given a legacy SLSTR L1 product, considering only variables that are unique by name,
+    the information from these variables must persist in the built eop: name, attributes, coordinates and data"""
+
     # Tested on the product:
     # S3A_SL_1_RBT____20220118T083600_20220118T083900_20220118T110259_0179_081_064_2160_LN2_O_NR_004.SEN3
     # On 7th February 2022
@@ -567,6 +576,9 @@ def test_verify_non_duplicate_variables_persistence_slstr_l1_in_eop_format():
 
 
 def test_verify_duplicate_variables_persistence_slstr_l1_in_eop_format():
+    """Given a legacy SLSTR L1 product, considering only variables that are not unique by name,
+    the information from these variables must persist in the built eop: name, attributes, coordinates and data"""
+
     # Tested on the product:
     # S3A_SL_1_RBT____20220118T083600_20220118T083900_20220118T110259_0179_081_064_2160_LN2_O_NR_004.SEN3
     # On 7th February 2022
@@ -606,6 +618,9 @@ def test_verify_duplicate_variables_persistence_slstr_l1_in_eop_format():
 
 @pytest.mark.unit
 def test_verify_non_duplicate_variables_persistence_olci_l1_in_zarr_format():
+    """Given a legacy OLCI L1 product, considering only variables that are unique by name,
+    the information from these variables must persist in zarr format: name, attributes, coordinates and data"""
+
     # Tested on the product:
     # S3A_OL_1_EFR____20220116T092821_20220116T093121_20220117T134858_0179_081_036_2160_LN1_O_NT_002.SEN3
     # The persistence of variables coordinates is not checked since they are not yet populated in zarr
@@ -624,6 +639,9 @@ def test_verify_non_duplicate_variables_persistence_olci_l1_in_zarr_format():
 
 
 def test_verify_duplicate_variables_persistence_olci_l1_in_zarr_format():
+    """Given a legacy OLCI L1 product, considering only variables that are not unique by name,
+    the information from these variables must persist in zarr format: name, attributes, coordinates and data"""
+
     # Tested on the product:
     # S3A_OL_1_EFR____20220116T092821_20220116T093121_20220117T134858_0179_081_036_2160_LN1_O_NT_002.SEN3
     # The persistence of variables coordinates is not checked since they are not yet populated in zarr
@@ -1255,6 +1273,9 @@ def test_verify_duplicate_variables_persistence_olci_l1_in_zarr_format():
 
 @pytest.mark.unit
 def test_verify_non_duplicate_variables_persistence_slstr_l1_in_zarr_format():
+    """Given a legacy SLSTR L1 product, considering only variables that are unique by name,
+    the information from these variables must persist in zarr format: name, attributes, coordinates and data"""
+
     # Tested on the product:
     # S3A_SL_1_RBT____20220118T083600_20220118T083900_20220118T110259_0179_081_064_2160_LN2_O_NR_004.SEN3
     # The persistence of variables coordinates is not checked since they are not yet populated in zarr
@@ -1273,6 +1294,9 @@ def test_verify_non_duplicate_variables_persistence_slstr_l1_in_zarr_format():
 
 
 def test_verify_duplicate_variables_persistence_slstr_l1_in_zarr_format():
+    """Given a legacy SLSTR L1 product, considering only variables that are not unique by name,
+    the information from these variables must persist in zarr format: name, attributes, coordinates and data"""
+
     # Tested on the product:
     # S3A_SL_1_RBT____20220118T083600_20220118T083900_20220118T110259_0179_081_064_2160_LN2_O_NR_004.SEN3
     # The persistence of variables coordinates is not checked since they are not yet populated in zarr

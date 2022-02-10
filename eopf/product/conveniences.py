@@ -43,6 +43,7 @@ def filter_paths_by(paths: list[str], filters: list[str]) -> list[str]:
             for filter in filters:
                 if filter in file_name:
                     filtered_file_paths.append(path)
+                    break
     except Exception as e:
         print(f"Exception encountered while filtering files: {e} ")
         return []
