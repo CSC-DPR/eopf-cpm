@@ -69,6 +69,7 @@ def test_load_product_from_zarr(zarr_file, fs: FakeFilesystem):
         product.load()
 
     assert product.attrs["top_level"]
+    assert product.attributes == product.attrs
 
     assert_contain(product, "coordinates", EOGroup)
     assert product["coordinates"].attrs["description"] == "coordinates Data Group"

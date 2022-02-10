@@ -109,7 +109,15 @@ def product(fs: FakeFilesystem) -> EOProduct:
 
 
 @pytest.mark.unit
-def test_add_group_var(product):
+def test_product_store_is_valid():
+    product = EOProduct("a_product")
+    with pytest.raises(TypeError):
+        product.open(mode="r", store_or_path_url=1)
+
+
+@pytest.mark.unit
+def test_browse_product(product):
+    assert len(product.relative_path) == 0
     assert_contain(product, "group0", EOGroup)
     assert_contain(product, "measurements/group1", EOGroup)
     assert_contain(product, "measurements/group1/group2", EOGroup)
@@ -119,6 +127,17 @@ def test_add_group_var(product):
     assert_contain(product, "measurements/group1/group2/variable_b", EOVariable)
     assert_contain(product, "measurements/group1/group2/variable_c", EOVariable)
     assert_contain(product, "measurements/group1/group2/variable_d", EOVariable)
+
+    assert len(product) == 3
+
+    with (
+        patch.object(EmptyTestStore, "iter", return_value=iter(["a", "b"])) as iter_method,
+        patch.object(EmptyTestStore, "get_data", return_value=(None, {})),
+        product.open(mode="r"),
+    ):
+        assert sorted(["group0", "measurements", "coordinates", "a", "b"]) == sorted([i for i in product])
+        assert product.get("a") is not None
+    assert iter_method.call_count == 1
 
     with pytest.raises(KeyError):
         assert_contain(product, "measurements/group2", EOGroup)
@@ -199,6 +218,9 @@ def test_attributes(product):
 
 @pytest.mark.unit
 def test_setitem(product):
+
+    with pytest.raises(TypeError):
+        EOGroup("group1b", None, dataset=["a", "b"])
 
     product["measurements/group1b/"] = EOGroup("group1b", None)
 
@@ -306,6 +328,14 @@ def test_delitem(product):
     with pytest.raises(KeyError):
         product["measurements/group1/group2"]
 
+    with (
+        patch.object(EmptyTestStore, "__delitem__", return_value=None) as del_method,
+        patch.object(EmptyTestStore, "__contains__", return_value=True) as in_method,
+    ):
+        del product["false_key"]
+    del_method.assert_called_once()
+    in_method.assert_called_once()
+
 
 @pytest.mark.unit
 def test_invalid_dataset():
@@ -321,12 +351,16 @@ def test_create_product_on_memory(fs: FakeFilesystem):
     with pytest.raises(StoreNotDefinedError):
         product.open(mode="w")
 
+    with pytest.raises(StoreNotDefinedError):
+        product._relative_key("a key")
+
     assert product._store is None, "store must be None"
     assert not (fs.isdir(product.name) or fs.isfile(product.name)), "Product must not create any thing on fs"
 
 
 @pytest.mark.unit
 def test_write_product(product):
+
     with pytest.raises(StoreNotOpenError):
         product.write()
 
@@ -341,6 +375,12 @@ def test_write_product(product):
     assert mock_method.call_count == 8
     assert product._store is not None, "store must be set"
 
+    product._store = None
+    with pytest.raises(StoreNotDefinedError):
+        product.write()
+    with pytest.raises(StoreNotDefinedError):
+        product.measurements.write()
+
 
 @pytest.mark.unit
 def test_load_product(product):
@@ -352,6 +392,10 @@ def test_load_product(product):
 
     assert mock_method.call_count == 1
     assert product._store is not None, "store must be set"
+
+    product._store = None
+    with pytest.raises(StoreNotDefinedError):
+        product.load()
 
 
 @pytest.mark.unit
