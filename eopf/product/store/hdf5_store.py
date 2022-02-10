@@ -253,8 +253,8 @@ class EOHDF5Store:
         f = h5py.File(self._store, "w")
         root = f.create_group(self._store)
 
-        #eogroup: Union[EOVariable, "EOGroup"] = product._get_group("attributes")
-        #if isinstance(eogroup, EOGroup) and eogroup is not None:
+        # eogroup: Union[EOVariable, "EOGroup"] = product._get_group("attributes")
+        # if isinstance(eogroup, EOGroup) and eogroup is not None:
         #    self._h5_group(f, root, eogroup)
         eogroup1: Union[EOVariable, "EOGroup"] = product._get_group("coordinates")
         if isinstance(eogroup1, EOGroup):
