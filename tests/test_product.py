@@ -145,13 +145,19 @@ def test_generate_hierarchy_tree():
     assert tree_structure == {
         "name": "product_name",
         "groups": {
-            "coordinates": {"Attributes": {}},
+            "coordinates": {},
             "measurements": {
-                "Attributes": {},
                 "subgroup1": {
-                    "Attributes": {},
-                    "variable1": {"Attributes": {"name :": "some name"}},
-                    "variable2": {"Attributes": {"name :": "second variable"}},
+                    "variable1": {
+                        "Attributes": {"name :": "some name"},
+                        "Dimensions": "('dim_0',)",
+                        "Coordinates": "Coordinates:\n    *empty*",
+                    },
+                    "variable2": {
+                        "Attributes": {"name :": "second variable"},
+                        "Dimensions": "('dim_0',)",
+                        "Coordinates": "Coordinates:\n    *empty*",
+                    },
                 },
             },
         },
@@ -173,17 +179,29 @@ def test_generate_hierarchy_tree2():
     assert tree_structure == {
         "name": "product",
         "groups": {
-            "coordinates": {"Attributes": {}},
+            "coordinates": {},
             "measurements": {
-                "Attributes": {},
                 "subgroup1": {
-                    "Attributes": {},
-                    "variable11": {"Attributes": {"name :": "some name"}},
-                    "variable12": {"Attributes": {"name :": "second variable"}},
+                    "variable11": {
+                        "Attributes": {"name :": "some name"},
+                        "Dimensions": "('dim_0',)",
+                        "Coordinates": "Coordinates:\n    *empty*",
+                    },
+                    "variable12": {
+                        "Attributes": {"name :": "second variable"},
+                        "Dimensions": "('dim_0',)",
+                        "Coordinates": "Coordinates:\n    *empty*",
+                    },
                 },
-                "subgroup2": {"Attributes": {}, "variable21": {"Attributes": {"name :": "value"}}},
+                "subgroup2": {
+                    "variable21": {
+                        "Attributes": {"name :": "value"},
+                        "Dimensions": "('dim_0',)",
+                        "Coordinates": "Coordinates:\n    *empty*",
+                    },
+                },
             },
-            "conditions": {"Attributes": {}},
+            "conditions": {},
         },
     }
 
@@ -205,17 +223,29 @@ def test_generate_hierarchy_tree3():
     assert tree_structure == {
         "name": "product",
         "groups": {
-            "coordinates": {"Attributes": {}},
+            "coordinates": {},
             "measurements": {
-                "Attributes": {},
                 "subgroup1": {
-                    "Attributes": {},
-                    "variable11": {"Attributes": {"name :": "some name"}},
-                    "variable12": {"Attributes": {"name :": "second variable"}},
+                    "variable11": {
+                        "Attributes": {"name :": "some name"},
+                        "Dimensions": "('dim_0',)",
+                        "Coordinates": "Coordinates:\n    *empty*",
+                    },
+                    "variable12": {
+                        "Attributes": {"name :": "second variable"},
+                        "Dimensions": "('dim_0',)",
+                        "Coordinates": "Coordinates:\n    *empty*",
+                    },
                 },
-                "subgroup2": {"Attributes": {}, "variable21": {"Attributes": {"name :": "value"}}},
+                "subgroup2": {
+                    "variable21": {
+                        "Attributes": {"name :": "value"},
+                        "Dimensions": "('dim_0',)",
+                        "Coordinates": "Coordinates:\n    *empty*",
+                    },
+                },
             },
-            "conditions": {"Attributes": {}, "subgroup3": {"Attributes": {}, "subsubgroup1": {"Attributes": {}}}},
+            "conditions": {"subgroup3": {"subsubgroup1": {}}},
         },
     }
 
