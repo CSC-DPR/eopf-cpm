@@ -176,11 +176,11 @@ class EOProductStore(MutableMapping[str, Any]):
         """
 
     @abstractmethod
-    def update_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}):
+    def update_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         ...
 
     @abstractmethod
-    def delete_attr(self, group_path: str, attr_name: str):
+    def delete_attr(self, group_path: str, attr_name: str) -> None:
         ...
 
     @abstractmethod

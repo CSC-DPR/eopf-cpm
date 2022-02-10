@@ -207,12 +207,12 @@ class EOZarrStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         self._root.create_group(join_path(*relative_path, name, sep=self.sep)).attrs.update(attrs)
 
-    def update_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}):
+    def update_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         self._root[group_path].attrs.update(attrs)
 
-    def delete_attr(self, group_path: str, attr_name: str):
+    def delete_attr(self, group_path: str, attr_name: str) -> None:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         del self._root[group_path].attrs[attr_name]

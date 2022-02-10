@@ -335,6 +335,7 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
         for key in self.store.iter(self.path):
+            group: Union[EOGroup, EOVariable]
             if erase or key not in self._groups:
                 try:
                     dataset, attrs = self.store.get_data(self._relative_key(key))
@@ -344,6 +345,8 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
                 self[key] = group
             else:
                 group = self[key]
+            if not isinstance(group, EOGroup):
+                continue
             group.load(erase=erase)
 
     def _ipython_key_completions_(self) -> list[str]:
