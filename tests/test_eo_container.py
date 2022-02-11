@@ -99,6 +99,10 @@ def product(fs: FakeFilesystem) -> EOProduct:
         product["measurements/group1"].add_variable("group2/variable_b")
         product["measurements/group1"]["group2"].add_variable("/measurements/group1/group2/variable_c", dims=["c1"])
         product.measurements.group1.group2.assign_dims(["c1"])
+
+        product.measurements.add_variable("group3/variable_e")
+        product.measurements.add_variable("group3/sgroup3/variable_f")
+
         product.add_variable("measurements/group1/group2/variable_d")
 
         product["measurements"]["group1"].add_group("group2b")
@@ -323,7 +327,11 @@ def test_delitem(product):
 
     with pytest.raises(KeyError):
         del product.measurements["/measurements/group1"]
-    del product.measurements["group1"]
+
+    assert len(product.measurements.group3) > 0
+    del product.measurements["group3"]
+    with pytest.raises(KeyError):
+        assert product.measurements["group3"]
 
     with pytest.raises(KeyError):
         product["measurements/group1/group2"]
@@ -371,8 +379,8 @@ def test_write_product(product):
     ):
         product.write()
 
-    assert mock_method2.call_count == 3
-    assert mock_method.call_count == 8
+    assert mock_method2.call_count == 5
+    assert mock_method.call_count == 10
     assert product._store is not None, "store must be set"
 
     product._store = None
