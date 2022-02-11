@@ -211,18 +211,19 @@ class EOHDF5Store:
             return
         current_node = parent_node.create_group(eogroup.name)
 
-        json_dict = EOHDF5Store.json_serializable_dict_of(eogroup.attrs)
-        self._set_attr(current_node, json_dict)
+        #json_dict = EOHDF5Store.json_serializable_dict_of(eogroup.attrs)
+        #self._set_attr(current_node, json_dict)
 
         for key, eovar in eogroup.variables:
             json_dict_ = EOHDF5Store.json_serializable_dict_of(eovar.attrs)
             self._set_attr(current_node, json_dict_)
 
-            if eovar.dims:
-                da = xr.DataArray(data=eovar._data.values)
-                if json_dict_ is not None:
-                    if "_FillValue" in json_dict_:
-                        da.fillna(json_dict_["_FillValue"])
+            #if eovar.dims:
+            da = xr.DataArray(data=eovar._data.values)
+            if json_dict_ is not None:
+                if "_FillValue" in json_dict_:
+                    da.fillna(json_dict_["_FillValue"])
+                if eovar._data.dtype !=  np.dtype('O'):
                     h5_var = current_node.create_dataset(eovar.name, data=da)
                     self._set_attr(h5_var, json_dict_)
 
