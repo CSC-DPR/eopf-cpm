@@ -3,19 +3,7 @@ Define HDF5 Store Object for EOProduct.
 """
 
 import contextlib
-from abc import abstractclassmethod, abstractmethod
-from typing import (
-    Any,
-    Callable,
-    Dict,
-    Hashable,
-    Iterable,
-    Iterator,
-    Mapping,
-    Optional,
-    Type,
-    Union,
-)
+from typing import Any, Dict, Union
 
 import h5py
 import numpy as np
@@ -232,13 +220,13 @@ class EOHDF5Store:
 
             if eovar.dims:
                 da = xr.DataArray(data=eovar._data.values)
-                if json_dict_ != None:
+                if json_dict_ is not None:
                     if "_FillValue" in json_dict_:
                         da.fillna(json_dict_["_FillValue"])
                     h5_var = current_node.create_dataset(eovar.name, data=da)
                     self._set_attr(h5_var, json_dict_)
 
-        if eogroup.groups != None:
+        if eogroup.groups is not None:
             for key, g in eogroup.groups:
                 self._h5_group(f, current_node, g)
 

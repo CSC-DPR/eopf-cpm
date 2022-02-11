@@ -2,7 +2,6 @@ import contextlib
 import glob
 import os
 import os.path
-import shutil
 
 import h5py
 import pytest
@@ -159,10 +158,13 @@ def test_hdf5_get_dict_vars():
     dict = h5._get_dict_vars(obj, vars)
     assert "altitude" in dict, "altitude variable is not in dictionary"
 
+
 @pytest.fixture(scope="session", autouse=True)
 def cleanup(request):
     """Cleanup testing files."""
+
     def remove_test_files():
         os.remove(_get_path("path_to_hdf5_file"))
         os.remove(_get_path("path_to_output_file"))
+
     request.addfinalizer(remove_test_files)
