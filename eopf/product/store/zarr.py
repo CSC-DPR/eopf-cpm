@@ -83,7 +83,7 @@ class EOZarrStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         return contains_array(self._fs, path=path)
 
-    def get_data(self, key: str) -> tuple[Optional[xarray.Dataset], MutableMapping[str, Any]]:
+    def get_data(self, key: str) -> tuple[Optional[xarray.Dataset], dict[str, Any]]:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         if self.is_group(key):

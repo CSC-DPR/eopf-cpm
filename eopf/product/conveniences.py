@@ -1,11 +1,11 @@
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from eopf.product import EOProduct
 from eopf.product.store.abstract import EOProductStore
 
 
 def init_product(
-    product_name: str, *, store_or_path_url: Optional[Union[str, EOProductStore]] = None, **kwargs
+    product_name: str, *, store_or_path_url: Optional[Union[str, EOProductStore]] = None, **kwargs: Any
 ) -> EOProduct:
     """Convenience function to create an harmonized
 

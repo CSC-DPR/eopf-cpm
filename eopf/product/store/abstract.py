@@ -286,7 +286,7 @@ class EOProductStore(MutableMapping[str, Any]):
         """
 
     @abstractmethod
-    def get_data(self, path: str) -> tuple[Optional[xarray.Dataset], MutableMapping[str, Any]]:
+    def get_data(self, path: str) -> tuple[Optional[xarray.Dataset], dict[str, Any]]:
         """Retrieve the datas of a group indexed by the given path.
 
         Parameters
@@ -298,7 +298,7 @@ class EOProductStore(MutableMapping[str, Any]):
         -------
         xarray.Dataset or None
             data of the group
-        collections.abc.MutableMapping[str, Any]
+        dict[str, Any]
             attributes of the group
 
         Raises
