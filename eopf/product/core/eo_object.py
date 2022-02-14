@@ -18,10 +18,22 @@ _DIMENSIONS_NAME = "_EOPF_DIMENSIONS"
 
 
 class EOObject(EOAbstract):
-    """
-    Abstract class implemented by EOGroup and EOVariable.
+    """Abstract class implemented by EOGroup and EOVariable.
     Provide local attributes, and both local and inherited coordinates.
     Implement product affiliation and path access.
+
+    Parameters
+    ----------
+    name: str, optional
+        name of this group
+    product: EOProduct, optional
+        product top level
+    relative_path: Iterable[str], optional
+        list like of string representing the path from the product
+    coords: MutableMapping[str, Any], optional
+        coordinates to assign
+    retrive_dims: tuple[str], optional
+        dimensions to assign
     """
 
     def __init__(
@@ -41,19 +53,34 @@ class EOObject(EOAbstract):
         self.assign_dims(retrieve_dims=retrieve_dims)
 
     def assign_dims(self, retrieve_dims: Iterable[str]) -> None:
+        """Assign dimension to this object
+
+        Parameters
+        ----------
+        retrive_dims: Iterable[str], optional
+            dimensions to assign
+        """
         for key in retrieve_dims:
             path, _, dim = key.rpartition("/")
             self.attrs.setdefault(_DIMENSIONS_PATHS, []).append(path)
             self.attrs.setdefault(_DIMENSIONS_NAME, []).append(dim)
 
     def assign_coords(self, coords: MutableMapping[str, Any] = {}, **kwargs: Any) -> None:
+        """Assign coordinates to this object
+
+        Coordinates should be set in the given key-value pair format: {"path/under/coordinates/group" : array_like}.
+
+        Parameters
+        ----------
+        coords: MutableMapping[str, Any] optional
+            coordinates to assign
+        """
         for path, coords_value in it.chain(coords.items(), kwargs.items()):
             self.product.coordinates.add_variable(path, data=coords_value)
             self.assign_dims([path])
 
     def _repath(self, name: str, product: "Optional[EOProduct]", relative_path: Optional[Iterable[str]]) -> None:
-        """
-         Set the name, product and relative_path attributes of this EObject.
+        """Set the name, product and relative_path attributes of this EObject.
          This method won't repath the object in a way that result in it being the child of multiple product,
          or at multiple path.
 
@@ -87,6 +114,7 @@ class EOObject(EOAbstract):
 
     @property
     def dims(self) -> tuple[str, ...]:
+        """tupple[str, ...]: dimensions"""
         return self.attrs.get(_DIMENSIONS_NAME, tuple())
 
     @property
@@ -113,7 +141,7 @@ class EOObject(EOAbstract):
 
     @property
     def coordinates(self) -> MappingProxyType[str, Any]:
-        """Coordinates defined by this object (does not consider inheritance)."""
+        """MappingProxyType[str, Any]: Coordinates defined by this object"""
         dims = self.dims
         coords_group = self.product.coordinates
         return MappingProxyType(
