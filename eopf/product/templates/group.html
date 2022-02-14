@@ -22,8 +22,8 @@
 {% block sections %}
     {% if obj.attrs %}
         <li class="eopf-section-item">
-            <input type="checkbox" class="eopf-section-summary-in" id="{{ obj|string }}_attrs" hidden>
-            <label for="{{ obj|string }}_attrs" class="eopf-section-summary eopf-header" >
+            <input type="checkbox" class="eopf-section-summary-in" id="{{ obj|string }}_{{ unique_id }}_attrs" hidden>
+            <label for="{{ obj|string }}_{{ unique_id }}_attrs" class="eopf-section-summary eopf-header" >
                 {% include "static/images/icons-svg-attributes.svg" %}
                 Attributes
             </label>
@@ -41,8 +41,8 @@
 
     {% if obj.coords %}
         <li class="eopf-section-item">
-            <input type="checkbox" class="eopf-section-summary-in" id="{{ obj|string }}_coords" hidden>
-            <label for="{{ obj|string }}_coords" class="eopf-section-summary eopf-header" >
+            <input type="checkbox" class="eopf-section-summary-in" id="{{ obj|string }}_{{unique_id}}_coords" hidden>
+            <label for="{{ obj|string }}_{{unique_id}}_coords" class="eopf-section-summary eopf-header" >
                 {% include "static/images/icons-svg-coords.svg" %}
                 Coordinates
             </label>
