@@ -1,3 +1,6 @@
+from eopf.product.core.eo_container import EOContainer
+
+
 def group_details(section_detail: dict, section_structure: dict) -> None:
     subgroup_structure = {}
     item_structure = {}
@@ -38,3 +41,10 @@ def compute_tree_structure(tree) -> dict:
             group_details(section_detail, section_structure)
             product_structure["groups"][section_name] = section_structure
     return product_structure
+
+
+def assert_contain(container: EOContainer, path: str, expect_type, path_offset="/"):
+    obj = container[path]
+    assert obj.path == path_offset + path
+    assert obj.name == path.rpartition("/")[2]
+    assert isinstance(obj, expect_type)
