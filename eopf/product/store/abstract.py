@@ -152,7 +152,12 @@ class EOProductStore(MutableMapping[str, Any]):
         """
 
     @abstractmethod
-    def add_group(self, name: str, relative_path: Iterable[str] = [], attrs: MutableMapping[str, Any] = {}) -> None:
+    def add_group(
+        self,
+        name: str,
+        relative_path: Iterable[str] = [],
+        attrs: MutableMapping[str, Any] = {},
+    ) -> None:
         """write a group over the store
 
         Parameters

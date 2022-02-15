@@ -9,6 +9,7 @@ from typing import (
     MutableMapping,
     Optional,
     Union,
+    ValuesView,
 )
 
 import xarray
@@ -47,7 +48,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         data: Optional[Any] = None,
         product: Optional["EOProduct"] = None,
         relative_path: Optional[Iterable[str]] = None,
-        attrs: Optional[dict[str, Any]] = None,
+        attrs: Optional[MutableMapping[str, Any]] = None,
         coords: MutableMapping[str, Any] = {},
         dims: tuple[str, ...] = tuple(),
         **kwargs: Any,
@@ -63,8 +64,12 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return EOVariable(name="", data=data)
 
     @property
-    def attrs(self) -> dict[str, Any]:
+    def attrs(self) -> MutableMapping[str, Any]:
         return self._data.attrs
+
+    @property
+    def coords(self) -> ValuesView[Any]:
+        return self.coordinates.values()
 
     @property
     def chunksizes(self) -> Mapping[Any, tuple[int, ...]]:

@@ -88,7 +88,7 @@ class EmptyTestStore(EOProductStore):
 
 
 @pytest.fixture
-def product(fs: FakeFilesystem) -> EOProduct:
+def product() -> EOProduct:
     product: EOProduct = init_product("product_name", store_or_path_url=EmptyTestStore(""))
     with product.open(mode="w"):
         product.add_group("measurements/group1", coords={"c1": [2], "c2": [3], "group2": [4]})
@@ -422,7 +422,7 @@ def test_product_must_have_mandatory_group():
     assert product.is_valid()
 
 
-@pytest.mark.usecase
+@pytest.mark.unit
 def test_product_tree(capsys):
     product = init_product("product_name")
     product.measurements.add_group("subgroup1")
@@ -437,88 +437,40 @@ def test_product_tree(capsys):
 
 
 @pytest.mark.unit
-def test_generate_hierarchy_tree():
-    product = init_product("product_name")
-    product.measurements.add_group("subgroup1")
-    product.measurements.subgroup1.add_variable("variable1", [1, 2, 3], attrs={"name": "some name"})
-    product.measurements.subgroup1.add_variable("variable2", [4, 5, 6], attrs={"name": "second variable"})
+def test_hierarchy_html(product):
     parser = etree.HTMLParser()
     tree = etree.fromstring(product._repr_html_(), parser)
     tree_structure = compute_tree_structure(tree)
     assert tree_structure == {
         "name": "product_name",
         "groups": {
-            "coordinates": {"Attributes": {}},
+            "coordinates": {
+                "c1": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
+                "c2": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
+                "group2": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
+            },
             "measurements": {
-                "Attributes": {},
-                "subgroup1": {
-                    "Attributes": {},
-                    "variable1": {"Attributes": {"name :": "some name"}},
-                    "variable2": {"Attributes": {"name :": "second variable"}},
+                "group1": {
+                    "Attributes": {"_EOPF_DIMENSIONS_PATHS :": "['', '', '']"},
+                    "group2": {
+                        "Attributes": {"_EOPF_DIMENSIONS_PATHS :": "['']"},
+                        "variable_b": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
+                        "variable_c": {
+                            "Attributes": {"_EOPF_DIMENSIONS_PATHS :": "['']"},
+                            "Dimensions": "",
+                            "Coordinates": " /->coordinates -> c1])",
+                        },
+                        "variable_d": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
+                    },
+                    "group2b": {"group3": {}, "group3b": {}},
+                    "variable_a": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
+                },
+                "group3": {
+                    "sgroup3": {"variable_f": {"Attributes": {}, "Dimensions": "", "Coordinates": ""}},
+                    "variable_e": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
                 },
             },
-        },
-    }
-
-
-@pytest.mark.unit
-def test_generate_hierarchy_tree2():
-    product = init_product("product")
-    product.measurements.add_group("subgroup1")
-    product.measurements.add_group("subgroup2")
-    product.measurements.subgroup1.add_variable("variable11", [1, 2, 3], attrs={"name": "some name"})
-    product.measurements.subgroup1.add_variable("variable12", [4, 5, 6], attrs={"name": "second variable"})
-    product.measurements.subgroup2.add_variable("variable21", [1, 2, 3], attrs={"name": "value"})
-    product.add_group("conditions")
-    parser = etree.HTMLParser()
-    tree = etree.fromstring(product._repr_html_(), parser)
-    tree_structure = compute_tree_structure(tree)
-    assert tree_structure == {
-        "name": "product",
-        "groups": {
-            "coordinates": {"Attributes": {}},
-            "measurements": {
-                "Attributes": {},
-                "subgroup1": {
-                    "Attributes": {},
-                    "variable11": {"Attributes": {"name :": "some name"}},
-                    "variable12": {"Attributes": {"name :": "second variable"}},
-                },
-                "subgroup2": {"Attributes": {}, "variable21": {"Attributes": {"name :": "value"}}},
-            },
-            "conditions": {"Attributes": {}},
-        },
-    }
-
-
-@pytest.mark.unit
-def test_generate_hierarchy_tree3():
-    product = init_product("product")
-    product.measurements.add_group("subgroup1")
-    product.measurements.add_group("subgroup2")
-    product.measurements.subgroup1.add_variable("variable11", [1, 2, 3], attrs={"name": "some name"})
-    product.measurements.subgroup1.add_variable("variable12", [4, 5, 6], attrs={"name": "second variable"})
-    product.measurements.subgroup2.add_variable("variable21", [1, 2, 3], attrs={"name": "value"})
-    product.add_group("conditions")
-    product.conditions.add_group("subgroup3")
-    product.conditions.subgroup3.add_group("subsubgroup1")
-    parser = etree.HTMLParser()
-    tree = etree.fromstring(product._repr_html_(), parser)
-    tree_structure = compute_tree_structure(tree)
-    assert tree_structure == {
-        "name": "product",
-        "groups": {
-            "coordinates": {"Attributes": {}},
-            "measurements": {
-                "Attributes": {},
-                "subgroup1": {
-                    "Attributes": {},
-                    "variable11": {"Attributes": {"name :": "some name"}},
-                    "variable12": {"Attributes": {"name :": "second variable"}},
-                },
-                "subgroup2": {"Attributes": {}, "variable21": {"Attributes": {"name :": "value"}}},
-            },
-            "conditions": {"Attributes": {}, "subgroup3": {"Attributes": {}, "subsubgroup1": {"Attributes": {}}}},
+            "group0": {},
         },
     }
 

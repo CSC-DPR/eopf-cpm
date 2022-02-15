@@ -42,6 +42,7 @@ jobs:
           --cov=eopf
           --cov-report=term-missing
           --cov-fail-under=70
+          -m unit
 
       - name: linter
         run: pipenv run flake8 eopf tests
@@ -100,6 +101,7 @@ jobs:
           --cov=eopf
           --cov-report=term-missing
           --cov-fail-under=70
+          -m unit
 
       - name: linter
         run: python -m flake8 eopf tests

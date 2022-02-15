@@ -193,7 +193,12 @@ class EOZarrStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         return iter(self._root)
 
-    def add_group(self, name: str, relative_path: Iterable[str] = [], attrs: MutableMapping[str, Any] = {}) -> None:
+    def add_group(
+        self,
+        name: str,
+        relative_path: Iterable[str] = [],
+        attrs: MutableMapping[str, Any] = {},
+    ) -> None:
         """write a group over the store
 
         Parameters
