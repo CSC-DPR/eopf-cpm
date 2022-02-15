@@ -19,7 +19,6 @@ from eopf.product.conveniences import init_product
 from eopf.product.core import EOGroup, EOProduct, EOVariable
 from eopf.product.store import EOProductStore
 from eopf.product.utils import upsplit_eo_path
-from tests.utils import compute_tree_structure
 
 from .utils import assert_contain, compute_tree_structure
 
@@ -89,7 +88,7 @@ class EmptyTestStore(EOProductStore):
 
 
 @pytest.fixture
-def product(fs: FakeFilesystem) -> EOProduct:
+def product() -> EOProduct:
     product: EOProduct = init_product("product_name", store_or_path_url=EmptyTestStore(""))
     with product.open(mode="w"):
         product.add_group("measurements/group1", coords={"c1": [2], "c2": [3], "group2": [4]})
@@ -466,6 +465,10 @@ def test_hierarchy_html(product):
                     "group2b": {"group3": {}, "group3b": {}},
                     "variable_a": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
                 },
+                "group3": {
+                    "sgroup3": {"variable_f": {"Attributes": {}, "Dimensions": "", "Coordinates": ""}},
+                    "variable_e": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
+                },
             },
             "group0": {},
         },
@@ -486,17 +489,3 @@ def test_eovariable_plot():
         variable.plot(yincrease=False)
 
     mock_method.assert_called_once_with(yincrease=False)
-
-    
-@pytest.mark.usecase
-def test_product_tree(capsys):
-    product = init_product("product_name")
-    product.measurements.add_group("subgroup1")
-    product.measurements.subgroup1.add_variable("variable1", [1, 2, 3], attrs={"name": "some name"})
-    product.measurements.subgroup1.add_variable("variable2", [4, 5, 6], attrs={"name": "second variable"})
-    product.tree()
-    captured = capsys.readouterr()
-    assert (
-        captured.out
-        == "├── measurements\n|  ├── subgroup1\n|    └── variable1\n|    └── variable2\n├── coordinates\n"  # noqa
-    )
