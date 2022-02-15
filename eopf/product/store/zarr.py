@@ -1,4 +1,4 @@
-from typing import Any, Hashable, Iterable, Iterator, MutableMapping, Optional
+from typing import Any, Iterable, Iterator, MutableMapping, Optional
 
 import fsspec
 import xarray
@@ -197,7 +197,7 @@ class EOZarrStore(EOProductStore):
         self,
         name: str,
         relative_path: Iterable[str] = [],
-        attrs: MutableMapping[Hashable, Any] = {},
+        attrs: MutableMapping[str, Any] = {},
     ) -> None:
         """write a group over the store
 

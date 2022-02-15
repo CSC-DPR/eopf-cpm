@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Hashable, Iterable, MutableMapping, Optional
+from typing import TYPE_CHECKING, Any, Iterable, MutableMapping, Optional
 
 from eopf.product.store import EOProductStore
 
@@ -88,7 +88,7 @@ class EOAbstract(ABC):  # pragma: no cover
 
     @property
     @abstractmethod
-    def attrs(self) -> MutableMapping[Hashable, Any]:
+    def attrs(self) -> MutableMapping[str, Any]:
         """
         Dictionary of this EOObject attributes.
         """

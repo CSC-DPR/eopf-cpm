@@ -48,7 +48,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         data: Optional[Any] = None,
         product: Optional["EOProduct"] = None,
         relative_path: Optional[Iterable[str]] = None,
-        attrs: Optional[MutableMapping[Hashable, Any]] = None,
+        attrs: Optional[MutableMapping[str, Any]] = None,
         coords: MutableMapping[str, Any] = {},
         dims: tuple[str, ...] = tuple(),
         **kwargs: Any,
@@ -64,7 +64,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return EOVariable(name="", data=data)
 
     @property
-    def attrs(self) -> MutableMapping[Hashable, Any]:
+    def attrs(self) -> MutableMapping[str, Any]:
         return self._data.attrs
 
     @property
