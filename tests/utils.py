@@ -3,6 +3,7 @@ import os
 import xarray as xr
 
 from eopf.product.conveniences import get_dir_files
+from eopf.product.core.eo_container import EOContainer
 
 
 def get_s3_vars(path):
@@ -209,3 +210,10 @@ def get_zarr_vars(path):
             zarr_vars[var_name] = xr.DataArray(dir_vars.variables[var_name])
 
     return zarr_vars
+
+
+def assert_contain(container: EOContainer, path: str, expect_type, path_offset="/"):
+    obj = container[path]
+    assert obj.path == path_offset + path
+    assert obj.name == path.rpartition("/")[2]
+    assert isinstance(obj, expect_type)

@@ -330,14 +330,23 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
 
     def load(self, erase: bool = False) -> None:
         """load all the product in memory"""
+        from .eo_group import EOGroup
+
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
         for key in self.store.iter(self.path):
-            if not erase and key in self._groups:
+            group: Union[EOGroup, EOVariable]
+            if erase or key not in self._groups:
+                try:
+                    dataset, attrs = self.store.get_data(self._relative_key(key))
+                except TypeError:
+                    continue
+                group = EOGroup(dataset=dataset, attrs=attrs)
+                self[key] = group
+            else:
+                group = self[key]
+            if not isinstance(group, EOGroup):
                 continue
-            name, relative_path, dataset, attrs = self.store[self._relative_key(key)]
-            group = EOGroup(name, self.product, relative_path=relative_path, dataset=dataset, attrs=attrs)
-            self._groups[key] = group
             group.load(erase=erase)
 
     def _ipython_key_completions_(self) -> list[str]:

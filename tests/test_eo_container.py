@@ -1,4 +1,4 @@
-from typing import Any, Iterable, Iterator, Optional
+from typing import Any, Iterable, Iterator, MutableMapping, Optional
 from unittest.mock import patch
 
 import fsspec
@@ -6,18 +6,22 @@ import numpy as np
 import pytest
 import xarray
 from lxml import etree
+from pyfakefs.fake_filesystem import FakeFilesystem
 
 from eopf.exceptions import (
     EOObjectExistError,
     EOObjectMultipleParentError,
     InvalidProductError,
+    StoreNotDefinedError,
+    StoreNotOpenError,
 )
 from eopf.product.conveniences import init_product
 from eopf.product.core import EOGroup, EOProduct, EOVariable
-from eopf.product.core.eo_container import EOContainer
 from eopf.product.store import EOProductStore
 from eopf.product.utils import upsplit_eo_path
 from tests.utils import compute_tree_structure
+
+from .utils import assert_contain, compute_tree_structure
 
 
 class EmptyTestStore(EOProductStore):
@@ -77,37 +81,48 @@ class EmptyTestStore(EOProductStore):
     def get_data(self, key: str) -> tuple:
         raise KeyError()
 
+    def update_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = ...):
+        return super().update_attrs(group_path, attrs)
 
-def fill_test_product() -> EOProduct:
+    def delete_attr(self, group_path: str, attr_name: str):
+        return super().delete_attr(group_path, attr_name)
+
+
+@pytest.fixture
+def product(fs: FakeFilesystem) -> EOProduct:
     product: EOProduct = init_product("product_name", store_or_path_url=EmptyTestStore(""))
-    product.open(mode="r")
-    product.add_group("measurements/group1", coords={"c1": [2], "c2": [3], "group2": [4]})
-    product.add_group("group0")
+    with product.open(mode="w"):
+        product.add_group("measurements/group1", coords={"c1": [2], "c2": [3], "group2": [4]})
+        product.add_group("group0")
 
-    product.measurements["group1"].add_variable("variable_a")
+        product.measurements["group1"].add_variable("variable_a")
 
-    product["measurements/group1"].add_variable("group2/variable_b")
-    product["measurements/group1"]["group2"].add_variable("/measurements/group1/group2/variable_c", dims=["c1"])
-    product.measurements.group1.group2.assign_dims(["c1"])
-    product.add_variable("measurements/group1/group2/variable_d")
+        product["measurements/group1"].add_variable("group2/variable_b")
+        product["measurements/group1"]["group2"].add_variable("/measurements/group1/group2/variable_c", dims=["c1"])
+        product.measurements.group1.group2.assign_dims(["c1"])
 
-    product["measurements"]["group1"].add_group("group2b")
-    product.measurements["group1"].add_group("/measurements/group1/group2b/group3")
-    product.add_group("measurements/group1/group2b/group3b")
+        product.measurements.add_variable("group3/variable_e")
+        product.measurements.add_variable("group3/sgroup3/variable_f")
+
+        product.add_variable("measurements/group1/group2/variable_d")
+
+        product["measurements"]["group1"].add_group("group2b")
+        product.measurements["group1"].add_group("/measurements/group1/group2b/group3")
+        product.add_group("measurements/group1/group2b/group3b")
 
     return product
 
 
-def assert_contain(container: EOContainer, path: str, expect_type, path_offset="/"):
-    obj = container[path]
-    assert obj.path == path_offset + path
-    assert obj.name == path.rpartition("/")[2]
-    assert isinstance(obj, expect_type)
+@pytest.mark.unit
+def test_product_store_is_valid():
+    product = EOProduct("a_product")
+    with pytest.raises(TypeError):
+        product.open(mode="r", store_or_path_url=1)
 
 
 @pytest.mark.unit
-def test_add_group_var():
-    product = fill_test_product()
+def test_browse_product(product):
+    assert len(product.relative_path) == 0
     assert_contain(product, "group0", EOGroup)
     assert_contain(product, "measurements/group1", EOGroup)
     assert_contain(product, "measurements/group1/group2", EOGroup)
@@ -118,6 +133,17 @@ def test_add_group_var():
     assert_contain(product, "measurements/group1/group2/variable_c", EOVariable)
     assert_contain(product, "measurements/group1/group2/variable_d", EOVariable)
 
+    assert len(product) == 3
+
+    with (
+        patch.object(EmptyTestStore, "iter", return_value=iter(["a", "b"])) as iter_method,
+        patch.object(EmptyTestStore, "get_data", return_value=(None, {})),
+        product.open(mode="r"),
+    ):
+        assert sorted(["group0", "measurements", "coordinates", "a", "b"]) == sorted([i for i in product])
+        assert product.get("a") is not None
+    assert iter_method.call_count == 1
+
     with pytest.raises(KeyError):
         assert_contain(product, "measurements/group2", EOGroup)
     with pytest.raises(KeyError):
@@ -125,8 +151,7 @@ def test_add_group_var():
 
 
 @pytest.mark.unit
-def test_get_getattr():
-    product = fill_test_product()
+def test_get_getattr(product):
 
     assert product["measurements/group1"] is product.measurements.group1
     assert product["measurements/group1/variable_a"].path == product.measurements.group1.variable_a.path
@@ -141,8 +166,7 @@ def test_get_getattr():
 
 
 @pytest.mark.unit
-def test_invalids_add():
-    product = fill_test_product()
+def test_invalids_add(product):
     with pytest.raises(EOObjectExistError):
         product.add_variable("measurements/group1/group2/variable_c")
     with pytest.raises(EOObjectExistError):
@@ -160,8 +184,7 @@ def test_invalids_add():
 
 
 @pytest.mark.unit
-def test_coordinates():
-    product = fill_test_product()
+def test_coordinates(product):
     paths = [
         "measurements",
         "measurements/group1",
@@ -187,9 +210,8 @@ def test_coordinates():
 
 
 @pytest.mark.unit
-def test_attributes():
+def test_attributes(product):
     test_dict = {"a": 344, "b/c": None, "b": EOGroup}
-    product = fill_test_product()
     attr = product["measurements"].attrs
     attr.update(test_dict)
     assert test_dict == product["measurements"].attrs
@@ -200,8 +222,10 @@ def test_attributes():
 
 
 @pytest.mark.unit
-def test_setitem():
-    product = fill_test_product()
+def test_setitem(product):
+
+    with pytest.raises(TypeError):
+        EOGroup("group1b", None, dataset=["a", "b"])
 
     product["measurements/group1b/"] = EOGroup("group1b", None)
 
@@ -251,9 +275,8 @@ def test_setitem():
 
 
 @pytest.mark.unit
-def test_multipleparent_setitem():
-    product = fill_test_product()
-    product_bis = fill_test_product()
+def test_multipleparent_setitem(product):
+    product_bis = EOProduct("fake")
     with pytest.raises(EOObjectMultipleParentError):
         product["group1g"] = EOGroup("group1g", product, ("/", "measurements", "group1b"))
     with pytest.raises(EOObjectMultipleParentError):
@@ -281,8 +304,7 @@ def test_multipleparent_setitem():
 
 
 @pytest.mark.unit
-def test_delitem():
-    product = fill_test_product()
+def test_delitem(product):
     del product["group0"]
     with pytest.raises(KeyError):
         product["group0"]
@@ -303,14 +325,25 @@ def test_delitem():
     del product.measurements["group1/group2"]
     with pytest.raises(KeyError):
         product["measurements/group1/group2"]
-    product2 = fill_test_product()
 
     with pytest.raises(KeyError):
-        del product2.measurements["/measurements/group1"]
-    del product2.measurements["group1"]
+        del product.measurements["/measurements/group1"]
+
+    assert len(product.measurements.group3) > 0
+    del product.measurements["group3"]
+    with pytest.raises(KeyError):
+        assert product.measurements["group3"]
 
     with pytest.raises(KeyError):
         product["measurements/group1/group2"]
+
+    with (
+        patch.object(EmptyTestStore, "__delitem__", return_value=None) as del_method,
+        patch.object(EmptyTestStore, "__contains__", return_value=True) as in_method,
+    ):
+        del product["false_key"]
+    del_method.assert_called_once()
+    in_method.assert_called_once()
 
 
 @pytest.mark.unit
@@ -321,8 +354,91 @@ def test_invalid_dataset():
 
 
 @pytest.mark.unit
-def test_hierarchy_html():
-    product = fill_test_product()
+def test_create_product_on_memory(fs: FakeFilesystem):
+    product = init_product("product_name")
+
+    with pytest.raises(StoreNotDefinedError):
+        product.open(mode="w")
+
+    with pytest.raises(StoreNotDefinedError):
+        product._relative_key("a key")
+
+    assert product._store is None, "store must be None"
+    assert not (fs.isdir(product.name) or fs.isfile(product.name)), "Product must not create any thing on fs"
+
+
+@pytest.mark.unit
+def test_write_product(product):
+
+    with pytest.raises(StoreNotOpenError):
+        product.write()
+
+    with (
+        patch.object(EmptyTestStore, "add_group", return_value=None) as mock_method,
+        patch.object(EmptyTestStore, "add_variables", return_value=None) as mock_method2,
+        product.open(mode="w"),
+    ):
+        product.write()
+
+    assert mock_method2.call_count == 5
+    assert mock_method.call_count == 10
+    assert product._store is not None, "store must be set"
+
+    product._store = None
+    with pytest.raises(StoreNotDefinedError):
+        product.write()
+    with pytest.raises(StoreNotDefinedError):
+        product.measurements.write()
+
+
+@pytest.mark.unit
+def test_load_product(product):
+    with pytest.raises(StoreNotOpenError):
+        product.load()
+
+    with (patch.object(EmptyTestStore, "get_data", return_value=(None, {})) as mock_method, product.open(mode="r")):
+        product.load()
+
+    assert mock_method.call_count == 1
+    assert product._store is not None, "store must be set"
+
+    product._store = None
+    with pytest.raises(StoreNotDefinedError):
+        product.load()
+
+
+@pytest.mark.unit
+def test_product_must_have_mandatory_group():
+    product = EOProduct("product_name")
+    assert product._store is None, "store must be None"
+
+    with pytest.raises(InvalidProductError):
+        product.validate()
+    assert not product.is_valid()
+
+    for group in product.MANDATORY_FIELD:
+        product.add_group(group)
+
+    product.validate()
+    assert product.is_valid()
+
+
+@pytest.mark.usecase
+def test_product_tree(capsys):
+    product = init_product("product_name")
+    product.measurements.add_group("subgroup1")
+    product.measurements.subgroup1.add_variable("variable1", [1, 2, 3], attrs={"name": "some name"})
+    product.measurements.subgroup1.add_variable("variable2", [4, 5, 6], attrs={"name": "second variable"})
+    product.tree()
+    captured = capsys.readouterr()
+    assert (
+        captured.out
+        == "├── measurements\n|  ├── subgroup1\n|    └── variable1\n|    └── variable2\n├── coordinates\n"  # noqa
+    )
+
+
+@pytest.mark.unit
+def test_hierarchy_html(product):
     parser = etree.HTMLParser()
     tree = etree.fromstring(product._repr_html_(), parser)
     tree_structure = compute_tree_structure(tree)
@@ -371,7 +487,7 @@ def test_eovariable_plot():
 
     mock_method.assert_called_once_with(yincrease=False)
 
-
+    
 @pytest.mark.usecase
 def test_product_tree(capsys):
     product = init_product("product_name")

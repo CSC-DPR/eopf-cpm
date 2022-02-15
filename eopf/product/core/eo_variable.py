@@ -53,7 +53,6 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         dims: tuple[str, ...] = tuple(),
         **kwargs: Any,
     ):
-
         if not isinstance(data, (xarray.DataArray, EOVariable)) and data is not None:
             data = xarray.DataArray(data=data, name=name, attrs=attrs, **kwargs)
         if data is None:
