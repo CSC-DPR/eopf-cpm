@@ -32,7 +32,7 @@ class EOAbstract(ABC):  # pragma: no cover
     @property
     @abstractmethod
     def store(self) -> Optional[EOProductStore]:
-        """EOProductStore or None: The store associated to it's product
+        """EOProductStore or None: The store associated to its product
         or None if there is no store
 
         Raises

@@ -7,7 +7,7 @@ from eopf.product.store.abstract import EOProductStore
 def init_product(
     product_name: str, *, store_or_path_url: Optional[Union[str, EOProductStore]] = None, **kwargs: Any
 ) -> EOProduct:
-    """Convenience function to create an harmonized common data model
+    """Convenience function to create a valid EOProduct base.
 
     Parameters
     ----------
@@ -22,6 +22,7 @@ def init_product(
     See Also
     --------
     eopf.product.EOProduct
+    eopf.product.EOProduct.is_valid
     """
     product = EOProduct(product_name, store_or_path_url=store_or_path_url, **kwargs)
 
