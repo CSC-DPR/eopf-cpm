@@ -96,7 +96,7 @@ class EOProductStore(MutableMapping[str, Any]):
 
         Returns
         -------
-        typing.Iterable[str]
+        Iterable[str]
             List like object containing the path of object inside
 
         Raises
@@ -203,9 +203,9 @@ class EOProductStore(MutableMapping[str, Any]):
         ----------
         name: str
             name of the group
-        relative_path: typing.Iterable[str], optional
+        relative_path: Iterable[str], optional
             list of all parents from root level
-        attrs: collections.abc.MutableMapping[str, Any], optional
+        attrs: MutableMapping[str, Any], optional
             dict like representation of attributes to assign
 
         Raises
@@ -222,7 +222,7 @@ class EOProductStore(MutableMapping[str, Any]):
         ----------
         name: str
             name of the dataset
-        relative_path: typing.Iterable[str], optional
+        relative_path: Iterable[str], optional
             list of all parents from root level
 
         Raises
@@ -239,7 +239,7 @@ class EOProductStore(MutableMapping[str, Any]):
         ----------
         group_path: str
             path of the object to write attributes
-        attrs: collections.abc.MutableMapping[str, Any], optional
+        attrs: MutableMapping[str, Any], optional
             dict like representation of attributes to write
 
         Raises
@@ -276,7 +276,7 @@ class EOProductStore(MutableMapping[str, Any]):
 
         Returns
         -------
-        typing.Iterator[str]
+        Iterator[str]
             An iterator of the paths inside the given path
 
         Raises
@@ -296,7 +296,7 @@ class EOProductStore(MutableMapping[str, Any]):
 
         Returns
         -------
-        xarray.Dataset or None
+        Dataset or None
             data of the group
         dict[str, Any]
             attributes of the group

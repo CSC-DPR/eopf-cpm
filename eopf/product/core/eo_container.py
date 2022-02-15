@@ -252,6 +252,8 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
     ) -> "EOVariable":  # pragma: no cover
         """Add a variable local to the EOVariable. Does not support paths and recursively adding subgroups.
 
+        The given data is copied to create the new EOVariable object.
+
         Parameters
         ----------
         name: str

@@ -32,7 +32,7 @@ class EOAbstract(ABC):  # pragma: no cover
     @property
     @abstractmethod
     def store(self) -> Optional[EOProductStore]:
-        """EOProductStore or None: The store associated to the product to level
+        """EOProductStore or None: The store associated to it's product
         or None if there is no store
 
         Raises
@@ -50,7 +50,7 @@ class EOAbstract(ABC):  # pragma: no cover
     @property
     @abstractmethod
     def relative_path(self) -> Iterable[str]:
-        """typing.Iterable[str]: Relative path of this object.
+        """Iterable[str]: Relative path of this object.
         It's the set of the names of this object parents (Product name as '/')."""
 
     @property
