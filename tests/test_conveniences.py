@@ -307,7 +307,7 @@ def test_read_xrd_1(tmpdir):
     assert out_ds is None
 
 
-@pytest.mark.unit
+@pytest.mark.usecase
 def test_read_xrd_2():
     """Given a non existing file,
     the funtion must return None"""
@@ -330,7 +330,7 @@ def test_read_xrd_3():
     assert out_ds is None
 
 
-@pytest.mark.unit
+@pytest.mark.usecase
 def test_read_xrd_4():
     """Given a file in a supported format, containing one variable which must be skipped,
     the funtion must return None"""
@@ -344,7 +344,7 @@ def test_read_xrd_4():
     assert out_ds is None
 
 
-@pytest.mark.unit
+@pytest.mark.usecase
 def test_read_xrd_5():
     """Given a file in a supported format, containing a variable,
     the function must return a dataset containing the variable from s3_file_path"""
@@ -361,7 +361,7 @@ def test_read_xrd_5():
     assert s3_ds.equals(out_ds)
 
 
-@pytest.mark.unit
+@pytest.mark.usecase
 def test_read_xrd_6():
     """Given a file in a supported format, with a variable both skipped and picked,
     the function must return None since skip has precedence over pick"""
@@ -376,7 +376,7 @@ def test_read_xrd_6():
     assert out_ds is None
 
 
-@pytest.mark.unit
+@pytest.mark.usecase
 def test_read_xrd_7():
     """Given a file in a supported format, with a variable to be picked,
     the function must return a dataset containing the variable from s3_file_path picked"""
@@ -394,7 +394,7 @@ def test_read_xrd_7():
     assert s3_ds.equals(out_ds)
 
 
-@pytest.mark.unit
+@pytest.mark.usecase
 def test_read_xrd_8():
     """Given files in a supported format, with no pick or skip,
     the function must return a dataset containing all the variables from all files"""
@@ -418,7 +418,7 @@ def test_read_xrd_8():
     assert s3_ds.equals(out_ds)
 
 
-@pytest.mark.unit
+@pytest.mark.usecase
 def test_read_xrd_9():
     """Given files in a supported format, with one file not existing,
     the function must return None due to non-existing file"""

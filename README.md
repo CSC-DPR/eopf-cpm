@@ -40,3 +40,8 @@ pip install -e path/to/eopf/folder
 ```
 
 > **WARNING** If pip is not up to date, you can have an error, so, try `pip install -U pip` before.
+
+
+## TEST
+
+To run all the test, be sure to have the needed data.

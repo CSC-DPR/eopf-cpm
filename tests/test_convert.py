@@ -31,7 +31,7 @@ from .utils import (
 )
 
 
-@pytest.mark.unit
+@pytest.mark.usecase
 def test_harmozied_structure_olci_l1_in_eop_format():
     """Given a legacy OLCI L1 product,
     the eop must respect the harmozied data structure"""
@@ -48,7 +48,7 @@ def test_harmozied_structure_olci_l1_in_eop_format():
         assert group in allowed_top_level_groups
 
 
-@pytest.mark.unit
+@pytest.mark.usecase
 def test_verify_non_duplicate_variables_persistence_olci_l1_in_eop_format():
     """Given a legacy OLCI L1 product, considering only variables that are unique by name,
     the information from these variables must persist in the built eop: name, attributes, coordinates and data"""
@@ -67,6 +67,7 @@ def test_verify_non_duplicate_variables_persistence_olci_l1_in_eop_format():
     assert len(vars_not_found) == 0, "There should be no elements in list vars_not_found"
 
 
+@pytest.mark.usecase
 def test_verify_duplicate_variables_persistence_olci_l1_in_eop_format():
     """Given a legacy OLCI L1 product, considering only variables that are not unique by name,
     the information from these variables must persist in the built eop: name, attributes, coordinates and data"""
@@ -585,7 +586,7 @@ def test_verify_duplicate_variables_persistence_olci_l1_in_eop_format():
     assert s3_var.equals(eop_var)
 
 
-@pytest.mark.unit
+@pytest.mark.usecase
 def test_harmozied_structure_slstr_l1_in_eop_format():
     """Given a legacy SLSTR L1 product,
     the eop must respect the harmozied data structure"""
@@ -602,7 +603,7 @@ def test_harmozied_structure_slstr_l1_in_eop_format():
         assert group in allowed_top_level_groups
 
 
-@pytest.mark.unit
+@pytest.mark.usecase
 def test_verify_non_duplicate_variables_persistence_slstr_l1_in_eop_format():
     """Given a legacy SLSTR L1 product, considering only variables that are unique by name,
     the information from these variables must persist in the built eop: name, attributes, coordinates and data"""
@@ -621,6 +622,7 @@ def test_verify_non_duplicate_variables_persistence_slstr_l1_in_eop_format():
     assert len(vars_not_found) == 0, "There should be no elements in list vars_not_found"
 
 
+@pytest.mark.usecase
 def test_verify_duplicate_variables_persistence_slstr_l1_in_eop_format():
     """Given a legacy SLSTR L1 product, considering only variables that are not unique by name,
     the information from these variables must persist in the built eop: name, attributes, coordinates and data"""
@@ -662,6 +664,7 @@ def test_verify_duplicate_variables_persistence_slstr_l1_in_eop_format():
     assert s3_var.equals(eop_var)
 
 
+@pytest.mark.usecase
 def test_harmozied_structure_olci_l1_in_zarr_format():
     """Given a legacy OLCI L1 product,
     the zarr must respect the harmozied data structure"""
@@ -691,7 +694,7 @@ def test_harmozied_structure_olci_l1_in_zarr_format():
         assert group in allowed_top_level_groups
 
 
-@pytest.mark.unit
+@pytest.mark.usecase
 def test_verify_non_duplicate_variables_persistence_olci_l1_in_zarr_format():
     """Given a legacy OLCI L1 product, considering only variables that are unique by name,
     the information from these variables must persist in zarr format: name, attributes, coordinates and data"""
@@ -713,6 +716,7 @@ def test_verify_non_duplicate_variables_persistence_olci_l1_in_zarr_format():
     assert len(vars_not_found) == 0, "There should be no elements in list vars_not_found"
 
 
+@pytest.mark.usecase
 def test_verify_duplicate_variables_persistence_olci_l1_in_zarr_format():
     """Given a legacy OLCI L1 product, considering only variables that are not unique by name,
     the information from these variables must persist in zarr format: name, attributes, coordinates and data"""
@@ -1346,6 +1350,7 @@ def test_verify_duplicate_variables_persistence_olci_l1_in_zarr_format():
     assert cmp_s3_zarr_var(s3_var, zarr_var)
 
 
+@pytest.mark.usecase
 def test_harmozied_structure_slstr_l1_in_zarr_format():
     """Given a legacy OLCI L1 product,
     the zarr must respect the harmozied data structure"""
@@ -1375,7 +1380,7 @@ def test_harmozied_structure_slstr_l1_in_zarr_format():
         assert group in allowed_top_level_groups
 
 
-@pytest.mark.unit
+@pytest.mark.usecase
 def test_verify_non_duplicate_variables_persistence_slstr_l1_in_zarr_format():
     """Given a legacy SLSTR L1 product, considering only variables that are unique by name,
     the information from these variables must persist in zarr format: name, attributes, coordinates and data"""
@@ -1397,6 +1402,7 @@ def test_verify_non_duplicate_variables_persistence_slstr_l1_in_zarr_format():
     assert len(vars_not_found) == 0, "There should be no elements in list vars_not_found"
 
 
+@pytest.mark.usecase
 def test_verify_duplicate_variables_persistence_slstr_l1_in_zarr_format():
     """Given a legacy SLSTR L1 product, considering only variables that are not unique by name,
     the information from these variables must persist in zarr format: name, attributes, coordinates and data"""
@@ -1447,7 +1453,7 @@ def test_verify_duplicate_variables_persistence_slstr_l1_in_zarr_format():
     assert cmp_s3_zarr_var(s3_var, zarr_var)
 
 
-@pytest.mark.unit
+@pytest.mark.usecase
 def test_xml_persistance_olci():
     """Gigen a legacy OLCI L1 product,
     the legacy information from the xfdumanifest must persist in the built eop"""
@@ -1473,7 +1479,7 @@ def test_xml_persistance_olci():
     assert eop_dict == om_eop_dict
 
 
-@pytest.mark.unit
+@pytest.mark.usecase
 def test_xml_persistance_slstr():
     """Gigen a legacy SLSTR L1 product,
     the legacy information from the xfdumanifest must persist in the built eop"""
