@@ -32,9 +32,9 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         Attributes to assign
     """
 
-    def __init__(self, attrs: Optional[dict[str, Any]] = None) -> None:
+    def __init__(self, attrs: Optional[MutableMapping[str, Any]] = None) -> None:
         self._groups: dict[str, "EOGroup"] = {}
-        self._attrs: dict[str, Any] = attrs or dict()
+        self._attrs: MutableMapping[str, Any] = attrs or dict()
 
     def __getitem__(self, key: str) -> Union["EOGroup", "EOVariable"]:
         return self._get_item(key)
@@ -209,7 +209,7 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
     def _add_local_group(
         self,
         name: str,
-        attrs: dict[str, Any] = {},
+        attrs: MutableMapping[str, Any] = {},
         coords: MutableMapping[str, Any] = {},
         dims: tuple[str, ...] = tuple(),
     ) -> "EOGroup":

@@ -143,6 +143,7 @@ def test_load_product_from_zarr(zarr_file, fs: FakeFilesystem):
         product.store["an_utem"] = "A_Value"
 
 
+@pytest.mark.unit
 @pytest.mark.parametrize("_type", [EOZarrStore])
 def test_write_stores(fs: FakeFilesystem, _type: type[EOProductStore]):
     store = _type("product_name")
@@ -168,6 +169,7 @@ def test_write_stores(fs: FakeFilesystem, _type: type[EOProductStore]):
     store.close()
 
 
+@pytest.mark.unit
 @pytest.mark.parametrize("_type", [EOZarrStore])
 def test_read_stores(fs: FakeFilesystem, _type: type[EOProductStore]):
     store = _type("a_product")
@@ -187,11 +189,13 @@ def test_read_stores(fs: FakeFilesystem, _type: type[EOProductStore]):
     store.close()
 
 
+@pytest.mark.unit
 def test_abstract_store_cant_be_instantiate():
     with pytest.raises(TypeError):
         EOProductStore("not_instantiable")
 
 
+@pytest.mark.unit
 @pytest.mark.parametrize("_type", [EOZarrStore])
 def test_store_must_be_open(fs: FakeFilesystem, _type: type[EOProductStore]):
     store = _type("a_product")
@@ -238,6 +242,7 @@ def test_store_must_be_open(fs: FakeFilesystem, _type: type[EOProductStore]):
             getattr(store, method)()
 
 
+@pytest.mark.unit
 @pytest.mark.parametrize("_type", [EOZarrStore])
 def test_store_structure(fs: FakeFilesystem, _type: type[EOProductStore]):
     store = _type("a_product")

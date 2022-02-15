@@ -57,7 +57,7 @@ class EOGroup(EOContainer, EOObject):
         product: "Optional[EOProduct]" = None,
         relative_path: Optional[Iterable[str]] = None,
         dataset: Optional[xarray.Dataset] = None,
-        attrs: Optional[dict[str, Any]] = None,
+        attrs: Optional[MutableMapping[str, Any]] = None,
         coords: MutableMapping[str, Any] = {},
         dims: tuple[str, ...] = tuple(),
     ) -> None:
