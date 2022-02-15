@@ -422,7 +422,7 @@ def test_product_must_have_mandatory_group():
     assert product.is_valid()
 
 
-@pytest.mark.usecase
+@pytest.mark.unit
 def test_product_tree(capsys):
     product = init_product("product_name")
     product.measurements.add_group("subgroup1")
