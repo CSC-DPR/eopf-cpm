@@ -34,7 +34,7 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
 
     def __init__(self, attrs: Optional[MutableMapping[str, Any]] = None) -> None:
         self._groups: dict[str, "EOGroup"] = {}
-        self._attrs: MutableMapping[str, Any] = attrs or dict()
+        self._attrs: dict[str, Any] = dict(attrs) if attrs is not None else {}
 
     def __getitem__(self, key: str) -> Union["EOGroup", "EOVariable"]:
         return self._get_item(key)

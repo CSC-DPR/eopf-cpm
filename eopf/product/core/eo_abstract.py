@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Iterable, MutableMapping, Optional
+from typing import TYPE_CHECKING, Any, Iterable, Optional
 
 from eopf.product.store import EOProductStore
 

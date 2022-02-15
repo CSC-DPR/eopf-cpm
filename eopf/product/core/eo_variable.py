@@ -73,7 +73,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return EOVariable(name="", data=data)
 
     @property
-    def attrs(self) -> MutableMapping[str, Any]:
+    def attrs(self) -> dict[str, Any]:
         return self._data.attrs
 
     @property
