@@ -1,9 +1,11 @@
 from typing import Any, Iterable, Iterator, Optional
+from unittest.mock import patch
 
 import fsspec
 import numpy as np
 import pytest
 import xarray
+from lxml import etree
 
 from eopf.exceptions import (
     EOObjectExistError,
@@ -15,6 +17,7 @@ from eopf.product.core import EOGroup, EOProduct, EOVariable
 from eopf.product.core.eo_container import EOContainer
 from eopf.product.store import EOProductStore
 from eopf.product.utils import upsplit_eo_path
+from tests.utils import compute_tree_structure
 
 
 class EmptyTestStore(EOProductStore):
@@ -315,3 +318,69 @@ def test_invalid_dataset():
     with pytest.raises(TypeError):
         EOGroup(dataset=xarray.Dataset({1: ("a", np.array([3]))}))
     EOGroup(dataset=xarray.Dataset({"1": ("a", np.array([3]))}))
+
+
+@pytest.mark.unit
+def test_hierarchy_html():
+    product = fill_test_product()
+    parser = etree.HTMLParser()
+    tree = etree.fromstring(product._repr_html_(), parser)
+    tree_structure = compute_tree_structure(tree)
+    assert tree_structure == {
+        "name": "product_name",
+        "groups": {
+            "coordinates": {
+                "c1": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
+                "c2": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
+                "group2": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
+            },
+            "measurements": {
+                "group1": {
+                    "Attributes": {"_EOPF_DIMENSIONS_PATHS :": "['', '', '']"},
+                    "group2": {
+                        "Attributes": {"_EOPF_DIMENSIONS_PATHS :": "['']"},
+                        "variable_b": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
+                        "variable_c": {
+                            "Attributes": {"_EOPF_DIMENSIONS_PATHS :": "['']"},
+                            "Dimensions": "",
+                            "Coordinates": " /->coordinates -> c1])",
+                        },
+                        "variable_d": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
+                    },
+                    "group2b": {"group3": {}, "group3b": {}},
+                    "variable_a": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
+                },
+            },
+            "group0": {},
+        },
+    }
+
+
+@pytest.mark.unit
+def test_eovariable_plot():
+    product = init_product("product_name")
+    product.measurements.add_group("subgroup")
+    product.measurements.subgroup.add_variable("my_variable", [[1, 2, 3, 4], [8, 9, 7, 5]])
+    product.measurements.add_variable("demo", data=[])
+    product.measurements.subgroup.add_group("another_group")
+    product.measurements.subgroup.another_group.add_variable("my_variable", [[1, 2, 3, 4], [8, 9, 7, 5]])
+
+    with patch.object(xarray.DataArray, "plot", return_value=None) as mock_method:
+        variable = product.measurements.demo
+        variable.plot(yincrease=False)
+
+    mock_method.assert_called_once_with(yincrease=False)
+
+
+@pytest.mark.usecase
+def test_product_tree(capsys):
+    product = init_product("product_name")
+    product.measurements.add_group("subgroup1")
+    product.measurements.subgroup1.add_variable("variable1", [1, 2, 3], attrs={"name": "some name"})
+    product.measurements.subgroup1.add_variable("variable2", [4, 5, 6], attrs={"name": "second variable"})
+    product.tree()
+    captured = capsys.readouterr()
+    assert (
+        captured.out
+        == "├── measurements\n|  ├── subgroup1\n|    └── variable1\n|    └── variable2\n├── coordinates\n"  # noqa
+    )

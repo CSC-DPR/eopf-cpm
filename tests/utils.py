@@ -86,11 +86,11 @@ def group_details(section_detail: dict, section_structure: dict) -> None:
     item_names = section_detail.xpath("label/text()")
     item_name = None
     if item_names:
-        item_name = str(item_names[-1]).strip()
+        item_name = str(item_names[-1]).strip("', :").strip()
     subgroup_names = section_detail.xpath("div/label/text()")
     subgroup_name = None
     if subgroup_names:
-        subgroup_name = str(subgroup_names[-1]).strip()
+        subgroup_name = str(subgroup_names[-1]).strip("', :").strip()
     if item_name == "Attributes":
         attributes = section_detail.xpath("div/dl")
         if attributes:
@@ -104,7 +104,8 @@ def group_details(section_detail: dict, section_structure: dict) -> None:
     elif item_name == "Dimensions" or item_name == "Coordinates":
         dimensions = section_detail.xpath("div/div/text()")
         if dimensions:
-            dimension_value = dimensions[-1].strip()
+            dimension_value = dimensions[-1].strip("', :").strip()
+            dimension_value = dimension_value.partition("->")[2]
             section_structure[item_name] = dimension_value
 
     subgroups = section_detail.xpath("div/div/ul/li")
@@ -117,13 +118,13 @@ def group_details(section_detail: dict, section_structure: dict) -> None:
 
 
 def compute_tree_structure(tree) -> dict:
-    product_name = str(tree.xpath("/html/body/div/label/text()")[-1]).strip()
+    product_name = str(tree.xpath("/html/body/div/label/text()")[-1]).strip("', :").strip()
     sections = tree.xpath("/html/body/div/div/ul/li")
     product_structure = {"name": product_name, "groups": {}}
 
     for section in sections:
         section_structure = {}
-        section_name = str(section.xpath("div/label/text()")[-1]).strip()
+        section_name = str(section.xpath("div/label/text()")[-1]).strip("', :").strip()
         section_details = section.xpath("div/div/ul/li")
         if section_details:
             for section_detail in section_details:
