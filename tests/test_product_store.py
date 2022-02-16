@@ -180,7 +180,6 @@ def test_read_stores(fs: FakeFilesystem, _type: type[EOProductStore]):
 
     store.open(mode="r")
     assert store["a_group"] is not None
-    assert store.map is None
     assert len(store) == 1
     assert "a_group" in [_ for _ in store]
     with pytest.raises(KeyError):

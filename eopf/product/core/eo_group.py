@@ -16,13 +16,39 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class EOGroup(EOContainer, EOObject):
-    """
-    A group of EOVariable and sub EOGroup, linked to their EOProduct's EOProductStore (if existing).
+    """A group of EOVariable and sub EOGroup, linked to their EOProduct's EOProductStore (if existing).
 
     Read and write both dynamically, or on demand to the EOProductStore.
     Can be used in a dictionary like manner with relatives and absolutes paths.
     Has personal attributes and both personal and inherited coordinates.
+    Coordinates should be set in the given key-value pair format: {"path/under/coordinates/group" : array_like}.
+    About dimension, if a value is a path under the coordinates group, the coordinates is automatically associated.
 
+    Parameters
+    ----------
+    name: str, optional
+        name of this group
+    product: EOProduct, optional
+        product top level
+    relative_path: Iterable[str], optional
+        list like of string representing the path from the product
+    dataset: xarray.Dataset, optional
+        data for :obj:`EOVariable`
+    attrs: MutableMapping[str, Any], optional
+        attributes to assign
+    coords: MutableMapping[str, Any], optional
+        coordinates to assign
+    dims: tuple[str], optional
+        dimensions to assign
+
+    Raises
+    ------
+    TypeError
+        Trying to set a dataset with non str keys or with non dataset object
+
+    See Also
+    --------
+    xarray.Dataset
     """
 
     def __init__(
@@ -49,15 +75,6 @@ class EOGroup(EOContainer, EOObject):
         EOObject.__init__(self, name, product, relative_path, coords=coords, retrieve_dims=dims)
 
     def _get_item(self, key: str) -> Union[EOVariable, "EOGroup"]:
-        """Find and return an EOVariable or EOGroup from the given key.
-
-        If store is defined and key not already loaded in this group,
-        the object data is loaded from it.
-        Parameters
-        ----------
-        key: str
-            path of the EOVariable or EOGroup
-        """
         if key in self._dataset:
             return EOVariable(key, self._dataset[key], self.product, relative_path=[*self._relative_path, self._name])
         return super()._get_item(key)
@@ -73,6 +90,9 @@ class EOGroup(EOContainer, EOObject):
         if self._dataset is not None:
             yield from self._dataset.keys()
 
+    def __contains__(self, key: object) -> bool:
+        return super().__contains__(key) or (key in self._dataset)
+
     def __str__(self) -> str:
         return self.__repr__()
 
@@ -83,7 +103,12 @@ class EOGroup(EOContainer, EOObject):
         return renderer("group.html", group=self)
 
     def to_product(self) -> "EOProduct":
-        """Convert this group to a product"""
+        """Convert this group to a product
+
+        Returns
+        -------
+        EOProduct
+        """
         raise NotImplementedError
 
     @property
@@ -102,23 +127,6 @@ class EOGroup(EOContainer, EOObject):
 
     def _add_local_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> EOVariable:
 
-        """Construct and add an eovariable to this group
-
-        if store is defined and open, the eovariable it's directly write by the store.
-        Parameters
-        ----------
-        name: str
-            name of the future group
-        data: any, optional
-            data like object use to create dataarray or dataarray
-        **kwargs: any
-            DataArray extra parameters if data is not a dataarray
-        Returns
-        -------
-        EOVariable
-            newly created EOVariable
-        """
-
         if not isinstance(data, EOVariable):
             variable = EOVariable(name, data, self.product, relative_path=[*self._relative_path, self._name], **kwargs)
         else:
@@ -129,19 +137,8 @@ class EOGroup(EOContainer, EOObject):
         return variable
 
     def write(self, erase: bool = False) -> None:
-        """
-        write non synchronized subgroups, variables to the store
-
-        the store must be opened to work
-        See Also
-        --------
-        EOProduct.open
-        """
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
         super().write(erase=erase)
         if self._dataset is not None and len(self._dataset) > 0:
             self.store.add_variables(self.name, self._dataset, relative_path=self.relative_path)
-
-    def __contains__(self, key: object) -> bool:
-        return super().__contains__(key) or (key in self._dataset)

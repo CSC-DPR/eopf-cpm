@@ -27,19 +27,28 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
     """Wrapper around xarray.DataArray to provide Multi dimensional Array (Tensor)
     in earth observation context
 
-    Attributes
+    Parameters
     ----------
-    name
-    attrs
-    dims
-    coordinates
-    chunksizes
-    chunks
-    sizes
-    _data : xarray.DataArray
-        inner data
-    _product: EOProduct
-        product top level representation to access coordinates
+    name: str, optional
+        name of this group
+    data: any, optional
+        any data accept by :obj:`xarray.DataArray`
+    product: EOProduct, optional
+        product top level
+    relative_path: Iterable[str], optional
+        list like of string representing the path from the product
+    attrs: MutableMapping[str, Any], optional
+        attributes to assign
+    coords: MutableMapping[str, Any], optional
+        coordinates to assign
+    dims: tuple[str], optional
+        dimensions to assign
+    **kwargs: Any
+        any arguments to construct an :obj:`xarray.DataArray`
+
+    See Also
+    --------
+    xarray.DataArray
     """
 
     def __init__(
@@ -64,7 +73,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return EOVariable(name="", data=data)
 
     @property
-    def attrs(self) -> MutableMapping[str, Any]:
+    def attrs(self) -> dict[str, Any]:
         return self._data.attrs
 
     @property
@@ -321,9 +330,11 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
 
     def plot(self, **kwargs: dict[Any, Any]) -> None:
         """Wrapper around the xarray plotting functionality.
+
         Parameters
         ----------
         The parameters MUST follow the xarray.DataArray.plot() options.
+
         See Also
         --------
         DataArray.plot
