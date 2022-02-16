@@ -1,10 +1,29 @@
 {%if is_top %}
-    <style>{% include "static/css/style.css" %}</style>
+<style>{% include "static/css/style.css" %}</style>
 {% endif %}
+
+{% macro random_int(len) -%}
+    {% for n in range(len) %}
+        {{ [0,1,2,3,4,5,6,7,8,9]|random }}
+    {% endfor %}
+{%- endmacro %}
+
+{% macro unique_id(count_groups=2, group_len=6, separator='') -%}
+    {% set parts %}
+        {% for n in range(count_groups) -%}
+            {{ random_int(group_len) }}
+        {% endfor %}
+    {% endset %}
+    {{ parts|join(separator) }}
+{%- endmacro %}
+
+
+{% set unique_id = unique_id() %}
+
 <div style="display: contents;">
     <pre class='eopf-text-repr-fallback'>{{obj|string}}</pre>
-    <input type="checkbox" class="eopf-section-summary-in" id="{{ obj|string }}" hidden>
-    <label for="{{ obj|string }}" class="eopf-section-summary eopf-header" >
+    <input type="checkbox" class="eopf-section-summary-in" id="{{ obj|string }}_{{ unique_id }}" hidden>
+    <label for="{{ obj|string }}_{{ unique_id }}" class="eopf-section-summary eopf-header" >
         {% block icon %}{% endblock %}
         <div class='eopf-obj-type'>eopf.{{obj_type}}</div>
         {{ obj.name }}

@@ -4,45 +4,36 @@ package "eopf.product" {
 
     class EOGroup {
         __ Methods __
-        __init__(self, name, *items [, coordinates, dims,
-            attrs, store]): Constructor
+        __init__(self, name, product[, relative_path, dataset]): Constructor
         __getattr__(self, key): access to the given key as a member field
         __str__(self) -> str: string readable representation
         __repr__(self) -> str: unique identifying string
         _repr_html_(self) -> html representation for jupyter notebook
         _ipython_key_completions_(self) -> Iterable[str]: keys for completion by ipython
-        groups(self) -> Iterator[EOGroup]: like __iter__ but over EOGroup
-        variables(self) -> Iterator[EOGroup]: like __iter__ but over EOVariable
         sel(): can be used only by final groups -> xarray.dataset
         isel(): can be used only by final groups -> xarray.dataset
-       
+        to_product(): convert this group to a product
+        add_group(self, name): create a subgroup
+        add_variable(self, name, data, **kwargs): create an eovariable
+        write(self): write this group using the store
+        _get_item(self, name): get the eogroup or eovaribale from the given key in memory and/or the store
 
         __ Property __
         name: str
-        attrs: MutableMapping
-        metadata: MutableMapping
+        coordianates: EOGroup
         dims: tuple
+        groups: key value pair for subgroup
+        variables: key value pair for variables
+
 
         __ Field Members __
-        _name : str
-        _attrs : MutableMapping
-        _store : EOProductStore
-        _dims: tuple
-        _dataset : xarray.Dataset
+        _name: str
+        _store: EOProductStore
+        _dataset: xarray.Dataset
+        _product: EOProduct
+        _items: dict[str, EOGroup], memory storage of subgroups
+        _relative_path: list[str], path from product level
 
-        __ Dask methods __
-        compute(self)
-        persiste(self)
-        __dask_tokenize__(self)
-        __dask_graph__(self)
-        __dask_keys__(self)
-        __dask_layers__(self)
-        __dask_postcompute__(self)
-        __dask_postpersist__(self)
-        _dask_postcompute(self, results) -> EOGroup
-        _dask_postpersist(self, dsk: Mapping, *[, rename]) -> EOGroup
-        [property] __dask_optimize__
-        [property] __dask_scheduler__
     }
 
     class EOVariable

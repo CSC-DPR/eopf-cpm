@@ -6,3 +6,46 @@
 {% block icon %}
 {% include "static/images/icons-svg-data.svg" %}
 {% endblock %}
+
+{% block sections %}
+    <li class="eopf-section-item">
+        <input type="checkbox" class="eopf-section-summary-in" id="{{ obj|string }}_{{ unique_id }}_attrs" hidden>
+        <label for="{{ obj|string }}_{{ unique_id }}_attrs" class="eopf-section-summary eopf-header" >
+            {% include "static/images/icons-svg-attributes.svg" %}
+            Attributes
+        </label>
+        <div class='eopf-section-details'>
+            <dl class='eopf-attrs'>
+                {% with attributes=obj.attrs %}
+                    {% for name, value in attributes.items() %}
+                        <dt><span>{{name}} :</span></dt><dd>{{value}}</dd>
+                    {% endfor %}
+                {% endwith %}
+            </dl>
+        </div>
+    </li>
+    <li class="eopf-section-item">
+        <input type="checkbox" class="eopf-section-summary-in" id="{{ obj|string }}_{{ unique_id }}_dims" hidden>
+        <label for="{{ obj|string }}_{{ unique_id }}_dims" class="eopf-section-summary eopf-header" >
+            {% include "static/images/icons-svg-dims.svg" %}
+            Dimensions
+        </label>
+        <div class='eopf-section-details'>
+            {% with dimensions=obj.dims %}
+                <div class='eopf-section-inline-details'>{{dimensions}}</div>
+            {% endwith %}
+        </div>
+    </li>
+    <li class="eopf-section-item">
+        <input type="checkbox" class="eopf-section-summary-in" id="{{ obj|string }}_{{ unique_id }}_coords" hidden>
+        <label for="{{ obj|string }}_{{ unique_id }}_coords" class="eopf-section-summary eopf-header" >
+            {% include "static/images/icons-svg-coords.svg" %}
+            Coordinates
+        </label>
+        <div class='eopf-section-details'>
+            {% with coordinates=obj.coords %}
+                <div class='eopf-section-inline-details'>{{coordinates}}</div>
+            {% endwith %}
+        </div>
+    </li>
+{% endblock %}

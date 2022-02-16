@@ -8,3 +8,15 @@ class StoreNotDefinedError(Exception):
 
 class StoreNotOpenError(Exception):
     pass
+
+
+class InvalidStructureError(Exception):
+    pass
+
+
+class EOObjectExistError(Exception):
+    pass
+
+
+class EOObjectMultipleParentError(Exception):
+    pass
