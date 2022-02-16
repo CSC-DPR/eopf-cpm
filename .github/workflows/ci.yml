@@ -1,5 +1,7 @@
 name: eopf-cpm ci
-on: [pull_request]
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
 
 jobs:
   pipenv:
@@ -59,6 +61,14 @@ jobs:
       - name: typing
         run: pipenv run mypy eopf
 
+      - name: doctstring coverage
+        run: pipenv run docstr-coverage eopf -F 20
+        continue-on-error: true
+
+      - name: cyclomatic complexity
+        run: pipenv run xenon -a B -m C -b D eopf
+        continue-on-error: true
+
   conda:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -117,6 +127,14 @@ jobs:
 
       - name: typing
         run: python -m mypy eopf
+
+      - name: doctstring coverage
+        run: python -m docstr-coverage eopf -F 20
+        continue-on-error: true
+
+      - name: cyclomatic complexity
+        run: python -m xenon -a B -m C -b D eopf
+        continue-on-error: true
 
   build:
     runs-on: ubuntu-latest
