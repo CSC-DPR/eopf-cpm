@@ -103,6 +103,10 @@ jobs:
           mamba-version: "*"
         if: steps.cache-conda.outputs.cache-hit != 'true'
 
+      - name: update pip
+        run: pip install -U pip
+        if: steps.cache-conda.outputs.cache-hit == 'true'
+
       - name: Install eopf-cpm
         run: pip install --no-deps -e .
 
