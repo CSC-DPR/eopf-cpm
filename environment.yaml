@@ -29,3 +29,5 @@ dependencies:
     - jinja2==2.11.3
     - ipython==7.30.0
     - isort==5.10.1
+    - docstr-coverage==2.1.1
+    - xenon==0.8.0

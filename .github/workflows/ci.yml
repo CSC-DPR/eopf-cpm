@@ -1,5 +1,7 @@
 name: eopf-cpm ci
-on: [pull_request]
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
 
 jobs:
   pipenv:
@@ -59,6 +61,14 @@ jobs:
       - name: typing
         run: pipenv run mypy eopf
 
+      - name: doctstring coverage
+        run: pipenv run docstr-coverage eopf -F 20
+        continue-on-error: true
+
+      - name: cyclomatic complexity
+        run: pipenv run xenon -a B -m C -b D eopf
+        continue-on-error: true
+
   conda:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -78,7 +88,7 @@ jobs:
           echo "CONDA_ENV_FILE=environment.yaml" >> $GITHUB_ENV
           echo "PYTHON_VERSION=${{ matrix.python-version }}" >> $GITHUB_ENV
 
-      - name: Cache conda
+      - id: cache-conda
         uses: actions/cache@v2
         with:
           path: ~/conda_pkgs_dir
@@ -90,11 +100,14 @@ jobs:
         with:
           environment-file: environment.yaml
           activate-environment: eopf-dev
+          use-only-tar-bz2: true
+          auto-update-conda: false
+          auto-activate-base: false
+          channel-priority: strict
           mamba-version: "*"
-        if: steps.cache-conda.outputs.cache-hit != 'true'
 
       - name: Install eopf-cpm
-        run: pip install --no-deps -e .
+        run: python -m pip install --no-deps -e .
 
       - name: Run tests
         run: python -m pytest
@@ -117,6 +130,14 @@ jobs:
 
       - name: typing
         run: python -m mypy eopf
+
+      - name: doctstring coverage
+        run: docstr-coverage eopf -F 20
+        continue-on-error: true
+
+      - name: cyclomatic complexity
+        run: python -m xenon -a B -m C -b D eopf
+        continue-on-error: true
 
   build:
     runs-on: ubuntu-latest
