@@ -88,7 +88,7 @@ jobs:
           echo "CONDA_ENV_FILE=environment.yaml" >> $GITHUB_ENV
           echo "PYTHON_VERSION=${{ matrix.python-version }}" >> $GITHUB_ENV
 
-      - name: Cache conda
+      - id: cache-conda
         uses: actions/cache@v2
         with:
           path: ~/conda_pkgs_dir
@@ -129,7 +129,7 @@ jobs:
         run: python -m mypy eopf
 
       - name: doctstring coverage
-        run: python -m docstr-coverage eopf -F 20
+        run: docstr-coverage eopf -F 20
         continue-on-error: true
 
       - name: cyclomatic complexity
