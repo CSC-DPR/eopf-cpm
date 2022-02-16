@@ -101,11 +101,7 @@ jobs:
           environment-file: environment.yaml
           activate-environment: eopf-dev
           mamba-version: "*"
-        if: steps.cache-conda.outputs.cache-hit != 'true'
-
-      - name: activate env
-        run: conda activate eopf-dev
-        if: steps.cache-conda.outputs.cache-hit == 'true'
+          auto-update-conda: false
 
       - name: Install eopf-cpm
         run: python -m pip install --no-deps -e .
