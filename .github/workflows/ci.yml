@@ -103,8 +103,8 @@ jobs:
           mamba-version: "*"
         if: steps.cache-conda.outputs.cache-hit != 'true'
 
-      - name: update pip
-        run: python -m pip install -U pip
+      - name: activate env
+        run: conda activate eopf-dev
         if: steps.cache-conda.outputs.cache-hit == 'true'
 
       - name: Install eopf-cpm
