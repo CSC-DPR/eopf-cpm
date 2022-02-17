@@ -1,5 +1,5 @@
 from types import TracebackType
-from typing import Any, Iterable, Optional, Type, Union
+from typing import Any, Iterable, MutableMapping, Optional, Type, Union
 
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError, StoreNotOpenError
 from eopf.product.utils import join_eo_path, partition_eo_path, product_relative_path
@@ -12,12 +12,24 @@ from .eo_variable import EOVariable
 
 
 class EOProduct(EOContainer):
-    """
-    A EOProduct containing EOGroups (and throught them their EOVariable), linked to it's EOProductStore (if existing).
+    """A EOProduct containing EOGroups (and throught them their EOVariable), linked to it's EOProductStore (if existing).
 
     Read and write both dynamically, or on demand to the EOProductStore.
     Can be used in a dictionary like manner with relatives and absolutes paths.
     Has personal attributes and both personal and inherited coordinates.
+
+    Parameters
+    ----------
+    name: str
+        name of this product
+    store_or_path_url: Union[str, EOProductStore], optional
+        a EOProductStore or a string to create to a EOZarrStore
+    attrs: dict[str, Any], optional
+        global attributes of this product
+
+    See Also
+    --------
+    eopf.product.conveniences.init_product
     """
 
     MANDATORY_FIELD = ("measurements", "coordinates")
@@ -26,7 +38,7 @@ class EOProduct(EOContainer):
         self,
         name: str,
         store_or_path_url: Optional[Union[str, EOProductStore]] = None,
-        attrs: Optional[dict[str, Any]] = None,
+        attrs: Optional[MutableMapping[str, Any]] = None,
     ) -> None:
         EOContainer.__init__(self, attrs=attrs)
         self._name: str = name
@@ -35,6 +47,12 @@ class EOProduct(EOContainer):
 
     @property
     def attributes(self) -> dict[str, Any]:
+        """Attributes
+
+        See Also
+        --------
+        EOContainer.attrs
+        """
         return self.attrs
 
     @property
@@ -76,12 +94,15 @@ class EOProduct(EOContainer):
     def _repr_html_(self) -> str:
         return renderer("product.html", product=self)
 
+    def _add_local_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> EOVariable:
+        raise InvalidProductError("Products can't directly store variables.")
+
     def open(
         self, *, store_or_path_url: Optional[Union[EOProductStore, str]] = None, mode: str = "r", **kwargs: Any
     ) -> "EOProduct":
-        """setup the store to be readable or writable
+        """Setup the store to be readable or writable
 
-        if store_or_path_url is given, the store is overwrite by the new one.
+        if store_or_path_url is given, the store is override by the new one.
 
         Parameters
         ----------
@@ -100,17 +121,24 @@ class EOProduct(EOContainer):
         return self
 
     def is_valid(self) -> bool:
-        """check if the product is a valid eopf product
+        """Check if the product is a valid eopf product
+
+        Returns
+        -------
+        bool
+
         See Also
         --------
         EOProduct.validate"""
         return all(key in self for key in self.MANDATORY_FIELD)
 
-    def _add_local_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> EOVariable:
-        raise InvalidProductError("Products can't directly store variables.")
-
     def validate(self) -> None:
         """check if the product is a valid eopf product, raise an error if is not a valid one
+
+        Raises
+        ------
+        InvalidProductError
+            If the product not follow the harmonized common data model
 
         See Also
         --------
@@ -164,8 +192,9 @@ class EOProduct(EOContainer):
 
         Returns
         ------
-        Instance of EOProduct if the environment is interactive (e.g. Jupyter Notebook)
-        Oterwise, returns None.
+        Union[EOProduct, None]
+            Instance of EOProduct if the environment is interactive (e.g. Jupyter Notebook)
+            Oterwise, returns None.
         """
         try:
             from IPython import get_ipython
@@ -183,6 +212,7 @@ class EOProduct(EOContainer):
 
     @property
     def coordinates(self) -> EOGroup:
+        """EOGroup: Coordinates mandatory group"""
         coords = self.get("coordinates")
         if not isinstance(coords, EOGroup):
             raise InvalidProductError("coordinates must be defined at product level and must be an EOGroup")
@@ -193,7 +223,7 @@ class EOProduct(EOContainer):
             raise StoreNotDefinedError("Store must be defined")
         if self.store.status == StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open")
-        self.store.update_attrs("", attrs=self.attrs)
+        self.store.write_attrs("", attrs=self.attrs)
         return super().write()
 
     def load(self) -> None:

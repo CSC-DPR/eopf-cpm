@@ -9,6 +9,7 @@ from typing import (
     MutableMapping,
     Optional,
     Union,
+    ValuesView,
 )
 
 import xarray
@@ -26,19 +27,28 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
     """Wrapper around xarray.DataArray to provide Multi dimensional Array (Tensor)
     in earth observation context
 
-    Attributes
+    Parameters
     ----------
-    name
-    attrs
-    dims
-    coordinates
-    chunksizes
-    chunks
-    sizes
-    _data : xarray.DataArray
-        inner data
-    _product: EOProduct
-        product top level representation to access coordinates
+    name: str, optional
+        name of this group
+    data: any, optional
+        any data accept by :obj:`xarray.DataArray`
+    product: EOProduct, optional
+        product top level
+    relative_path: Iterable[str], optional
+        list like of string representing the path from the product
+    attrs: MutableMapping[str, Any], optional
+        attributes to assign
+    coords: MutableMapping[str, Any], optional
+        coordinates to assign
+    dims: tuple[str], optional
+        dimensions to assign
+    **kwargs: Any
+        any arguments to construct an :obj:`xarray.DataArray`
+
+    See Also
+    --------
+    xarray.DataArray
     """
 
     def __init__(
@@ -47,7 +57,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         data: Optional[Any] = None,
         product: Optional["EOProduct"] = None,
         relative_path: Optional[Iterable[str]] = None,
-        attrs: Optional[dict[str, Any]] = None,
+        attrs: Optional[MutableMapping[str, Any]] = None,
         coords: MutableMapping[str, Any] = {},
         dims: tuple[str, ...] = tuple(),
         **kwargs: Any,
@@ -65,6 +75,10 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
     @property
     def attrs(self) -> dict[str, Any]:
         return self._data.attrs
+
+    @property
+    def coords(self) -> ValuesView[Any]:
+        return self.coordinates.values()
 
     @property
     def chunksizes(self) -> Mapping[Any, tuple[int, ...]]:
@@ -316,9 +330,11 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
 
     def plot(self, **kwargs: dict[Any, Any]) -> None:
         """Wrapper around the xarray plotting functionality.
+
         Parameters
         ----------
         The parameters MUST follow the xarray.DataArray.plot() options.
+
         See Also
         --------
         DataArray.plot
