@@ -48,31 +48,6 @@ class EOZarrStore(EOProductStore):
         self._root = None
         self._fs = None
 
-    def listdir(self, path: Optional[str] = None) -> Any:
-        if self._fs is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        return self._fs.listdir(path=path)
-
-    def rmdir(self, path: Optional[str] = None) -> None:
-        if self._fs is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        self._fs.rmdir(path=path)
-
-    def clear(self) -> None:
-        if self._fs is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        self._fs.clear()
-
-    def getsize(self, path: Optional[str] = None) -> Any:
-        if self._fs is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        return self._fs.getsize(path=path)
-
-    def dir_path(self, path: Optional[str] = None) -> Any:
-        if self._fs is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        return self._fs.dir_path(path=path)
-
     def is_group(self, path: str) -> bool:
         if self._fs is None:
             raise StoreNotOpenError("Store must be open before access to it")
@@ -135,8 +110,8 @@ class EOZarrStore(EOProductStore):
             the path contain variables representation or not
         """
         return any(
-            array_meta_key in self.listdir(join_path(path, key))
-            for key in self.listdir(path)
+            array_meta_key in self._fs.listdir(path=join_path(path, key))
+            for key in self._fs.listdir(path=path)
             if not key.startswith(".zarr")
         )
 

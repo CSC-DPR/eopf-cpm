@@ -159,13 +159,12 @@ def test_write_stores(fs: FakeFilesystem, _type: type[EOProductStore]):
     assert z["a_group"].attrs == {"description": "value"}
 
     store.open(mode="r+")
-    assert "a_group" in store.listdir()
-    assert "/product_name" == store.dir_path()
+    assert "a_group" in store
+
     store.delete_attr("a_group", "description")
     z = zarr.open("product_name", mode="r")
     assert z["a_group"].attrs == {}
     del store["a_group"]
-    assert "a_group" not in store.listdir()
     store.close()
 
 
@@ -237,10 +236,6 @@ def test_store_must_be_open(fs: FakeFilesystem, _type: type[EOProductStore]):
         for i in store:
             continue
 
-    for method in ["listdir", "rmdir", "clear", "getsize", "dir_path"]:
-        with pytest.raises(StoreNotOpenError):
-            getattr(store, method)()
-
 
 @pytest.mark.unit
 @pytest.mark.parametrize("_type", [EOZarrStore])
@@ -253,28 +248,7 @@ def test_store_structure(fs: FakeFilesystem, _type: type[EOProductStore]):
 
     assert store["a_group"] is not None
 
-    assert isinstance(store.listdir(), list)
-    assert isinstance(store.listdir("another_one"), list)
-
-    assert isinstance(store.getsize(), int)
-    assert isinstance(store.getsize("another_one"), int)
-
-    assert isinstance(store.dir_path(), str)
-    assert isinstance(store.dir_path("another_one"), str)
-
     assert store.is_group("another_one")
     assert not store.is_variable("another_one")
-
-    assert store.rmdir("a_group") is None
-
-    with pytest.raises(KeyError):
-        store["a_group"]
-
-    assert store.clear() is None
-
-    with pytest.raises(KeyError):
-        store["a_final_one"]
-    with pytest.raises(KeyError):
-        store["another_one"]
 
     store.close()
