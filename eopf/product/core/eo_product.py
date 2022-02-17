@@ -223,7 +223,7 @@ class EOProduct(EOContainer):
             raise StoreNotDefinedError("Store must be defined")
         if self.store.status == StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open")
-        self.store.update_attrs("", attrs=self.attrs)
+        self.store.write_attrs("", attrs=self.attrs)
         return super().write(erase=erase)
 
     def load(self, erase: bool = False) -> None:

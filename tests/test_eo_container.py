@@ -80,8 +80,8 @@ class EmptyTestStore(EOProductStore):
     def get_data(self, key: str) -> tuple:
         raise KeyError()
 
-    def update_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = ...):
-        return super().update_attrs(group_path, attrs)
+    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = ...):
+        return super().write_attrs(group_path, attrs)
 
     def delete_attr(self, group_path: str, attr_name: str):
         return super().delete_attr(group_path, attr_name)

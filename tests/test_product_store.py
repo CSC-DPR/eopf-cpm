@@ -152,7 +152,7 @@ def test_write_stores(fs: FakeFilesystem, _type: type[EOProductStore]):
     store.add_group("a_group")
     with patch.object(xarray.Dataset, "to_zarr", return_value=None):
         store.add_variables("a_group", xarray.Dataset())
-    store.update_attrs("a_group", attrs={"description": "value"})
+    store.write_attrs("a_group", attrs={"description": "value"})
     store.close()
     z = zarr.open("product_name", mode="r")
     assert fs.isfile("product_name") or fs.isdir("product_name/a_group") or fs.isfile("product_name/a_group")
@@ -227,7 +227,7 @@ def test_store_must_be_open(fs: FakeFilesystem, _type: type[EOProductStore]):
         store.iter("a_group")
 
     with pytest.raises(StoreNotOpenError):
-        store.update_attrs("a_group", attrs={})
+        store.write_attrs("a_group", attrs={})
 
     with pytest.raises(StoreNotOpenError):
         store.delete_attr("a_group", "attr")

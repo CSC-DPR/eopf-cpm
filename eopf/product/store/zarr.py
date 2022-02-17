@@ -72,11 +72,27 @@ class EOZarrStore(EOProductStore):
         raise KeyError(f"Invalid name {key}")
 
     def add_group(self, name: str, relative_path: Iterable[str] = [], attrs: MutableMapping[str, Any] = {}) -> None:
+        """Write a group over the store
+
+        Parameters
+        ----------
+        name: str
+            name of the group
+        relative_path: Iterable[str], optional
+            list of all parents from root level
+        attrs: MutableMapping[str, Any], optional
+            dict like representation of attributes to assign
+
+        Raises
+        ------
+        StoreNotOpenError
+            If the store is closed
+        """
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         self._root.create_group(join_path(*relative_path, name, sep=self.sep)).attrs.update(attrs)
 
-    def update_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
+    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         self._root[group_path].attrs.update(attrs)
@@ -87,6 +103,22 @@ class EOZarrStore(EOProductStore):
         del self._root[group_path].attrs[attr_name]
 
     def add_variables(self, name: str, dataset: xarray.Dataset, relative_path: Iterable[str] = []) -> None:
+        """Write a group over the store
+
+        Parameters
+        ----------
+        name: str
+            name of the group
+        relative_path: Iterable[str], optional
+            list of all parents from root level
+        attrs: MutableMapping[str, Any], optional
+            dict like representation of attributes to assign
+
+        Raises
+        ------
+        StoreNotOpenError
+            If the store is closed
+        """
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         dataset.to_zarr(store=join_path(self.url, *relative_path, name, sep=self.sep), mode="a")

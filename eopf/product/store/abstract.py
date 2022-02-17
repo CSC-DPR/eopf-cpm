@@ -2,7 +2,7 @@ import enum
 import warnings
 from abc import abstractmethod
 from collections.abc import MutableMapping
-from typing import Any, Iterable, Iterator, Optional
+from typing import Any, Iterator, Optional
 
 import xarray
 
@@ -121,43 +121,7 @@ class EOProductStore(MutableMapping[str, Any]):
         """
 
     @abstractmethod
-    def add_group(self, name: str, relative_path: Iterable[str] = [], attrs: MutableMapping[str, Any] = {}) -> None:
-        """Write a group over the store
-
-        Parameters
-        ----------
-        name: str
-            name of the group
-        relative_path: Iterable[str], optional
-            list of all parents from root level
-        attrs: MutableMapping[str, Any], optional
-            dict like representation of attributes to assign
-
-        Raises
-        ------
-        StoreNotOpenError
-            If the store is closed
-        """
-
-    @abstractmethod
-    def add_variables(self, name: str, dataset: xarray.Dataset, relative_path: Iterable[str] = []) -> None:
-        """Write variables over the store from :obj:`xarray.Dataset`
-
-        Parameters
-        ----------
-        name: str
-            name of the dataset
-        relative_path: Iterable[str], optional
-            list of all parents from root level
-
-        Raises
-        ------
-        StoreNotOpenError
-            If the store is closed
-        """
-
-    @abstractmethod
-    def update_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
+    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         """Update attrs in the store
 
         Parameters
