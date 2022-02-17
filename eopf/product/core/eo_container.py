@@ -91,8 +91,8 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         elif key in self._groups:
             item = self._groups[key]
         elif self.store is not None:
-            dataset, attrs = self.store.get_data(self._relative_key(key))
-            item = EOGroup(dataset=dataset, attrs=attrs)
+            dataset, attrs = self.store.get_data(self._store_key(key))
+            item = EOGroup(variables=dataset, attrs=attrs)
         self[key] = item
         if subkey is not None:
             return item[subkey]
@@ -106,7 +106,7 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         if keys is None:
             if name in self._groups:
                 del self._groups[name]
-            if self.store is not None and (store_key := self._relative_key(name)) in self.store:
+            if self.store is not None and (store_key := self._store_key(name)) in self.store:
                 del self.store[store_key]
         else:
             del self[name][keys]
@@ -131,7 +131,7 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
             and any(key == store_key for store_key in self.store.iter(self.path))
         )
 
-    def _relative_key(self, key: str) -> str:
+    def _store_key(self, key: str) -> str:
         """Helper to construct a store specific path of a sub object.
 
         Parameters
@@ -149,7 +149,7 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         """
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
-        return join_path(self.path, key, sep=self.store.sep)
+        return join_path(*self.relative_path, key, sep=self.store.sep)
 
     def add_group(
         self,
@@ -279,8 +279,6 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         group = self[name] = EOGroup(attrs=attrs)
         group.assign_coords(coords=coords)
         group.assign_dims(dims)
-        if self.store is not None and self.store.status == StorageStatus.OPEN:
-            self.store.add_group(name, relative_path=group.relative_path, attrs=group.attrs)
         return group
 
     @abstractmethod
@@ -311,7 +309,7 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         """
         ...
 
-    def write(self, erase: bool = False) -> None:
+    def write(self) -> None:
         """
         write non synchronized subgroups, variables to the store
 
@@ -323,31 +321,23 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
         for name, item in self._groups.items():
-            if not erase and name in self.store.iter(self.path):
-                continue
-            self.store.add_group(name, relative_path=item.relative_path, attrs=item.attrs)
-            item.write(erase=erase)
+            self.store[self._store_key(name)] = item
+            item.write()
 
-    def load(self, erase: bool = False) -> None:
+    def load(self) -> None:
         """load all the product in memory"""
         from .eo_group import EOGroup
 
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
         for key in self.store.iter(self.path):
-            group: Union[EOGroup, EOVariable]
-            if erase or key not in self._groups:
-                try:
-                    dataset, attrs = self.store.get_data(self._relative_key(key))
-                except TypeError:
-                    continue
-                group = EOGroup(dataset=dataset, attrs=attrs)
-                self[key] = group
-            else:
-                group = self[key]
-            if not isinstance(group, EOGroup):
+            try:
+                eo_object = self.store[self._store_key(key)]
+            except TypeError:
                 continue
-            group.load(erase=erase)
+            self[key] = eo_object
+            if isinstance(eo_object, EOGroup):
+                eo_object.load()
 
     def _ipython_key_completions_(self) -> list[str]:
         return [key for key in self.keys()]

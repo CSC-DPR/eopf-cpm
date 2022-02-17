@@ -1,14 +1,11 @@
 from collections.abc import MutableMapping
 from typing import TYPE_CHECKING, Any, Iterable, Iterator, Optional, Union
 
-import xarray
-
 from eopf.exceptions import StoreNotDefinedError
 from eopf.product.core.eo_container import EOContainer
 from eopf.product.core.eo_object import EOObject
 
 from ..formatting import renderer
-from ..store.abstract import StorageStatus
 from .eo_variable import EOVariable
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -30,22 +27,22 @@ class EOGroup(EOContainer, EOObject):
         name: str = "",
         product: "Optional[EOProduct]" = None,
         relative_path: Optional[Iterable[str]] = None,
-        dataset: Optional[xarray.Dataset] = None,
+        variables: Optional[dict[str, EOVariable]] = None,
         attrs: Optional[dict[str, Any]] = None,
         coords: MutableMapping[str, Any] = {},
         dims: tuple[str, ...] = tuple(),
     ) -> None:
         EOContainer.__init__(self, attrs=attrs)
 
-        if dataset is None:
-            dataset = xarray.Dataset()
+        if variables is None:
+            variables = dict()
         else:
-            for key in dataset:
+            if not isinstance(variables, dict):
+                raise TypeError("dataset parameters must be a dictionary")
+            for key in variables:
                 if not isinstance(key, str):
                     raise TypeError(f"The dataset key {str(key)} is type {type(key)} instead of str")
-        if not isinstance(dataset, xarray.Dataset):
-            raise TypeError("dataset parameters must be a xarray.Dataset instance")
-        self._dataset = dataset
+        self._variables = variables
         EOObject.__init__(self, name, product, relative_path, coords=coords, retrieve_dims=dims)
 
     def _get_item(self, key: str) -> Union[EOVariable, "EOGroup"]:
@@ -58,20 +55,20 @@ class EOGroup(EOContainer, EOObject):
         key: str
             path of the EOVariable or EOGroup
         """
-        if key in self._dataset:
-            return EOVariable(key, self._dataset[key], self.product, relative_path=[*self._relative_path, self._name])
+        if key in self._variables:
+            return self._variables[key]
         return super()._get_item(key)
 
     def __delitem__(self, key: str) -> None:
-        if key in self._dataset:
-            del self._dataset[key]
+        if key in self._variables:
+            del self._variables[key]
         else:
             super().__delitem__(key)
 
     def __iter__(self) -> Iterator[str]:
         yield from super().__iter__()
-        if self._dataset is not None:
-            yield from self._dataset.keys()
+        if self._variables is not None:
+            yield from self._variables.keys()
 
     def __str__(self) -> str:
         return self.__repr__()
@@ -123,12 +120,10 @@ class EOGroup(EOContainer, EOObject):
             variable = EOVariable(name, data, self.product, relative_path=[*self._relative_path, self._name], **kwargs)
         else:
             variable = data
-        self._dataset[name] = variable._data
-        if self.store is not None and self.store.status == StorageStatus.OPEN:
-            self.store.add_variables(self._name, self._dataset, relative_path=self._relative_path)
+        self._variables[name] = variable
         return variable
 
-    def write(self, erase: bool = False) -> None:
+    def write(self) -> None:
         """
         write non synchronized subgroups, variables to the store
 
@@ -139,9 +134,9 @@ class EOGroup(EOContainer, EOObject):
         """
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
-        super().write(erase=erase)
-        if self._dataset is not None and len(self._dataset) > 0:
-            self.store.add_variables(self.name, self._dataset, relative_path=self.relative_path)
+        super().write()
+        for var_name in self._variables:
+            self.store[self._store_key(var_name)] = self._variables[var_name]
 
     def __contains__(self, key: object) -> bool:
-        return super().__contains__(key) or (key in self._dataset)
+        return super().__contains__(key) or (key in self._variables)

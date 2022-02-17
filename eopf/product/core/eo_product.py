@@ -188,19 +188,19 @@ class EOProduct(EOContainer):
             raise InvalidProductError("coordinates must be defined at product level and must be an EOGroup")
         return coords
 
-    def write(self, erase: bool = False) -> None:
+    def write(self) -> None:
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
         if self.store.status == StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open")
         self.store.update_attrs("", attrs=self.attrs)
-        return super().write(erase=erase)
+        return super().write()
 
-    def load(self, erase: bool = False) -> None:
+    def load(self) -> None:
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
         if self.store.status == StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open")
         _, attrs = self.store.get_data("")
         self.attrs.update(attrs)
-        return super().load(erase)
+        return super().load()

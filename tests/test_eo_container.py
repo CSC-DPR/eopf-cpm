@@ -38,6 +38,7 @@ class EmptyTestStore(EOProductStore):
         return 0
 
     def __setitem__(self, k: Any, v: Any) -> None:
+        print(k, v)
         pass
 
     def __delitem__(self, v: Any) -> None:
@@ -224,7 +225,7 @@ def test_attributes(product):
 def test_setitem(product):
 
     with pytest.raises(TypeError):
-        EOGroup("group1b", None, dataset=["a", "b"])
+        EOGroup("group1b", None, variables=["a", "b"])
 
     product["measurements/group1b/"] = EOGroup("group1b", None)
 
@@ -348,8 +349,8 @@ def test_delitem(product):
 @pytest.mark.unit
 def test_invalid_dataset():
     with pytest.raises(TypeError):
-        EOGroup(dataset=xarray.Dataset({1: ("a", np.array([3]))}))
-    EOGroup(dataset=xarray.Dataset({"1": ("a", np.array([3]))}))
+        EOGroup(variables={1: EOVariable(data=np.array([3]))})
+    EOGroup(variables={"1": EOVariable(data=np.array([3]))})
 
 
 @pytest.mark.unit
@@ -360,7 +361,7 @@ def test_create_product_on_memory(fs: FakeFilesystem):
         product.open(mode="w")
 
     with pytest.raises(StoreNotDefinedError):
-        product._relative_key("a key")
+        product._store_key("a key")
 
     assert product._store is None, "store must be None"
     assert not (fs.isdir(product.name) or fs.isfile(product.name)), "Product must not create any thing on fs"
@@ -373,14 +374,12 @@ def test_write_product(product):
         product.write()
 
     with (
-        patch.object(EmptyTestStore, "add_group", return_value=None) as mock_method,
-        patch.object(EmptyTestStore, "add_variables", return_value=None) as mock_method2,
+        patch.object(EmptyTestStore, "__setitem__", return_value=None) as mock_method,
         product.open(mode="w"),
     ):
         product.write()
 
-    assert mock_method2.call_count == 5
-    assert mock_method.call_count == 10
+    assert mock_method.call_count == 15
     assert product._store is not None, "store must be set"
 
     product._store = None
