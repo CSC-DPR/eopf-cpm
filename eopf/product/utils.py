@@ -1,6 +1,6 @@
 import functools
+import posixpath
 import weakref
-from os import path
 from pathlib import PurePosixPath
 from typing import Any, Callable, Optional, Tuple
 
@@ -32,8 +32,8 @@ def weak_cache(func: Callable[..., Any]) -> Callable[..., Any]:
     return inner
 
 
-# We need to use a mix of os.path (normpath) and pathlib (partition) in the eo_path methods.
-# As we work with strings we use os.path as much as possible.
+# We need to use a mix of posixpath (normpath) and pathlib (partition) in the eo_path methods.
+# As we work with strings we use posixpath (the unix path specific implementation of os.path) as much as possible.
 
 
 def norm_eo_path(eo_path: str) -> str:
@@ -49,7 +49,7 @@ def norm_eo_path(eo_path: str) -> str:
     """
     if eo_path == "":
         raise KeyError("Invalid empty eo_path")
-    eo_path = path.normpath(eo_path)  # Do not use pathlib (does not remove ..)
+    eo_path = posixpath.normpath(eo_path)  # Do not use pathlib (does not remove ..)
     if eo_path.startswith("//"):  # text is a special path so it's not normalised by normpath
         eo_path = eo_path[1:]
     return eo_path
@@ -66,7 +66,7 @@ def join_eo_path(*subpaths: str) -> str:
     -------
     eo path string
     """
-    return norm_eo_path(path.join(*subpaths))
+    return norm_eo_path(posixpath.join(*subpaths))
 
 
 def partition_eo_path(eo_path: str) -> Tuple[str, ...]:
@@ -74,12 +74,12 @@ def partition_eo_path(eo_path: str) -> Tuple[str, ...]:
 
 
 def upsplit_eo_path(eo_path: str) -> Tuple[str, str]:
-    return path.split(eo_path)
+    return posixpath.split(eo_path)
 
 
 def downsplit_eo_path(eo_path: str) -> Tuple[str, Optional[str]]:
     folder_name = partition_eo_path(eo_path)[0]
-    sub_path: Optional[str] = path.relpath(eo_path, start=folder_name)
+    sub_path: Optional[str] = posixpath.relpath(eo_path, start=folder_name)
     if sub_path == ".":
         sub_path = None
     return folder_name, sub_path
