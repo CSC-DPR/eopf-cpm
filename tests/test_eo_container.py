@@ -394,7 +394,7 @@ def test_load_product(product):
     with pytest.raises(StoreNotOpenError):
         product.load()
 
-    with (patch.object(EmptyTestStore, "get_data", return_value=(None, {})) as mock_method, product.open(mode="r")):
+    with (patch.object(EmptyTestStore, "__getitem__", return_value=(EOGroup())) as mock_method, product.open(mode="r")):
         product.load()
 
     assert mock_method.call_count == 1

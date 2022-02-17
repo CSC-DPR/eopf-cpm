@@ -139,7 +139,7 @@ def test_load_product_from_zarr(zarr_file, fs: FakeFilesystem):
         assert_contain(product, "measurements/group2", EOGroup)
     with pytest.raises(KeyError):
         assert_contain(product, "measurements/group1/variable_d", EOVariable)
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(TypeError):
         product.store["an_utem"] = "A_Value"
 
 
@@ -183,8 +183,7 @@ def test_read_stores(fs: FakeFilesystem, _type: type[EOProductStore]):
     assert "a_group" in [_ for _ in store]
     with pytest.raises(KeyError):
         store["invalid_key"]
-    with pytest.raises(KeyError):
-        store.get_data("invalid_key")
+
     store.close()
 
 
@@ -204,9 +203,6 @@ def test_store_must_be_open(fs: FakeFilesystem, _type: type[EOProductStore]):
 
     with pytest.raises(StoreNotOpenError):
         store["a_group"]
-
-    with pytest.raises(StoreNotOpenError):
-        store.get_data("a_group")
 
     with pytest.raises(StoreNotOpenError):
         store.add_group("a_group")
