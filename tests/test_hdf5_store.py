@@ -2,12 +2,13 @@ import contextlib
 import glob
 import os
 import os.path
+import shutil
 
 import h5py
 import pytest
 
 from eopf.product.convert import OLCIL1EOPConverter
-from eopf.product.store.hdf5_store import EOHDF5Store
+from eopf.product.store.hdf5 import EOHDF5Store
 
 
 def _get_path(path):
@@ -21,6 +22,8 @@ def _get_path(path):
         return "data/out.txt"
     if path == "path_to_group":
         return "data/prod.hdf5/coordinates"
+    if path == "path_to_variable":
+        return "latitude"
 
 
 def _file_exists(path_to_file):
@@ -41,7 +44,7 @@ def _hdf5_write():
         os.remove(file_path)
     s3_olci_l0 = OLCIL1EOPConverter(_get_path("path_to_product"))
     s3_olci_l0.read()
-    h5 = EOHDF5Store(file_path)
+    h5 = EOHDF5Store(file_path, "new_prod")
     h5.write(s3_olci_l0.eop)
 
 
@@ -114,7 +117,7 @@ def test_hdf5_descend_obj_all():
         with contextlib.redirect_stdout(ff):
             with h5py.File(path_file, "r") as f:
                 h5 = EOHDF5Store(path_file)
-                obj = f.get("/")
+                obj: h5py.Group = f.get("/")
                 h5._descend_obj_all(obj, sep="\t")
     check_result = _check_item("coordinates")
     assert check_result, "coordinates group is not in HDF5 file"
@@ -128,7 +131,7 @@ def test_hdf5_descend_obj_gr():
         with contextlib.redirect_stdout(ff):
             with h5py.File(path_file, "r") as f:
                 h5 = EOHDF5Store(path_file)
-                obj = f.get("/")
+                obj: h5py.Group = f.get("/")
                 h5._descend_obj_gr(obj, sep="\t")
     check_result = _check_item("coordinates")
     assert check_result, "coordinates group is not in HDF5 file"
@@ -142,7 +145,7 @@ def test_hdf5_descend_obj_var():
         with contextlib.redirect_stdout(ff):
             with h5py.File(path_file, "r") as f:
                 h5 = EOHDF5Store(path_file)
-                obj = f.get("/")
+                obj: h5py.Group = f.get("/")
                 h5._descend_obj_var(obj, sep="\t")
     check_result = _check_item("altitude")
     assert check_result, "altitude variable is not in HDF5 file"
@@ -153,18 +156,15 @@ def test_hdf5_get_dict_vars():
     """Test _get_dict_vars for dictionary of all variables in hdf5 file"""
     f = h5py.File(_get_path("path_to_hdf5_file"), "r")
     vars = {}
-    obj = f.get("/")
+    obj: h5py.Group = f.get("/")
     h5 = EOHDF5Store(_get_path("path_to_hdf5_file"))
     dict = h5._get_dict_vars(obj, vars)
-    assert "altitude" in dict, "altitude variable is not in dictionary"
-
+    assert _get_path("path_to_variable") in dict, _get_path("path_to_variable")+" variable is not in dictionary"
 
 @pytest.fixture(scope="session", autouse=True)
 def cleanup(request):
     """Cleanup testing files."""
-
     def remove_test_files():
         os.remove(_get_path("path_to_hdf5_file"))
         os.remove(_get_path("path_to_output_file"))
-
     request.addfinalizer(remove_test_files)
