@@ -1,3 +1,4 @@
+import tempfile
 from typing import Any
 
 import h5py
@@ -146,9 +147,10 @@ def test_load_product_from_zarr(zarr_file: str, fs: FakeFilesystem):
         product.store["an_utem"] = "A_Value"
 
 
+@pytest.mark.unit
 @pytest.mark.parametrize(
     "store_and_decoder",
-    [(EOZarrStore(zarr.MemoryStore()), zarr.open)],
+    [(EOZarrStore(zarr.MemoryStore()), zarr.open), (EOHDF5Store(tempfile.TemporaryFile()), h5py.File)],
 )
 def test_write_stores(fs: FakeFilesystem, store_and_decoder: tuple[EOProductStore, Any]):
     store, decoder_type = store_and_decoder
@@ -160,6 +162,7 @@ def test_write_stores(fs: FakeFilesystem, store_and_decoder: tuple[EOProductStor
     store.close()
 
     decoder = decoder_type(store.url, mode="r")
+
     assert dict(decoder["a_group"].attrs) == {"description": "value"}
 
     assert decoder["a_group"] is not None
@@ -167,7 +170,7 @@ def test_write_stores(fs: FakeFilesystem, store_and_decoder: tuple[EOProductStor
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize("store", [EOZarrStore(zarr.MemoryStore())])
+@pytest.mark.parametrize("store", [EOZarrStore(zarr.MemoryStore()), EOHDF5Store(tempfile.TemporaryFile())])
 def test_read_stores(fs: FakeFilesystem, store: EOProductStore):
 
     store.open(mode="w")
@@ -193,7 +196,7 @@ def test_abstract_store_cant_be_instantiate():
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize("store", [EOZarrStore("a_product"), ])
+@pytest.mark.parametrize("store", [EOZarrStore("a_product"), EOHDF5Store(tempfile.TemporaryFile())])
 def test_store_must_be_open(fs: FakeFilesystem, store: EOProductStore):
 
     with pytest.raises(StoreNotOpenError):
@@ -226,7 +229,7 @@ def test_store_must_be_open(fs: FakeFilesystem, store: EOProductStore):
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize("store", [EOZarrStore("a_product")])
+@pytest.mark.parametrize("store", [EOZarrStore("a_product"), EOHDF5Store(tempfile.TemporaryFile())])
 def test_store_structure(fs: FakeFilesystem, store: EOProductStore):
     store.open(mode="w")
     store["a_group"] = EOGroup()
