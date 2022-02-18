@@ -1,5 +1,5 @@
 from collections.abc import MutableMapping
-from typing import TYPE_CHECKING, Any, Iterable, Iterator, Optional, Union
+from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
 
 import xarray
 
@@ -54,8 +54,7 @@ class EOGroup(EOContainer, EOObject):
     def __init__(
         self,
         name: str = "",
-        product: "Optional[EOProduct]" = None,
-        relative_path: Optional[Iterable[str]] = None,
+        parent: "Optional[EOProduct]" = None,
         dataset: Optional[xarray.Dataset] = None,
         attrs: Optional[MutableMapping[str, Any]] = None,
         coords: MutableMapping[str, Any] = {},
@@ -72,11 +71,11 @@ class EOGroup(EOContainer, EOObject):
         if not isinstance(dataset, xarray.Dataset):
             raise TypeError("dataset parameters must be a xarray.Dataset instance")
         self._dataset = dataset
-        EOObject.__init__(self, name, product, relative_path, coords=coords, retrieve_dims=dims)
+        EOObject.__init__(self, name, parent, coords=coords, retrieve_dims=dims)
 
     def _get_item(self, key: str) -> Union[EOVariable, "EOGroup"]:
         if key in self._dataset:
-            return EOVariable(key, self._dataset[key], self.product, relative_path=[*self._relative_path, self._name])
+            return EOVariable(key, self._dataset[key], self)
         return super()._get_item(key)
 
     def __delitem__(self, key: str) -> None:
@@ -128,12 +127,12 @@ class EOGroup(EOContainer, EOObject):
     def _add_local_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> EOVariable:
 
         if not isinstance(data, EOVariable):
-            variable = EOVariable(name, data, self.product, relative_path=[*self._relative_path, self._name], **kwargs)
+            variable = EOVariable(name, data, self, **kwargs)
         else:
             variable = data
         self._dataset[name] = variable._data
         if self.store is not None and self.store.status == StorageStatus.OPEN:
-            self.store.add_variables(self._name, self._dataset, relative_path=self._relative_path)
+            self.store.add_variables(self._name, self._dataset, relative_path=self.relative_path)
         return variable
 
     def write(self, erase: bool = False) -> None:

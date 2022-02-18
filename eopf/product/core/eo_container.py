@@ -11,7 +11,6 @@ from eopf.product.utils import (
     is_absolute_eo_path,
     join_path,
     norm_eo_path,
-    partition_eo_path,
     product_relative_path,
 )
 
@@ -52,9 +51,8 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         if subkeys:
             self[key][subkeys] = value
             return
-        item_rel_path = partition_eo_path(self.path)
 
-        value._repath(key, self.product, item_rel_path)
+        value._repath(key, self)  # type: ignore[arg-type]
         if isinstance(value, EOGroup):
             self._groups[key] = value
         else:

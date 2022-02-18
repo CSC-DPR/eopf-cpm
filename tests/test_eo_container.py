@@ -239,18 +239,17 @@ def test_setitem(product):
     product["group1e"] = EOGroup("group1c", None)
     product["/measurements/"]["/measurements/group1b"] = EOGroup("group1b", None)
     product["group1f"] = EOGroup("group1f", product)
-    product["measurements/group1h"] = EOGroup("group1h", product, ["/", "measurements"])
+    product["measurements/group1h"] = EOGroup("group1h", product["/measurements"])
     product["measurements/group1/variable_v1"] = EOVariable("variable_v1", None)
     product["/measurements/group1/variable_v2"] = EOVariable("variable_v1", None)
     product["measurements/group1"]["variable_v3"] = EOVariable("variable_v3", None)
     product["measurements/group1"]["variable_v3"] = EOVariable("variable_v3", None)
-    product["measurements/group1"]["/measurements/group1/variable_v4"] = EOVariable("variable_v4", None, product)
-    product["measurements/group1"]["variable_v5"] = EOVariable(
-        "variable_v5",
-        [1, 2],
-        product,
-        ["/", "measurements", "group1"],
+    product["measurements/group1"]["/measurements/group1/variable_v4"] = EOVariable(
+        "variable_v4",
+        None,
+        product["/measurements/group1"],
     )
+    product["measurements/group1"]["variable_v5"] = EOVariable("variable_v5", [1, 2], product["/measurements/group1"])
     with pytest.raises(KeyError):
         product["measurements/group1"][""] = EOVariable("", None)
 
@@ -277,21 +276,16 @@ def test_setitem(product):
 def test_multipleparent_setitem(product):
     product_bis = EOProduct("fake")
     with pytest.raises(EOObjectMultipleParentError):
-        product["group1g"] = EOGroup("group1g", product, ("/", "measurements", "group1b"))
+        product["group1g"] = EOGroup("group1g", product["/measurements/group1"])
     with pytest.raises(EOObjectMultipleParentError):
         product["group1h"] = EOGroup("group1i", product_bis)
     with pytest.raises(EOObjectMultipleParentError):
-        product["group1i"] = EOGroup("group1i", product_bis, ("measurements", "group1i"))
+        product["group1i"] = EOGroup("group1i", product_bis)
     with pytest.raises(EOObjectMultipleParentError):
         var = EOVariable("variable_v6", None, product_bis)
         product["measurements/group1"]["variable_v6"] = var
     with pytest.raises(EOObjectMultipleParentError):
-        product["measurements/group1"]["variable_v7"] = EOVariable(
-            "variable_v7",
-            None,
-            product_bis,
-            ["/", "measurements", "group1"],
-        )
+        product["measurements/group1"]["variable_v7"] = product_bis.add_variable("/measurements/group1/variable_v7")
 
     with pytest.raises(EOObjectMultipleParentError):
         product["measurements/group1"]["variable_v8"] = EOVariable(

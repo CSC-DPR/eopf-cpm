@@ -1,7 +1,6 @@
 import itertools as it
-import weakref
 from types import MappingProxyType
-from typing import TYPE_CHECKING, Any, Iterable, MutableMapping, Optional
+from typing import TYPE_CHECKING, Any, Iterable, MutableMapping, Optional, Union
 
 from eopf.exceptions import EOObjectMultipleParentError, InvalidProductError
 from eopf.product.core.eo_abstract import EOAbstract
@@ -9,6 +8,8 @@ from eopf.product.store.abstract import EOProductStore
 from eopf.product.utils import join_eo_path, join_path
 
 if TYPE_CHECKING:  # pragma: no cover
+    from eopf.product.core.eo_container import EOContainer
+    from eopf.product.core.eo_group import EOGroup
     from eopf.product.core.eo_product import EOProduct
     from eopf.product.core.eo_variable import EOVariable
 
@@ -39,16 +40,13 @@ class EOObject(EOAbstract):
     def __init__(
         self,
         name: str,
-        product: Optional["EOProduct"] = None,
-        relative_path: Optional[Iterable[str]] = None,
+        parent: "Optional[Union[EOGroup, EOProduct]]" = None,
         coords: MutableMapping[str, Any] = {},
         retrieve_dims: tuple[str, ...] = tuple(),
     ) -> None:
-
         self._name: str = ""
-        self._relative_path: tuple[str, ...] = tuple()
-        self._product: Optional["EOProduct"] = None
-        self._repath(name, product, relative_path)
+        self._parent: Optional["EOContainer"] = None
+        self._repath(name, parent)
         self.assign_coords(coords=coords)
         self.assign_dims(retrieve_dims=retrieve_dims)
 
@@ -79,7 +77,7 @@ class EOObject(EOAbstract):
             self.product.coordinates.add_variable(path, data=coords_value)
             self.assign_dims([path])
 
-    def _repath(self, name: str, product: "Optional[EOProduct]", relative_path: Optional[Iterable[str]]) -> None:
+    def _repath(self, name: str, parent: "Optional[Union[EOGroup, EOProduct]]") -> None:
         """Set the name, product and relative_path attributes of this EObject.
          This method won't repath the object in a way that result in it being the child of multiple product,
          or at multiple path.
@@ -96,21 +94,14 @@ class EOObject(EOAbstract):
              If the object has a product and a not undefined attribute is modified.
 
         """
-        if product is not None and not isinstance(product, weakref.ProxyType):
-            product = weakref.proxy(product)
-        relative_path = tuple(relative_path) if relative_path is not None else tuple()
-        # weakref.proxy 'is' only work with another proxy
-        if self._product is not None:
+        if self._parent is not None:
             if self._name != "" and self._name != name:
                 raise EOObjectMultipleParentError("The EOObject name does not match it's new path")
-            if self._relative_path != tuple() and self._relative_path != relative_path:
-                raise EOObjectMultipleParentError("The EOObject path does not match it's new parent")
-            if self._product is not product:
+            if self._parent is not parent:
                 raise EOObjectMultipleParentError("The EOObject product does not match it's new parent")
 
         self._name = name
-        self._relative_path = relative_path
-        self._product = product
+        self._parent = parent
 
     @property
     def dims(self) -> tuple[str, ...]:
@@ -122,18 +113,35 @@ class EOObject(EOAbstract):
         return self._name
 
     @property
+    def parent(self) -> "Optional[Union[EOContainer, EOProduct]]":
+        """
+        Parent COntainer/Product of this object in it's Product.
+        Returns
+        -------
+
+        """
+        return self._parent
+
+    @property
     def path(self) -> str:
-        return join_eo_path(*self.relative_path, self.name)
+        if self.parent is None:
+            return self.name
+        else:
+            return join_eo_path(self.parent.path, self.name)
 
     @property
     def product(self) -> "EOProduct":
-        if self._product is None:
+        if self.parent is None:
             raise InvalidProductError("Undefined product")
-        return self._product
+        return self.parent.product
 
     @property
     def relative_path(self) -> Iterable[str]:
-        return self._relative_path
+        rel_path: list[str] = list()
+        if self.parent is not None:
+            rel_path.extend(self.parent.relative_path)
+            rel_path.append(self.parent.name)
+        return rel_path
 
     @property
     def store(self) -> Optional[EOProductStore]:
