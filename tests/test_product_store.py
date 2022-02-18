@@ -1,5 +1,6 @@
 from typing import Any
 
+import h5py
 import pytest
 import xarray
 import zarr
@@ -8,6 +9,7 @@ from pyfakefs.fake_filesystem import FakeFilesystem
 from eopf.exceptions import StoreNotOpenError
 from eopf.product.core import EOGroup, EOProduct, EOVariable
 from eopf.product.store import EOProductStore, EOZarrStore
+from eopf.product.store.hdf5 import EOHDF5Store
 
 from .utils import assert_contain
 
@@ -191,17 +193,17 @@ def test_abstract_store_cant_be_instantiate():
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize("store", [EOZarrStore("a_product")])
+@pytest.mark.parametrize("store", [EOZarrStore("a_product"), ])
 def test_store_must_be_open(fs: FakeFilesystem, store: EOProductStore):
-
-    with pytest.raises(StoreNotOpenError):
-        del store["a_group"]
 
     with pytest.raises(StoreNotOpenError):
         store["a_group"]
 
     with pytest.raises(StoreNotOpenError):
         store["a_group"] = EOGroup(variables={})
+
+    with pytest.raises(StoreNotOpenError):
+        store["a_variable"] = EOVariable()
 
     with pytest.raises(StoreNotOpenError):
         store.is_group("a_group")
