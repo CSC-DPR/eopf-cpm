@@ -154,7 +154,13 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         """
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
-        return join_path(*self.relative_path, key, sep=self.store.sep)
+        from eopf.product import EOProduct
+
+        if isinstance(self, EOProduct):
+            name = key
+        else:
+            name = join_path(self.name, key, sep=self.store.sep)
+        return join_path(*self.relative_path, name, sep=self.store.sep)
 
     def _recursive_add(self, path: str, add_local_method: Callable[..., Any], *args: Any, **kwargs: Any) -> Any:
         """Recursively got through the path , adding group as needed,

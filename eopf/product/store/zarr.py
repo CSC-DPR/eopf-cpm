@@ -1,4 +1,4 @@
-from typing import Any, Iterable, Iterator, MutableMapping, Optional
+from typing import TYPE_CHECKING, Any, Iterable, Iterator, MutableMapping, Optional
 
 import xarray
 import zarr
@@ -6,9 +6,12 @@ from zarr.hierarchy import Group
 from zarr.storage import FSStore, array_meta_key, contains_array, contains_group
 
 from eopf.exceptions import StoreNotOpenError
-from eopf.product.utils import join_path, weak_cache
+from eopf.product.utils import join_path
 
 from .abstract import EOProductStore
+
+if TYPE_CHECKING:
+    from eopf.product.core.eo_object import EOObject
 
 
 class EOZarrStore(EOProductStore):
@@ -57,19 +60,6 @@ class EOZarrStore(EOProductStore):
         if self._fs is None:
             raise StoreNotOpenError("Store must be open before access to it")
         return contains_array(self._fs, path=path)
-
-    def get_data(self, key: str) -> tuple[Optional[xarray.Dataset], dict[str, Any]]:
-        if self._root is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        if self.is_group(key):
-            dataset = None
-            group = self[key]
-            if self.has_variables(group.path):
-                dataset = self.__get_dataset(key)
-            return (dataset, group.attrs.asdict())
-        elif self.is_variable(key):
-            raise TypeError("EOVariable must be loaded from EOGroup dataset, not EOProductStore")
-        raise KeyError(f"Invalid name {key}")
 
     def add_group(self, name: str, relative_path: Iterable[str] = [], attrs: MutableMapping[str, Any] = {}) -> None:
         """Write a group over the store
@@ -140,24 +130,42 @@ class EOZarrStore(EOProductStore):
         -------
         bool
             the path contain variables representation or not
+
+        Raises
+        ------
+        StoreNotOpenError
+            If the store is closed
         """
+        if self._fs is None:
+            raise StoreNotOpenError("Store must be open before access to it")
         return any(
             array_meta_key in self._fs.listdir(path=join_path(path, key))
             for key in self._fs.listdir(path=path)
             if not key.startswith(".zarr")
         )
 
-    @weak_cache
-    def __get_dataset(self, path: str) -> Any:
-        return xarray.open_zarr(join_path(self.url, path, sep=self.sep), consolidated=True)
-
-    def __getitem__(self, key: str) -> Any:
+    def __getitem__(self, key: str) -> "EOObject":
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        return self._root[key]
 
-    def __setitem__(self, key: Any, value: Any) -> None:
-        raise NotImplementedError()
+        from eopf.product.core import EOGroup, EOVariable
+
+        obj = self._root[key]
+        if self.is_group(key):
+            return EOGroup(attrs=obj.attrs)
+        return EOVariable(data=obj, attrs=obj.attrs)
+
+    def __setitem__(self, key: str, value: "EOObject") -> None:
+        from eopf.product.core import EOGroup, EOVariable
+
+        if isinstance(value, EOGroup):
+            self._root.create_group(key, overwrite=True)
+        elif isinstance(value, EOVariable):
+            self._root.create_dataset(key)
+            zarr.consolidate_metadata(self.sep.join([self._root.store.path, self._root[key].path]))
+        else:
+            raise TypeError("Only EOGroup and EOVariable can be set")
+        self.write_attrs(key, value.attrs)
 
     def __delitem__(self, key: str) -> None:
         if self._root is None:

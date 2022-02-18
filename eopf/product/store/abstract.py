@@ -2,9 +2,7 @@ import enum
 import warnings
 from abc import abstractmethod
 from collections.abc import MutableMapping
-from typing import Any, Iterator, Optional
-
-import xarray
+from typing import Any, Iterator
 
 from eopf.exceptions.warnings import AlreadyClose, AlreadyOpen
 
@@ -174,31 +172,5 @@ class EOProductStore(MutableMapping[str, Any]):
             If the store is closed
         """
 
-    @abstractmethod
-    def get_data(self, path: str) -> tuple[Optional[xarray.Dataset], dict[str, Any]]:
-        """Retrieve the datas of a group indexed by the given path.
-
-        Parameters
-        ----------
-        path: str
-            path of the group that's containe the data
-
-        Returns
-        -------
-        Dataset or None
-            data of the group
-        dict[str, Any]
-            attributes of the group
-
-        Raises
-        ------
-        StoreNotOpenError
-            If the store is closed
-        KeyError
-            There is no data at the given path
-        TypeError
-            You try to extract data from variable directly
-        """
-
-    def __hash__(self) -> int:
-        return id(self)
+    def __delitem__(self, key: str) -> None:
+        raise NotImplementedError()

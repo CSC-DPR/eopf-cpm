@@ -231,6 +231,6 @@ class EOProduct(EOContainer):
             raise StoreNotDefinedError("Store must be defined")
         if self.store.status == StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open")
-        _, attrs = self.store.get_data("")
-        self.attrs.update(attrs)
+        group = self.store[""]
+        self.attrs.update(group.attrs)
         return super().load()
