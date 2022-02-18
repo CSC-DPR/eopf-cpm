@@ -138,6 +138,8 @@ class EOObject(EOAbstract):
     def relative_path(self) -> Iterable[str]:
         rel_path: list[str] = list()
         if self.parent is not None:
+            if self.parent._is_root:
+                return ["/"]
             rel_path.extend(self.parent.relative_path)
             rel_path.append(self.parent.name)
         return rel_path

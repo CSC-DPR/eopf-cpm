@@ -441,3 +441,7 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
 
     def _ipython_key_completions_(self) -> list[str]:
         return [key for key in self.keys()]
+
+    @property
+    def _is_root(self) -> "bool":
+        return False
