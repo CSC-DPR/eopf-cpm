@@ -139,7 +139,8 @@ def test_load_product_from_zarr(zarr_file, fs: FakeFilesystem):
         assert_contain(product, "measurements/group2", EOGroup)
     with pytest.raises(KeyError):
         assert_contain(product, "measurements/group1/variable_d", EOVariable)
-    with pytest.raises(TypeError):
+
+    with (product.open(mode="r"), pytest.raises(TypeError)):
         product.store["an_utem"] = "A_Value"
 
 
