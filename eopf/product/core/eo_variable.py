@@ -19,8 +19,7 @@ from eopf.product.core.eo_object import EOObject
 from ..formatting import renderer
 
 if TYPE_CHECKING:  # pragma: no cover
-    from eopf.product.core.eo_group import EOGroup
-    from eopf.product.core.eo_product import EOProduct
+    from eopf.product.core.eo_container import EOContainer
 
 
 class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
@@ -55,7 +54,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         self,
         name: str = "",
         data: Optional[Any] = None,
-        parent: Optional[Union["EOGroup", "EOProduct"]] = None,
+        parent: Optional["EOContainer"] = None,
         attrs: Optional[MutableMapping[str, Any]] = None,
         coords: MutableMapping[str, Any] = {},
         dims: tuple[str, ...] = tuple(),

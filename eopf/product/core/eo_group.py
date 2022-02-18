@@ -1,5 +1,5 @@
 from collections.abc import MutableMapping
-from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
+from typing import TYPE_CHECKING, Any, Iterator, Optional
 
 import xarray
 
@@ -73,7 +73,7 @@ class EOGroup(EOContainer, EOObject):
         self._dataset = dataset
         EOObject.__init__(self, name, parent, coords=coords, retrieve_dims=dims)
 
-    def _get_item(self, key: str) -> Union[EOVariable, "EOGroup"]:
+    def _get_item(self, key: str) -> "EOObject":
         if key in self._dataset:
             return EOVariable(key, self._dataset[key], self)
         return super()._get_item(key)

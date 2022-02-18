@@ -187,7 +187,7 @@ class EOProduct(EOContainer):
             print("|" + " " * level + "├──", g[0])
             self._create_structure(g, level + 2)
 
-    def tree(self) -> Union["EOProduct", None]:
+    def tree(self) -> Optional["EOProduct"]:
         """Display the hierarchy of the product.
 
         Returns

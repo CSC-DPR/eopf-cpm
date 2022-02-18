@@ -1,6 +1,6 @@
 import itertools as it
 from types import MappingProxyType
-from typing import TYPE_CHECKING, Any, Iterable, MutableMapping, Optional, Union
+from typing import TYPE_CHECKING, Any, Iterable, MutableMapping, Optional
 
 from eopf.exceptions import EOObjectMultipleParentError, InvalidProductError
 from eopf.product.core.eo_abstract import EOAbstract
@@ -9,7 +9,6 @@ from eopf.product.utils import join_eo_path, join_path
 
 if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_container import EOContainer
-    from eopf.product.core.eo_group import EOGroup
     from eopf.product.core.eo_product import EOProduct
     from eopf.product.core.eo_variable import EOVariable
 
@@ -40,7 +39,7 @@ class EOObject(EOAbstract):
     def __init__(
         self,
         name: str,
-        parent: "Optional[Union[EOGroup, EOProduct]]" = None,
+        parent: "Optional[EOContainer]" = None,
         coords: MutableMapping[str, Any] = {},
         retrieve_dims: tuple[str, ...] = tuple(),
     ) -> None:
@@ -77,7 +76,7 @@ class EOObject(EOAbstract):
             self.product.coordinates.add_variable(path, data=coords_value)
             self.assign_dims([path])
 
-    def _repath(self, name: str, parent: "Optional[Union[EOGroup, EOProduct]]") -> None:
+    def _repath(self, name: str, parent: "Optional[EOContainer]") -> None:
         """Set the name, product and relative_path attributes of this EObject.
          This method won't repath the object in a way that result in it being the child of multiple product,
          or at multiple path.
@@ -113,7 +112,7 @@ class EOObject(EOAbstract):
         return self._name
 
     @property
-    def parent(self) -> "Optional[Union[EOContainer, EOProduct]]":
+    def parent(self) -> "Optional[EOContainer]":
         """
         Parent COntainer/Product of this object in it's Product.
         Returns
