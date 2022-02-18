@@ -57,7 +57,7 @@ class EOHDF5Store(EOProductStore):
         obj = self._fs[key]
         if self.is_group(key):
             return EOGroup(attrs=obj.attrs)
-        return EOVariable(data=obj[()], attrs=obj.attrs, chunks=obj.chunks)
+        return EOVariable(data=obj[()], attrs=obj.attrs)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
         if self._fs is None:
