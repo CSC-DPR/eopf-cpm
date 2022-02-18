@@ -145,9 +145,8 @@ def test_load_product_from_zarr(zarr_file, fs: FakeFilesystem):
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize("_type", [EOZarrStore])
-def test_write_stores(fs: FakeFilesystem, _type: type[EOProductStore]):
-    store = _type("product_name")
+def test_write_zarr_stores(fs: FakeFilesystem):
+    store = EOZarrStore("product_name")
 
     store.open(mode="w")
     store.add_group("a_group")
@@ -175,7 +174,7 @@ def test_read_stores(fs: FakeFilesystem, _type: type[EOProductStore]):
     store = _type("a_product")
 
     store.open(mode="w")
-    store.add_group("a_group")
+    store["a_group"] = EOGroup()
     store.close()
 
     store.open(mode="r")
@@ -206,10 +205,7 @@ def test_store_must_be_open(fs: FakeFilesystem, _type: type[EOProductStore]):
         store["a_group"]
 
     with pytest.raises(StoreNotOpenError):
-        store.add_group("a_group")
-
-    with pytest.raises(StoreNotOpenError):
-        store.add_variables("a_group", xarray.Dataset())
+        store["a_group"] = EOGroup(variables={})
 
     with pytest.raises(StoreNotOpenError):
         store.is_group("a_group")
@@ -227,9 +223,6 @@ def test_store_must_be_open(fs: FakeFilesystem, _type: type[EOProductStore]):
         store.write_attrs("a_group", attrs={})
 
     with pytest.raises(StoreNotOpenError):
-        store.delete_attr("a_group", "attr")
-
-    with pytest.raises(StoreNotOpenError):
         for i in store:
             continue
 
@@ -239,9 +232,9 @@ def test_store_must_be_open(fs: FakeFilesystem, _type: type[EOProductStore]):
 def test_store_structure(fs: FakeFilesystem, _type: type[EOProductStore]):
     store = _type("a_product")
     store.open(mode="w")
-    store.add_group("a_group")
-    store.add_group("another_one")
-    store.add_group("a_final_one")
+    store["a_group"] = EOGroup()
+    store["another_one"] = EOGroup()
+    store["a_final_one"] = EOGroup()
 
     assert store["a_group"] is not None
 
