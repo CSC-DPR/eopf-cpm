@@ -3,7 +3,6 @@ from typing import (
     Any,
     Callable,
     Hashable,
-    Iterable,
     Iterator,
     Mapping,
     MutableMapping,
@@ -20,7 +19,7 @@ from eopf.product.core.eo_object import EOObject
 from ..formatting import renderer
 
 if TYPE_CHECKING:  # pragma: no cover
-    from eopf.product.core.eo_product import EOProduct
+    from eopf.product.core.eo_container import EOContainer
 
 
 class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
@@ -55,8 +54,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         self,
         name: str = "",
         data: Optional[Any] = None,
-        product: Optional["EOProduct"] = None,
-        relative_path: Optional[Iterable[str]] = None,
+        parent: Optional["EOContainer"] = None,
         attrs: Optional[MutableMapping[str, Any]] = None,
         coords: MutableMapping[str, Any] = {},
         dims: tuple[str, ...] = tuple(),
@@ -67,7 +65,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         if data is None:
             data = xarray.DataArray()
         self._data: xarray.DataArray = data
-        EOObject.__init__(self, name, product, relative_path=relative_path, coords=coords, retrieve_dims=dims)
+        EOObject.__init__(self, name, parent, coords=coords, retrieve_dims=dims)
 
     def _init_similar(self, data: xarray.DataArray) -> "EOVariable":
         return EOVariable(name="", data=data)
@@ -241,8 +239,6 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
                 missing_dims=missing_dims,
                 **indexers_kwargs,
             ),
-            self._product,
-            relative_path=self._relative_path,
         )
 
     def sel(
@@ -324,8 +320,6 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
                 drop=drop,
                 **indexers_kwargs,
             ),
-            self._product,
-            relative_path=self._relative_path,
         )
 
     def plot(self, **kwargs: dict[Any, Any]) -> None:
@@ -347,7 +341,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
             warnings.warn(f"Cannot display plot. Error {e}")
 
     def __getitem__(self, key: Any) -> "EOVariable":
-        return EOVariable(key, self._data[key], self._product, relative_path=self._relative_path)
+        return EOVariable(key, self._data[key])
 
     def __setitem__(self, key: Any, value: Any) -> None:
         self._data[key] = value
@@ -357,7 +351,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
 
     def __iter__(self) -> Iterator["EOVariable"]:
         for data in self._data:
-            yield EOVariable(data.name, data, self._product, relative_path=self._relative_path)
+            yield EOVariable(data.name, data)
 
     def __len__(self) -> int:
         return len(self._data)
@@ -366,7 +360,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return self.__repr__()
 
     def __repr__(self) -> str:
-        return f'{self._product!r} -> {"->".join(self._relative_path)} -> {self.name}'
+        return f'{self.product!r} -> {"->".join(self.relative_path)} -> {self.name}'
 
     def _repr_html_(self) -> str:
         return renderer("variable.html", variable=self)
