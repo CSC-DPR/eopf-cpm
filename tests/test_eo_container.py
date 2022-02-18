@@ -137,7 +137,7 @@ def test_browse_product(product):
 
     with (
         patch.object(EmptyTestStore, "iter", return_value=iter(["a", "b"])) as iter_method,
-        patch.object(EmptyTestStore, "get_data", return_value=(None, {})),
+        patch.object(EmptyTestStore, "__getitem__", return_value=EOGroup()),
         product.open(mode="r"),
     ):
         assert sorted(["group0", "measurements", "coordinates", "a", "b"]) == sorted([i for i in product])
