@@ -88,6 +88,20 @@ class EOZarrStore(EOProductStore):
         self._root[group_path].attrs.update(attrs)
 
     def delete_attr(self, group_path: str, attr_name: str) -> None:
+        """Delete the specific attributes
+
+        Parameters
+        ----------
+        group_path: str
+            path of the object corresponding to the attributes
+        attr_name: str
+            name of the attributes to delete
+
+        Raises
+        ------
+        StoreNotOpenError
+            If the store is closed
+        """
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         del self._root[group_path].attrs[attr_name]

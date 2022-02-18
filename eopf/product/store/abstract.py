@@ -136,23 +136,6 @@ class EOProductStore(MutableMapping[str, Any]):
         """
 
     @abstractmethod
-    def delete_attr(self, group_path: str, attr_name: str) -> None:
-        """Delete the specific attributes
-
-        Parameters
-        ----------
-        group_path: str
-            path of the object corresponding to the attributes
-        attr_name: str
-            name of the attributes to delete
-
-        Raises
-        ------
-        StoreNotOpenError
-            If the store is closed
-        """
-
-    @abstractmethod
     def iter(self, path: str) -> Iterator[str]:
         """Iter over the given path
 
