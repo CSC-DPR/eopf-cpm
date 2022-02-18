@@ -1,5 +1,4 @@
-from unittest.mock import patch
-
+import h5py
 import pytest
 import xarray
 import zarr
@@ -8,6 +7,7 @@ from pyfakefs.fake_filesystem import FakeFilesystem
 from eopf.exceptions import StoreNotOpenError
 from eopf.product.core import EOGroup, EOProduct, EOVariable
 from eopf.product.store import EOProductStore, EOZarrStore
+from eopf.product.store.hdf5 import EOHDF5Store
 
 from .utils import assert_contain
 
@@ -145,14 +145,11 @@ def test_load_product_from_zarr(zarr_file, fs: FakeFilesystem):
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize("_type", [EOZarrStore])
-def test_write_stores(fs: FakeFilesystem, _type: type[EOProductStore]):
-    store = _type("product_name")
+def test_write_zarr_stores(fs: FakeFilesystem):
+    store = EOZarrStore("product_name")
 
     store.open(mode="w")
-    store.add_group("a_group")
-    with patch.object(xarray.Dataset, "to_zarr", return_value=None):
-        store.add_variables("a_group", xarray.Dataset())
+    store["a_group"] = EOGroup()
     store.write_attrs("a_group", attrs={"description": "value"})
     store.close()
     z = zarr.open("product_name", mode="r")
@@ -170,12 +167,38 @@ def test_write_stores(fs: FakeFilesystem, _type: type[EOProductStore]):
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize("_type", [EOZarrStore])
+def test_write_hdf5_stores():
+    import tempfile
+
+    tf = tempfile.TemporaryFile()
+    store = EOHDF5Store(tf)
+    store.open(mode="w")
+    store["a_group"] = EOGroup()
+    store.write_attrs("a_group", attrs={"description": "value"})
+    store.close()
+
+    tf.seek(0)
+    f = h5py.File(tf, mode="r")
+    assert f["a_group"].attrs == {"description": "value"}
+    f.close()
+
+    store.open(mode="r+", store_or_path_url=tf)
+    assert "a_group" in store
+
+    f = h5py.File(tf, mode="r")
+    assert f["a_group"].attrs == {"description": "value"}
+    f.close()
+
+    store.close()
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize("_type", [EOZarrStore, EOHDF5Store])
 def test_read_stores(fs: FakeFilesystem, _type: type[EOProductStore]):
     store = _type("a_product")
 
     store.open(mode="w")
-    store.add_group("a_group")
+    store["a_group"] = EOGroup()
     store.close()
 
     store.open(mode="r")
@@ -195,21 +218,18 @@ def test_abstract_store_cant_be_instantiate():
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize("_type", [EOZarrStore])
+@pytest.mark.parametrize("_type", [EOZarrStore, EOHDF5Store])
 def test_store_must_be_open(fs: FakeFilesystem, _type: type[EOProductStore]):
     store = _type("a_product")
-
-    with pytest.raises(StoreNotOpenError):
-        del store["a_group"]
 
     with pytest.raises(StoreNotOpenError):
         store["a_group"]
 
     with pytest.raises(StoreNotOpenError):
-        store.add_group("a_group")
+        store["a_group"] = EOGroup()
 
     with pytest.raises(StoreNotOpenError):
-        store.add_variables("a_group", xarray.Dataset())
+        store["a_variable"] = EOVariable()
 
     with pytest.raises(StoreNotOpenError):
         store.is_group("a_group")
@@ -227,21 +247,18 @@ def test_store_must_be_open(fs: FakeFilesystem, _type: type[EOProductStore]):
         store.write_attrs("a_group", attrs={})
 
     with pytest.raises(StoreNotOpenError):
-        store.delete_attr("a_group", "attr")
-
-    with pytest.raises(StoreNotOpenError):
         for i in store:
             continue
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize("_type", [EOZarrStore])
+@pytest.mark.parametrize("_type", [EOZarrStore, EOHDF5Store])
 def test_store_structure(fs: FakeFilesystem, _type: type[EOProductStore]):
     store = _type("a_product")
     store.open(mode="w")
-    store.add_group("a_group")
-    store.add_group("another_one")
-    store.add_group("a_final_one")
+    store["a_group"] = EOGroup()
+    store["another_one"] = EOGroup()
+    store["a_final_one"] = EOGroup()
 
     assert store["a_group"] is not None
 
