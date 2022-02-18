@@ -1,5 +1,5 @@
 from collections.abc import MutableMapping
-from typing import TYPE_CHECKING, Any, Iterable, Iterator, Optional, Union
+from typing import TYPE_CHECKING, Any, Iterator, Optional
 
 from eopf.exceptions import StoreNotDefinedError
 from eopf.product.core.eo_container import EOContainer
@@ -51,8 +51,7 @@ class EOGroup(EOContainer, EOObject):
     def __init__(
         self,
         name: str = "",
-        product: "Optional[EOProduct]" = None,
-        relative_path: Optional[Iterable[str]] = None,
+        parent: "Optional[EOProduct]" = None,
         variables: Optional[dict[str, EOVariable]] = None,
         attrs: Optional[MutableMapping[str, Any]] = None,
         coords: MutableMapping[str, Any] = {},
@@ -71,9 +70,10 @@ class EOGroup(EOContainer, EOObject):
         self._variables = variables
         EOObject.__init__(self, name, product, relative_path, coords=coords, retrieve_dims=dims)
 
-    def _get_item(self, key: str) -> Union[EOVariable, "EOGroup"]:
+    def _get_item(self, key: str) -> "EOObject":
         if key in self._variables:
             return self._variables[key]
+
         return super()._get_item(key)
 
     def __delitem__(self, key: str) -> None:
@@ -125,10 +125,11 @@ class EOGroup(EOContainer, EOObject):
     def _add_local_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> EOVariable:
 
         if not isinstance(data, EOVariable):
-            variable = EOVariable(name, data, self.product, relative_path=[*self._relative_path, self._name], **kwargs)
+            variable = EOVariable(name, data, self, **kwargs)
         else:
             variable = data
         self._variables[name] = variable
+
         return variable
 
     def write(self) -> None:

@@ -46,6 +46,10 @@ class EOProduct(EOContainer):
         self.__set_store(store_or_path_url=store_or_path_url)
 
     @property
+    def _is_root(self) -> "bool":
+        return True
+
+    @property
     def attributes(self) -> dict[str, Any]:
         """Attributes
 
@@ -187,7 +191,7 @@ class EOProduct(EOContainer):
             print("|" + " " * level + "├──", g[0])
             self._create_structure(g, level + 2)
 
-    def tree(self) -> Union["EOProduct", None]:
+    def tree(self) -> Optional["EOProduct"]:
         """Display the hierarchy of the product.
 
         Returns
