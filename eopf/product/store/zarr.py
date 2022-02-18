@@ -172,6 +172,8 @@ class EOZarrStore(EOProductStore):
     def __setitem__(self, key: str, value: "EOObject") -> None:
         from eopf.product.core import EOGroup, EOVariable
 
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
         if isinstance(value, EOGroup):
             self._root.create_group(key, overwrite=True)
         elif isinstance(value, EOVariable):
