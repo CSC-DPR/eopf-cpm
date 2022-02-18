@@ -31,3 +31,4 @@ dependencies:
     - isort==5.10.1
     - docstr-coverage==2.1.1
     - xenon==0.8.0
+    - h5py==3.6.0

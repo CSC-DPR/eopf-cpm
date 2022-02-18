@@ -177,7 +177,7 @@ class EOZarrStore(EOProductStore):
         if isinstance(value, EOGroup):
             self._root.create_group(key, overwrite=True)
         elif isinstance(value, EOVariable):
-            self._root.create_dataset(key)
+            self._root.create_dataset(key, data=value._data)
             zarr.consolidate_metadata(self.sep.join([self._root.store.path, self._root[key].path]))
         else:
             raise TypeError("Only EOGroup and EOVariable can be set")
