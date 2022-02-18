@@ -140,7 +140,6 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
         )
 
     def _store_key(self, key: str) -> str:
-    
         """Helper to construct a store specific path of a sub object.
 
         Parameters
