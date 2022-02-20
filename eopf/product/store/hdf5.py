@@ -25,7 +25,6 @@ class EOHDF5Store(EOProductStore):
         super().__init__(url)
         self.url = url
         self._root_name = root_name
-        self.current_node: h5py.Group = None
         self.current_variable = None
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
@@ -166,10 +165,8 @@ class EOHDF5Store(EOProductStore):
         """
         if self._fs is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        #self.current_node = self._fs.create_group(join_path(*relative_path, name))
-        self.current_node = self._fs.create_group(join_path(self._root_name, *relative_path, name))
-        #self.current_node = self._fs.create_group(os.path.join(self._root_name, *relative_path, name))
-
+        path = join_path(*relative_path, name, sep=self.sep)
+        self._fs.create_group(path)
 
     def add_variables(self, name: str, dataset: xr.Dataset, relative_path: Iterable[str] = []) -> None:
         """write variables over the store
@@ -183,10 +180,8 @@ class EOHDF5Store(EOProductStore):
         """
         if self._fs is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        #self.current_variable = self.current_node.create_dataset(join_path(*relative_path, name), data=dataset)
-        self.current_variable = self.current_node.create_dataset(join_path(self._root_name, *relative_path, name), data=dataset)
-        #self.current_variable = self.current_node.create_dataset(os.path.join(self._root_name, *relative_path, name), data=dataset)
-        
+        path = join_path(*relative_path, name, sep=self.sep)
+        self.current_variable = self._fs.create_dataset(path, data=dataset)
 
     def _h5_group(self, eogroup: EOGroup, relative_path: Iterable[str] = []) -> None:
         """
@@ -197,12 +192,12 @@ class EOHDF5Store(EOProductStore):
         relative_path: path of the new group
         ----------
         """
+       
         self.add_group(eogroup.name, relative_path)
 
-        #json_dict = EOHDF5Store.json_serializable_dict_of(eogroup.attrs)
+        json_dict = EOHDF5Store.json_serializable_dict_of(eogroup.attrs)
         #self._set_attr(current_node, json_dict)
-
-        path = itertools.chain(relative_path, [eogroup.name])
+        
         for key, eovar in eogroup.variables:
             json_dict_ = EOHDF5Store.json_serializable_dict_of(eovar.attrs)
 
@@ -215,9 +210,10 @@ class EOHDF5Store(EOProductStore):
             
             if eovar._data.dtype !=  np.dtype('O'):
                 
-                self.add_variables(eovar.name, da, path)
+                self.add_variables(eogroup.name+'/'+eovar.name, da, relative_path)
                 self._set_attr(self.current_variable, json_dict_)
 
+        path: Iterable = (relative_path + [eogroup.name])
         if eogroup.groups is not None:
             for key, g in eogroup.groups:
                 self._h5_group(g, path)
@@ -232,7 +228,7 @@ class EOHDF5Store(EOProductStore):
         """
         self.open("w")
         self._fs.create_group(self._root_name)
-        path:Iterable = ([''])
+        path:Iterable = ([self._root_name])
 
         # eogroup: Union[EOVariable, "EOGroup"] = product._get_group("attributes")
         # if isinstance(eogroup, EOGroup) and eogroup is not None:
@@ -376,8 +372,6 @@ class EOHDF5Store(EOProductStore):
             for key in obj.keys():
                 if type(obj[key]) == h5py._hl.dataset.Dataset:
                     str_dict = ""
-                    #for attr in obj[key].attrs:
-                    #    str_dict = str_dict + str(attr)+ " "
                     for key_ in obj[key].attrs.keys():
                         str_dict = str_dict + key_ + "=" +str(obj[key].attrs[key_]) + ", "
                     vars[key] = str_dict
