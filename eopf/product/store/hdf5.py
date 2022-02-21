@@ -70,7 +70,6 @@ class EOHDF5Store(EOProductStore):
     def __getitem__(self, key: str) -> "EOObject":
         if self._fs is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        from eopf.product.core import EOGroup, EOVariable
 
         obj = self._fs[key]
         if self.is_group(key):
@@ -80,12 +79,12 @@ class EOHDF5Store(EOProductStore):
     def __setitem__(self, key: str, value: "EOObject") -> None:
         if self._fs is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        from eopf.product.core import EOGroup, EOVariable
 
         if isinstance(value, EOGroup):
             self._fs.create_group(key)
         elif isinstance(value, EOVariable):
-            self._fs.create_dataset(key, value._data)
+            da = xr.DataArray(data=value._data)
+            ds = self._fs.create_dataset(key, data=da)
         else:
             raise TypeError("Only EOGroup and EOVariable can be set")
         self.write_attrs(key, value.attrs)
@@ -100,81 +99,6 @@ class EOHDF5Store(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         return len(self._fs)
 
-    def listdir(self, path: Optional[str] = None) -> Any:
-        """list the given path on the store, or the root if no path.
-
-        Parameters
-        ----------
-        path: str, optional
-            path to list on the store
-        """
-        raise NotImplementedError()
-
-    def rmdir(self, path: Optional[str] = None) -> None:
-        """remove the given path on the store, or the root if no path.
-
-        Parameters
-        ----------
-        path: str, optional
-            path to remove on the store
-        """
-        raise NotImplementedError()
-
-    def clear(self) -> None:
-        """clear all the store from root path"""
-        raise NotImplementedError()
-
-    def getsize(self, path: Optional[str] = None) -> Any:
-        """return size under the path or root if no path given
-
-        Parameters
-        ----------
-        path: str, optional
-            path to get size on the store
-        """
-        raise NotImplementedError()
-
-    def dir_path(self, path: Optional[str] = None) -> Any:
-        """return directory path of the given path or root
-
-        Parameters
-        ----------
-        path: str, optional
-            path to get directory on the store
-        """
-        raise NotImplementedError()
-    
-    def add_group(self, name: str, relative_path: Iterable[str] = []) -> None:
-        """write a group over the store
-
-        Parameters
-        ----------
-        name: str
-            name of the group
-        relative_path: Iterable[str], optional
-            list of all parents from root
-        """
-        if self._fs is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        self._fs.create_group(join_path(*relative_path, name, sep=self.sep))
-
-    def add_variables(self, name: str, dataset: xr.Dataset, attrs: Any, relative_path: Iterable[str] = []) -> None:
-        """write variables over the store
-
-        Parameters
-        ----------
-        name: str
-            name of the dataset
-        relative_path: Iterable[str], optional
-            list of all parents from root
-        """
-        if self._fs is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        dset = self._fs.create_dataset(join_path(*relative_path, name, sep=self.sep), data=dataset)
-
-        for attr in attrs:
-            dset.attrs[attr] = attrs[attr]
-
     def _h5_group(self, eogroup: EOGroup, relative_path: Iterable[str] = []) -> None:
         """
         Iterate through groups in EOProduct and creates hdf5 groups, variables, datasets and attributes
@@ -184,26 +108,12 @@ class EOHDF5Store(EOProductStore):
         relative_path: path of the new group
         ----------
         """
-       
-        self.add_group(eogroup.name, relative_path)
 
-        json_dict = EOHDF5Store.json_serializable_dict_of(eogroup.attrs)
-        #self._set_attr(current_node, json_dict)
-        
+        self.__setitem__(join_path(*relative_path, eogroup.name, sep=self.sep), eogroup)
+
         for key, eovar in eogroup.variables:
-            json_dict_ = EOHDF5Store.json_serializable_dict_of(eovar.attrs)
-
-            #if eovar.dims:
-            da = xr.DataArray(data=eovar._data.values)
-
-            if json_dict_ is not None:
-                if "_FillValue" in json_dict_:
-                    da.fillna(json_dict_["_FillValue"])
-            
-            if eovar._data.dtype !=  np.dtype('O'):
-                
-                self.add_variables(eogroup.name+'/'+eovar.name, da, json_dict_, relative_path)
-
+            self.__setitem__(join_path(*relative_path, eogroup.name+'/'+eovar.name, sep=self.sep), eovar)
+           
         path: Iterable = (relative_path + [eogroup.name])
         if eogroup.groups is not None:
             for key, g in eogroup.groups:
@@ -381,51 +291,16 @@ class EOHDF5Store(EOProductStore):
         ----------
         """
         self.open()
-        dict = EOHDF5Store.json_dict()
+        dict = EOHDF5Store.json_empty_dict()
         if dump_type == "var":
-                vrs = EOHDF5Store.json_dict()
-                dict = self._get_dict_vars(self._fs.get(group), vrs)
+                dict = self._get_dict_vars(self._fs.get(group), dict)
         elif dump_type == "gr":
-                gr = EOHDF5Store.json_dict()
-                dict = self._get_dict_group(self._fs.get(group), gr)
+                dict = self._get_dict_group(self._fs.get(group), dict)
         self.close()
         return dict
 
-    def _set_attr(self, h5_node: h5py.Group, attrs: Any) -> None:
-        """
-        Set attributes to a node
-        Parameters:
-        ----------
-        h5_node: the HDF5 node to which it is added attributes
-        attrs: the attributes to be added
-        ----------
-        """
-        for attr in attrs:
-            h5_node.attrs[attr] = attrs[attr]
-
     @staticmethod
-    def json_serializable_dict_of(attrs: Any) -> Any:
-        """
-        Creates a JSON dict from attributes
-        Parameters
-        ----------
-        attrs: attributes
-        ----------
-        """
-        result = dict()
-        for attr in attrs:
-            value = attrs[attr]
-            if isinstance(value, np.integer):
-                value = int(value)
-            elif isinstance(value, np.floating):
-                value = float(value)
-            elif isinstance(value, np.ndarray):
-                value = value.tolist()
-            result[attr] = value
-        return result
-
-    @staticmethod
-    def json_dict() -> Any:
+    def json_empty_dict() -> Any:
         """
         Creates an empty JSON dict
         """
