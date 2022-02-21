@@ -29,7 +29,6 @@ class EOHDF5Store(EOProductStore):
         super().__init__(url)
         self.url = url
         self._root_name = root_name
-        self.current_variable = None
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         super().open(mode=mode, **kwargs)
@@ -159,7 +158,7 @@ class EOHDF5Store(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         self._fs.create_group(join_path(*relative_path, name, sep=self.sep))
 
-    def add_variables(self, name: str, dataset: xr.Dataset, relative_path: Iterable[str] = []) -> None:
+    def add_variables(self, name: str, dataset: xr.Dataset, attrs: Any, relative_path: Iterable[str] = []) -> None:
         """write variables over the store
 
         Parameters
@@ -171,7 +170,10 @@ class EOHDF5Store(EOProductStore):
         """
         if self._fs is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        self.current_variable = self._fs.create_dataset(join_path(*relative_path, name, sep=self.sep), data=dataset)
+        dset = self._fs.create_dataset(join_path(*relative_path, name, sep=self.sep), data=dataset)
+
+        for attr in attrs:
+            dset.attrs[attr] = attrs[attr]
 
     def _h5_group(self, eogroup: EOGroup, relative_path: Iterable[str] = []) -> None:
         """
@@ -200,9 +202,7 @@ class EOHDF5Store(EOProductStore):
             
             if eovar._data.dtype !=  np.dtype('O'):
                 
-                self.add_variables(eogroup.name+'/'+eovar.name, da, relative_path)
-                self._set_attr(self.current_variable, json_dict_)
-                #self.write_attrs(eogroup.name+'/'+eovar.name, json_dict_)
+                self.add_variables(eogroup.name+'/'+eovar.name, da, json_dict_, relative_path)
 
         path: Iterable = (relative_path + [eogroup.name])
         if eogroup.groups is not None:
