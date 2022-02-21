@@ -60,10 +60,11 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         dims: tuple[str, ...] = tuple(),
         **kwargs: Any,
     ):
+        attrs = dict(attrs) if attrs is not None else {}
         if not isinstance(data, (xarray.DataArray, EOVariable)) and data is not None:
             data = xarray.DataArray(data=data, name=name, attrs=attrs, **kwargs)
         if data is None:
-            data = xarray.DataArray()
+            data = xarray.DataArray(name=name, attrs=attrs, **kwargs)
         self._data: xarray.DataArray = data
         EOObject.__init__(self, name, parent, coords=coords, retrieve_dims=dims)
 

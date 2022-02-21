@@ -291,9 +291,7 @@ def test_multipleparent_setitem(product):
     with pytest.raises(EOObjectMultipleParentError):
         product["measurements/group1"]["variable_v8"] = EOVariable(
             "variable_v7",
-            None,
-            product,
-            ["/", "measurements", "group2"],
+            parent=product,
         )
 
 
