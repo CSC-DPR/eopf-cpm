@@ -43,7 +43,6 @@ class EOHDF5Store(EOProductStore):
         self._fs.close()
         self._fs = None
         self._root = None
-        
 
     def is_group(self, path: str) -> bool:
         if self._fs is None:
@@ -128,8 +127,8 @@ class EOHDF5Store(EOProductStore):
         ----------
         """
         self.open("w")
-        self._fs.create_group(self._root_name)
-        path:Iterable = ([self._root_name])
+        #self._fs.create_group(self._root_name)
+        path:Iterable = (["/"])
 
         for name, group in product._groups.items():
             self._h5_group(group, path)
