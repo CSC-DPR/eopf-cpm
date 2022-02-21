@@ -23,9 +23,13 @@ class SafeHierarchy(EOProductStore):
         return iter(self._child_list)
 
     def is_group(self, path: str) -> bool:
+        if path == "" or path == "/":
+            return True
         raise NotImplementedError
 
     def is_variable(self, path: str) -> bool:
+        if path == "" or path == "/":
+            return False
         raise NotImplementedError
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
@@ -87,6 +91,7 @@ class EOSafeStore(EOProductStore):
             mapping_factory = MappingFactory(default_mappings=True)
         if url[-1] != "/":
             url = url + "/"
+        # FIXME Need to think of a way to manage urlak ospath on windows. Especially with the path in the json.
         super().__init__(url)
         self._store_factory = store_factory
         self._mapping_factory = mapping_factory
@@ -160,7 +165,7 @@ class EOSafeStore(EOProductStore):
         local_path: list[str] = []
         while safe_target_path not in self._config_mapping:
             safe_target_path, name = upsplit_eo_path(safe_target_path)
-            if target_path is None:
+            if safe_target_path is None:
                 raise KeyError("Path not found in the configuration")
             local_path.insert(0, name)
         return safe_target_path, join_eo_path(*local_path)
