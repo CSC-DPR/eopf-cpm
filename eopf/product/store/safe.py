@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional
+from typing import TYPE_CHECKING, Any, Iterator, MutableMapping
 
 from eopf.exceptions import StoreNotOpenError
 
@@ -15,11 +15,11 @@ if TYPE_CHECKING:
 class SafeHierarchy(EOProductStore):
     """A very simple Store implementation allowing to iterate over a group direct child."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__("")
-        self._child_list = []
+        self._child_list: list[str] = []
 
-    def __iter__(self) -> Iterator["EOObject"]:
+    def __iter__(self) -> Iterator[str]:
         return iter(self._child_list)
 
     def is_group(self, path: str) -> bool:
@@ -48,7 +48,7 @@ class SafeHierarchy(EOProductStore):
     def __len__(self) -> int:
         return len(self._child_list)
 
-    def _add_child(self, child_name: str):
+    def _add_child(self, child_name: str) -> None:
         self._child_list.append(child_name)
 
 
@@ -81,27 +81,27 @@ class EOSafeStore(EOProductStore):
         super().__init__(url)
         self._store_factory = store_factory
         self._mapping_factory = mapping_factory
-        self._accessor_map: dict[str, EOProductStore] = None  # map item_format : source path to Store
-        self._config_mapping: dict[str, list[dict[str, Any]]] = None  # map source path to config read from Json
+        self._accessor_map: dict[str, EOProductStore] = dict()  # map item_format : source path to Store
+        self._config_mapping: dict[str, list[dict[str, Any]]] = dict()  # map source path to config read from Json
         self._attrs: dict[str, dict[str, Any]] = dict()
 
-    def _read_json_config(self):
+    def _read_json_config(self) -> None:
         json_data = self._mapping_factory.get_mapping(self.url)
         json_config_list = json_data["data_mapping"]
         for config in json_config_list:
             self._add_data_config(config[self.CONFIG_TARGET], config)
         self._attrs = json_data["metadata_mapping"]
 
-    def _contain_hierarchy_config(self, target_path: str):
+    def _contain_hierarchy_config(self, target_path: str) -> bool:
         if target_path not in self._config_mapping:
             return False
         config_list = self._config_mapping[target_path]
         for existing_config in config_list:
-            if existing_config.source_path == self.SAFE_HIERARCHY_FORMAT:
+            if existing_config[self.CONFIG_FORMAT] == self.SAFE_HIERARCHY_FORMAT:
                 return True
         return False
 
-    def _add_data_config(self, target_path: str, config: dict[str, Any]):
+    def _add_data_config(self, target_path: str, config: dict[str, Any]) -> None:
         if target_path in self._config_mapping:
             self._config_mapping[target_path].append(config)
         else:
@@ -119,31 +119,33 @@ class EOSafeStore(EOProductStore):
             parent_config["target_path"] = source_path_parent
             parent_config["source_path"] = source_path_parent
             parent_config["item_format"] = self.SAFE_HIERARCHY_FORMAT
-            self._add_config(source_path_parent, parent_config)
+            self._add_data_config(source_path_parent, parent_config)
         self._get_accessor(source_path_parent, self.SAFE_HIERARCHY_FORMAT)._add_child(name)
 
-    def _add_accessor(self, file_path: str, item_format: Optional[str] = None):
+    def _add_accessor(self, file_path: str, item_format: str) -> EOProductStore:
+        mapped_store: EOProductStore
         if item_format == "SafeHierarchy":
             mapped_store = self._accessor_map["SafeHierarchy:" + file_path] = SafeHierarchy()
         else:
-            mapped_store = self._store_factory.get_mapping(self, file_path, item_format)
+            mapped_store = self._store_factory.get_store(file_path, item_format)
         self._accessor_map[item_format + ":" + file_path] = mapped_store
+        return mapped_store
 
-    def _get_accessor(self, file_path: str, item_format: Optional[str] = None):
+    def _get_accessor(self, file_path: str, item_format: str) -> EOProductStore:
         if item_format + ":" + file_path in self._accessor_map:
             return self._accessor_map[item_format + ":" + file_path]
         else:
             return self._add_accessor(file_path, item_format)
 
-    def _get_accessors_from_conf(self, conf_path: str):
+    def _get_accessors_from_conf(self, conf_path: str) -> list[EOProductStore]:
         configs = self._config_mapping[conf_path]
         return [
             self._get_accessor(self.url + conf[self.CONFIG_SOURCE_FILE], conf[self.CONFIG_FORMAT]) for conf in configs
         ]
 
-    def _split_target_path(self, target_path):
+    def _split_target_path(self, target_path: str) -> tuple[str, str]:
         safe_target_path = target_path
-        local_path = []
+        local_path: list[str] = []
         while safe_target_path not in self._config_mapping:
             safe_target_path, name = upsplit_eo_path(safe_target_path)
             if target_path is None:
@@ -151,13 +153,13 @@ class EOSafeStore(EOProductStore):
             local_path.insert(0, name)
         return safe_target_path, join_eo_path(*local_path)
 
-    def _eo_obj_fuse(self, eo_obj_list: list[EOObject]):
+    def _eo_obj_fuse(self, eo_obj_list: list[EOObject]) -> EOObject:
         # Should at least merge dims and attributes of EOVariables/Group.
         if len(eo_obj_list) != 1:
             raise NotImplementedError
         return eo_obj_list[0]
 
-    def _apply_properties(self, eo_obj: EOObject):
+    def _apply_properties(self, eo_obj: EOObject) -> EOObject:
         # Should for example add the dims from the json config to an EOVariable.
         return eo_obj
 
@@ -207,7 +209,7 @@ class EOSafeStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         safe_path, accessor_path = self._split_target_path(path)
 
-        key_set = set()
+        key_set: set[str] = set()
         for accessor in self._get_accessors_from_conf(safe_path):
             # Should not throw exception if their store is Open.
             key_set.union(accessor.iter(accessor_path))

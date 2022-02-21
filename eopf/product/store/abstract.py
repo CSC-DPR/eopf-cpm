@@ -159,5 +159,5 @@ class EOProductStore(MutableMapping[str, Any]):
         raise NotImplementedError()
 
     @staticmethod
-    def guess_can_read(file_path: str):
+    def guess_can_read(file_path: str) -> bool:
         return False

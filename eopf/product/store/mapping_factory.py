@@ -3,8 +3,8 @@ from typing import Any
 
 
 class MappingFactory:
-    def __init__(self, default_mappings=True):
-        self.mapping_set = set()
+    def __init__(self, default_mappings: bool = True) -> None:
+        self.mapping_set: set[str] = set()
         if default_mappings:
             self.register_mapping("S3_OL_1_EFR_mapping.json")
 
@@ -12,11 +12,12 @@ class MappingFactory:
         self.mapping_set.add(store_class)
 
     def get_mapping(self, file_path: str) -> dict[str, Any]:
-        for json_mapping_file in self.mapping_set:
-            json_mapping_data = json.load(json_mapping_file)
-            if self.guess_can_read(json_mapping_data, file_path):
-                return json_mapping_data
+        for json_mapping_path in self.mapping_set:
+            with open(json_mapping_path) as json_mapping_file:
+                json_mapping_data = json.load(json_mapping_file)
+                if self.guess_can_read(json_mapping_data, file_path):
+                    return json_mapping_data
         raise KeyError("No registered store compatible with : " + file_path)
 
-    def guess_can_read(self, json_mapping_data: dict[str, Any], file_path: str):
+    def guess_can_read(self, json_mapping_data: dict[str, Any], file_path: str) -> bool:
         return True
