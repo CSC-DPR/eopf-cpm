@@ -1,12 +1,9 @@
 from collections.abc import MutableMapping
 from typing import TYPE_CHECKING, Any, Iterable, Iterator, Optional, Dict, Union
-import fsspec
-import itertools
+
 import contextlib
 import h5py
-import numpy as np
 import xarray as xr
-import os
 
 from eopf.exceptions import StoreNotOpenError
 from eopf.product.store import EOProductStore
@@ -131,7 +128,7 @@ class EOHDF5Store(EOProductStore):
         self._fs.create_group(self._root_name)
         path:Iterable = ([self._root_name])
 
-        # eogroup: Union[EOVariable, "EOGroup"] = product._get_group("attributes")
+        # eogroup: Union[EOVariable, "EOGroup"] = product._get_item("attributes")
         # if isinstance(eogroup, EOGroup) and eogroup is not None:
         #    self._h5_group(f, root, eogroup)
         eogroup1: Union[EOVariable, "EOGroup"] = product._get_item("coordinates")
