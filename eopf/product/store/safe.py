@@ -120,7 +120,10 @@ class EOSafeStore(EOProductStore):
             parent_config["source_path"] = source_path_parent
             parent_config["item_format"] = self.SAFE_HIERARCHY_FORMAT
             self._add_data_config(source_path_parent, parent_config)
-        self._get_accessor(source_path_parent, self.SAFE_HIERARCHY_FORMAT)._add_child(name)
+        safe_hierachy = self._get_accessor(source_path_parent, self.SAFE_HIERARCHY_FORMAT)
+        if not isinstance(safe_hierachy, SafeHierarchy):
+            raise TypeError("Unexpected accessor type.")
+        safe_hierachy._add_child(name)
 
     def _add_accessor(self, file_path: str, item_format: str) -> EOProductStore:
         mapped_store: EOProductStore
