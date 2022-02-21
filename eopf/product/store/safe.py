@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Iterator, MutableMapping
+from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional
 
 from eopf.exceptions import StoreNotOpenError
 
@@ -75,7 +75,16 @@ class EOSafeStore(EOProductStore):
     CONFIG_TARGET = "target_path"
     CONFIG_SOURCE_FILE = "source_path"
 
-    def __init__(self, url: str, store_factory: StoreFactory, mapping_factory: MappingFactory) -> None:
+    def __init__(
+        self,
+        url: str,
+        store_factory: Optional[StoreFactory] = None,
+        mapping_factory: Optional[MappingFactory] = None,
+    ) -> None:
+        if store_factory is None:
+            store_factory = StoreFactory(default_stores=True)
+        if mapping_factory is None:
+            mapping_factory = MappingFactory(default_mappings=True)
         if url[-1] != "/":
             url = url + "/"
         super().__init__(url)

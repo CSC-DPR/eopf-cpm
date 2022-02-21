@@ -5,10 +5,10 @@ from eopf.product.store.zarr import EOZarrStore
 
 
 class StoreFactory:
-    def __init__(self, default_mappings: bool = True) -> None:
+    def __init__(self, default_stores: bool = True) -> None:
         self.item_formats: dict[str, type] = dict()
         self.store_types: set[type] = set()
-        if default_mappings:
+        if default_stores:
             self.register_store(EOZarrStore)
             # self.register_mapping(EONetcdfStore, "netcdf")
 
