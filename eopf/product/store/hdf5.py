@@ -9,7 +9,10 @@ from eopf.exceptions import StoreNotOpenError
 from eopf.product.store import EOProductStore
 from eopf.exceptions import StoreNotOpenError
 from eopf.product.utils import join_path, weak_cache
-from ..core import EOGroup, EOProduct, EOVariable
+#from ..core import EOGroup, EOProduct, EOVariable
+from ..core.eo_product import EOProduct
+from ..core.eo_variable import EOVariable
+from ..core.eo_group import EOGroup
 
 if TYPE_CHECKING:
     from eopf.product.core.eo_object import EOObject
@@ -128,21 +131,9 @@ class EOHDF5Store(EOProductStore):
         self._fs.create_group(self._root_name)
         path:Iterable = ([self._root_name])
 
-        # eogroup: Union[EOVariable, "EOGroup"] = product._get_item("attributes")
-        # if isinstance(eogroup, EOGroup) and eogroup is not None:
-        #    self._h5_group(f, root, eogroup)
-        eogroup1: Union[EOVariable, "EOGroup"] = product._get_item("coordinates")
-        if isinstance(eogroup1, EOGroup):
-            self._h5_group(eogroup1, path)
-        eogroup2: Union[EOVariable, "EOGroup"] = product._get_item("measurements")
-        if isinstance(eogroup2, EOGroup):
-            self._h5_group(eogroup2, path)
-        eogroup3: Union[EOVariable, "EOGroup"] = product._get_item("quality")
-        if isinstance(eogroup3, EOGroup) and eogroup3 is not None:
-            self._h5_group(eogroup3, path)
-        eogroup4: Union[EOVariable, "EOGroup"] = product._get_item("conditions")
-        if isinstance(eogroup4, EOGroup) and eogroup4 is not None:
-            self._h5_group(eogroup4, path)
+        for name, group in product._groups.items():
+            self._h5_group(group, path)
+    
         self.close()
 
     def _descend_obj_all(self, obj: h5py.Group, sep: str = "\t") -> None:
