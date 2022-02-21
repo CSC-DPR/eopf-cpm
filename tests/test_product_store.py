@@ -7,8 +7,9 @@ from pyfakefs.fake_filesystem import FakeFilesystem
 
 from eopf.exceptions import StoreNotOpenError
 from eopf.product.core import EOGroup, EOProduct, EOVariable
-from eopf.product.store import EOProductStore, EOZarrStore
+from eopf.product.store import EOProductStore, EOZarrStore, NetCDFStore
 
+from .decoder import Netcdfdecoder
 from .utils import assert_contain
 
 
@@ -146,7 +147,10 @@ def test_load_product_from_zarr(zarr_file: str, fs: FakeFilesystem):
 
 @pytest.mark.parametrize(
     "store_and_decoder",
-    [(EOZarrStore(zarr.MemoryStore()), zarr.open)],
+    [
+        (EOZarrStore(zarr.MemoryStore()), zarr.open),
+        (NetCDFStore("product.nc"), Netcdfdecoder),
+    ],
 )
 def test_write_stores(fs: FakeFilesystem, store_and_decoder: tuple[EOProductStore, Any]):
     store, decoder_type = store_and_decoder

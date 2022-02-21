@@ -155,7 +155,7 @@ class EOObject(EOAbstract):
         coords_group = self.product.coordinates
         retrieved_coords = {}
         for coord_path, dim in zip(self.attrs.get(_DIMENSIONS_PATHS, ["/"] * len(dims)), dims):
-            if coords := coords_group.get(join_eo_path(coord_path, dim)) is not None:
+            if (coords := coords_group.get(join_eo_path(coord_path, dim))) is not None:
                 retrieved_coords[join_path(coord_path, dim)] = coords
         return MappingProxyType(retrieved_coords)
 
