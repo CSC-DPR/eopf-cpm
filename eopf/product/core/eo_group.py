@@ -136,5 +136,5 @@ class EOGroup(EOContainer, EOObject):
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
         super().write()
-        for var_name in self._variables:
-            self.store[self._store_key(var_name)] = self._variables[var_name]
+        for var_name, item in self._variables.items():
+            self.store[self._store_key(var_name)] = item

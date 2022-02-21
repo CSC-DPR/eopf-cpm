@@ -153,12 +153,11 @@ class EOObject(EOAbstract):
         """MappingProxyType[str, Any]: Coordinates defined by this object"""
         dims = self.dims
         coords_group = self.product.coordinates
-        return MappingProxyType(
-            {
-                join_path(coord_path, dim): coords_group[join_eo_path(coord_path, dim)]
-                for coord_path, dim in zip(self.attrs.get(_DIMENSIONS_PATHS, ["/"] * len(dims)), dims)
-            },
-        )
+        retrieved_coords = {}
+        for coord_path, dim in zip(self.attrs.get(_DIMENSIONS_PATHS, ["/"] * len(dims)), dims):
+            if coords := coords_group.get(join_eo_path(coord_path, dim)) is not None:
+                retrieved_coords[join_path(coord_path, dim)] = coords
+        return MappingProxyType(retrieved_coords)
 
     def get_coordinate(self, name: str, context: Optional[str] = None) -> "EOVariable":
         if context is None:
