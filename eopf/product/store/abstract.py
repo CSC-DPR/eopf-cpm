@@ -157,3 +157,7 @@ class EOProductStore(MutableMapping[str, Any]):
 
     def __delitem__(self, key: str) -> None:
         raise NotImplementedError()
+
+    @staticmethod
+    def guess_can_read(file_path: str):
+        return False
