@@ -16,6 +16,19 @@ if TYPE_CHECKING:
     from eopf.product.core.eo_object import EOObject
 
 
+class H5ls:
+    """This class displays the structure of a hdf5 file, i.e. the names of groups and variables
+    """
+    def __init__(self):
+        items = 0
+
+    def __call__(self, name):
+        items = items+1
+
+    def get_items(self):
+        return self.items
+
+
 class EOHDF5Store(EOProductStore):
 
     def __init__(self, url: str) -> None:
@@ -61,8 +74,8 @@ class EOHDF5Store(EOProductStore):
 
         obj = self._select_node(key)
         if self.is_group(key):
-            return EOGroup(attrs=obj.attrs)
-        return EOVariable(data=obj, attrs=obj.attrs)
+            return EOGroup(name=key, attrs=obj.attrs)
+        return EOVariable(name=key, data=obj, attrs=obj.attrs)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
         if self._fs is None:
@@ -83,9 +96,13 @@ class EOHDF5Store(EOProductStore):
         return it.chain(iter(self._root.keys()))
 
     def __len__(self) -> int:
-        if self._root is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        return len(self._root)
+        #if self._root is None:
+        #    raise StoreNotOpenError("Store must be open before access to it")
+        #return len(self._root)
+        items: int = 0
+        h5ls = H5ls()
+        self._root.visititems(h5ls)
+        return h5ls.get_items()
     
     def _select_node(self, key: str) -> Union[h5py.Group, h5py.Dataset]:
         if key in ["/", ""]:
