@@ -23,6 +23,6 @@ class StoreFactory:
                 return self.item_formats[item_format](file_path, *args, **kwargs)
             raise KeyError("No registered store with format : " + item_format)
         for store_type in self.store_types:
-            if store_type.guess_can_read(file_path):  # type: ignore[attr-defined]
+            if store_type.guess_can_read(file_path):
                 return store_type(file_path, *args, **kwargs)
         raise KeyError("No registered store compatible with : " + file_path)

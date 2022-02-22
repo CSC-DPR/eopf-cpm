@@ -1,4 +1,5 @@
 import itertools as it
+import pathlib
 from collections.abc import MutableMapping
 from typing import TYPE_CHECKING, Any, Iterator, Union
 
@@ -89,3 +90,7 @@ class NetCDFStore(EOProductStore):
         if key in ["/", ""]:
             return self._root
         return self._root[key]
+
+    @staticmethod
+    def guess_can_read(file_path: str) -> bool:
+        return pathlib.Path(file_path).suffix in [".nc"]
