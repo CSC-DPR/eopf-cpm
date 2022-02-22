@@ -2,7 +2,7 @@ from typing import Any, Optional
 
 from eopf.product.store import EOProductStore
 from eopf.product.store.zarr import EOZarrStore
-
+from eopf.product.store.netcdf import NetCDFStore
 
 class StoreFactory:
     def __init__(self, default_stores: bool = True) -> None:
@@ -10,7 +10,7 @@ class StoreFactory:
         self.store_types: set[type] = set()
         if default_stores:
             self.register_store(EOZarrStore)
-            # self.register_mapping(EONetcdfStore, "netcdf")
+            self.register_store(NetCDFStore, "netcdf")
 
     def register_store(self, store_class: type, *args: str) -> None:
         self.store_types.add(store_class)
@@ -23,6 +23,6 @@ class StoreFactory:
                 return self.item_formats[item_format](file_path, *args, **kwargs)
             raise KeyError("No registered store with format : " + item_format)
         for store_type in self.store_types:
-            if store_type.guess_can_read(file_path):  # type: ignore[attr-defined]
+            if store_type.guess_can_read(file_path):
                 return store_type(file_path, *args, **kwargs)
         raise KeyError("No registered store compatible with : " + file_path)
