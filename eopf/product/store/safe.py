@@ -154,11 +154,14 @@ class EOSafeStore(EOProductStore):
         else:
             return self._add_accessor(file_path, item_format)
 
-    def _get_accessors_from_conf(self, conf_path: str) -> list[EOProductStore]:
+    def _get_accessors_from_conf(self, conf_path: str) -> list[(EOProductStore,str)]:
         configs = self._config_mapping[conf_path]
-        return [
-            self._get_accessor(self.url + conf[self.CONFIG_SOURCE_FILE], conf[self.CONFIG_FORMAT]) for conf in configs
-        ]
+        results = list()
+        for conf in configs:
+            accessor_file, accessor_local_path = conf[self.CONFIG_SOURCE_FILE].split(':')
+            results.append((self._get_accessor(self.url + accessor_file, conf[self.CONFIG_FORMAT]),
+                            accessor_local_path))
+        return results
 
     def _split_target_path(self, target_path: str) -> tuple[str, str]:
         safe_target_path = target_path
@@ -197,9 +200,10 @@ class EOSafeStore(EOProductStore):
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
         safe_path, accessor_path = self._split_target_path(path)
-        for accessor in self._get_accessors_from_conf(safe_path):
+        for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
+            config_accessor_path = join_eo_path(config_accessor_path, accessor_path)
             # Stores are not supposed to throw KeyError on is_group
-            if accessor.is_group(accessor_path):
+            if accessor.is_group(config_accessor_path):
                 return True
         return False
 
@@ -207,9 +211,10 @@ class EOSafeStore(EOProductStore):
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
         safe_path, accessor_path = self._split_target_path(path)
-        for accessor in self._get_accessors_from_conf(safe_path):
+        for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
+            config_accessor_path = join_eo_path(config_accessor_path, accessor_path)
             # Stores are not supposed to throw KeyError on is_group
-            if accessor.is_variable(accessor_path):
+            if accessor.is_variable(config_accessor_path):
                 return True
         return False
 
@@ -217,9 +222,10 @@ class EOSafeStore(EOProductStore):
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
         safe_path, accessor_path = self._split_target_path(group_path)
-        for accessor in self._get_accessors_from_conf(safe_path):
+        for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
+            config_accessor_path = join_eo_path(config_accessor_path, accessor_path)
             # We might want to catch Unimplemented/KeyError and throw one if none write_attrs suceed
-            accessor.write_attrs(accessor_path)
+            accessor.write_attrs(config_accessor_path)
 
     def iter(self, path: str) -> Iterator[str]:
         if self.status is StorageStatus.CLOSE:
@@ -227,9 +233,10 @@ class EOSafeStore(EOProductStore):
         safe_path, accessor_path = self._split_target_path(path)
 
         key_set: set[str] = set()
-        for accessor in self._get_accessors_from_conf(safe_path):
+        for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
+            config_accessor_path = join_eo_path(config_accessor_path, accessor_path)
             # Should not throw exception if their store is Open.
-            key_set.union(accessor.iter(accessor_path))
+            key_set.union(accessor.iter(config_accessor_path))
         return iter(key_set)
 
     def __getitem__(self, key: str) -> "EOObject":
@@ -242,9 +249,10 @@ class EOSafeStore(EOProductStore):
         safe_path, accessor_path = self._split_target_path(key)
 
         eo_obj_list = list()
-        for accessor in self._get_accessors_from_conf(safe_path):
+        for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
+            config_accessor_path = join_eo_path(config_accessor_path, accessor_path)
             # We should catch Key Error, and throw if the object isn't found in any of the accessors
-            accessed_object = accessor[accessor_path]
+            accessed_object = accessor[config_accessor_path]
             processed_object = self._apply_properties(accessed_object)
             eo_obj_list.append(processed_object)
         return self._eo_obj_fuse(eo_obj_list)
@@ -254,18 +262,20 @@ class EOSafeStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         safe_path, accessor_path = self._split_target_path(key)
 
-        for accessor in self._get_accessors_from_conf(safe_path):
+        for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
+            config_accessor_path = join_eo_path(config_accessor_path, accessor_path)
             # We should catch Key Error, and throw if the object isn't set in any of the accessors
-            accessor[accessor_path] = accessor  # I hope we don't need to reverse apply_properties.
+            accessor[config_accessor_path] = value  # I hope we don't need to reverse apply_properties.
 
     def __delitem__(self, key: str) -> None:
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
         safe_path, accessor_path = self._split_target_path(key)
 
-        for accessor in self._get_accessors_from_conf(safe_path):
+        for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
+            config_accessor_path = join_eo_path(config_accessor_path, accessor_path)
             # We should catch Key Error, and throw if the object isn't found in any of the accessors
-            del accessor[accessor_path]
+            del accessor[config_accessor_path]
 
     def __len__(self) -> int:
         if self.status is StorageStatus.CLOSE:
