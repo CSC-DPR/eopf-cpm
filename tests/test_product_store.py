@@ -160,10 +160,18 @@ def test_write_stores(fs: FakeFilesystem, store_and_decoder: tuple[EOProductStor
     store.write_attrs("a_group", attrs={"description": "value"})
     store["a_group/a_variable"] = EOVariable(data=[])
     store.close()
+<<<<<<< HEAD
     decoder = decoder_type(store.url, mode="r")
 
     assert dict(decoder["a_group"].attrs) == {"description": "value"}
 
+=======
+
+    decoder = decoder_type(store.url, mode="r")
+
+    assert dict(decoder["a_group"].attrs) == {"description": "value"}
+
+>>>>>>> b975030c5d47b1a024d2818b7830f6a2032c4375
     assert decoder["a_group"] is not None
     assert decoder["a_group/a_variable"] is not None
 
@@ -202,7 +210,11 @@ def test_store_must_be_open(fs: FakeFilesystem, store: EOProductStore):
         store["a_group"]
 
     with pytest.raises(StoreNotOpenError):
+<<<<<<< HEAD
         store["a_group"] = EOGroup()
+=======
+        store["a_group"] = EOGroup(variables={})
+>>>>>>> b975030c5d47b1a024d2818b7830f6a2032c4375
 
     with pytest.raises(StoreNotOpenError):
         store["a_variable"] = EOVariable()
@@ -223,7 +235,11 @@ def test_store_must_be_open(fs: FakeFilesystem, store: EOProductStore):
         store.write_attrs("a_group", attrs={})
 
     with pytest.raises(StoreNotOpenError):
+<<<<<<< HEAD
         for i in store:
+=======
+        for _ in store:
+>>>>>>> b975030c5d47b1a024d2818b7830f6a2032c4375
             continue
 
 

@@ -1,12 +1,10 @@
-from typing import TYPE_CHECKING, Any, Iterable, Iterator, MutableMapping, Optional
+from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional
 
-import xarray
 import zarr
 from zarr.hierarchy import Group
-from zarr.storage import FSStore, array_meta_key, contains_array, contains_group
+from zarr.storage import FSStore, contains_array, contains_group
 
 from eopf.exceptions import StoreNotOpenError
-from eopf.product.utils import join_path
 
 from .abstract import EOProductStore
 
@@ -61,102 +59,15 @@ class EOZarrStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         return contains_array(self._fs, path=path)
 
-    def add_group(self, name: str, relative_path: Iterable[str] = [], attrs: MutableMapping[str, Any] = {}) -> None:
-        """Write a group over the store
-
-        Parameters
-        ----------
-        name: str
-            name of the group
-        relative_path: Iterable[str], optional
-            list of all parents from root level
-        attrs: MutableMapping[str, Any], optional
-            dict like representation of attributes to assign
-
-        Raises
-        ------
-        StoreNotOpenError
-            If the store is closed
-        """
-        if self._root is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        self._root.create_group(join_path(*relative_path, name, sep=self.sep)).attrs.update(attrs)
-
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         self._root[group_path].attrs.update(attrs)
 
-    def delete_attr(self, group_path: str, attr_name: str) -> None:
-        """Delete the specific attributes
-
-        Parameters
-        ----------
-        group_path: str
-            path of the object corresponding to the attributes
-        attr_name: str
-            name of the attributes to delete
-
-        Raises
-        ------
-        StoreNotOpenError
-            If the store is closed
-        """
-        if self._root is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        del self._root[group_path].attrs[attr_name]
-
-    def add_variables(self, name: str, dataset: xarray.Dataset, relative_path: Iterable[str] = []) -> None:
-        """Write a group over the store
-
-        Parameters
-        ----------
-        name: str
-            name of the group
-        relative_path: Iterable[str], optional
-            list of all parents from root level
-        attrs: MutableMapping[str, Any], optional
-            dict like representation of attributes to assign
-
-        Raises
-        ------
-        StoreNotOpenError
-            If the store is closed
-        """
-        if self._root is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        dataset.to_zarr(store=join_path(self.url, *relative_path, name, sep=self.sep), mode="a")
-
     def iter(self, path: str) -> Iterator[str]:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         return iter(self._root.get(path, []))
-
-    def has_variables(self, path: str) -> bool:
-        """check if a path contains eovariables
-
-        Parameters
-        ----------
-        path: str
-            container to check
-
-        Returns
-        -------
-        bool
-            the path contain variables representation or not
-
-        Raises
-        ------
-        StoreNotOpenError
-            If the store is closed
-        """
-        if self._fs is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        return any(
-            array_meta_key in self._fs.listdir(path=join_path(path, key))
-            for key in self._fs.listdir(path=path)
-            if not key.startswith(".zarr")
-        )
 
     def __getitem__(self, key: str) -> "EOObject":
         if self._root is None:
