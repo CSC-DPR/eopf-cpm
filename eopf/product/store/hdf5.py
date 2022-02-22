@@ -9,7 +9,6 @@ from eopf.exceptions import StoreNotOpenError
 from eopf.product.store import EOProductStore
 from eopf.exceptions import StoreNotOpenError
 from eopf.product.utils import join_path, weak_cache
-#from ..core import EOGroup, EOProduct, EOVariable
 from ..core.eo_product import EOProduct
 from ..core.eo_variable import EOVariable
 from ..core.eo_group import EOGroup
@@ -22,13 +21,11 @@ class EOHDF5Store(EOProductStore):
 
     _fs: Optional[h5py.File] = None
     _root: Optional[h5py.Group] = None
-    _root_name: str = None
     sep = "/"
 
-    def __init__(self, url: str, root_name: str = '') -> None:
+    def __init__(self, url: str) -> None:
         super().__init__(url)
         self.url = url
-        self._root_name = root_name
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         super().open(mode=mode, **kwargs)
@@ -127,7 +124,6 @@ class EOHDF5Store(EOProductStore):
         ----------
         """
         self.open("w")
-        #self._fs.create_group(self._root_name)
         path:Iterable = (["/"])
 
         for name, group in product._groups.items():
