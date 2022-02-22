@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 from typing import Any
 
 
@@ -6,7 +7,8 @@ class MappingFactory:
     def __init__(self, default_mappings: bool = True) -> None:
         self.mapping_set: set[str] = set()
         if default_mappings:
-            self.register_mapping("S3_OL_1_EFR_mapping.json")
+            path_directory = Path(__file__).parent / "mapping"
+            self.register_mapping(str(path_directory / "S3_OL_1_EFR_mapping.json"))
 
     def register_mapping(self, store_class: str) -> None:
         self.mapping_set.add(store_class)

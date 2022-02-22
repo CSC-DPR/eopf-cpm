@@ -1,6 +1,7 @@
 import itertools as it
+import os
 from collections.abc import MutableMapping
-from typing import TYPE_CHECKING, Any, Iterator, Union
+from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
 
 from netCDF4 import Dataset, Group, Variable
 
@@ -13,11 +14,13 @@ if TYPE_CHECKING:
 
 class NetCDFStore(EOProductStore):
     def __init__(self, url: str) -> None:
+        url = os.path.expanduser(url)
         super().__init__(url)
+        self._root: Optional[Dataset] = None
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         super().open()
-        self._root: Dataset = Dataset(self.url, mode, format=kwargs.get("format", "NETCDF4"))
+        self._root = Dataset(self.url, mode, format=kwargs.get("format", "NETCDF4"))
 
     def close(self) -> None:
         super().close()
