@@ -177,7 +177,7 @@ def xrd_to_eovs(xrd: xr.Dataset) -> Iterable[Tuple[Hashable, xr.Variable]]:
         yield xrd_var, xrd_val
 
 
-def parse_xml(path_to_product: str, glob_pattern: str) -> Any:
+def parse_xml(path: Any) -> Any:
     """Parse an XML file taking into account the pattern of the filename
 
     Parameters
@@ -191,7 +191,6 @@ def parse_xml(path_to_product: str, glob_pattern: str) -> Any:
     -------
     ElementTree object loaded with source elements : Any
     """
-    path = glob.glob(os.path.join(path_to_product, glob_pattern))[0]
     dom = etree.parse(path)
     return dom
 
