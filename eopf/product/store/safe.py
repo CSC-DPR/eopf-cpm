@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional, Tuple
 from eopf.exceptions import StoreNotOpenError
 
 from ..core import EOGroup
-from ..utils import join_eo_path, join_eo_path_optional, upsplit_eo_path
+from ..utils import join_eo_path_optional, upsplit_eo_path
 from .abstract import EOProductStore, StorageStatus
 from .mapping_factory import MappingFactory
 from .store_factory import StoreFactory
@@ -144,8 +144,10 @@ class EOSafeStore(EOProductStore):
         if item_format == "SafeHierarchy":
             mapped_store = self._accessor_map["SafeHierarchy:" + file_path] = SafeHierarchy()
         else:
-            mapped_store = self._accessor_map[item_format + ":" + file_path] = \
-                self._store_factory.get_store(self.url + file_path, item_format)
+            mapped_store = self._accessor_map[item_format + ":" + file_path] = self._store_factory.get_store(
+                self.url + file_path,
+                item_format,
+            )
         if self._status is StorageStatus.OPEN:
             mapped_store.open(mode=self._mode)
         self._accessor_map[item_format + ":" + file_path] = mapped_store
@@ -161,19 +163,18 @@ class EOSafeStore(EOProductStore):
         configs = self._config_mapping[conf_path]
         results = list()
         for conf in configs:
-            accessor_source_split = conf[self.CONFIG_SOURCE_FILE].split(':')
+            accessor_source_split = conf[self.CONFIG_SOURCE_FILE].split(":")
             if len(accessor_source_split) > 2:
                 raise ValueError(f"Invalid {self.CONFIG_SOURCE_FILE} : {conf[self.CONFIG_SOURCE_FILE]}")
             accessor_file = accessor_source_split[0]
             accessor_local_path = None
             if len(accessor_source_split) == 2:
                 accessor_local_path = accessor_source_split[1]
-            results.append((self._get_accessor(accessor_file, conf[self.CONFIG_FORMAT]),
-                            accessor_local_path))
+            results.append((self._get_accessor(accessor_file, conf[self.CONFIG_FORMAT]), accessor_local_path))
         return results
 
     def _split_target_path(self, target_path: str) -> tuple[str, Optional[str]]:
-        if target_path and target_path[0] == '/':
+        if target_path and target_path[0] == "/":
             safe_target_path = target_path[1:]
         else:
             safe_target_path = target_path
@@ -181,8 +182,8 @@ class EOSafeStore(EOProductStore):
         while True:
             if safe_target_path in self._config_mapping:
                 return safe_target_path, join_eo_path_optional(*local_path)
-            if '/'+safe_target_path in self._config_mapping:
-                return '/'+safe_target_path, join_eo_path_optional(*local_path)
+            if "/" + safe_target_path in self._config_mapping:
+                return "/" + safe_target_path, join_eo_path_optional(*local_path)
 
             safe_target_path, name = upsplit_eo_path(safe_target_path)
             if name == "":

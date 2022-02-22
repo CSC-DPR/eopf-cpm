@@ -1,8 +1,9 @@
 from typing import Any, Optional
 
 from eopf.product.store import EOProductStore
-from eopf.product.store.zarr import EOZarrStore
 from eopf.product.store.netcdf import NetCDFStore
+from eopf.product.store.zarr import EOZarrStore
+
 
 class StoreFactory:
     def __init__(self, default_stores: bool = True) -> None:

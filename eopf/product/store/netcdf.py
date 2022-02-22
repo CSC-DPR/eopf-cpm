@@ -1,6 +1,6 @@
 import itertools as it
-import pathlib
 import os
+import pathlib
 from collections.abc import MutableMapping
 from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
 
@@ -15,7 +15,8 @@ if TYPE_CHECKING:
 
 class NetCDFStore(EOProductStore):
     def __init__(self, url: str) -> None:
-        url = os.path.expanduser(url)
+        if isinstance(url, str):
+            url = os.path.expanduser(url)
         super().__init__(url)
         self._root: Optional[Dataset] = None
 
@@ -57,7 +58,10 @@ class NetCDFStore(EOProductStore):
 
         from eopf.product.core import EOGroup, EOVariable
 
-        obj = self._select_node(key)
+        try:
+            obj = self._select_node(key)
+        except IndexError as e:  # if key is invalid, netcdf4 raise IndexError ...
+            raise KeyError(e)
         if self.is_group(key):
             return EOGroup(attrs=obj.__dict__)
         return EOVariable(data=obj, attrs=obj.__dict__)
