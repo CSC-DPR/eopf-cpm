@@ -201,7 +201,7 @@ class EOSafeStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         safe_path, accessor_path = self._split_target_path(path)
         for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
-            config_accessor_path = config_accessor_path + accessor_path
+            config_accessor_path = join_eo_path(config_accessor_path, accessor_path)
             # Stores are not supposed to throw KeyError on is_group
             if accessor.is_group(config_accessor_path):
                 return True
@@ -212,7 +212,7 @@ class EOSafeStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         safe_path, accessor_path = self._split_target_path(path)
         for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
-            config_accessor_path = config_accessor_path + accessor_path
+            config_accessor_path = join_eo_path(config_accessor_path, accessor_path)
             # Stores are not supposed to throw KeyError on is_group
             if accessor.is_variable(config_accessor_path):
                 return True
@@ -223,7 +223,7 @@ class EOSafeStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         safe_path, accessor_path = self._split_target_path(group_path)
         for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
-            config_accessor_path = config_accessor_path + accessor_path
+            config_accessor_path = join_eo_path(config_accessor_path, accessor_path)
             # We might want to catch Unimplemented/KeyError and throw one if none write_attrs suceed
             accessor.write_attrs(config_accessor_path)
 
@@ -234,7 +234,7 @@ class EOSafeStore(EOProductStore):
 
         key_set: set[str] = set()
         for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
-            config_accessor_path = config_accessor_path + accessor_path
+            config_accessor_path = join_eo_path(config_accessor_path, accessor_path)
             # Should not throw exception if their store is Open.
             key_set.union(accessor.iter(config_accessor_path))
         return iter(key_set)
@@ -250,7 +250,7 @@ class EOSafeStore(EOProductStore):
 
         eo_obj_list = list()
         for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
-            config_accessor_path = config_accessor_path + accessor_path
+            config_accessor_path = join_eo_path(config_accessor_path, accessor_path)
             # We should catch Key Error, and throw if the object isn't found in any of the accessors
             accessed_object = accessor[config_accessor_path]
             processed_object = self._apply_properties(accessed_object)
@@ -263,7 +263,7 @@ class EOSafeStore(EOProductStore):
         safe_path, accessor_path = self._split_target_path(key)
 
         for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
-            config_accessor_path = config_accessor_path + accessor_path
+            config_accessor_path = join_eo_path(config_accessor_path, accessor_path)
             # We should catch Key Error, and throw if the object isn't set in any of the accessors
             accessor[config_accessor_path] = value  # I hope we don't need to reverse apply_properties.
 
@@ -273,7 +273,7 @@ class EOSafeStore(EOProductStore):
         safe_path, accessor_path = self._split_target_path(key)
 
         for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
-            config_accessor_path = config_accessor_path + accessor_path
+            config_accessor_path = join_eo_path(config_accessor_path, accessor_path)
             # We should catch Key Error, and throw if the object isn't found in any of the accessors
             del accessor[config_accessor_path]
 
