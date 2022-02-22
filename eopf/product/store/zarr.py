@@ -1,3 +1,4 @@
+import pathlib
 from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional
 
 import zarr
@@ -109,3 +110,7 @@ class EOZarrStore(EOProductStore):
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         return iter(self._root)
+
+    @staticmethod
+    def guess_can_read(file_path: str) -> bool:
+        return pathlib.Path(file_path).suffix in [".zarr", ".zip", ""]
