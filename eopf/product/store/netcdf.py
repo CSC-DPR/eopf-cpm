@@ -22,11 +22,14 @@ class NetCDFStore(EOProductStore):
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         super().open()
-        self._root = Dataset(self.url, mode, format=kwargs.get("format", "NETCDF4"))
+        self._root = Dataset(self.url, mode, **kwargs)
 
     def close(self) -> None:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
         super().close()
         self._root.close()
+        self._root = None
 
     def is_group(self, path: str) -> bool:
         if self._root is None:
@@ -94,6 +97,8 @@ class NetCDFStore(EOProductStore):
         return it.chain(iter(self._root.groups), iter(self._root.variables))
 
     def _select_node(self, key: str) -> Union[Dataset, Group, Variable]:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
         if key in ["/", ""]:
             return self._root
         return self._root[key]

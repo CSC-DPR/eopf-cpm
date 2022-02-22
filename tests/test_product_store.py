@@ -1,3 +1,5 @@
+import os
+import os.path
 import tempfile
 from typing import Any
 
@@ -13,6 +15,8 @@ from eopf.product.store import EOHDF5Store, EOProductStore, EOZarrStore, NetCDFS
 
 from .decoder import Netcdfdecoder
 from .utils import assert_contain
+
+NETCDF_FILES = ["a_prod.nc"]
 
 
 @pytest.fixture
@@ -151,7 +155,7 @@ def test_load_product_from_zarr(zarr_file: str, fs: FakeFilesystem):
     "store_and_decoder",
     [
         (EOZarrStore(zarr.MemoryStore()), zarr.open),
-        (NetCDFStore("product.nc"), Netcdfdecoder),
+        (NetCDFStore(NETCDF_FILES[0]), Netcdfdecoder),
         (EOHDF5Store(tempfile.TemporaryFile()), h5py.File),
     ],
 )
@@ -174,10 +178,13 @@ def test_write_stores(fs: FakeFilesystem, store_and_decoder: tuple[EOProductStor
 @pytest.mark.unit
 @pytest.mark.parametrize(
     "store",
-    [EOZarrStore(zarr.MemoryStore()), NetCDFStore(tempfile.TemporaryFile()), EOHDF5Store(tempfile.TemporaryFile())],
+    [
+        EOZarrStore(zarr.MemoryStore()),
+        NetCDFStore(NETCDF_FILES[0]),
+        EOHDF5Store(tempfile.TemporaryFile()),
+    ],
 )
 def test_read_stores(fs: FakeFilesystem, store: EOProductStore):
-
     store.open(mode="w")
     store["a_group"] = EOGroup()
     store["a_group/a_variable"] = EOVariable(data=[])
@@ -203,7 +210,11 @@ def test_abstract_store_cant_be_instantiate():
 @pytest.mark.unit
 @pytest.mark.parametrize(
     "store",
-    [EOZarrStore("a_product"), NetCDFStore("product.nc"), EOHDF5Store(tempfile.TemporaryFile())],
+    [
+        EOZarrStore("a_product"),
+        NetCDFStore(tempfile.TemporaryFile()),
+        EOHDF5Store(tempfile.TemporaryFile()),
+    ],
 )
 def test_store_must_be_open(fs: FakeFilesystem, store: EOProductStore):
 
@@ -236,7 +247,11 @@ def test_store_must_be_open(fs: FakeFilesystem, store: EOProductStore):
 @pytest.mark.unit
 @pytest.mark.parametrize(
     "store",
-    [EOZarrStore("a_product"), NetCDFStore(tempfile.TemporaryFile()), EOHDF5Store(tempfile.TemporaryFile())],
+    [
+        EOZarrStore("a_product"),
+        NetCDFStore(NETCDF_FILES[0]),
+        EOHDF5Store(tempfile.TemporaryFile()),
+    ],
 )
 def test_store_structure(fs: FakeFilesystem, store: EOProductStore):
     store.open(mode="w")
@@ -252,3 +267,11 @@ def test_store_structure(fs: FakeFilesystem, store: EOProductStore):
     assert not store.is_variable("another_one")
 
     store.close()
+
+
+# needed because Netcdf4 have no convenience way to test without create a file ...
+@pytest.fixture(autouse=True)
+def cleanup_files():
+    for file in NETCDF_FILES:
+        if os.path.isfile(file):
+            os.remove(file)

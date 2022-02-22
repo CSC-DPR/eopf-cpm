@@ -34,6 +34,8 @@ class EOHDF5Store(EOProductStore):
         self._root = h5py.File(self.url, mode=mode)
 
     def close(self) -> None:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
         super().close()
         self._root.close()
         self._root = None
@@ -100,10 +102,14 @@ class EOHDF5Store(EOProductStore):
 
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
         return len(self._root)
 
 
     def _select_node(self, key: str) -> Union[h5py.Group, h5py.Dataset]:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
         if key in [""]:
             return self._root["/"]
         return self._root[key]
