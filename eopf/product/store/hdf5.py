@@ -7,22 +7,23 @@ import h5py
 from eopf.exceptions import StoreNotOpenError
 from eopf.product.store import EOProductStore
 
+
 if TYPE_CHECKING:
     from eopf.product.core.eo_object import EOObject
 
 
-# ???
 # class H5ls:
 #     """This class displays the structure of a hdf5 file, i.e. the names of groups and variables"""
 
 #     def __init__(self):
-#         items = 0
+#         self.names = []
 
-#     def __call__(self, name):
-#         items = items + 1
+#     def __call__(self, name: str):
+#         if name not in self.names:
+#             self.names += [name]
 
 #     def get_items(self):
-#         return self.items
+#         return len(self.names)
 
 
 class EOHDF5Store(EOProductStore):
@@ -104,6 +105,7 @@ class EOHDF5Store(EOProductStore):
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         return len(self._root)
+
 
     def _select_node(self, key: str) -> Union[h5py.Group, h5py.Dataset]:
         if self._root is None:
