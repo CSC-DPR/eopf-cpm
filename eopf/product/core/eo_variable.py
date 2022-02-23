@@ -66,7 +66,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         if data is None:
             data = xarray.DataArray(name=name, attrs=attrs, **kwargs)
         self._data: xarray.DataArray = data
-        EOObject.__init__(self, name, parent, coords=coords, retrieve_dims=dims)
+        EOObject.__init__(self, name, parent, coords=coords, dims=dims)
 
     def _init_similar(self, data: xarray.DataArray) -> "EOVariable":
         return EOVariable(name="", data=data)
@@ -235,7 +235,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return EOVariable(
             self.name,
             self._data.isel(
-                indexers=indexers,  # pyre-ignore[6]
+                indexers=indexers,
                 drop=drop,
                 missing_dims=missing_dims,
                 **indexers_kwargs,

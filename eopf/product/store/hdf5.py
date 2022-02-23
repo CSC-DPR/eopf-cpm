@@ -1,6 +1,6 @@
 import itertools as it
 from collections.abc import MutableMapping
-from typing import TYPE_CHECKING, Any, Iterator, Optional, List, Union
+from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
 
 import h5py
 

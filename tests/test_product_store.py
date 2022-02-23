@@ -22,7 +22,6 @@ _FILES = ["test_ncdf_file_.nc", "test_h5py_file_.h5"]
 def zarr_file(fs: FakeFilesystem):
     file_name = "file://test_attributes"
     dims = "_EOPF_DIMENSIONS"
-    dims_paths = "_EOPF_DIMENSIONS_PATHS"
 
     root = zarr.open(file_name, mode="w")
     root.attrs["top_level"] = True
@@ -49,20 +48,20 @@ def zarr_file(fs: FakeFilesystem):
 
     xarray.Dataset(
         {
-            "polarian": xarray.DataArray([[12, 4], [3, 8]], attrs={dims: ["radiance"], dims_paths: ["grid"]}),
-            "cartesian": xarray.DataArray([[5, -3], [-55, 66]], attrs={dims: ["orphan"], dims_paths: ["tie_point"]}),
+            "polarian": xarray.DataArray([[12, 4], [3, 8]], attrs={dims: ["grid/radiance"]}),
+            "cartesian": xarray.DataArray([[5, -3], [-55, 66]], attrs={dims: ["tie_point/orphan"]}),
         },
     ).to_zarr(store=f"{file_name}/measurements/geo_position/altitude", mode="a")
     xarray.Dataset(
         {
-            "polarian": xarray.DataArray([[1, 2], [3, 4]], attrs={dims: ["radiance"], dims_paths: ["grid"]}),
-            "cartesian": xarray.DataArray([[9, 7], [-12, 81]], attrs={dims: ["orphan"], dims_paths: ["tie_point"]}),
+            "polarian": xarray.DataArray([[1, 2], [3, 4]], attrs={dims: ["grid/radiance"]}),
+            "cartesian": xarray.DataArray([[9, 7], [-12, 81]], attrs={dims: ["tie_point/orphan"]}),
         },
     ).to_zarr(store=f"{file_name}/measurements/geo_position/latitude", mode="a")
     xarray.Dataset(
         {
-            "polarian": xarray.DataArray([[6, 7], [2, 1]], attrs={dims: ["radiance"], dims_paths: ["tie_point"]}),
-            "cartesian": xarray.DataArray([[25, 0], [-5, 72]], attrs={dims: ["orphan"], dims_paths: ["grid"]}),
+            "polarian": xarray.DataArray([[6, 7], [2, 1]], attrs={dims: ["tie_point/radiance"]}),
+            "cartesian": xarray.DataArray([[25, 0], [-5, 72]], attrs={dims: ["grid/orphan"]}),
         },
     ).to_zarr(store=f"{file_name}/measurements/geo_position/longitude", mode="a")
     return file_name
@@ -99,6 +98,7 @@ def test_load_product_from_zarr(zarr_file: str, fs: FakeFilesystem):
         EOVariable,
         "/measurements/geo_position/altitude/",
     )
+
     assert isinstance(product.measurements.geo_position.altitude.polarian.coordinates["grid/radiance"], EOVariable)
     assert_contain(
         product.measurements.geo_position.altitude,
@@ -164,6 +164,7 @@ def test_write_stores(fs: FakeFilesystem, store: EOProductStore, decoder_type: A
     store["a_group"] = EOGroup()
     store.write_attrs("a_group", attrs={"description": "value"})
     store["a_group/a_variable"] = EOVariable(data=[])
+    store["coordinates/a_coord"] = EOVariable(data=[1, 2, 3])
     store.close()
 
     decoder = decoder_type(store.url, mode="r")
@@ -270,6 +271,10 @@ def test_store_structure(fs: FakeFilesystem, store: EOProductStore):
 # needed because Netcdf4 have no convenience way to test without create a file ...
 @pytest.fixture(autouse=True)
 def cleanup_files():
+    yield
     for file in _FILES:
+        print(file)
         if os.path.isfile(file):
             os.remove(file)
+        if os.path.isdir(file):
+            os.removedirs(file)

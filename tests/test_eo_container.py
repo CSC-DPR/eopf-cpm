@@ -92,7 +92,11 @@ class EmptyTestStore(EOProductStore):
 def product() -> EOProduct:
     product: EOProduct = init_product("product_name", store_or_path_url=EmptyTestStore(""))
     with product.open(mode="w"):
-        product.add_group("measurements/group1", coords={"c1": [2], "c2": [3], "group2": [4]})
+        product.add_group(
+            "measurements/group1",
+            coords={"c1": [2], "c2": [3], "group2": [4]},
+            dims=["c1", "c2", "group2"],
+        )
         product.add_group("group0")
 
         product.measurements["group1"].add_variable("variable_a")
@@ -192,11 +196,11 @@ def test_coordinates(product):
         "measurements/group1/group2/variable_c",
     ]
     product.measurements.assign_dims(["c1"])
+    print({p: product[p].coordinates for p in paths})
+    c1 = {p: product[p].coordinates["c1"] for p in paths}
+    c2 = product.measurements.group1.coordinates["c2"]
 
-    c1 = {p: product[p].coordinates["/c1"] for p in paths}
-    c2 = product.measurements.group1.coordinates["/c2"]
-
-    assert set(product["measurements/group1"].coordinates.keys()) == {"/c1", "/c2", "/group2"}
+    assert set(product["measurements/group1"].coordinates.keys()) == {"c1", "c2", "group2"}
     assert np.all(product.coordinates[key] == value for key, value in product.measurements.group1.coordinates.items())
     for p in paths:
         container = product[p] if p != "/" else product
@@ -442,12 +446,12 @@ def test_hierarchy_html(product):
             },
             "measurements": {
                 "group1": {
-                    "Attributes": {"_EOPF_DIMENSIONS_PATHS :": "['', '', '']"},
+                    "Attributes": {"_EOPF_DIMENSIONS :": "['c1', 'c2', 'group2']"},
                     "group2": {
-                        "Attributes": {"_EOPF_DIMENSIONS_PATHS :": "['']"},
+                        "Attributes": {"_EOPF_DIMENSIONS :": "['c1']"},
                         "variable_b": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
                         "variable_c": {
-                            "Attributes": {"_EOPF_DIMENSIONS_PATHS :": "['']"},
+                            "Attributes": {"_EOPF_DIMENSIONS :": "['c1']"},
                             "Dimensions": "",
                             "Coordinates": " /->coordinates -> c1])",
                         },
