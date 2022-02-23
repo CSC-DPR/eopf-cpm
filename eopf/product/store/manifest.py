@@ -1,10 +1,10 @@
 import os
-from typing import Any, Dict, Iterator, MutableMapping
+from typing import Any, Dict, Iterator, MutableMapping, Optional, TextIO
 
+from eopf.exceptions import FileNotExists, StoreNotOpenError, XmlParsingError
 from eopf.product.conveniences import apply_xpath, parse_xml, translate_structure
 from eopf.product.core import EOGroup
 from eopf.product.store import EOProductStore
-from eopf.exceptions import StoreNotOpenError, FileNotExists, XmlParsingError
 
 
 class ManifestStore(EOProductStore):
@@ -19,7 +19,7 @@ class ManifestStore(EOProductStore):
         self._metada_mapping: MutableMapping[str, Any] = {}
         self._namespaces: Dict[str, str] = {}
         self._xfdu_dom = None
-        self._xml_fobj = None
+        self._xml_fobj: Optional[TextIO] = None
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         if os.path.isfile(self.url):
@@ -79,7 +79,7 @@ class ManifestStore(EOProductStore):
     def __iter__(self) -> Iterator[str]:
         if self._xml_fobj is None:
             raise StoreNotOpenError("Store must be open before access to it")
-    
+
         for key in self.KEYS:
             yield self._attrs[key]
 
@@ -98,11 +98,7 @@ class ManifestStore(EOProductStore):
 
         try:
             cf = {
-                attr: apply_xpath(
-                    self._xfdu_dom, 
-                    self._metada_mapping["CF"][attr],
-                    self._namespaces
-                )
+                attr: apply_xpath(self._xfdu_dom, self._metada_mapping["CF"][attr], self._namespaces)
                 for attr in self._metada_mapping["CF"]
             }
             self._attrs["CF"] = cf
@@ -115,11 +111,7 @@ class ManifestStore(EOProductStore):
 
         try:
             eop = {
-                attr: translate_structure(
-                    self._metada_mapping["OM_EOP"][attr],
-                    self._xfdu_dom,
-                    self._namespaces
-                )
+                attr: translate_structure(self._metada_mapping["OM_EOP"][attr], self._xfdu_dom, self._namespaces)
                 for attr in self._metada_mapping["OM_EOP"]
             }
             self._attrs["OM_EOP"] = eop
