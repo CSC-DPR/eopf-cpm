@@ -1,0 +1,533 @@
+{
+  "recognition": {
+    "filename_pattern": "S3._OL_1_E[FR]R.*SEN3",
+    "product_type_pattern": "OL_1_E[FR]R___"
+  },
+  "data_mapping": [
+    {
+      "short_name": "latitude",
+      "target_path": "/coordinates/image_grid/latitude",
+      "source_path": "geo_coordinates.nc:latitude",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "longitude",
+      "target_path": "/coordinates/image_grid/longitude",
+      "source_path": "geo_coordinates.nc:longitude",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "detector_index",
+      "target_path": "/coordinates/image_grid/detector_index",
+      "source_path": "instrument_data.nc:detector_index",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "row_time",
+      "target_path": "/coordinates/image_grid/row_time",
+      "source_path": "time_coordinates.nc:time_stamp",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "tp_latitude",
+      "target_path": "/coordinates/tiepoint_grid/latitude",
+      "source_path": "tie_geo_coordinates.nc:latitude",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "tp_longitude",
+      "target_path": "/coordinates/tiepoint_grid/longitude",
+      "source_path": "tie_geo_coordinates.nc:longitude",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_latitude",
+      "target_path": "/coordinates/orphans/latitude",
+      "source_path": "removed_pixels.nc:latitude",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_longitude",
+      "target_path": "/coordinates/orphans/longitude",
+      "source_path": "removed_pixels.nc:longitude",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_detector_index",
+      "target_path": "/coordinates/orphans/detector_index",
+      "source_path": "removed_pixels.nc:detector_index",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "oa01_radiance",
+      "target_path": "/measurements/image/oa01_radiance",
+      "source_path": "Oa01_radiance.nc:Oa01_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "oa02_radiance",
+      "target_path": "/measurements/image/oa02_radiance",
+      "source_path": "Oa02_radiance.nc:Oa02_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "oa03_radiance",
+      "target_path": "/measurements/image/oa03_radiance",
+      "source_path": "Oa03_radiance.nc:Oa03_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "oa04_radiance",
+      "target_path": "/measurements/image/oa04_radiance",
+      "source_path": "Oa04_radiance.nc:Oa04_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "oa05_radiance",
+      "target_path": "/measurements/image/oa05_radiance",
+      "source_path": "Oa05_radiance.nc:Oa05_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "oa06_radiance",
+      "target_path": "/measurements/image/oa06_radiance",
+      "source_path": "Oa06_radiance.nc:Oa06_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "oa07_radiance",
+      "target_path": "/measurements/image/oa07_radiance",
+      "source_path": "Oa07_radiance.nc:Oa07_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "oa08_radiance",
+      "target_path": "/measurements/image/oa08_radiance",
+      "source_path": "Oa08_radiance.nc:Oa08_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "oa09_radiance",
+      "target_path": "/measurements/image/oa09_radiance",
+      "source_path": "Oa09_radiance.nc:Oa09_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "oa10_radiance",
+      "target_path": "/measurements/image/oa10_radiance",
+      "source_path": "Oa10_radiance.nc:Oa10_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "oa11_radiance",
+      "target_path": "/measurements/image/oa11_radiance",
+      "source_path": "Oa11_radiance.nc:Oa11_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "oa12_radiance",
+      "target_path": "/measurements/image/oa12_radiance",
+      "source_path": "Oa12_radiance.nc:Oa12_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "oa13_radiance",
+      "target_path": "/measurements/image/oa13_radiance",
+      "source_path": "Oa13_radiance.nc:Oa13_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "oa14_radiance",
+      "target_path": "/measurements/image/oa14_radiance",
+      "source_path": "Oa14_radiance.nc:Oa14_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "oa15_radiance",
+      "target_path": "/measurements/image/oa15_radiance",
+      "source_path": "Oa15_radiance.nc:Oa15_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "oa16_radiance",
+      "target_path": "/measurements/image/oa16_radiance",
+      "source_path": "Oa16_radiance.nc:Oa16_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "oa17_radiance",
+      "target_path": "/measurements/image/oa17_radiance",
+      "source_path": "Oa17_radiance.nc:Oa17_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "oa18_radiance",
+      "target_path": "/measurements/image/oa18_radiance",
+      "source_path": "Oa18_radiance.nc:Oa18_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "oa19_radiance",
+      "target_path": "/measurements/image/oa19_radiance",
+      "source_path": "Oa19_radiance.nc:Oa19_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "oa20_radiance",
+      "target_path": "/measurements/image/oa20_radiance",
+      "source_path": "Oa20_radiance.nc:Oa20_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "oa21_radiance",
+      "target_path": "/measurements/image/oa21_radiance",
+      "source_path": "Oa21_radiance.nc:Oa21_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_oa01_radiance",
+      "target_path": "/measurements/orphans/oa01_radiance",
+      "source_path": "removed_pixels.nc:Oa01_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_oa02_radiance",
+      "target_path": "/measurements/orphans/oa02_radiance",
+      "source_path": "removed_pixels.nc:Oa02_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_oa03_radiance",
+      "target_path": "/measurements/orphans/oa03_radiance",
+      "source_path": "removed_pixels.nc:Oa03_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_oa04_radiance",
+      "target_path": "/measurements/orphans/oa04_radiance",
+      "source_path": "removed_pixels.nc:Oa04_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_oa05_radiance",
+      "target_path": "/measurements/orphans/oa05_radiance",
+      "source_path": "removed_pixels.nc:Oa05_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_oa06_radiance",
+      "target_path": "/measurements/orphans/oa06_radiance",
+      "source_path": "removed_pixels.nc:Oa06_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_oa07_radiance",
+      "target_path": "/measurements/orphans/oa07_radiance",
+      "source_path": "removed_pixels.nc:Oa07_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_oa08_radiance",
+      "target_path": "/measurements/orphans/oa08_radiance",
+      "source_path": "removed_pixels.nc:Oa08_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_oa09_radiance",
+      "target_path": "/measurements/orphans/oa09_radiance",
+      "source_path": "removed_pixels.nc:Oa09_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_oa10_radiance",
+      "target_path": "/measurements/orphans/oa10_radiance",
+      "source_path": "removed_pixels.nc:Oa10_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_oa11_radiance",
+      "target_path": "/measurements/orphans/oa11_radiance",
+      "source_path": "removed_pixels.nc:Oa11_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_oa12_radiance",
+      "target_path": "/measurements/orphans/oa12_radiance",
+      "source_path": "removed_pixels.nc:Oa12_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_oa13_radiance",
+      "target_path": "/measurements/orphans/oa13_radiance",
+      "source_path": "removed_pixels.nc:Oa13_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_oa14_radiance",
+      "target_path": "/measurements/orphans/oa14_radiance",
+      "source_path": "removed_pixels.nc:Oa14_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_oa15_radiance",
+      "target_path": "/measurements/orphans/oa15_radiance",
+      "source_path": "removed_pixels.nc:Oa15_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_oa16_radiance",
+      "target_path": "/measurements/orphans/oa16_radiance",
+      "source_path": "removed_pixels.nc:Oa16_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_oa17_radiance",
+      "target_path": "/measurements/orphans/oa17_radiance",
+      "source_path": "removed_pixels.nc:Oa17_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_oa18_radiance",
+      "target_path": "/measurements/orphans/oa18_radiance",
+      "source_path": "removed_pixels.nc:Oa18_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_oa19_radiance",
+      "target_path": "/measurements/orphans/oa19_radiance",
+      "source_path": "removed_pixels.nc:Oa19_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_oa20_radiance",
+      "target_path": "/measurements/orphans/oa20_radiance",
+      "source_path": "removed_pixels.nc:Oa20_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_oa21_radiance",
+      "target_path": "/measurements/orphans/oa21_radiance",
+      "source_path": "removed_pixels.nc:Oa21_radiance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "quality_flags",
+      "target_path": "/quality/image/quality_flags",
+      "source_path": "qualityFlags.nc:quality_flags",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_quality_flags",
+      "target_path": "/quality/orphans/quality_flags",
+      "source_path": "removed_pixels.nc:quality_flags",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "geometry_oaa",
+      "target_path": "/conditions/geometry/oaa",
+      "source_path": "tie_geometries.nc:OAA",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "geometry_oza",
+      "target_path": "/conditions/geometry/oza",
+      "source_path": "tie_geometries.nc:OZA",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "geometry_saa",
+      "target_path": "/conditions/geometry/saa",
+      "source_path": "tie_geometries.nc:SAA",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "geometry_sza",
+      "target_path": "/conditions/geometry/sza",
+      "source_path": "tie_geometries.nc:SZA",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "geometry_altitude",
+      "target_path": "/conditions/geometry/altitude",
+      "source_path": "geo_coordinates.nc:altitude",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "meteo_atmospheric_temperature_profile",
+      "target_path": "/conditions/meteo/atmospheric_temperature_profile",
+      "source_path": "tie_meteo.nc:atmospheric_temperature_profile",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "meteo_horizontal_wind",
+      "target_path": "/conditions/meteo/horizontal_wind",
+      "source_path": "tie_meteo.nc:horizontal_wind",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "meteo_humidity",
+      "target_path": "/conditions/meteo/humidity",
+      "source_path": "tie_meteo.nc:humidity",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "meteo_reference_pressure_level",
+      "target_path": "/conditions/meteo/reference_pressure_level",
+      "source_path": "tie_meteo.nc:reference_pressure_level",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "meteo_sea_level_pressure",
+      "target_path": "/conditions/meteo/sea_level_pressure",
+      "source_path": "tie_meteo.nc:sea_level_pressure",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "meteo_total_columnar_water_vapour",
+      "target_path": "/conditions/meteo/total_columnar_water_vapour",
+      "source_path": "tie_meteo.nc:total_columnar_water_vapour",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "meteo_total_ozone",
+      "target_path": "/conditions/meteo/total_ozone",
+      "source_path": "tie_meteo.nc:total_ozone",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "instrument_fwhm",
+      "target_path": "/conditions/instrument/fwhm",
+      "source_path": "instrument_data.nc:FWHM",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "instrument_frame_offset",
+      "target_path": "/conditions/instrument/frame_offset",
+      "source_path": "instrument_data.nc:frame_offset",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "instrument_lambda0",
+      "target_path": "/conditions/instrument/lambda0",
+      "source_path": "instrument_data.nc:lambda0",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "instrument_relative_spectral_covariance",
+      "target_path": "/conditions/instrument/relative_spectral_covariance",
+      "source_path": "instrument_data.nc:relative_spectral_covariance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "instrument_solar_flux",
+      "target_path": "/conditions/instrument/solar_flux",
+      "source_path": "instrument_data.nc:solar_flux",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_sza",
+      "target_path": "/conditions/orphans/sza",
+      "source_path": "removed_pixels.nc:SZA",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_altitude",
+      "target_path": "/conditions/orphans/altitude",
+      "source_path": "removed_pixels.nc:altitude",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "orphans_nb_removed_pixels",
+      "target_path": "/conditions/orphans/nb_removed_pixels",
+      "source_path": "removed_pixels.nc:nb_removed_pixels",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "metadata",
+      "target_path": "/attributes",
+      "source_path": "xfdumanifest.xml",
+      "item_format": "xfdumetadata"
+    },
+    {
+      "short_name": "xfdumanifest",
+      "target_path": "/misc/xfdumanifest.xml",
+      "source_path": "xfdumanifest.xml",
+      "item_format": "misc"
+    }
+  ],
+  "metadata_mapping": {
+    "CF": {
+      "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName/text())",
+      "history": "concat(metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/sentinel-safe:software/@name,' ',metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/sentinel-safe:software/@version,' ',metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/@stop)",
+      "institution": "concat(metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/@organisation,', ',metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/@name)",
+      "source": "concat(metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:familyName/text(), metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:number/text(), ' ',metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/@abbreviation,' ',metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/text())",
+      "comment": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dispositionMode/text())",
+      "references": "'https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-2, https://sentinels.copernicus.eu/web/sentinel/user-guides/sentinel-2-msi/processing-levels/level-1'",
+      "Conventions": "'CF-1.9'"
+    },
+    "OM_EOP": {
+      "phenomenonTime": {
+        "beginPosition": "metadataSection/metadataObject[@ID='acquisitionPeriod']//sentinel-safe:acquisitionPeriod/sentinel-safe:startTime",
+        "endPosition": "metadataSection/metadataObject[@ID='acquisitionPeriod']//sentinel-safe:acquisitionPeriod/sentinel-safe:stopTime"
+      },
+      "resultTime": {
+        "timePosition": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:creationTime"
+      },
+      "procedure": {
+        "platform": {
+          "shortName": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:familyName",
+          "serialIdentifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:number"
+        },
+        "instrument": {
+          "shortName": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/@abbreviation"
+        },
+        "sensor": {
+          "sensorType": "'OPTICAL'",
+          "operationalMode": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode/@identifier"
+        },
+        "acquistionParameters": {
+          "orbitNumber": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber",
+          "orbitDirection": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber/@groundTrackDirection"
+        }
+      },
+      "featureOfInterest": {
+        "multiExtentOf": "metadataSection/metadataObject[@ID='measurementFrameSet']/metadataWrap/xmlData/sentinel-safe:frameSet/sentinel-safe:footPrint/gml:posList"
+      },
+      "result": {
+        "product": {
+          "fileName": "dataObjectSection/dataObject/byteStream/fileLocation/@href",
+          "timeliness": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:timeliness"
+        }
+      },
+      "metadataProperty": {
+        "identifier": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName",
+        "creationDate": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:creationTime",
+        "acquisitionType": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dispositionMode",
+        "productType": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productType",
+        "status": "'ARCHIVED'",
+        "downlinkedTo": {
+          "acquisitionStation": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingGroundStation",
+          "acquisitionDate": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingStopTime"
+        },
+        "productQualityStatus": "metadataSection/metadataObject[@ID='measurementQualityInformation']/metadataWrap/xmlData/sentinel-safe:qualityInformation/sentinel-safe:extension/sentinel3:productQuality/sentinel3:onlineQualityCheck",
+        "productQualityDegradationTag": "metadataSection/metadataObject[@ID='measurementQualityInformation']/metadataWrap/xmlData/sentinel-safe:qualityInformation/sentinel-safe:extension/sentinel3:productQuality/sentinel3:degradationFlags",
+        "processing": {
+          "processingCenter": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/@name",
+          "processingDate": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/@stop",
+          "processorName": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/sentinel-safe:software/@name",
+          "processorVersion": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/sentinel-safe:software/@version"
+        }
+      }
+    }
+  },
+  "namespaces": {
+    "xfdu": "urn:ccsds:schema:xfdu:1",
+    "gml": "http://www.opengis.net/gml",
+    "safe": "http://www.esa.int/safe/sentinel/1.1",
+    "sentinel-safe": "http://www.esa.int/safe/sentinel/1.1",
+    "sentinel3": "http://www.esa.int/safe/sentinel/sentinel-3/1.0",
+    "olci": "http://www.esa.int/safe/sentinel/sentinel-3/olci/1.0",
+    "n1": "https://psd-14.sentinel2.eo.esa.int/PSD/User_Product_Level-1C.xsd",
+    "xsi": "http://www.w3.org/2001/XMLSchema-instance"
+  }
+}
