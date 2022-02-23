@@ -273,7 +273,6 @@ def test_store_structure(fs: FakeFilesystem, store: EOProductStore):
 def cleanup_files():
     yield
     for file in _FILES:
-        print(file)
         if os.path.isfile(file):
             os.remove(file)
         if os.path.isdir(file):

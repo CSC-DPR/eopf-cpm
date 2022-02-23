@@ -64,9 +64,10 @@ class NetCDFStore(EOProductStore):
             obj = self._select_node(key)
         except IndexError as e:  # if key is invalid, netcdf4 raise IndexError ...
             raise KeyError(e)
+        print(obj.__dict__)
         if self.is_group(key):
             return EOGroup(attrs=obj.__dict__)
-        return EOVariable(data=obj, attrs=obj.__dict__)
+        return EOVariable(data=obj, attrs=obj.__dict__, dims=obj.dimensions)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
         from eopf.product.core import EOGroup, EOVariable

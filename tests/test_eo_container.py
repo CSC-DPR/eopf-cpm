@@ -196,7 +196,6 @@ def test_coordinates(product):
         "measurements/group1/group2/variable_c",
     ]
     product.measurements.assign_dims(["c1"])
-    print({p: product[p].coordinates for p in paths})
     c1 = {p: product[p].coordinates["c1"] for p in paths}
     c2 = product.measurements.group1.coordinates["c2"]
 
@@ -440,9 +439,9 @@ def test_hierarchy_html(product):
         "name": "product_name",
         "groups": {
             "coordinates": {
-                "c1": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
-                "c2": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
-                "group2": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
+                "c1": {"Attributes": {"_EOPF_DIMENSIONS :": "['dim_0']"}, "Dimensions": "", "Coordinates": ""},
+                "c2": {"Attributes": {"_EOPF_DIMENSIONS :": "['dim_0']"}, "Dimensions": "", "Coordinates": ""},
+                "group2": {"Attributes": {"_EOPF_DIMENSIONS :": "['dim_0']"}, "Dimensions": "", "Coordinates": ""},
             },
             "measurements": {
                 "group1": {
