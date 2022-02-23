@@ -152,15 +152,14 @@ def test_load_product_from_zarr(zarr_file: str, fs: FakeFilesystem):
 
 
 @pytest.mark.parametrize(
-    "store_and_decoder",
+    "store, decoder_type",
     [
         (EOZarrStore(zarr.MemoryStore()), zarr.open),
         (NetCDFStore(NETCDF_FILES[0]), Netcdfdecoder),
         (EOHDF5Store(tempfile.TemporaryFile()), h5py.File),
     ],
 )
-def test_write_stores(fs: FakeFilesystem, store_and_decoder: tuple[EOProductStore, Any]):
-    store, decoder_type = store_and_decoder
+def test_write_stores(fs: FakeFilesystem, store: EOProductStore, decoder_type: Any):
 
     store.open(mode="w")
     store["a_group"] = EOGroup()
