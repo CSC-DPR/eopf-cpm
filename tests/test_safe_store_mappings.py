@@ -9,6 +9,7 @@ from eopf.product.store.safe import EOSafeStore
 copy_target = "~/work_dev/data_out/S3A_OL_1_EFR____20200101T101517_20200101T101817_20200102T141102_0179_053_179_2520_LN1_O_NT_002.SEN3"
 store_path = "~/work_dev/data/S3A_OL_1_EFR____20200101T101517_20200101T101817_20200102T141102_0179_053_179_2520_LN1_O_NT_002.SEN3"
 
+
 @pytest.mark.usecase
 def test_read_product():
     product = EOProduct("my_product", store_or_path_url=EOSafeStore(store_path))
@@ -27,6 +28,7 @@ def test_load_write_product():
     product.write()
     product.store.close()
 
+
 @pytest.mark.usecase
 def test_load_product_custom_json():
     mapping_factory = MappingFactory(False)
@@ -35,6 +37,7 @@ def test_load_product_custom_json():
     product.open()
     product.load()
     product.store.close()
+
 
 @pytest.mark.usecase
 def test_load_write_product_custom_json():
