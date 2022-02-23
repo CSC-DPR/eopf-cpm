@@ -1,5 +1,7 @@
 from typing import Any, Dict, Iterator, MutableMapping, Optional, TextIO
 
+from pytest import yield_fixture
+
 from eopf.exceptions import (
     MissingConfigurationParameter,
     StoreNotOpenError,
@@ -61,7 +63,7 @@ class ManifestStore(EOProductStore):
         if path not in ["", super().sep]:
             raise KeyError(f"Invalid path: {path}")
 
-        yield ""
+        yield from ()
 
     def __getitem__(self, key: str) -> MutableMapping[str, Any]:
         if self._xml_fobj is None:
