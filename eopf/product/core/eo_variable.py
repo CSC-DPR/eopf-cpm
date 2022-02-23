@@ -66,6 +66,8 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         if data is None:
             data = xarray.DataArray(name=name, attrs=attrs, **kwargs)
         self._data: xarray.DataArray = data
+        if not dims:
+            dims = data.dims
         EOObject.__init__(self, name, parent, coords=coords, dims=dims)
 
     def _init_similar(self, data: xarray.DataArray) -> "EOVariable":
