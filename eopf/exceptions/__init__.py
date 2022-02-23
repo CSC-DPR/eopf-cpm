@@ -26,5 +26,13 @@ class FileNotExists(Exception):
     pass
 
 
+class FileOpenError(Exception):
+    pass
+
+
 class XmlParsingError(Exception):
+    pass
+
+
+class MissingConfigurationParameter(Exception):
     pass

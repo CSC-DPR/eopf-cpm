@@ -1,8 +1,13 @@
-from importlib.metadata import metadata
 import os
 from typing import Any, Dict, Iterator, MutableMapping, Optional, TextIO
 
-from eopf.exceptions import FileNotExists, StoreNotOpenError, XmlParsingError
+from eopf.exceptions import (
+    FileNotExists,
+    FileOpenError,
+    MissingConfigurationParameter,
+    StoreNotOpenError,
+    XmlParsingError,
+)
 from eopf.product.conveniences import apply_xpath, parse_xml, translate_structure
 from eopf.product.core import EOGroup
 from eopf.product.store import EOProductStore
@@ -12,19 +17,34 @@ class ManifestStore(EOProductStore):
 
     KEYS = ["CF", "OM_EOP"]
 
-    def __init__(self, url: str, config: dict[str, Any]) -> None:
+    def __init__(self, url: str) -> None:
         super().__init__(url)
         self._attrs: MutableMapping[str, Any] = {}
         for key in self.KEYS:
             self._attrs[key] = {}
-        self._metada_mapping: MutableMapping[str, Any] = config["metadata_mapping"]
-        self._namespaces: Dict[str, str] = config["namespaces"]
         self._xfdu_dom = None
         self._xml_fobj: Optional[TextIO] = None
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
+
+        # get configuration parameters
+        if "config" not in kwargs.keys():
+            raise MissingConfigurationParameter(" The parameter: config; is missing")
+        try:
+            config_dict: Optional[Any] = kwargs.get("config")
+            if not isinstance(config_dict, Dict):
+                raise MissingConfigurationParameter(" The parameter: config; should be a dictionary")
+            self._metada_mapping: MutableMapping[str, Any] = config_dict["metadata_mapping"]
+            self._namespaces: Dict[str, str] = config_dict["namespaces"]
+        except KeyError as e:
+            raise KeyError(f"Missing configuration pameter: {e}")
+
+        # open the manifest xml
         if os.path.isfile(self.url):
-            self._xml_fobj = open(self.url, mode="r", **kwargs)
+            try:
+                self._xml_fobj = open(self.url, mode="r")
+            except Exception as e:
+                raise FileOpenError(f"Error when open file {self.url}: {e}")
             super().open()
         else:
             raise FileNotExists(f"No XML file at: {self.url} ")
@@ -50,6 +70,8 @@ class ManifestStore(EOProductStore):
 
         if path not in ["", super().sep]:
             raise KeyError(f"Invalid path: {path}")
+
+        yield ""
 
     def __getitem__(self, key: str) -> MutableMapping[str, Any]:
         if self._xml_fobj is None:
