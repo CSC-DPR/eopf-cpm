@@ -1,3 +1,4 @@
+from importlib.metadata import metadata
 import os
 from typing import Any, Dict, Iterator, MutableMapping, Optional, TextIO
 
@@ -11,13 +12,13 @@ class ManifestStore(EOProductStore):
 
     KEYS = ["CF", "OM_EOP"]
 
-    def __init__(self, url: str) -> None:
+    def __init__(self, url: str, config: dict[str, Any]) -> None:
         super().__init__(url)
         self._attrs: MutableMapping[str, Any] = {}
         for key in self.KEYS:
             self._attrs[key] = {}
-        self._metada_mapping: MutableMapping[str, Any] = {}
-        self._namespaces: Dict[str, str] = {}
+        self._metada_mapping: MutableMapping[str, Any] = config["metadata_mapping"]
+        self._namespaces: Dict[str, str] = config["namespaces"]
         self._xfdu_dom = None
         self._xml_fobj: Optional[TextIO] = None
 
@@ -47,10 +48,8 @@ class ManifestStore(EOProductStore):
         if self._xml_fobj is None:
             raise StoreNotOpenError("Store must be open before access to it")
 
-        if path in self.KEYS:
-            return self._attrs[path].keys()
-        else:
-            raise KeyError(f"Invalid path: {path}; see KEYS")
+        if path not in ["", super().sep]:
+            raise KeyError(f"Invalid path: {path}")
 
     def __getitem__(self, key: str) -> MutableMapping[str, Any]:
         if self._xml_fobj is None:
@@ -63,18 +62,10 @@ class ManifestStore(EOProductStore):
         return eog
 
     def __setitem__(self, key: str, value: Any) -> None:
-        if self._xml_fobj is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-
-        if key == "metadata_mapping":
-            self._metada_mapping = value
-        elif key == "namespaces":
-            self._namespaces = value
-        else:
-            raise KeyError(f"Invalid key: {key}; valid options: metadata_mapping, namespaces;")
+        raise NotImplementedError()
 
     def __len__(self) -> int:
-        return len(self._attrs)
+        return 0
 
     def __iter__(self) -> Iterator[str]:
         if self._xml_fobj is None:
