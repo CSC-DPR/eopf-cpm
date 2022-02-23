@@ -1,3 +1,4 @@
+import os
 from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional, Tuple
 
 from eopf.exceptions import StoreNotOpenError
@@ -25,36 +26,39 @@ class SafeHierarchy(EOProductStore):
     def is_group(self, path: str) -> bool:
         if path == "" or path == "/":
             return True
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def is_variable(self, path: str) -> bool:
         if path == "" or path == "/":
             return False
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         pass
 
     def iter(self, path: str) -> Iterator[str]:
         if path != "":
-            raise NotImplementedError
+            raise NotImplementedError()
         return iter(self._child_list)
 
     def __delitem__(self, key: str) -> None:
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
-        raise NotImplementedError
+        if not isinstance(value, EOGroup) or (key != "" and not value.name in self._child_list):
+            raise KeyError("Safe can't write key outside of it's dictionary")
 
     def __getitem__(self, key: str) -> "EOObject":
         if key == "" or key == "/":
             return EOGroup()
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def __len__(self) -> int:
         return len(self._child_list)
 
     def _add_child(self, child_name: str) -> None:
+        if not child_name:
+            raise KeyError("Invalid store group name")
         self._child_list.append(child_name)
 
 
@@ -124,7 +128,7 @@ class EOSafeStore(EOProductStore):
         else:
             self._config_mapping[target_path] = [config]
 
-        if target_path == "":
+        if target_path == "" or target_path == "/":
             return
         source_path_parent, name = upsplit_eo_path(target_path)
 
@@ -206,6 +210,11 @@ class EOSafeStore(EOProductStore):
             self._read_json_config()
         for key in self._accessor_map:
             self._accessor_map[key].open(mode, **kwargs)
+        if mode == "w":
+            try:
+                os.mkdir(os.path.expanduser(self.url))
+            except FileExistsError:
+                ...
 
     def close(self) -> None:
         super().close()
