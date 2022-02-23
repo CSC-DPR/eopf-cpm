@@ -21,7 +21,7 @@ def test_read_product():
 def test_load_write_product():
     product = EOProduct("my_product", store_or_path_url=EOSafeStore(store_path))
     product.open()
-    product["/coordinates/image_grid/longitude"]
+    product.load()
     product.store.close()
     product.open(mode="w", store_or_path_url=EOSafeStore(copy_target))
     product.write()

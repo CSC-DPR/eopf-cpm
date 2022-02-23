@@ -193,11 +193,20 @@ class EOSafeStore(EOProductStore):
                 raise KeyError("Path not found in the configuration")
             local_path.insert(0, name)
 
-    def _eo_obj_fuse(self, eo_obj_list: list["EOObject"]) -> "EOObject":
+    def _eo_obj_fuse(self, *eo_obj_list: "EOObject") -> "EOObject":
         # Should at least merge dims and attributes of EOVariables/Group.
-        if len(eo_obj_list) != 1:
-            raise NotImplementedError
-        return eo_obj_list[0]
+        if not eo_obj_list:
+            raise KeyError("Empty object match.")
+        if len(eo_obj_list) == 1:
+            return eo_obj_list[0]
+        dims = set()
+        attrs = dict()
+        for eo_obj in eo_obj_list:
+            if not isinstance(eo_obj, EOGroup):
+                raise NotImplementedError
+            dims = dims.union(eo_obj.dims)
+            attrs.update(eo_obj.attrs)
+        return EOGroup(attrs=attrs, dims=dims)
 
     def _apply_properties(self, eo_obj: "EOObject") -> "EOObject":
         # Should for example add the dims from the json config to an EOVariable.
@@ -269,19 +278,20 @@ class EOSafeStore(EOProductStore):
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
 
-        if key == "" or key == "/":
-            return EOGroup(attrs=self._attrs)
 
         safe_path, accessor_path = self._split_target_path(key)
 
         eo_obj_list = list()
+        if key == "" or key == "/":
+            eo_obj_list.append(EOGroup(attrs=self._attrs))
+
         for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
             config_accessor_path = join_eo_path_optional(config_accessor_path, accessor_path)
             # We should catch Key Error, and throw if the object isn't found in any of the accessors
             accessed_object = accessor[config_accessor_path]
             processed_object = self._apply_properties(accessed_object)
             eo_obj_list.append(processed_object)
-        return self._eo_obj_fuse(eo_obj_list)
+        return self._eo_obj_fuse(*eo_obj_list)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
         if self.status is StorageStatus.CLOSE:
