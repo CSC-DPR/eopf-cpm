@@ -15,8 +15,7 @@ if TYPE_CHECKING:
 
 class NetCDFStore(EOProductStore):
     def __init__(self, url: str) -> None:
-        if isinstance(url, str):
-            url = os.path.expanduser(url)
+        url = os.path.expanduser(url)
         super().__init__(url)
         self._root: Optional[Dataset] = None
 
