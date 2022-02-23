@@ -15,8 +15,7 @@ if TYPE_CHECKING:
 
 class NetCDFStore(EOProductStore):
     def __init__(self, url: str) -> None:
-        if isinstance(url, str):
-            url = os.path.expanduser(url)
+        url = os.path.expanduser(url)
         super().__init__(url)
         self._root: Optional[Dataset] = None
 
@@ -67,7 +66,7 @@ class NetCDFStore(EOProductStore):
             raise KeyError(e)
         if self.is_group(key):
             return EOGroup(attrs=obj.__dict__)
-        return EOVariable(data=obj, attrs=obj.__dict__)
+        return EOVariable(data=obj, attrs=obj.__dict__, dims=obj.dimensions)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
         from eopf.product.core import EOGroup, EOVariable
