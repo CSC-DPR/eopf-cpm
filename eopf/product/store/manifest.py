@@ -1,9 +1,6 @@
-import os
 from typing import Any, Dict, Iterator, MutableMapping, Optional, TextIO
 
 from eopf.exceptions import (
-    FileNotExists,
-    FileOpenError,
     MissingConfigurationParameter,
     StoreNotOpenError,
     XmlParsingError,
@@ -40,14 +37,7 @@ class ManifestStore(EOProductStore):
             raise KeyError(f"Missing configuration pameter: {e}")
 
         # open the manifest xml
-        if os.path.isfile(self.url):
-            try:
-                self._xml_fobj = open(self.url, mode="r")
-            except Exception as e:
-                raise FileOpenError(f"Error when open file {self.url}: {e}")
-            super().open()
-        else:
-            raise FileNotExists(f"No XML file at: {self.url} ")
+        self._xml_fobj = open(self.url, mode="r")
 
     def close(self) -> None:
         if self._xml_fobj is None:

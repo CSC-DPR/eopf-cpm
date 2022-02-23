@@ -22,14 +22,6 @@ class EOObjectMultipleParentError(Exception):
     pass
 
 
-class FileNotExists(Exception):
-    pass
-
-
-class FileOpenError(Exception):
-    pass
-
-
 class XmlParsingError(Exception):
     pass
 
