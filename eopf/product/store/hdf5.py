@@ -1,6 +1,6 @@
 import itertools as it
 from collections.abc import MutableMapping
-from typing import TYPE_CHECKING, Any, Iterator, Union
+from typing import TYPE_CHECKING, Any, Iterator, List, Union
 
 import h5py
 import xarray as xr
@@ -18,14 +18,14 @@ if TYPE_CHECKING:
 class H5ls:
     """This class displays the structure of a hdf5 file, i.e. the names of groups and variables"""
 
-    def __init__(self):
-        self.names = []
+    def __init__(self) -> None:
+        self.names: List[str] = []
 
-    def __call__(self, name: str):
+    def __call__(self, name: str) -> None:
         if name not in self.names:
             self.names += [name]
 
-    def get_items(self):
+    def get_items(self) -> int:
         return len(self.names)
 
 
