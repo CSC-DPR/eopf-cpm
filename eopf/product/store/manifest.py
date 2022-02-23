@@ -150,7 +150,9 @@ class ManifestStore(EOProductStore):
         Raises
         ----------
         StoreNotOpenError
+            Trying to parse an xml that was not opened
         XmlParsingError
+            Any error while parsing the xml
         """
         if self._xml_fobj is None:
             raise StoreNotOpenError("Store must be open before access to it")
@@ -166,7 +168,9 @@ class ManifestStore(EOProductStore):
         Raises
         ----------
         StoreNotOpenError
+            Trying to compute CF from an opened that was not opened
         XmlParsingError
+            Any error while applying xpath
         """
         if self._xml_fobj is None:
             raise StoreNotOpenError("Store must be open before access to it")
@@ -186,7 +190,9 @@ class ManifestStore(EOProductStore):
         Raises
         ----------
         StoreNotOpenError
+            Trying to compute CF from an opened that was not opened
         XmlParsingError
+            Any error while from translate_structure
         """
         if self._xml_fobj is None:
             raise StoreNotOpenError("Store must be open before access to it")
