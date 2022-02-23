@@ -1,10 +1,24 @@
-from eopf.product.store import EOProductStore
-from eopf.product.conveniences import translate_structure, apply_xpath, etree_to_dict, parse_xml
-
-import xml.etree.ElementTree as ET
-from typing import Any, Dict, Hashable, Iterable, MutableMapping, Optional, Tuple, Union, Iterator
 import os
+import xml.etree.ElementTree as ET
+from typing import (
+    Any,
+    Dict,
+    Hashable,
+    Iterable,
+    Iterator,
+    MutableMapping,
+    Optional,
+    Tuple,
+    Union,
+)
 
+from eopf.product.conveniences import (
+    apply_xpath,
+    etree_to_dict,
+    parse_xml,
+    translate_structure,
+)
+from eopf.product.store import EOProductStore
 
 
 class ManifestStore(EOProductStore):
@@ -25,12 +39,12 @@ class ManifestStore(EOProductStore):
             self._xml_fobj = open(self.url, mode="r", **kwargs)
             super().open()
         else:
-            raise(f"No XML file at: {self.url} ")
+            raise (f"No XML file at: {self.url} ")
 
     def close(self) -> None:
-        self.xml_file.close()
+        self._xml_fobj.close()
         super().close()
-        
+
     def is_group(self, path: str) -> bool:
         raise NotImplementedError()
 
@@ -52,7 +66,7 @@ class ManifestStore(EOProductStore):
                 self._get_om_eop()
             elif key == "CF":
                 self._get_cf()
-            else: 
+            else:
                 # key == "XFDU":
                 self._get_xfdu()
             return self._attrs[key]
@@ -81,13 +95,13 @@ class ManifestStore(EOProductStore):
             xfdu = etree_to_dict(root[1])
             self._attrs["XFDU"] = xfdu
         except Exception as e:
-            raise(f"Exception while computing xfdu: {e}")
+            raise (f"Exception while computing xfdu: {e}")
 
     def _get_xfdu_dom(self) -> None:
         try:
             self._xfdu_dom = parse_xml(self._xml_fobj)
         except Exception as e:
-            raise(f"Exception while computing xfdu dom: {e}")
+            raise (f"Exception while computing xfdu dom: {e}")
 
     def _get_cf(self):
         if not self._xfdu_dom:
@@ -98,7 +112,8 @@ class ManifestStore(EOProductStore):
                 self._metada_mapping["CF"][attr],
                 self._namespaces
             )
-            for attr in self._metada_mapping["CF"]}
+            for attr in self._metada_mapping["CF"]
+        }
         self._attrs["CF"] = cf
 
     def _get_om_eop(self):
@@ -106,14 +121,9 @@ class ManifestStore(EOProductStore):
             self._get_xfdu_dom()
         eop = {
             attr: translate_structure(
-                self._metada_mapping["OM_EOP"][attr],
-                self._xfdu_dom,
-                self._namespaces
+                self._metada_mapping["OM_EOP"][attr], 
+                self._xfdu_dom, self._namespaces
             )
             for attr in self._metada_mapping["OM_EOP"]
         }
         self._attrs["OM_EOP"] = eop
-
-    
-
-
