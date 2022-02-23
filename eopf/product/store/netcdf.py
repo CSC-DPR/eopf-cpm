@@ -1,6 +1,6 @@
 import itertools as it
-import pathlib
 import os
+import pathlib
 from collections.abc import MutableMapping
 from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
 
