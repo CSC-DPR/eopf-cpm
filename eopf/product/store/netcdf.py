@@ -15,17 +15,21 @@ if TYPE_CHECKING:
 
 class NetCDFStore(EOProductStore):
     def __init__(self, url: str) -> None:
-        url = os.path.expanduser(url)
+        if isinstance(url, str):
+            url = os.path.expanduser(url)
         super().__init__(url)
         self._root: Optional[Dataset] = None
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         super().open()
-        self._root = Dataset(self.url, mode, format=kwargs.get("format", "NETCDF4"))
+        self._root = Dataset(self.url, mode, **kwargs)
 
     def close(self) -> None:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
         super().close()
         self._root.close()
+        self._root = None
 
     def is_group(self, path: str) -> bool:
         if self._root is None:
@@ -57,7 +61,10 @@ class NetCDFStore(EOProductStore):
 
         from eopf.product.core import EOGroup, EOVariable
 
-        obj = self._select_node(key)
+        try:
+            obj = self._select_node(key)
+        except IndexError as e:  # if key is invalid, netcdf4 raise IndexError ...
+            raise KeyError(e)
         if self.is_group(key):
             return EOGroup(attrs=obj.__dict__)
         return EOVariable(data=obj, attrs=obj.__dict__)
@@ -90,6 +97,8 @@ class NetCDFStore(EOProductStore):
         return it.chain(iter(self._root.groups), iter(self._root.variables))
 
     def _select_node(self, key: str) -> Union[Dataset, Group, Variable]:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
         if key in ["/", ""]:
             return self._root
         return self._root[key]

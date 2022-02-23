@@ -7,13 +7,13 @@ from eopf.product.store.zarr import EOZarrStore
 
 class StoreFactory:
     def __init__(self, default_stores: bool = True) -> None:
-        self.item_formats: dict[str, type] = dict()
-        self.store_types: set[type] = set()
+        self.item_formats: dict[str, type[EOProductStore]] = dict()
+        self.store_types: set[type[EOProductStore]] = set()
         if default_stores:
             self.register_store(EOZarrStore)
             self.register_store(NetCDFStore, "netcdf")
 
-    def register_store(self, store_class: type, *args: str) -> None:
+    def register_store(self, store_class: type[EOProductStore], *args: str) -> None:
         self.store_types.add(store_class)
         for mapping in args:
             self.item_formats[mapping] = store_class
