@@ -105,7 +105,7 @@ class EOSafeStore(EOProductStore):
         self._mapping_factory = mapping_factory
         self._accessor_map: dict[str, EOProductStore] = dict()  # map item_format : source path to Store
         self._config_mapping: dict[str, list[dict[str, Any]]] = dict()  # map source path to config read from Json
-        self._attrs: dict[str, dict[str, Any]] = dict()
+        self._accessor_open_config: dict[str, dict[str, Any]] = dict()
         self._mode = "CLOSED"
 
     def _read_json_config(self) -> None:
@@ -113,7 +113,9 @@ class EOSafeStore(EOProductStore):
         json_config_list = json_data["data_mapping"]
         for config in json_config_list:
             self._add_data_config(config[self.CONFIG_TARGET], config)
-        self._attrs = json_data["metadata_mapping"]
+        self._accessor_open_config["misc"] = dict()
+        self._accessor_open_config["misc"]["metadata_mapping"] = json_data["metadata_mapping"]
+        self._accessor_open_config["misc"]["namespaces"] = json_data["namespaces"]
 
     def _contain_hierarchy_config(self, target_path: str) -> bool:
         if target_path not in self._config_mapping:
@@ -155,7 +157,11 @@ class EOSafeStore(EOProductStore):
                 item_format,
             )
         if self._status is StorageStatus.OPEN:
-            mapped_store.open(mode=self._mode)
+            if item_format in self._accessor_open_config:
+                mapped_store.open(mode=self._mode, config=self._accessor_open_config[item_format])
+            else:
+                mapped_store.open(mode=self._mode)
+
         self._accessor_map[item_format + ":" + file_path] = mapped_store
         return mapped_store
 
@@ -286,7 +292,7 @@ class EOSafeStore(EOProductStore):
 
         eo_obj_list = list()
         if key == "" or key == "/":
-            eo_obj_list.append(EOGroup(attrs=self._attrs))
+            eo_obj_list.append(EOGroup())
 
         for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
             config_accessor_path = join_eo_path_optional(config_accessor_path, accessor_path)
