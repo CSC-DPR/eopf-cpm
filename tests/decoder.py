@@ -9,7 +9,7 @@ class Netcdfdecoder:
             self._node = url_or_obj
 
     def __getitem__(self, key: str):
-        return Netcdfdecoder(self._root[key])
+        return Netcdfdecoder(self._node[key])
 
     def attrs(self):
         return self._node.__dict__
