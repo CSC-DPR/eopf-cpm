@@ -1,8 +1,11 @@
 import glob
 import importlib.resources
 import json
+import re
 from pathlib import Path
 from typing import Any
+
+import fsspec
 
 
 
@@ -26,4 +29,9 @@ class MappingFactory:
         raise KeyError("No registered store compatible with : " + file_path)
 
     def guess_can_read(self, json_mapping_data: dict[str, Any], file_path: str) -> bool:
-        return True
+        fsmap = fsspec.get_mapper(file_path)
+        *_, dir_name = fsmap.root.rpartition(fsmap.fs.sep)
+        pattern = json_mapping_data.get("recognition", {}).get("filename_pattern")
+        if pattern:
+            return re.match(pattern, dir_name) is not None
+        return False
