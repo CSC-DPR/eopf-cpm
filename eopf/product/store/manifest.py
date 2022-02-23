@@ -1,16 +1,6 @@
 import os
 import xml.etree.ElementTree as ET
-from typing import (
-    Any,
-    Dict,
-    Hashable,
-    Iterable,
-    Iterator,
-    MutableMapping,
-    Optional,
-    Tuple,
-    Union,
-)
+from typing import Any, Dict, Iterator, MutableMapping
 
 from eopf.product.conveniences import (
     apply_xpath,
@@ -107,11 +97,7 @@ class ManifestStore(EOProductStore):
         if not self._xfdu_dom:
             self._get_xfdu_dom()
         cf = {
-            attr: apply_xpath(
-                self._xfdu_dom,
-                self._metada_mapping["CF"][attr],
-                self._namespaces
-            )
+            attr: apply_xpath(self._xfdu_dom, self._metada_mapping["CF"][attr], self._namespaces)
             for attr in self._metada_mapping["CF"]
         }
         self._attrs["CF"] = cf
@@ -120,10 +106,7 @@ class ManifestStore(EOProductStore):
         if not self._xfdu_dom:
             self._get_xfdu_dom()
         eop = {
-            attr: translate_structure(
-                self._metada_mapping["OM_EOP"][attr], 
-                self._xfdu_dom, self._namespaces
-            )
+            attr: translate_structure(self._metada_mapping["OM_EOP"][attr], self._xfdu_dom, self._namespaces)
             for attr in self._metada_mapping["OM_EOP"]
         }
         self._attrs["OM_EOP"] = eop

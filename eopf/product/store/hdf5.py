@@ -7,7 +7,6 @@ import h5py
 from eopf.exceptions import StoreNotOpenError
 from eopf.product.store import EOProductStore
 
-
 if TYPE_CHECKING:
     from eopf.product.core.eo_object import EOObject
 
@@ -105,7 +104,6 @@ class EOHDF5Store(EOProductStore):
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         return len(self._root)
-
 
     def _select_node(self, key: str) -> Union[h5py.Group, h5py.Dataset]:
         if self._root is None:
