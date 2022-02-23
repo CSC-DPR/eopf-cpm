@@ -150,7 +150,7 @@ class EOObject(EOAbstract):
         coords_group = self.product.coordinates
         retrieved_coords = {}
         for dim in self.dims:
-            if (coords := coords_group.get(dim)) is not None:
+            if coords := coords_group.get(dim):
                 retrieved_coords[dim] = coords
         return MappingProxyType(retrieved_coords)
 

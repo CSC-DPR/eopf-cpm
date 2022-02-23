@@ -72,7 +72,6 @@ class EOHDF5Store(EOProductStore):
         from eopf.product.core import EOGroup, EOVariable
 
         obj = self._select_node(key)
-        print(dict(obj.attrs))
         if self.is_group(key):
             return EOGroup(name=key, attrs=obj.attrs)
         return EOVariable(name=key, data=obj[()], attrs=obj.attrs)
