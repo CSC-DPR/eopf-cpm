@@ -117,7 +117,8 @@ class ManifestStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
 
         # computes CF and OM_EOP
-        self._parse_xml()
+        if self._parsed_xml is None:
+            self._parse_xml()
         self._compute_om_eop()
         self._compute_cf()
 
