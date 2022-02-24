@@ -1,3 +1,4 @@
+import os
 from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional, Tuple
 
 from eopf.exceptions import StoreNotOpenError
@@ -25,36 +26,41 @@ class SafeHierarchy(EOProductStore):
     def is_group(self, path: str) -> bool:
         if path == "" or path == "/":
             return True
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def is_variable(self, path: str) -> bool:
         if path == "" or path == "/":
             return False
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         pass
 
     def iter(self, path: str) -> Iterator[str]:
         if path != "":
-            raise NotImplementedError
+            raise NotImplementedError()
         return iter(self._child_list)
 
     def __delitem__(self, key: str) -> None:
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
-        raise NotImplementedError
+        cond1 = not isinstance(value, EOGroup)
+        cond2 = key != "" and value.name not in self._child_list
+        if cond1 or cond2:
+            raise KeyError("Safe can't write key outside of it's dictionary")
 
     def __getitem__(self, key: str) -> "EOObject":
         if key == "" or key == "/":
             return EOGroup()
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def __len__(self) -> int:
         return len(self._child_list)
 
     def _add_child(self, child_name: str) -> None:
+        if not child_name:
+            raise KeyError("Invalid store group name")
         self._child_list.append(child_name)
 
 
@@ -99,7 +105,7 @@ class EOSafeStore(EOProductStore):
         self._mapping_factory = mapping_factory
         self._accessor_map: dict[str, EOProductStore] = dict()  # map item_format : source path to Store
         self._config_mapping: dict[str, list[dict[str, Any]]] = dict()  # map source path to config read from Json
-        self._attrs: dict[str, dict[str, Any]] = dict()
+        self._accessor_open_config: dict[str, dict[str, Any]] = dict()
         self._mode = "CLOSED"
 
     def _read_json_config(self) -> None:
@@ -107,7 +113,9 @@ class EOSafeStore(EOProductStore):
         json_config_list = json_data["data_mapping"]
         for config in json_config_list:
             self._add_data_config(config[self.CONFIG_TARGET], config)
-        self._attrs = json_data["metadata_mapping"]
+        self._accessor_open_config["misc"] = dict()
+        self._accessor_open_config["misc"]["metadata_mapping"] = json_data["metadata_mapping"]
+        self._accessor_open_config["misc"]["namespaces"] = json_data["namespaces"]
 
     def _contain_hierarchy_config(self, target_path: str) -> bool:
         if target_path not in self._config_mapping:
@@ -124,7 +132,7 @@ class EOSafeStore(EOProductStore):
         else:
             self._config_mapping[target_path] = [config]
 
-        if target_path == "":
+        if target_path == "" or target_path == "/":
             return
         source_path_parent, name = upsplit_eo_path(target_path)
 
@@ -149,7 +157,11 @@ class EOSafeStore(EOProductStore):
                 item_format,
             )
         if self._status is StorageStatus.OPEN:
-            mapped_store.open(mode=self._mode)
+            if item_format in self._accessor_open_config:
+                mapped_store.open(mode=self._mode, config=self._accessor_open_config[item_format])
+            else:
+                mapped_store.open(mode=self._mode)
+
         self._accessor_map[item_format + ":" + file_path] = mapped_store
         return mapped_store
 
@@ -190,11 +202,20 @@ class EOSafeStore(EOProductStore):
                 raise KeyError("Path not found in the configuration")
             local_path.insert(0, name)
 
-    def _eo_obj_fuse(self, eo_obj_list: list["EOObject"]) -> "EOObject":
+    def _eo_obj_fuse(self, *eo_obj_list: "EOObject") -> "EOObject":
         # Should at least merge dims and attributes of EOVariables/Group.
-        if len(eo_obj_list) != 1:
-            raise NotImplementedError
-        return eo_obj_list[0]
+        if not eo_obj_list:
+            raise KeyError("Empty object match.")
+        if len(eo_obj_list) == 1:
+            return eo_obj_list[0]
+        dims = set()
+        attrs = dict()
+        for eo_obj in eo_obj_list:
+            if not isinstance(eo_obj, EOGroup):
+                raise NotImplementedError
+            dims = dims.union(eo_obj.dims)
+            attrs.update(eo_obj.attrs)
+        return EOGroup(attrs=attrs, dims=dims)
 
     def _apply_properties(self, eo_obj: "EOObject") -> "EOObject":
         # Should for example add the dims from the json config to an EOVariable.
@@ -207,6 +228,11 @@ class EOSafeStore(EOProductStore):
             self._read_json_config()
         for key in self._accessor_map:
             self._accessor_map[key].open(mode, **kwargs)
+        if mode == "w":
+            try:
+                os.mkdir(os.path.expanduser(self.url))
+            except FileExistsError:
+                ...
 
     def close(self) -> None:
         super().close()
@@ -261,19 +287,20 @@ class EOSafeStore(EOProductStore):
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
 
-        if key == "" or key == "/":
-            return EOGroup(attrs=self._attrs)
 
         safe_path, accessor_path = self._split_target_path(key)
 
         eo_obj_list = list()
+        if key == "" or key == "/":
+            eo_obj_list.append(EOGroup())
+
         for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
             config_accessor_path = join_eo_path_optional(config_accessor_path, accessor_path)
             # We should catch Key Error, and throw if the object isn't found in any of the accessors
             accessed_object = accessor[config_accessor_path]
             processed_object = self._apply_properties(accessed_object)
             eo_obj_list.append(processed_object)
-        return self._eo_obj_fuse(eo_obj_list)
+        return self._eo_obj_fuse(*eo_obj_list)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
         if self.status is StorageStatus.CLOSE:

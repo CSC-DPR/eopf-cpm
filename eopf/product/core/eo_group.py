@@ -68,7 +68,7 @@ class EOGroup(EOContainer, EOObject):
                 if not isinstance(key, str):
                     raise TypeError(f"The dataset key {str(key)} is type {type(key)} instead of str")
         self._variables = variables
-        EOObject.__init__(self, name, parent, coords=coords, retrieve_dims=dims)
+        EOObject.__init__(self, name, parent, coords=coords, dims=dims)
 
     def _get_item(self, key: str) -> "EOObject":
         if key in self._variables:

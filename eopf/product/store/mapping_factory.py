@@ -11,7 +11,8 @@ class MappingFactory:
         self.mapping_set: set[str] = set()
         if default_mappings:
             path_directory = Path(__file__).parent / "mapping"
-            self.register_mapping(str(path_directory / "S3_OL_1_EFR_mapping.json"))
+            for mapping_path in path_directory.glob("*.json"):
+                self.register_mapping(str(mapping_path))
 
     def register_mapping(self, store_class: str) -> None:
         self.mapping_set.add(store_class)

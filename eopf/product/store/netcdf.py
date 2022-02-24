@@ -14,9 +14,10 @@ if TYPE_CHECKING:
 
 
 class NetCDFStore(EOProductStore):
+    RESTRICTED_ATTR_KEY = ("_FillValue",)
+
     def __init__(self, url: str) -> None:
-        if isinstance(url, str):
-            url = os.path.expanduser(url)
+        url = os.path.expanduser(url)
         super().__init__(url)
         self._root: Optional[Dataset] = None
 
@@ -47,6 +48,7 @@ class NetCDFStore(EOProductStore):
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         current_node = self._select_node(group_path)
+        attrs = {attr: value for attr, value in attrs.items() if attr not in self.RESTRICTED_ATTR_KEY}
         current_node.setncatts(attrs)
 
     def iter(self, path: str) -> Iterator[str]:
@@ -67,7 +69,7 @@ class NetCDFStore(EOProductStore):
             raise KeyError(e)
         if self.is_group(key):
             return EOGroup(attrs=obj.__dict__)
-        return EOVariable(data=obj, attrs=obj.__dict__)
+        return EOVariable(data=obj, attrs=obj.__dict__, dims=obj.dimensions)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
         from eopf.product.core import EOGroup, EOVariable
