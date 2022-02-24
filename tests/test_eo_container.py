@@ -38,6 +38,7 @@ class EmptyTestStore(EOProductStore):
         return 0
 
     def __setitem__(self, k: Any, v: Any) -> None:
+        print(k, v)
         pass
 
     def __delitem__(self, v: Any) -> None:
@@ -80,8 +81,8 @@ class EmptyTestStore(EOProductStore):
     def get_data(self, key: str) -> tuple:
         raise KeyError()
 
-    def update_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = ...):
-        return super().update_attrs(group_path, attrs)
+    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = ...):
+        return super().write_attrs(group_path, attrs)
 
     def delete_attr(self, group_path: str, attr_name: str):
         return super().delete_attr(group_path, attr_name)
@@ -91,7 +92,11 @@ class EmptyTestStore(EOProductStore):
 def product() -> EOProduct:
     product: EOProduct = init_product("product_name", store_or_path_url=EmptyTestStore(""))
     with product.open(mode="w"):
-        product.add_group("measurements/group1", coords={"c1": [2], "c2": [3], "group2": [4]})
+        product.add_group(
+            "measurements/group1",
+            coords={"c1": [2], "c2": [3], "group2": [4]},
+            dims=["c1", "c2", "group2"],
+        )
         product.add_group("group0")
 
         product.measurements["group1"].add_variable("variable_a")
@@ -136,7 +141,7 @@ def test_browse_product(product):
 
     with (
         patch.object(EmptyTestStore, "iter", return_value=iter(["a", "b"])) as iter_method,
-        patch.object(EmptyTestStore, "get_data", return_value=(None, {})),
+        patch.object(EmptyTestStore, "__getitem__", return_value=EOGroup()),
         product.open(mode="r"),
     ):
         assert sorted(["group0", "measurements", "coordinates", "a", "b"]) == sorted([i for i in product])
@@ -191,11 +196,10 @@ def test_coordinates(product):
         "measurements/group1/group2/variable_c",
     ]
     product.measurements.assign_dims(["c1"])
+    c1 = {p: product[p].coordinates["c1"] for p in paths}
+    c2 = product.measurements.group1.coordinates["c2"]
 
-    c1 = {p: product[p].coordinates["/c1"] for p in paths}
-    c2 = product.measurements.group1.coordinates["/c2"]
-
-    assert set(product["measurements/group1"].coordinates.keys()) == {"/c1", "/c2", "/group2"}
+    assert set(product["measurements/group1"].coordinates.keys()) == {"c1", "c2", "group2"}
     assert np.all(product.coordinates[key] == value for key, value in product.measurements.group1.coordinates.items())
     for p in paths:
         container = product[p] if p != "/" else product
@@ -224,7 +228,7 @@ def test_attributes(product):
 def test_setitem(product):
 
     with pytest.raises(TypeError):
-        EOGroup("group1b", None, dataset=["a", "b"])
+        EOGroup("group1b", None, variables=["a", "b"])
 
     product["measurements/group1b/"] = EOGroup("group1b", None)
 
@@ -290,9 +294,7 @@ def test_multipleparent_setitem(product):
     with pytest.raises(EOObjectMultipleParentError):
         product["measurements/group1"]["variable_v8"] = EOVariable(
             "variable_v7",
-            None,
-            product,
-            ["/", "measurements", "group2"],
+            parent=product,
         )
 
 
@@ -342,8 +344,8 @@ def test_delitem(product):
 @pytest.mark.unit
 def test_invalid_dataset():
     with pytest.raises(TypeError):
-        EOGroup(dataset=xarray.Dataset({1: ("a", np.array([3]))}))
-    EOGroup(dataset=xarray.Dataset({"1": ("a", np.array([3]))}))
+        EOGroup(variables={1: EOVariable(data=np.array([3]))})
+    EOGroup(variables={"1": EOVariable(data=np.array([3]))})
 
 
 @pytest.mark.unit
@@ -354,7 +356,7 @@ def test_create_product_on_memory(fs: FakeFilesystem):
         product.open(mode="w")
 
     with pytest.raises(StoreNotDefinedError):
-        product._relative_key("a key")
+        product._store_key("a key")
 
     assert product._store is None, "store must be None"
     assert not (fs.isdir(product.name) or fs.isfile(product.name)), "Product must not create any thing on fs"
@@ -367,14 +369,12 @@ def test_write_product(product):
         product.write()
 
     with (
-        patch.object(EmptyTestStore, "add_group", return_value=None) as mock_method,
-        patch.object(EmptyTestStore, "add_variables", return_value=None) as mock_method2,
+        patch.object(EmptyTestStore, "__setitem__", return_value=None) as mock_method,
         product.open(mode="w"),
     ):
         product.write()
 
-    assert mock_method2.call_count == 5
-    assert mock_method.call_count == 10
+    assert mock_method.call_count == 19
     assert product._store is not None, "store must be set"
 
     product._store = None
@@ -389,7 +389,7 @@ def test_load_product(product):
     with pytest.raises(StoreNotOpenError):
         product.load()
 
-    with (patch.object(EmptyTestStore, "get_data", return_value=(None, {})) as mock_method, product.open(mode="r")):
+    with (patch.object(EmptyTestStore, "__getitem__", return_value=(EOGroup())) as mock_method, product.open(mode="r")):
         product.load()
 
     assert mock_method.call_count == 1
@@ -439,18 +439,18 @@ def test_hierarchy_html(product):
         "name": "product_name",
         "groups": {
             "coordinates": {
-                "c1": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
-                "c2": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
-                "group2": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
+                "c1": {"Attributes": {"_EOPF_DIMENSIONS :": "['dim_0']"}, "Dimensions": "", "Coordinates": ""},
+                "c2": {"Attributes": {"_EOPF_DIMENSIONS :": "['dim_0']"}, "Dimensions": "", "Coordinates": ""},
+                "group2": {"Attributes": {"_EOPF_DIMENSIONS :": "['dim_0']"}, "Dimensions": "", "Coordinates": ""},
             },
             "measurements": {
                 "group1": {
-                    "Attributes": {"_EOPF_DIMENSIONS_PATHS :": "['', '', '']"},
+                    "Attributes": {"_EOPF_DIMENSIONS :": "['c1', 'c2', 'group2']"},
                     "group2": {
-                        "Attributes": {"_EOPF_DIMENSIONS_PATHS :": "['']"},
+                        "Attributes": {"_EOPF_DIMENSIONS :": "['c1']"},
                         "variable_b": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
                         "variable_c": {
-                            "Attributes": {"_EOPF_DIMENSIONS_PATHS :": "['']"},
+                            "Attributes": {"_EOPF_DIMENSIONS :": "['c1']"},
                             "Dimensions": "",
                             "Coordinates": " /->coordinates -> c1])",
                         },

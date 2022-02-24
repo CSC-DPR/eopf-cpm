@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Any, Iterable, MutableMapping, Optional
 from eopf.exceptions import EOObjectMultipleParentError, InvalidProductError
 from eopf.product.core.eo_abstract import EOAbstract
 from eopf.product.store.abstract import EOProductStore
-from eopf.product.utils import join_eo_path, join_path
+from eopf.product.utils import join_eo_path
 
 if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_container import EOContainer
@@ -13,7 +13,6 @@ if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_variable import EOVariable
 
 
-_DIMENSIONS_PATHS = "_EOPF_DIMENSIONS_PATHS"
 _DIMENSIONS_NAME = "_EOPF_DIMENSIONS"
 
 
@@ -32,7 +31,7 @@ class EOObject(EOAbstract):
         list like of string representing the path from the product
     coords: MutableMapping[str, Any], optional
         coordinates to assign
-    retrive_dims: tuple[str], optional
+    dims: tuple[str], optional
         dimensions to assign
     """
 
@@ -41,15 +40,15 @@ class EOObject(EOAbstract):
         name: str,
         parent: "Optional[EOContainer]" = None,
         coords: MutableMapping[str, Any] = {},
-        retrieve_dims: tuple[str, ...] = tuple(),
+        dims: tuple[str, ...] = tuple(),
     ) -> None:
         self._name: str = ""
         self._parent: Optional["EOContainer"] = None
         self._repath(name, parent)
         self.assign_coords(coords=coords)
-        self.assign_dims(retrieve_dims=retrieve_dims)
+        self.assign_dims(dims=dims)
 
-    def assign_dims(self, retrieve_dims: Iterable[str]) -> None:
+    def assign_dims(self, dims: Iterable[str]) -> None:
         """Assign dimension to this object
 
         Parameters
@@ -57,9 +56,7 @@ class EOObject(EOAbstract):
         retrive_dims: Iterable[str], optional
             dimensions to assign
         """
-        for key in retrieve_dims:
-            path, _, dim = key.rpartition("/")
-            self.attrs.setdefault(_DIMENSIONS_PATHS, []).append(path)
+        for dim in dims:
             self.attrs.setdefault(_DIMENSIONS_NAME, []).append(dim)
 
     def assign_coords(self, coords: MutableMapping[str, Any] = {}, **kwargs: Any) -> None:
@@ -74,7 +71,6 @@ class EOObject(EOAbstract):
         """
         for path, coords_value in it.chain(coords.items(), kwargs.items()):
             self.product.coordinates.add_variable(path, data=coords_value)
-            self.assign_dims([path])
 
     def _repath(self, name: str, parent: "Optional[EOContainer]") -> None:
         """Set the name, product and relative_path attributes of this EObject.
@@ -151,14 +147,12 @@ class EOObject(EOAbstract):
     @property
     def coordinates(self) -> MappingProxyType[str, Any]:
         """MappingProxyType[str, Any]: Coordinates defined by this object"""
-        dims = self.dims
         coords_group = self.product.coordinates
-        return MappingProxyType(
-            {
-                join_path(coord_path, dim): coords_group[join_eo_path(coord_path, dim)]
-                for coord_path, dim in zip(self.attrs.get(_DIMENSIONS_PATHS, ["/"] * len(dims)), dims)
-            },
-        )
+        retrieved_coords = {}
+        for dim in self.dims:
+            if coords := coords_group.get(dim):
+                retrieved_coords[dim] = coords
+        return MappingProxyType(retrieved_coords)
 
     def get_coordinate(self, name: str, context: Optional[str] = None) -> "EOVariable":
         if context is None:

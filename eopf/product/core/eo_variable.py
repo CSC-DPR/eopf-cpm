@@ -60,12 +60,20 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         dims: tuple[str, ...] = tuple(),
         **kwargs: Any,
     ):
+        attrs = dict(attrs) if attrs is not None else {}
+
+        from .eo_object import _DIMENSIONS_NAME
+
+        existing_dims = attrs.pop(_DIMENSIONS_NAME, [])
         if not isinstance(data, (xarray.DataArray, EOVariable)) and data is not None:
             data = xarray.DataArray(data=data, name=name, attrs=attrs, **kwargs)
         if data is None:
-            data = xarray.DataArray()
+            data = xarray.DataArray(name=name, attrs=attrs, **kwargs)
+
+        if not dims:
+            dims = existing_dims or data.dims
         self._data: xarray.DataArray = data
-        EOObject.__init__(self, name, parent, coords=coords, retrieve_dims=dims)
+        EOObject.__init__(self, name, parent, coords=coords, dims=tuple(dims))
 
     def _init_similar(self, data: xarray.DataArray) -> "EOVariable":
         return EOVariable(name="", data=data)
@@ -234,7 +242,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return EOVariable(
             self.name,
             self._data.isel(
-                indexers=indexers,  # pyre-ignore[6]
+                indexers=indexers,
                 drop=drop,
                 missing_dims=missing_dims,
                 **indexers_kwargs,
