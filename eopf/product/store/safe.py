@@ -113,9 +113,9 @@ class EOSafeStore(EOProductStore):
         json_config_list = json_data["data_mapping"]
         for config in json_config_list:
             self._add_data_config(config[self.CONFIG_TARGET], config)
-        self._accessor_open_config["misc"] = dict()
-        self._accessor_open_config["misc"]["metadata_mapping"] = json_data["metadata_mapping"]
-        self._accessor_open_config["misc"]["namespaces"] = json_data["namespaces"]
+        self._accessor_open_config["xfdumetadata"] = dict()
+        self._accessor_open_config["xfdumetadata"]["metadata_mapping"] = json_data["metadata_mapping"]
+        self._accessor_open_config["xfdumetadata"]["namespaces"] = json_data["namespaces"]
 
     def _contain_hierarchy_config(self, target_path: str) -> bool:
         if target_path not in self._config_mapping:
@@ -286,7 +286,6 @@ class EOSafeStore(EOProductStore):
     def __getitem__(self, key: str) -> "EOObject":
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
-
 
         safe_path, accessor_path = self._split_target_path(key)
 

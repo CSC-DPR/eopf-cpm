@@ -1,6 +1,7 @@
 from typing import Any, Optional
 
 from eopf.product.store import EOProductStore
+from eopf.product.store.manifest import ManifestStore
 from eopf.product.store.netcdf import NetCDFStore
 from eopf.product.store.zarr import EOZarrStore
 
@@ -12,6 +13,7 @@ class StoreFactory:
         if default_stores:
             self.register_store(EOZarrStore)
             self.register_store(NetCDFStore, "netcdf")
+            self.register_store(ManifestStore, "xfdumetadata")
 
     def register_store(self, store_class: type[EOProductStore], *args: str) -> None:
         self.store_types.add(store_class)
