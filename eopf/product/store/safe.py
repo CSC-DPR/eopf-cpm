@@ -1,6 +1,14 @@
 import os
 import warnings
-from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional, Tuple
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Iterator,
+    MutableMapping,
+    Optional,
+    Sequence,
+    Tuple,
+)
 
 from eopf.exceptions import StoreNotOpenError
 
@@ -148,7 +156,7 @@ class EOSafeStore(EOProductStore):
             raise TypeError("Unexpected accessor type.")
         safe_hierachy._add_child(name)
 
-    def _add_accessor(self, file_path: str, item_format: str) -> EOProductStore:
+    def _add_accessor(self, file_path: str, item_format: str) -> Optional[EOProductStore]:
         mapped_store: Optional[EOProductStore]
         if item_format == "SafeHierarchy":
             mapped_store = self._accessor_map["SafeHierarchy:" + file_path] = SafeHierarchy()
@@ -169,13 +177,13 @@ class EOSafeStore(EOProductStore):
         self._accessor_map[item_format + ":" + file_path] = mapped_store
         return mapped_store
 
-    def _get_accessor(self, file_path: str, item_format: str) -> EOProductStore:
+    def _get_accessor(self, file_path: str, item_format: str) -> Optional[EOProductStore]:
         if item_format + ":" + file_path in self._accessor_map:
             return self._accessor_map[item_format + ":" + file_path]
         else:
             return self._add_accessor(file_path, item_format)
 
-    def _get_accessors_from_conf(self, conf_path: str) -> list[Tuple[EOProductStore, str]]:
+    def _get_accessors_from_conf(self, conf_path: str) -> Sequence[Tuple[EOProductStore, Optional[Any]]]:
         configs = self._config_mapping[conf_path]
         results = list()
         for conf in configs:
@@ -191,7 +199,7 @@ class EOSafeStore(EOProductStore):
                 results.append((accessor, accessor_local_path))
         return results
 
-    def _split_target_path(self, target_path: str) -> list[tuple[str, Optional[str]]]:
+    def _split_target_path(self, target_path: str) -> Sequence[tuple[str, Optional[str]]]:
         if target_path and target_path[0] == "/":
             safe_target_path = target_path[1:]
         else:
@@ -217,14 +225,14 @@ class EOSafeStore(EOProductStore):
             raise KeyError("Empty object match.")
         if len(eo_obj_list) == 1:
             return eo_obj_list[0]
-        dims = set()
+        dims: set[str] = set()
         attrs = dict()
         for eo_obj in eo_obj_list:
             if not isinstance(eo_obj, EOGroup):
                 raise NotImplementedError
             dims = dims.union(eo_obj.dims)
             attrs.update(eo_obj.attrs)
-        return EOGroup(attrs=attrs, dims=dims)
+        return EOGroup(attrs=attrs, dims=tuple(dims))
 
     def _apply_properties(self, eo_obj: "EOObject") -> "EOObject":
         # Should for example add the dims from the json config to an EOVariable.
@@ -300,7 +308,7 @@ class EOSafeStore(EOProductStore):
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
 
-        eo_obj_list = list()
+        eo_obj_list: list[EOObject] = list()
         for safe_path, accessor_path in self._split_target_path(key):
             if key in ["", "/"]:
                 eo_obj_list.append(EOGroup())
