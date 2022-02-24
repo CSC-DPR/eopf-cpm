@@ -399,7 +399,7 @@ def test_close_manifest_store(store: EOProductStore):
         store.close()
 
 
-@pytest.mark.unit
+@pytest.mark.usecase
 def test_retrieve_from_manifest_store():
     """Tested on 24th of February on data coming from
     S3A_OL_1_EFR____20220116T092821_20220116T093121_20220117T134858_0179_081_036_2160_LN1_O_NT_002.SEN3
