@@ -6,8 +6,8 @@ from eopf.product import EOProduct
 from eopf.product.store.mapping_factory import MappingFactory
 from eopf.product.store.safe import EOSafeStore
 
-copy_target = "~/work_dev/data_out/S3A_OL_1_EFR____20200101T101517_20200101T101817_20200102T141102_0179_053_179_2520_LN1_O_NT_002.SEN3"
-store_path = "~/work_dev/data/S3A_OL_1_EFR____20200101T101517_20200101T101817_20200102T141102_0179_053_179_2520_LN1_O_NT_002.SEN3"
+copy_target = "~/work_dev/data_out/S3A_OL_1_EFR____20200101T101517_20200101T101817_20200102T141102_0179_053_179_2520_LN1_O_NT_002.SEN3"  # noqa
+store_path = "~/work_dev/data/S3A_OL_1_EFR____20200101T101517_20200101T101817_20200102T141102_0179_053_179_2520_LN1_O_NT_002.SEN3"  # noqa
 
 
 @pytest.mark.usecase
