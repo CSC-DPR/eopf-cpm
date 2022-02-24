@@ -25,12 +25,12 @@ class SafeHierarchy(EOProductStore):
         return iter(self._child_list)
 
     def is_group(self, path: str) -> bool:
-        if path == "" or path == "/":
+        if path in ["", "/"]:
             return True
         raise NotImplementedError()
 
     def is_variable(self, path: str) -> bool:
-        if path == "" or path == "/":
+        if path in ["", "/"]:
             return False
         raise NotImplementedError()
 
@@ -52,7 +52,7 @@ class SafeHierarchy(EOProductStore):
             raise KeyError("Safe can't write key outside of it's dictionary")
 
     def __getitem__(self, key: str) -> "EOObject":
-        if key == "" or key == "/":
+        if key in ["", "/"]:
             return EOGroup()
         raise NotImplementedError()
 
@@ -133,7 +133,7 @@ class EOSafeStore(EOProductStore):
         else:
             self._config_mapping[target_path] = [config]
 
-        if target_path == "" or target_path == "/":
+        if target_path in ["", "/"]:
             return
         source_path_parent, name = upsplit_eo_path(target_path)
 
@@ -302,7 +302,7 @@ class EOSafeStore(EOProductStore):
 
         eo_obj_list = list()
         for safe_path, accessor_path in self._split_target_path(key):
-            if key == "" or key == "/":
+            if key in ["", "/"]:
                 eo_obj_list.append(EOGroup())
             for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
                 config_accessor_path = join_eo_path_optional(config_accessor_path, accessor_path)
