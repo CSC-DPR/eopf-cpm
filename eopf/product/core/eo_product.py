@@ -122,6 +122,9 @@ class EOProduct(EOContainer):
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
         self.store.open(mode=mode, **kwargs)
+        if mode in ["r"]:
+            group = self.store[""]
+            self.attrs.update(group.attrs)
         return self
 
     def is_valid(self) -> bool:
@@ -235,6 +238,4 @@ class EOProduct(EOContainer):
             raise StoreNotDefinedError("Store must be defined")
         if self.store.status == StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open")
-        group = self.store[""]
-        self.attrs.update(group.attrs)
         return super().load()
