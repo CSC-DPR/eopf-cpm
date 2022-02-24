@@ -447,12 +447,6 @@
       "target_path": "",
       "source_path": "xfdumanifest.xml",
       "item_format": "xfdumetadata"
-    },
-    {
-      "short_name": "xfdumanifest",
-      "target_path": "/misc/xfdumanifest.xml",
-      "source_path": "xfdumanifest.xml",
-      "item_format": "misc"
     }
   ],
   "metadata_mapping": {
