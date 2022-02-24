@@ -1,6 +1,6 @@
 import os
 import os.path
-from typing import Any
+from typing import Any, Optional
 
 import h5py
 import pytest
@@ -281,16 +281,11 @@ def cleanup_files():
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize(
-    "store",
-    [
-        ManifestStore(_FILES[2]),
-    ],
-)
-def test_mtd_store_must_be_open(fs: FakeFilesystem, store: EOProductStore):
+def test_mtd_store_must_be_open(fs: FakeFilesystem):
     """Given a manifest store, when accessing items inside it without previously opening it,
     the function must raise a StoreNotOpenError error.
     """
+    store = ManifestStore(_FILES[2])
     with pytest.raises(StoreNotOpenError):
         store["a_group"]
 
@@ -309,92 +304,31 @@ def test_init_manifest_store():
     assert manifest.url == url
 
 
-@pytest.mark.unit
 @pytest.mark.parametrize(
-    "store",
+    "config, exception_type",
     [
-        ManifestStore(_FILES[2]),
+        (None, MissingConfigurationParameter),
+        ([0, 1, 2], MissingConfigurationParameter),
+        ({"metadata_mapping": {}}, KeyError),
+        ({"namespaces": {}}, KeyError),
+        ({"namespaces": {}, "metadata_mapping": {}}, FileNotFoundError),
     ],
 )
-def test_open_manifest_store(store: EOProductStore):
+def test_open_manifest_store(config: Optional[dict], exception_type: Exception):
     """Given a manifest store, without passing configuration parameters
     the function must raise a MissingConfigurationParameter error.
     """
-    with pytest.raises(MissingConfigurationParameter):
-        store.open()
+    store = ManifestStore(_FILES[2])
+    with pytest.raises(exception_type):
+        store.open(config=config)
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize(
-    "store",
-    [
-        ManifestStore(_FILES[2]),
-    ],
-)
-def test_open_manifest_store2(store: EOProductStore):
-    """Given a manifest store, without passing a dictionary as configuration parameters
-    the function must raise a MissingConfigurationParameter error.
-    """
-    with pytest.raises(MissingConfigurationParameter):
-        store.open(config=[0, 1, 2])
-
-
-@pytest.mark.unit
-@pytest.mark.parametrize(
-    "store",
-    [
-        ManifestStore(_FILES[2]),
-    ],
-)
-def test_open_manifest_store3(store: EOProductStore):
-    """Given a manifest store, without passing the namespaces configuration parameters
-    the function must raise a KeyError.
-    """
-    with pytest.raises(KeyError):
-        store.open(config={"metadata_mapping": {}})
-
-
-@pytest.mark.unit
-@pytest.mark.parametrize(
-    "store",
-    [
-        ManifestStore(_FILES[2]),
-    ],
-)
-def test_open_manifest_store4(store: EOProductStore):
-    """Given a manifest store, without passing the metadata_mapping configuration parameters
-    the function must raise a KeyError.
-    """
-    with pytest.raises(KeyError):
-        store.open(config={"namespaces": {}})
-
-
-@pytest.mark.unit
-@pytest.mark.parametrize(
-    "store",
-    [
-        ManifestStore(_FILES[2]),
-    ],
-)
-def test_open_manifest_store5(store: EOProductStore):
-    """Given a manifest store, when trying to open an XML file that does not exist,
-    the function must raise a FileNotFound error.
-    """
-    with pytest.raises(FileNotFoundError):
-        store.open(config={"namespaces": {}, "metadata_mapping": {}})
-
-
-@pytest.mark.unit
-@pytest.mark.parametrize(
-    "store",
-    [
-        ManifestStore(_FILES[2]),
-    ],
-)
-def test_close_manifest_store(store: EOProductStore):
+def test_close_manifest_store():
     """Given a manifest store, when trying to close it while not previously opening it,
     the function must raise a StoreNotOpen error.
     """
+    store = ManifestStore(_FILES[2])
     with pytest.raises(StoreNotOpenError):
         store.close()
 

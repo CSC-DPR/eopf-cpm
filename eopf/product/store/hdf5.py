@@ -43,7 +43,7 @@ class EOHDF5Store(EOProductStore):
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         current_node = self._select_node(path)
-        if not (path == "" or path == "/"):
+        if path not in ["", "/"]:
             current_node.attrs.update(attrs)
 
     def iter(self, path: str) -> Iterator[str]:
@@ -61,10 +61,7 @@ class EOHDF5Store(EOProductStore):
         obj = self._select_node(key)
         if self.is_group(key):
             return EOGroup(name=key, attrs=obj.attrs)
-        if obj is not None:
-            return EOVariable(name=key, data=obj[:], attrs=obj.attrs)
-        else:
-            return EOVariable(name=key)
+        return EOVariable(name=key, data=obj[()], attrs=obj.attrs)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
         if self._root is None:
