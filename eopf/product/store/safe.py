@@ -1,4 +1,5 @@
 import os
+import warnings
 from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional, Tuple
 
 from eopf.exceptions import StoreNotOpenError
@@ -103,7 +104,7 @@ class EOSafeStore(EOProductStore):
         super().__init__(url)
         self._store_factory = store_factory
         self._mapping_factory = mapping_factory
-        self._accessor_map: dict[str, EOProductStore] = dict()  # map item_format : source path to Store
+        self._accessor_map: dict[str, Optional[EOProductStore]] = dict()  # map item_format : source path to Store
         self._config_mapping: dict[str, list[dict[str, Any]]] = dict()  # map source path to config read from Json
         self._accessor_open_config: dict[str, dict[str, Any]] = dict()
         self._mode = "CLOSED"
@@ -148,7 +149,7 @@ class EOSafeStore(EOProductStore):
         safe_hierachy._add_child(name)
 
     def _add_accessor(self, file_path: str, item_format: str) -> EOProductStore:
-        mapped_store: EOProductStore
+        mapped_store: Optional[EOProductStore]
         if item_format == "SafeHierarchy":
             mapped_store = self._accessor_map["SafeHierarchy:" + file_path] = SafeHierarchy()
         else:
@@ -156,12 +157,15 @@ class EOSafeStore(EOProductStore):
                 self.url + file_path,
                 item_format,
             )
-        if self._status is StorageStatus.OPEN:
-            if item_format in self._accessor_open_config:
-                mapped_store.open(mode=self._mode, config=self._accessor_open_config[item_format])
-            else:
-                mapped_store.open(mode=self._mode)
-
+        try:
+            if self._status is StorageStatus.OPEN:
+                if item_format in self._accessor_open_config:
+                    mapped_store.open(mode=self._mode, config=self._accessor_open_config[item_format])
+                else:
+                    mapped_store.open(mode=self._mode)
+        except NotImplementedError:
+            mapped_store = None
+            warnings.warn("Unimplemented store mode")
         self._accessor_map[item_format + ":" + file_path] = mapped_store
         return mapped_store
 
@@ -182,7 +186,9 @@ class EOSafeStore(EOProductStore):
             accessor_local_path = None
             if len(accessor_source_split) == 2:
                 accessor_local_path = accessor_source_split[1]
-            results.append((self._get_accessor(accessor_file, conf[self.CONFIG_FORMAT]), accessor_local_path))
+            accessor = self._get_accessor(accessor_file, conf[self.CONFIG_FORMAT])
+            if accessor is not None:  # We also want to append accessor of len 0.
+                results.append((accessor, accessor_local_path))
         return results
 
     def _split_target_path(self, target_path: str) -> tuple[str, Optional[str]]:
@@ -227,7 +233,9 @@ class EOSafeStore(EOProductStore):
         if not self._config_mapping:
             self._read_json_config()
         for key in self._accessor_map:
-            self._accessor_map[key].open(mode, **kwargs)
+            accessor = self._accessor_map[key]
+            if accessor:
+                accessor.open(mode, **kwargs)
         if mode == "w":
             try:
                 os.mkdir(os.path.expanduser(self.url))
@@ -238,7 +246,9 @@ class EOSafeStore(EOProductStore):
         super().close()
         self._mode = "CLOSED"
         for key in self._accessor_map:
-            self._accessor_map[key].close()
+            accessor = self._accessor_map[key]
+            if accessor:
+                accessor.close()
 
     def is_group(self, path: str) -> bool:
         if self.status is StorageStatus.CLOSE:

@@ -52,6 +52,8 @@ class ManifestStore(EOProductStore):
         **kwargs: Any
             extra kwargs through which configuration parameters are passsed
         """
+        if mode != "r":
+            raise NotImplementedError()
 
         # get configuration parameters
         if "config" not in kwargs.keys():
