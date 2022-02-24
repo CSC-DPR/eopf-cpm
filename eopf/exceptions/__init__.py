@@ -20,3 +20,11 @@ class EOObjectExistError(Exception):
 
 class EOObjectMultipleParentError(Exception):
     pass
+
+
+class XmlParsingError(Exception):
+    pass
+
+
+class MissingConfigurationParameter(Exception):
+    pass

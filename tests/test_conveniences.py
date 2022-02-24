@@ -15,12 +15,18 @@ from eopf.product.conveniences import (
 )
 
 
+@pytest.fixture
+def tree():
+    snippet_path = "tests/data/snippet_xfdumanifest.xml"
+    snippet_file = open(snippet_path)
+    tree = parse_xml(snippet_file)
+    return tree
+
+
 @pytest.mark.unit
-def test_parse_xml():
+def test_parse_xml(tree):
     """Given an input xml,
     the output of the function must match the expected output"""
-
-    tree = parse_xml(os.path.abspath("tests/data"), "*.xml")
     result = ""
     display_namespaces = True
     for element in tree.iter():
@@ -43,11 +49,9 @@ def test_parse_xml():
 
 
 @pytest.mark.unit
-def test_translate_structure():
+def test_translate_structure(tree):
     """Given an input xml,
     the output of the function must match the expected output"""
-
-    dom = parse_xml(os.path.abspath("tests/data"), "*.xml")
     MAP = {
         "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName/text())",  # noqa
         "Conventions": "'CF-1.9'",
@@ -59,7 +63,7 @@ def test_translate_structure():
         "sentinel3": "http://www.esa.int/safe/sentinel/sentinel-3/1.0",
         "olci": "http://www.esa.int/safe/sentinel/sentinel-3/olci/1.0",
     }
-    result = {attr: translate_structure(MAP[attr], dom, NAMESPACES) for attr in MAP}
+    result = {attr: translate_structure(MAP[attr], tree, NAMESPACES) for attr in MAP}
     assert result == {
         "title": "S3A_OL_1_EFR____20220116T092821_20220116T093121_20220117T134858_0179_081_036_2160_LN1_O_NT_002.SEN3",
         "Conventions": "CF-1.9",
@@ -67,11 +71,9 @@ def test_translate_structure():
 
 
 @pytest.mark.unit
-def test_apply_xpath():
+def test_apply_xpath(tree):
     """Given an input xml,
     the output of the function must match the expected output"""
-
-    dom = parse_xml(os.path.abspath("tests/data"), "*.xml")
     MAP = {
         "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName/text())",  # noqa
         "Conventions": "'CF-1.9'",
@@ -83,7 +85,7 @@ def test_apply_xpath():
         "sentinel3": "http://www.esa.int/safe/sentinel/sentinel-3/1.0",
         "olci": "http://www.esa.int/safe/sentinel/sentinel-3/olci/1.0",
     }
-    result = {attr: apply_xpath(dom, MAP[attr], NAMESPACES) for attr in MAP}
+    result = {attr: apply_xpath(tree, MAP[attr], NAMESPACES) for attr in MAP}
     assert result == {
         "title": "S3A_OL_1_EFR____20220116T092821_20220116T093121_20220117T134858_0179_081_036_2160_LN1_O_NT_002.SEN3",
         "Conventions": "CF-1.9",
@@ -91,11 +93,9 @@ def test_apply_xpath():
 
 
 @pytest.mark.unit
-def test_etree_to_dict():
+def test_etree_to_dict(tree):
     """Given an input xml,
     the output of the function must match the expected output"""
-
-    tree = parse_xml(os.path.abspath("tests/data"), "*.xml")
     root = tree.getroot()
     ddict = etree_to_dict(root[0])
     assert ddict == {

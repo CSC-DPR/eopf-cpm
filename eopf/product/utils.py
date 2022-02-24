@@ -76,6 +76,23 @@ def join_eo_path(*subpaths: str) -> str:
     return norm_eo_path(posixpath.join(*subpaths))
 
 
+def join_eo_path_optional(*subpaths: Optional[str]) -> str:
+    """Join eo object paths.
+
+    Parameters
+    ----------
+    *subpaths: str
+
+    Returns
+    -------
+    str
+    """
+    valid_subpaths = [path for path in subpaths if path]
+    if not valid_subpaths:
+        return ""
+    return join_eo_path(*valid_subpaths)
+
+
 def partition_eo_path(eo_path: str) -> tuple[str, ...]:
     """Extract each elements of the eo_path
 
