@@ -29,6 +29,7 @@ def test_load_product():
     product.open()
     assert "CF" in product.attrs
     product.load()
+    assert product._groups
     assert "CF" in product.attrs
     product.store.close()
 
