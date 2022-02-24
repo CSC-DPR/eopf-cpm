@@ -98,10 +98,10 @@ class OLCIL1EOPConverter(S3L1EOPConverter):
 
     def _build_attributes_eog(self) -> None:
         """build attributes eog mandatory"""
-
-        xfdu_dom = parse_xml(self.input_path, "xfdumanifest.xml")
-        xml_path = os.path.join(self.input_path, "xfdumanifest.xml")
-        tree = ET.parse(xml_path)
+        manifest_path = os.path.join(self.input_path, "xfdumanifest.xml")
+        manifest = open(manifest_path)
+        xfdu_dom = parse_xml(manifest)
+        tree = ET.parse(manifest_path)
         root = tree.getroot()
         xfdu = etree_to_dict(root[1])
         cf = {attr: apply_xpath(xfdu_dom, CF_MAP_OLCI_L1[attr], NAMESPACES_OLCI_L1) for attr in CF_MAP_OLCI_L1}
@@ -244,9 +244,10 @@ class SLSTRL1EOPConverter(S3L1EOPConverter):
 
     def _build_attributes_eog(self) -> None:
         """build attributes eog mandatory"""
-        xfdu_dom = parse_xml(self.input_path, "xfdumanifest.xml")
-        xml_path = os.path.join(self.input_path, "xfdumanifest.xml")
-        tree = ET.parse(xml_path)
+        manifest_path = os.path.join(self.input_path, "xfdumanifest.xml")
+        manifest = open(manifest_path)
+        xfdu_dom = parse_xml(manifest)
+        tree = ET.parse(manifest_path)
         root = tree.getroot()
         xfdu = etree_to_dict(root[1])
         cf = {attr: apply_xpath(xfdu_dom, CF_MAP_SLSTR_L1[attr], NAMESPACES_SLSTR_L1) for attr in CF_MAP_SLSTR_L1}
