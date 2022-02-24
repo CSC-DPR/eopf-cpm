@@ -19,8 +19,9 @@ from eopf.product.conveniences import (
 def test_parse_xml():
     """Given an input xml,
     the output of the function must match the expected output"""
-
-    tree = parse_xml(os.path.abspath("tests/data"), "*.xml")
+    snippet_path = "tests/data/snippet_xfdumanifest.xml"
+    snippet_file = open(snippet_path)
+    tree = parse_xml(snippet_file)
     result = ""
     display_namespaces = True
     for element in tree.iter():
@@ -46,8 +47,9 @@ def test_parse_xml():
 def test_translate_structure():
     """Given an input xml,
     the output of the function must match the expected output"""
-
-    dom = parse_xml(os.path.abspath("tests/data"), "*.xml")
+    snippet_path = "tests/data/snippet_xfdumanifest.xml"
+    snippet_file = open(snippet_path)
+    dom = parse_xml(snippet_file)
     MAP = {
         "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName/text())",  # noqa
         "Conventions": "'CF-1.9'",
@@ -70,8 +72,9 @@ def test_translate_structure():
 def test_apply_xpath():
     """Given an input xml,
     the output of the function must match the expected output"""
-
-    dom = parse_xml(os.path.abspath("tests/data"), "*.xml")
+    snippet_path = "tests/data/snippet_xfdumanifest.xml"
+    snippet_file = open(snippet_path)
+    dom = parse_xml(snippet_file)
     MAP = {
         "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName/text())",  # noqa
         "Conventions": "'CF-1.9'",
@@ -94,8 +97,9 @@ def test_apply_xpath():
 def test_etree_to_dict():
     """Given an input xml,
     the output of the function must match the expected output"""
-
-    tree = parse_xml(os.path.abspath("tests/data"), "*.xml")
+    snippet_path = "tests/data/snippet_xfdumanifest.xml"
+    snippet_file = open(snippet_path)
+    tree = parse_xml(snippet_file)
     root = tree.getroot()
     ddict = etree_to_dict(root[0])
     assert ddict == {
