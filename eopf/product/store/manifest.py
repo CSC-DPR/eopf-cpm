@@ -97,7 +97,7 @@ class ManifestStore(EOProductStore):
         if self._xml_fobj is None:
             raise StoreNotOpenError("Store must be open before access to it")
 
-        if path not in ["", super().sep]:
+        if path not in ["", self.sep]:
             raise KeyError(f"Invalid path: {path}")
 
         yield from ()
@@ -143,8 +143,7 @@ class ManifestStore(EOProductStore):
         if self._xml_fobj is None:
             raise StoreNotOpenError("Store must be open before access to it")
 
-        for key in self.KEYS:
-            yield key
+        yield from self.KEYS
 
     def _parse_xml(self) -> None:
         """Parses the manifest xml and saves it in _parsed_xml

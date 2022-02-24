@@ -11,20 +11,6 @@ if TYPE_CHECKING:
     from eopf.product.core.eo_object import EOObject
 
 
-# class H5ls:
-#     """This class displays the structure of a hdf5 file, i.e. the names of groups and variables"""
-
-#    def __init__(self) -> None:
-#        self.names: List[str] = []
-
-#    def __call__(self, name: str) -> None:
-#        if name not in self.names:
-#            self.names += [name]
-
-#    def get_items(self) -> int:
-#        return len(self.names)
-
-
 class EOHDF5Store(EOProductStore):
     def __init__(self, url: str) -> None:
         super().__init__(url)
@@ -57,7 +43,8 @@ class EOHDF5Store(EOProductStore):
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         current_node = self._select_node(path)
-        current_node.attrs.update(attrs)
+        if path not in ["", "/"]:
+            current_node.attrs.update(attrs)
 
     def iter(self, path: str) -> Iterator[str]:
         if self._root is None:
@@ -95,12 +82,6 @@ class EOHDF5Store(EOProductStore):
         return it.chain(iter(self._root.keys()))
 
     def __len__(self) -> int:
-        # Goal ? doesn't work ontest by the way ...
-        # items: int = 0
-        # h5ls = H5ls()
-        # self._root.visititems(h5ls)
-        # return h5ls.get_items()
-
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         return len(self._root)
@@ -108,6 +89,6 @@ class EOHDF5Store(EOProductStore):
     def _select_node(self, key: str) -> Union[h5py.Group, h5py.Dataset]:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        if key in [""]:
-            return self._root["/"]
+        if key in ["/", ""]:
+            return self._root
         return self._root[key]
