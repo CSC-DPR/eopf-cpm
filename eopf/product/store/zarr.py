@@ -89,7 +89,7 @@ class EOZarrStore(EOProductStore):
         if isinstance(value, EOGroup):
             self._root.create_group(key, overwrite=True)
         elif isinstance(value, EOVariable):
-            self._root.create_dataset(key, data=value._data)
+            self._root.create_dataset(key, data=value._data.values)
             if hasattr(self._root.store, "path"):
                 zarr.consolidate_metadata(self.sep.join([self._root.store.path, self._root[key].path]))
         else:
