@@ -117,11 +117,11 @@ class EOSafeStore(EOProductStore):
         self._accessor_open_config: dict[str, dict[str, Any]] = dict()
         self._mode = "CLOSED"
 
-    def _read_json_config(self) -> None:
+    def _read_product_mapping(self) -> None:
         json_data = self._mapping_factory.get_mapping(self.url)
         json_config_list = json_data["data_mapping"]
         for config in json_config_list:
-            self._add_data_config(config[self.CONFIG_TARGET], config)
+            self._add_data_mapping(config[self.CONFIG_TARGET], config)
         self._accessor_open_config["xfdumetadata"] = dict()
         self._accessor_open_config["xfdumetadata"]["metadata_mapping"] = json_data["metadata_mapping"]
         self._accessor_open_config["xfdumetadata"]["namespaces"] = json_data["namespaces"]
@@ -135,7 +135,7 @@ class EOSafeStore(EOProductStore):
                 return True
         return False
 
-    def _add_data_config(self, target_path: str, config: dict[str, Any]) -> None:
+    def _add_data_mapping(self, target_path: str, config: dict[str, Any]) -> None:
         if target_path in self._config_mapping:
             self._config_mapping[target_path].append(config)
         else:
@@ -150,7 +150,7 @@ class EOSafeStore(EOProductStore):
             parent_config["target_path"] = source_path_parent
             parent_config["source_path"] = source_path_parent
             parent_config["item_format"] = self.SAFE_HIERARCHY_FORMAT
-            self._add_data_config(source_path_parent, parent_config)
+            self._add_data_mapping(source_path_parent, parent_config)
         safe_hierachy = self._get_accessor(source_path_parent, self.SAFE_HIERARCHY_FORMAT)
         if not isinstance(safe_hierachy, SafeHierarchy):
             raise TypeError("Unexpected accessor type.")
@@ -183,7 +183,7 @@ class EOSafeStore(EOProductStore):
         else:
             return self._add_accessor(file_path, item_format)
 
-    def _get_accessors_from_conf(self, conf_path: str) -> Sequence[Tuple[EOProductStore, Optional[Any]]]:
+    def _get_accessors_from_mapping(self, conf_path: str) -> Sequence[Tuple[EOProductStore, Optional[Any]]]:
         configs = self._config_mapping[conf_path]
         results = list()
         for conf in configs:
@@ -219,7 +219,7 @@ class EOSafeStore(EOProductStore):
                 raise KeyError("Path not found in the configuration")
             local_path.insert(0, name)
 
-    def _eo_obj_fuse(self, *eo_obj_list: "EOObject") -> "EOObject":
+    def _eo_object_merge(self, *eo_obj_list: "EOObject") -> "EOObject":
         # Should at least merge dims and attributes of EOVariables/Group.
         if not eo_obj_list:
             raise KeyError("Empty object match.")
@@ -242,7 +242,7 @@ class EOSafeStore(EOProductStore):
         super().open()
         self._mode = mode
         if not self._config_mapping:
-            self._read_json_config()
+            self._read_product_mapping()
         for key in self._accessor_map:
             accessor = self._accessor_map[key]
             if accessor:
@@ -265,7 +265,7 @@ class EOSafeStore(EOProductStore):
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
         for safe_path, accessor_path in self._split_target_path(path):
-            for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
+            for accessor, config_accessor_path in self._get_accessors_from_mapping(safe_path):
                 config_accessor_path = join_eo_path_optional(config_accessor_path, accessor_path)
                 # Stores are not supposed to throw KeyError on is_group
                 if accessor.is_group(config_accessor_path):
@@ -276,7 +276,7 @@ class EOSafeStore(EOProductStore):
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
         for safe_path, accessor_path in self._split_target_path(path):
-            for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
+            for accessor, config_accessor_path in self._get_accessors_from_mapping(safe_path):
                 config_accessor_path = join_eo_path_optional(config_accessor_path, accessor_path)
                 # Stores are not supposed to throw KeyError on is_group
                 if accessor.is_variable(config_accessor_path):
@@ -287,7 +287,7 @@ class EOSafeStore(EOProductStore):
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
         for safe_path, accessor_path in self._split_target_path(group_path):
-            for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
+            for accessor, config_accessor_path in self._get_accessors_from_mapping(safe_path):
                 config_accessor_path = join_eo_path_optional(config_accessor_path, accessor_path)
                 # We might want to catch Unimplemented/KeyError and throw one if none write_attrs suceed
                 accessor.write_attrs(config_accessor_path)
@@ -298,7 +298,7 @@ class EOSafeStore(EOProductStore):
 
         key_set: set[str] = set()
         for safe_path, accessor_path in self._split_target_path(path):
-            for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
+            for accessor, config_accessor_path in self._get_accessors_from_mapping(safe_path):
                 config_accessor_path = join_eo_path_optional(config_accessor_path, accessor_path)
                 # Should not throw exception if their store is Open.
                 key_set = key_set.union(accessor.iter(config_accessor_path))
@@ -312,19 +312,19 @@ class EOSafeStore(EOProductStore):
         for safe_path, accessor_path in self._split_target_path(key):
             if key in ["", "/"]:
                 eo_obj_list.append(EOGroup())
-            for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
+            for accessor, config_accessor_path in self._get_accessors_from_mapping(safe_path):
                 config_accessor_path = join_eo_path_optional(config_accessor_path, accessor_path)
                 # We should catch Key Error, and throw if the object isn't found in any of the accessors
                 accessed_object = accessor[config_accessor_path]
                 processed_object = self._apply_properties(accessed_object)
                 eo_obj_list.append(processed_object)
-        return self._eo_obj_fuse(*eo_obj_list)
+        return self._eo_object_merge(*eo_obj_list)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
         for safe_path, accessor_path in self._split_target_path(key):
-            for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
+            for accessor, config_accessor_path in self._get_accessors_from_mapping(safe_path):
                 config_accessor_path = join_eo_path_optional(config_accessor_path, accessor_path)
                 # We should catch Key Error, and throw if the object isn't set in any of the accessors
                 accessor[config_accessor_path] = value  # I hope we don't need to reverse apply_properties.
@@ -333,7 +333,7 @@ class EOSafeStore(EOProductStore):
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
         for safe_path, accessor_path in self._split_target_path(key):
-            for accessor, config_accessor_path in self._get_accessors_from_conf(safe_path):
+            for accessor, config_accessor_path in self._get_accessors_from_mapping(safe_path):
                 config_accessor_path = join_eo_path_optional(config_accessor_path, accessor_path)
                 # We should catch Key Error, and throw if the object isn't found in any of the accessors
                 del accessor[config_accessor_path]
