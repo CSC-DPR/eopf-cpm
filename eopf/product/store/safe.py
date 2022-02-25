@@ -330,7 +330,6 @@ class EOSafeStore(EOProductStore):
 
         """
         # Should for example add the dims from the json config to an EOVariable.
-        # FIXME We're going to need the config. Shoulkd probably add it to _get_accessors_from_mapping
         return eo_obj
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
