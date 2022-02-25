@@ -112,12 +112,16 @@ class EOSafeStore(EOProductStore):
         super().__init__(url)
         self._store_factory = store_factory
         self._mapping_factory = mapping_factory
+        # _accesor_map map the open accessor by file and accessor type to avoid reopening them in case of reuse.
         self._accessor_map: dict[str, Optional[EOProductStore]] = dict()  # map item_format : source path to Store
+        # _config_mapping contain the mapping config by target_path read from the json mapping.
+        # It's a dictionary of list as we can have multiple mapping for the same target_path.
         self._config_mapping: dict[str, list[dict[str, Any]]] = dict()  # map source path to config read from Json
         self._accessor_open_config: dict[str, dict[str, Any]] = dict()
         self._mode = "CLOSED"
 
     def _read_product_mapping(self) -> None:
+        """Read mapping from the mapping factory and fill _config_mapping from it."""
         json_data = self._mapping_factory.get_mapping(self.url)
         json_config_list = json_data["data_mapping"]
         for config in json_config_list:
@@ -126,7 +130,17 @@ class EOSafeStore(EOProductStore):
         self._accessor_open_config["xfdumetadata"]["metadata_mapping"] = json_data["metadata_mapping"]
         self._accessor_open_config["xfdumetadata"]["namespaces"] = json_data["namespaces"]
 
-    def _contain_hierarchy_config(self, target_path: str) -> bool:
+    def _contain_hierarchy_mapping(self, target_path: str) -> bool:
+        """Check if a hierarchy mapping is defined for target_path.
+
+        Parameters
+        ----------
+        target_path
+
+        Returns
+        -------
+
+        """
         if target_path not in self._config_mapping:
             return False
         config_list = self._config_mapping[target_path]
@@ -136,6 +150,18 @@ class EOSafeStore(EOProductStore):
         return False
 
     def _add_data_mapping(self, target_path: str, config: dict[str, Any]) -> None:
+        """Add a mapping from the format read from json to our internal format.
+        Also add own parents mapping and register new children to ancestors hierarchy store.
+
+        Parameters
+        ----------
+        target_path
+        config
+
+        Returns
+        -------
+
+        """
         if target_path in self._config_mapping:
             self._config_mapping[target_path].append(config)
         else:
@@ -145,7 +171,7 @@ class EOSafeStore(EOProductStore):
             return
         source_path_parent, name = upsplit_eo_path(target_path)
 
-        if not self._contain_hierarchy_config(source_path_parent):
+        if not self._contain_hierarchy_mapping(source_path_parent):
             parent_config = dict()
             parent_config["target_path"] = source_path_parent
             parent_config["source_path"] = source_path_parent
@@ -157,6 +183,19 @@ class EOSafeStore(EOProductStore):
         safe_hierachy._add_child(name)
 
     def _add_accessor(self, file_path: str, item_format: str) -> Optional[EOProductStore]:
+        """Add an accessor (sub store) to the opened accessor dictionary.
+        The accessor is created using the _store_factory (except for SafeHierarchy).
+
+        Parameters
+        ----------
+        file_path
+        item_format
+
+        Returns
+        -------
+
+        """
+
         mapped_store: Optional[EOProductStore]
         if item_format == "SafeHierarchy":
             mapped_store = self._accessor_map["SafeHierarchy:" + file_path] = SafeHierarchy()
@@ -178,12 +217,33 @@ class EOSafeStore(EOProductStore):
         return mapped_store
 
     def _get_accessor(self, file_path: str, item_format: str) -> Optional[EOProductStore]:
+        """Get an accessor from the opened accessors dictionary. If it's not present a new one is added.
+
+        Parameters
+        ----------
+        file_path
+        item_format
+
+        Returns
+        -------
+
+        """
         if item_format + ":" + file_path in self._accessor_map:
             return self._accessor_map[item_format + ":" + file_path]
         else:
             return self._add_accessor(file_path, item_format)
 
     def _get_accessors_from_mapping(self, conf_path: str) -> Sequence[Tuple[EOProductStore, Optional[Any]]]:
+        """Get all accessor corresponding to the configs of conf_path.
+        As multiple mapping car match a single conf_path, it can return multiple accessors.
+        Parameters
+        ----------
+        conf_path
+
+        Returns
+        -------
+
+        """
         configs = self._config_mapping[conf_path]
         results = list()
         for conf in configs:
@@ -200,6 +260,16 @@ class EOSafeStore(EOProductStore):
         return results
 
     def _split_target_path(self, target_path: str) -> Sequence[tuple[str, Optional[str]]]:
+        """Split target_path between a path where a mapping is registered, and a local path.
+
+        Parameters
+        ----------
+        target_path
+
+        Returns
+        -------
+
+        """
         if target_path and target_path[0] == "/":
             safe_target_path = target_path[1:]
         else:
@@ -220,6 +290,17 @@ class EOSafeStore(EOProductStore):
             local_path.insert(0, name)
 
     def _eo_object_merge(self, *eo_obj_list: "EOObject") -> "EOObject":
+        """Merge all eo objectect passed to this function.
+        We do an union on dims and attributes.
+
+        Parameters
+        ----------
+        eo_obj_list
+
+        Returns
+        -------
+
+        """
         # Should at least merge dims and attributes of EOVariables/Group.
         if not eo_obj_list:
             raise KeyError("Empty object match.")
@@ -235,7 +316,18 @@ class EOSafeStore(EOProductStore):
         return EOGroup(attrs=attrs, dims=tuple(dims))
 
     def _apply_properties(self, eo_obj: "EOObject") -> "EOObject":
+        """Modify the eo_object according to the json data_mapping config.
+
+        Parameters
+        ----------
+        eo_obj
+
+        Returns
+        -------
+
+        """
         # Should for example add the dims from the json config to an EOVariable.
+        # FIXME We're going to need the config. Shoulkd probably add it to _get_accessors_from_mapping
         return eo_obj
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
