@@ -26,6 +26,9 @@ dependencies:
   - pip:
     - pyre-check==0.9.8
     - yummy-sphinx-theme==0.1.1
-    - jinja2==2.11.3
+    - jinja2==3.0.3
     - ipython==7.30.0
     - isort==5.10.1
+    - docstr-coverage==2.1.1
+    - xenon==0.8.0
+    - h5py==3.6.0

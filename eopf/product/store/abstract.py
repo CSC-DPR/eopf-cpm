@@ -2,9 +2,7 @@ import enum
 import warnings
 from abc import abstractmethod
 from collections.abc import MutableMapping
-from typing import Any, Iterable, Iterator, Optional
-
-import xarray
+from typing import Any, Iterator
 
 from eopf.exceptions.warnings import AlreadyClose, AlreadyOpen
 
@@ -86,81 +84,6 @@ class EOProductStore(MutableMapping[str, Any]):
         self._status = StorageStatus.CLOSE
 
     @abstractmethod
-    def listdir(self, path: Optional[str] = None) -> Iterable[str]:
-        """List the given path on the store, or the root if no path.
-
-        Parameters
-        ----------
-        path: str, optional
-            path to list on the store
-
-        Returns
-        -------
-        Iterable[str]
-            List like object containing the path of object inside
-
-        Raises
-        ------
-        StoreNotOpenError
-            If the store is closed
-        """
-
-    @abstractmethod
-    def rmdir(self, path: Optional[str] = None) -> None:
-        """Remove the given path on the store, or the root if no path.
-
-        Parameters
-        ----------
-        path: str, optional
-            path to remove on the store
-
-        Raises
-        ------
-        StoreNotOpenError
-            If the store is closed
-        """
-
-    @abstractmethod
-    def clear(self) -> None:
-        """Clear the store from root path
-
-        Raises
-        ------
-        StoreNotOpenError
-            If the store is closed
-        """
-
-    @abstractmethod
-    def getsize(self, path: Optional[str] = None) -> None:
-        """Return size under the path or root if no path given
-
-        Parameters
-        ----------
-        path: str, optional
-            path to get size on the store
-
-        Raises
-        ------
-        StoreNotOpenError
-            If the store is closed
-        """
-
-    @abstractmethod
-    def dir_path(self, path: Optional[str] = None) -> None:
-        """Return directory path of the given path or root
-
-        Parameters
-        ----------
-        path: str, optional
-            path to get directory on the store
-
-        Raises
-        ------
-        StoreNotOpenError
-            If the store is closed
-        """
-
-    @abstractmethod
     def is_group(self, path: str) -> bool:
         """Check if the given path under root corresponding to a group representation
 
@@ -196,43 +119,7 @@ class EOProductStore(MutableMapping[str, Any]):
         """
 
     @abstractmethod
-    def add_group(self, name: str, relative_path: Iterable[str] = [], attrs: MutableMapping[str, Any] = {}) -> None:
-        """Write a group over the store
-
-        Parameters
-        ----------
-        name: str
-            name of the group
-        relative_path: Iterable[str], optional
-            list of all parents from root level
-        attrs: MutableMapping[str, Any], optional
-            dict like representation of attributes to assign
-
-        Raises
-        ------
-        StoreNotOpenError
-            If the store is closed
-        """
-
-    @abstractmethod
-    def add_variables(self, name: str, dataset: xarray.Dataset, relative_path: Iterable[str] = []) -> None:
-        """Write variables over the store from :obj:`xarray.Dataset`
-
-        Parameters
-        ----------
-        name: str
-            name of the dataset
-        relative_path: Iterable[str], optional
-            list of all parents from root level
-
-        Raises
-        ------
-        StoreNotOpenError
-            If the store is closed
-        """
-
-    @abstractmethod
-    def update_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
+    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         """Update attrs in the store
 
         Parameters
@@ -241,23 +128,6 @@ class EOProductStore(MutableMapping[str, Any]):
             path of the object to write attributes
         attrs: MutableMapping[str, Any], optional
             dict like representation of attributes to write
-
-        Raises
-        ------
-        StoreNotOpenError
-            If the store is closed
-        """
-
-    @abstractmethod
-    def delete_attr(self, group_path: str, attr_name: str) -> None:
-        """Delete the specific attributes
-
-        Parameters
-        ----------
-        group_path: str
-            path of the object corresponding to the attributes
-        attr_name: str
-            name of the attributes to delete
 
         Raises
         ------
@@ -285,31 +155,9 @@ class EOProductStore(MutableMapping[str, Any]):
             If the store is closed
         """
 
-    @abstractmethod
-    def get_data(self, path: str) -> tuple[Optional[xarray.Dataset], dict[str, Any]]:
-        """Retrieve the datas of a group indexed by the given path.
+    def __delitem__(self, key: str) -> None:
+        raise NotImplementedError()
 
-        Parameters
-        ----------
-        path: str
-            path of the group that's containe the data
-
-        Returns
-        -------
-        Dataset or None
-            data of the group
-        dict[str, Any]
-            attributes of the group
-
-        Raises
-        ------
-        StoreNotOpenError
-            If the store is closed
-        KeyError
-            There is no data at the given path
-        TypeError
-            You try to extract data from variable directly
-        """
-
-    def __hash__(self) -> int:
-        return id(self)
+    @staticmethod
+    def guess_can_read(file_path: str) -> bool:
+        return False

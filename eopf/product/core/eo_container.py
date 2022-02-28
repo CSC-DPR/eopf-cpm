@@ -1,7 +1,7 @@
 import warnings
 from abc import abstractmethod
 from collections.abc import MutableMapping
-from typing import TYPE_CHECKING, Any, Callable, Iterator, Optional, Union
+from typing import TYPE_CHECKING, Any, Callable, Iterator, Optional
 
 from eopf.exceptions import EOObjectExistError, StoreNotDefinedError
 from eopf.product.core.eo_abstract import EOAbstract
@@ -11,16 +11,16 @@ from eopf.product.utils import (
     is_absolute_eo_path,
     join_path,
     norm_eo_path,
-    partition_eo_path,
     product_relative_path,
 )
 
 if TYPE_CHECKING:  # pragma: no cover
     from .eo_group import EOGroup
+    from .eo_object import EOObject
     from .eo_variable import EOVariable
 
 
-class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]]):
+class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
     """Abstract class implemented by EOProduct and EOGroup.
     Storage of EOVariable and EOGroup, linked to their EOProduct's EOProductStore (if existing).
     Read and write both dynamically, or on demand to the EOProductStore.
@@ -36,10 +36,10 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         self._groups: dict[str, "EOGroup"] = {}
         self._attrs: dict[str, Any] = dict(attrs) if attrs is not None else {}
 
-    def __getitem__(self, key: str) -> Union["EOGroup", "EOVariable"]:
+    def __getitem__(self, key: str) -> "EOObject":
         return self._get_item(key)
 
-    def __setitem__(self, key: str, value: Union["EOGroup", "EOVariable"]) -> None:
+    def __setitem__(self, key: str, value: "EOObject") -> None:
         from .eo_group import EOGroup
 
         if key == "":
@@ -50,11 +50,13 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         # fixme should probably set the product and path
         key, subkeys = downsplit_eo_path(key)
         if subkeys:
-            self[key][subkeys] = value
+            sub_container = self[key]
+            if not isinstance(sub_container, EOContainer):
+                raise KeyError("__delitem__ can't take an absolute path as argument")
+            sub_container[subkeys] = value
             return
-        item_rel_path = partition_eo_path(self.path)
 
-        value._repath(key, self.product, item_rel_path)
+        value._repath(key, self)
         if isinstance(value, EOGroup):
             self._groups[key] = value
         else:
@@ -69,59 +71,15 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
                     yield key
         yield from self._groups
 
-    def __delitem__(self, key: str) -> None:
-        if is_absolute_eo_path(key):
-            raise KeyError("__delitem__ can't take an absolute path as argument")
-        name, keys = downsplit_eo_path(key)
+    def _get_item(self, key: str) -> "EOObject":
+        """find and return eovariable or eogroup from the given key.
 
-        if keys is None:
-            if name in self._groups:
-                del self._groups[name]
-            if self.store is not None and (store_key := self._relative_key(name)) in self.store:
-                del self.store[store_key]
-        else:
-            del self[name][keys]
-
-    def __len__(self) -> int:
-        keys = set(self._groups)
-        if self.store is not None:
-            keys |= set(_ for _ in self.store.iter(self.path))
-        return len(keys)
-
-    def __getattr__(self, attr: str) -> Union["EOGroup", "EOVariable"]:
-        if attr in self:
-            return self[attr]
-        raise AttributeError(attr)
-
-    def __contains__(self, key: object) -> bool:
-        if self.store is not None and self.store.status == StorageStatus.CLOSE:
-            warnings.warn("`in` statement can't check store")
-        return (key in self._groups) or (
-            self.store is not None
-            and self.store.status == StorageStatus.OPEN
-            and any(key == store_key for store_key in self.store.iter(self.path))
-        )
-
-    def _get_item(self, key: str) -> Union["EOGroup", "EOVariable"]:
-        """Find and return EOVariable or EOGroup from the given key.
-
-        if store is defined and open, and key not already loaded in this group,
+        if store is defined and key not already loaded in this group,
         data is loaded from it.
-
         Parameters
         ----------
         key: str
             name of the eovariable or eogroup
-
-        Returns
-        -------
-        EOVariable or EOGroup
-            item from the given key
-
-        Raises
-        ------
-        KeyError
-            the given Key is not present in this object
         """
         from .eo_group import EOGroup
 
@@ -139,14 +97,49 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         elif key in self._groups:
             item = self._groups[key]
         elif self.store is not None:
-            dataset, attrs = self.store.get_data(self._relative_key(key))
-            item = EOGroup(dataset=dataset, attrs=attrs)
-        self[key] = item
+            item = self.store[self._store_key(key)]
+            self[key] = item
         if subkey is not None:
             return item[subkey]
         return item
 
-    def _relative_key(self, key: str) -> str:
+    def __delitem__(self, key: str) -> None:
+        if is_absolute_eo_path(key):
+            raise KeyError("__delitem__ can't take an absolute path as argument")
+        name, keys = downsplit_eo_path(key)
+
+        if keys is None:
+            if name in self._groups:
+                del self._groups[name]
+            if self.store is not None and (store_key := self._store_key(name)) in self.store:
+                del self.store[store_key]
+        else:
+            sub_container = self[name]
+            if not isinstance(sub_container, EOContainer):
+                raise KeyError("__delitem__ can't take an absolute path as argument")
+            del sub_container[keys]
+
+    def __len__(self) -> int:
+        keys = set(self._groups)
+        if self.store is not None:
+            keys |= set(_ for _ in self.store.iter(self.path))
+        return len(keys)
+
+    def __getattr__(self, attr: str) -> "EOObject":
+        if attr in self:
+            return self[attr]
+        raise AttributeError(attr)
+
+    def __contains__(self, key: object) -> bool:
+        if self.store is not None and self.store.status == StorageStatus.CLOSE:
+            warnings.warn("`in` statement can't check store")
+        return (key in self._groups) or (
+            self.store is not None
+            and self.store.status == StorageStatus.OPEN
+            and any(key == store_key for store_key in self.store.iter(self.path))
+        )
+
+    def _store_key(self, key: str) -> str:
         """Helper to construct a store specific path of a sub object.
 
         Parameters
@@ -166,7 +159,13 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         """
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
-        return join_path(self.path, key, sep=self.store.sep)
+        from eopf.product import EOProduct
+
+        if isinstance(self, EOProduct):
+            name = key
+        else:
+            name = join_path(self.name, key, sep=self.store.sep)
+        return join_path(*self.relative_path, name, sep=self.store.sep)
 
     def _recursive_add(self, path: str, add_local_method: Callable[..., Any], *args: Any, **kwargs: Any) -> Any:
         """Recursively got through the path , adding group as needed,
@@ -242,8 +241,6 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         group = self[name] = EOGroup(attrs=attrs)
         group.assign_coords(coords=coords)
         group.assign_dims(dims)
-        if self.store is not None and self.store.status == StorageStatus.OPEN:
-            self.store.add_group(name, relative_path=group.relative_path, attrs=group.attrs)
         return group
 
     @abstractmethod
@@ -358,7 +355,7 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         # We want the method of the subtype.
         return self._recursive_add(norm_eo_path(name), local_adder, data, **kwargs)
 
-    def write(self, erase: bool = False) -> None:
+    def write(self) -> None:
         """Write non synchronized subgroups, variables to the store
 
         the store must be opened to work
@@ -383,12 +380,10 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
         for name, item in self._groups.items():
-            if not erase and name in self.store.iter(self.path):
-                continue
-            self.store.add_group(name, relative_path=item.relative_path, attrs=item.attrs)
-            item.write(erase=erase)
+            self.store[self._store_key(name)] = item
+            item.write()
 
-    def load(self, erase: bool = False) -> None:
+    def load(self) -> None:
         """Load all the product in memory
 
         The store must be open
@@ -415,19 +410,13 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
         for key in self.store.iter(self.path):
-            group: Union[EOGroup, EOVariable]
-            if erase or key not in self._groups:
-                try:
-                    dataset, attrs = self.store.get_data(self._relative_key(key))
-                except TypeError:
-                    continue
-                group = EOGroup(dataset=dataset, attrs=attrs)
-                self[key] = group
-            else:
-                group = self[key]
-            if not isinstance(group, EOGroup):
+            try:
+                eo_object = self.store[self._store_key(key)]
+            except TypeError:
                 continue
-            group.load(erase=erase)
+            self[key] = eo_object
+            if isinstance(eo_object, EOGroup):
+                eo_object.load()
 
     @property
     def attrs(self) -> dict[str, Any]:
@@ -436,3 +425,7 @@ class EOContainer(EOAbstract, MutableMapping[str, Union["EOGroup", "EOVariable"]
 
     def _ipython_key_completions_(self) -> list[str]:
         return [key for key in self.keys()]
+
+    @property
+    def _is_root(self) -> "bool":
+        return False

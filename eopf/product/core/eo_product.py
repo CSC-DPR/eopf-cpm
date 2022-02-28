@@ -46,6 +46,10 @@ class EOProduct(EOContainer):
         self.__set_store(store_or_path_url=store_or_path_url)
 
     @property
+    def _is_root(self) -> "bool":
+        return True
+
+    @property
     def attributes(self) -> dict[str, Any]:
         """Attributes
 
@@ -118,6 +122,9 @@ class EOProduct(EOContainer):
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
         self.store.open(mode=mode, **kwargs)
+        if mode in ["r"]:
+            group = self.store[""]
+            self.attrs.update(group.attrs)
         return self
 
     def is_valid(self) -> bool:
@@ -187,7 +194,7 @@ class EOProduct(EOContainer):
             print("|" + " " * level + "├──", g[0])
             self._create_structure(g, level + 2)
 
-    def tree(self) -> Union["EOProduct", None]:
+    def tree(self) -> Optional["EOProduct"]:
         """Display the hierarchy of the product.
 
         Returns
@@ -218,19 +225,17 @@ class EOProduct(EOContainer):
             raise InvalidProductError("coordinates must be defined at product level and must be an EOGroup")
         return coords
 
-    def write(self, erase: bool = False) -> None:
+    def write(self) -> None:
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
         if self.store.status == StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open")
-        self.store.update_attrs("", attrs=self.attrs)
-        return super().write(erase=erase)
+        self.store.write_attrs("", attrs=self.attrs)
+        return super().write()
 
-    def load(self, erase: bool = False) -> None:
+    def load(self) -> None:
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
         if self.store.status == StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open")
-        _, attrs = self.store.get_data("")
-        self.attrs.update(attrs)
-        return super().load(erase)
+        return super().load()
