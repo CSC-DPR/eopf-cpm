@@ -63,7 +63,7 @@ class ManifestStore(EOProductStore):
             if not isinstance(config_dict, Dict):
                 raise MissingConfigurationParameter(" The parameter: config; should be a dictionary")
             self._metada_mapping: MutableMapping[str, Any] = config_dict["metadata_mapping"]
-            self._namespaces: Dict[str, str] = config_dict["namespaces"]
+            self._namespaces: Dict[str, str] = config_dict["metadata_mapping"]["namespaces"]
         except KeyError as e:
             raise KeyError(f"Missing configuration pameter: {e}")
 

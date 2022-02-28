@@ -128,7 +128,9 @@ class EOSafeStore(EOProductStore):
             self._add_data_mapping(config[self.CONFIG_TARGET], config)
         self._accessor_open_config["xfdumetadata"] = dict()
         self._accessor_open_config["xfdumetadata"]["metadata_mapping"] = json_data["metadata_mapping"]
-        self._accessor_open_config["xfdumetadata"]["namespaces"] = json_data["namespaces"]
+        self._accessor_open_config["xfdumetadata"]["metadata_mapping"]["namespaces"] = json_data["metadata_mapping"][
+            "namespaces"
+        ]
 
     def _contain_hierarchy_mapping(self, target_path: str) -> bool:
         """Check if a hierarchy mapping is defined for target_path.
