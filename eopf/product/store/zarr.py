@@ -60,19 +60,58 @@ class EOZarrStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         return contains_array(self._fs, path=path)
 
-    def json_var_to_string(self, d: MutableMapping[str, Any]):
+    def conv(self, obj: Any):
 
-        for key in d:
-            if isinstance(d[key], MutableMapping):
-                d[key] = self.json_var_to_string(d[key])
+            #check if list or tuple
+            if isinstance(obj, list) or isinstance(obj, tuple):
+                tmp_lst = []
+                for element in obj:
+                    tmp_lst.append(self.conv(element))
+                if isinstance(obj, list):
+                    return tmp_lst
+                else:
+                    return tuple(tmp_lst)
+
+            # check int
+            try:
+                int(obj)
+            except:
+                pass
             else:
-                d[key] = str(d[key])
+                return int(obj)
+
+            # check float
+            try:
+                float(obj)
+            except:
+                pass
+            else:
+                return float(obj)
+
+            # check str
+            try:
+                str(obj)
+            except:
+                pass
+            else:
+                return str(obj)
+
+            # if no conversion can be done
+            return "Can NOT convert"
+
+    def attrs_convert(self, d: MutableMapping[str, Any]):
+
+        for key in d.keys():
+            if isinstance(d[key], MutableMapping):
+                d[key] = self.attrs_convert(d[key])
+            else:
+                d[key] = self.conv(d[key])
         return d
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        self._root[group_path].attrs.update(self.json_var_to_string(attrs))
+        self._root[group_path].attrs.update(self.attrs_convert(attrs))
 
     def iter(self, path: str) -> Iterator[str]:
         if self._root is None:
