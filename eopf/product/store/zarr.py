@@ -60,10 +60,19 @@ class EOZarrStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         return contains_array(self._fs, path=path)
 
+    def json_var_to_string(self, d: MutableMapping[str, Any]):
+
+        for key in d:
+            if isinstance(d[key], MutableMapping):
+                d[key] = self.json_var_to_string(d[key])
+            else:
+                d[key] = str(d[key])
+        return d
+
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        self._root[group_path].attrs.update(attrs)
+        self._root[group_path].attrs.update(self.json_var_to_string(attrs))
 
     def iter(self, path: str) -> Iterator[str]:
         if self._root is None:
