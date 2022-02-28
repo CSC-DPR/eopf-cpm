@@ -108,3 +108,77 @@ class NetCDFStore(EOProductStore):
     @staticmethod
     def guess_can_read(file_path: str) -> bool:
         return pathlib.Path(file_path).suffix in [".nc"]
+
+
+class NetcdfStringToTime(EOProductStore):
+
+    def __init__(self, url: str) -> None:
+        url = os.path.expanduser(url)
+        super().__init__(url)
+        self._root = None
+
+    def open(self, mode: str = "r", **kwargs: Any) -> None:
+        super().open()
+        import xarray as xr
+        self._root = xr.open_dataset(self.url)
+
+    def close(self) -> None:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        super().close()
+        self._root.close()
+        self._root = None
+
+    def is_group(self, path: str) -> bool:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        raise NotImplementedError
+
+    def is_variable(self, path: str) -> bool:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        raise NotImplementedError
+
+    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        raise NotImplementedError
+
+    def iter(self, path: str) -> Iterator[str]:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        raise NotImplementedError   
+    
+    def __getitem__(self, key: str) -> "EOObject":
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+
+        from eopf.product.core import EOVariable
+        import pandas as pd
+
+        time_da = self._root.get(key)
+        start = pd.to_datetime('1970-1-1T0:0:0.000000Z')
+        end = pd.to_datetime(time_da)
+        time_delta = (end - start) // pd.Timedelta("1microsecond")
+        eov: EOVariable = EOVariable(data=time_delta)
+        return eov
+
+    def __setitem__(self, key: str, value: "EOObject") -> None:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        raise NotImplementedError   
+
+    def __len__(self) -> int:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        return 1   
+
+    def __iter__(self) -> Iterator[str]:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        raise NotImplementedError  
+
+    def _select_node(self, key: str) -> Union[Dataset, Group, Variable]:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        raise NotImplementedError 
