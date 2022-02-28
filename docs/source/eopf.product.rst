@@ -1,8 +1,33 @@
 eopf.product package
 ====================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   eopf.product.core
+   eopf.product.store
+
 Submodules
 ----------
+
+eopf.product.constants module
+-----------------------------
+
+.. automodule:: eopf.product.constants
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+eopf.product.conveniences module
+--------------------------------
+
+.. automodule:: eopf.product.conveniences
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 eopf.product.convert module
 ---------------------------
@@ -12,26 +37,18 @@ eopf.product.convert module
    :undoc-members:
    :show-inheritance:
 
-eopf.product.core module
-------------------------
+eopf.product.formatting module
+------------------------------
 
-.. automodule:: eopf.product.core
+.. automodule:: eopf.product.formatting
    :members:
    :undoc-members:
    :show-inheritance:
 
-eopf.product.mixins module
---------------------------
-
-.. automodule:: eopf.product.mixins
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-eopf.product.store module
+eopf.product.utils module
 -------------------------
 
-.. automodule:: eopf.product.store
+.. automodule:: eopf.product.utils
    :members:
    :undoc-members:
    :show-inheritance:
