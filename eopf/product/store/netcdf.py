@@ -49,7 +49,8 @@ class NetCDFStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         current_node = self._select_node(group_path)
         attrs = {attr: value for attr, value in attrs.items() if attr not in self.RESTRICTED_ATTR_KEY}
-        current_node.setncatts(attrs)
+        if group_path not in ["", "/"]:
+            current_node.setncatts(attrs)
 
     def iter(self, path: str) -> Iterator[str]:
         if self._root is None:
@@ -111,7 +112,6 @@ class NetCDFStore(EOProductStore):
 
 
 class NetcdfStringToTime(EOProductStore):
-
     def __init__(self, url: str) -> None:
         url = os.path.expanduser(url)
         super().__init__(url)
@@ -120,6 +120,7 @@ class NetcdfStringToTime(EOProductStore):
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         super().open()
         import xarray as xr
+
         self._root = xr.open_dataset(self.url)
 
     def close(self) -> None:
@@ -147,17 +148,18 @@ class NetcdfStringToTime(EOProductStore):
     def iter(self, path: str) -> Iterator[str]:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        raise NotImplementedError   
-    
+        raise NotImplementedError
+
     def __getitem__(self, key: str) -> "EOObject":
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
 
-        from eopf.product.core import EOVariable
         import pandas as pd
 
+        from eopf.product.core import EOVariable
+
         time_da = self._root.get(key)
-        start = pd.to_datetime('1970-1-1T0:0:0.000000Z')
+        start = pd.to_datetime("1970-1-1T0:0:0.000000Z")
         end = pd.to_datetime(time_da)
         time_delta = (end - start) // pd.Timedelta("1microsecond")
         eov: EOVariable = EOVariable(data=time_delta)
@@ -166,19 +168,19 @@ class NetcdfStringToTime(EOProductStore):
     def __setitem__(self, key: str, value: "EOObject") -> None:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        raise NotImplementedError   
+        raise NotImplementedError
 
     def __len__(self) -> int:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        return 1   
+        return 1
 
     def __iter__(self) -> Iterator[str]:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        raise NotImplementedError  
+        raise NotImplementedError
 
     def _select_node(self, key: str) -> Union[Dataset, Group, Variable]:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        raise NotImplementedError 
+        raise NotImplementedError
