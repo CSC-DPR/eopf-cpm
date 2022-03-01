@@ -5,6 +5,8 @@ import zarr
 from zarr.hierarchy import Group
 from zarr.storage import FSStore, contains_array, contains_group
 
+from numpy import int64, int32, int16, uint64, uint32, uint16, float64, float32, float16, ndarray
+
 from eopf.exceptions import StoreNotOpenError
 
 from .abstract import EOProductStore
@@ -58,54 +60,54 @@ class EOZarrStore(EOProductStore):
         return contains_array(self._fs, path=path)
 
     def conv(self, obj: Any) -> Any:
+
         # check if list or tuple
-        if isinstance(obj, list) or isinstance(obj, tuple):
+        if isinstance(obj, list) or isinstance(obj, tuple) or isinstance(obj, set):
             tmp_lst = []
             for element in obj:
                 tmp_lst.append(self.conv(element))
             if isinstance(obj, list):
                 return tmp_lst
-            return tuple(tmp_lst)
+            if isinstance(obj, list):
+                return set(tmp_lst)
+            else:
+                return tuple(tmp_lst)
 
-        # check int
-        try:
-            int(obj)
-        except (ValueError, TypeError):
-            pass
-        else:
+        # check np
+        if isinstance(obj, ndarray):
+            return self.conv(obj.tolist())
+
+        # check np int
+        if isinstance(obj, (int64, int32, int16, int)):
             return int(obj)
 
-        # check float
-        try:
-            float(obj)
-        except (ValueError, TypeError):
-            pass
-        else:
+        # check np int
+        if isinstance(obj, (uint64, uint32, uint16)):
+            return int(obj)
+
+        # check np float
+        if isinstance(obj, (float64, float32, float16, float)):
             return float(obj)
 
+        # check dict
+        if isinstance(obj, dict):
+            return dict(obj)
+
+        # check set
+        if isinstance(obj, set):
+            return set(obj)
+
         # check str
-        try:
-            str(obj)
-        except (ValueError, TypeError):
-            pass
-        else:
+        if isinstance(obj, str):
             return str(obj)
 
         # if no conversion can be done
         raise Exception(f"Can NOT convert {obj} of type {type(obj)}")
 
-    def attrs_convert(self, d: MutableMapping[str, Any]) -> MutableMapping[str, Any]:
-        for key, value in d.items():
-            if isinstance(d[key], MutableMapping):
-                d[key] = self.attrs_convert(value)
-            else:
-                d[key] = self.conv(value)
-        return d
-
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        self._root[group_path].attrs.update(self.attrs_convert(attrs))
+        self._root[group_path].attrs.update(self.conv(attrs))
 
     def iter(self, path: str) -> Iterator[str]:
         if self._root is None:
