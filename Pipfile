@@ -32,6 +32,8 @@ isort= "5.10.1"
 yummy-sphinx-theme = "0.1.1"
 docstr-coverage = "2.1.1"
 xenon = "0.8.0"
+pandas = "1.4.1"
+
 
 [requires]
 python_version = "3.9"

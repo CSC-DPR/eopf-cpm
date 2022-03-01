@@ -179,11 +179,4 @@ class NetcdfStringToTime(EOProductStore):
         return 1
 
     def __iter__(self) -> Iterator[str]:
-        if self._root is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        raise NotImplementedError
-
-    def _select_node(self, key: str) -> Union[Dataset, Group, Variable]:
-        if self._root is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        raise NotImplementedError
+        return iter(self._root)

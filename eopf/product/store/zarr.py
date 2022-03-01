@@ -61,7 +61,6 @@ class EOZarrStore(EOProductStore):
         return contains_array(self._fs, path=path)
 
     def conv(self, obj: Any) -> Any:
-
         # check if list or tuple
         if isinstance(obj, list) or isinstance(obj, tuple):
             tmp_lst = []
@@ -69,13 +68,12 @@ class EOZarrStore(EOProductStore):
                 tmp_lst.append(self.conv(element))
             if isinstance(obj, list):
                 return tmp_lst
-            else:
-                return tuple(tmp_lst)
+            return tuple(tmp_lst)
 
         # check int
         try:
             int(obj)
-        except TypeError:
+        except (ValueError, TypeError):
             pass
         else:
             return int(obj)
@@ -83,7 +81,7 @@ class EOZarrStore(EOProductStore):
         # check float
         try:
             float(obj)
-        except TypeError:
+        except (ValueError, TypeError):
             pass
         else:
             return float(obj)
@@ -91,21 +89,20 @@ class EOZarrStore(EOProductStore):
         # check str
         try:
             str(obj)
-        except TypeError:
+        except (ValueError, TypeError):
             pass
         else:
             return str(obj)
 
         # if no conversion can be done
-        return "Can NOT convert"
+        raise Exception(f"Can NOT convert {obj} of type {type(obj)}")
 
     def attrs_convert(self, d: MutableMapping[str, Any]) -> MutableMapping[str, Any]:
-
-        for key in d.keys():
+        for key, value in d.items():
             if isinstance(d[key], MutableMapping):
-                d[key] = self.attrs_convert(d[key])
+                d[key] = self.attrs_convert(value)
             else:
-                d[key] = self.conv(d[key])
+                d[key] = self.conv(value)
         return d
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
