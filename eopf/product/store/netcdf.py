@@ -162,7 +162,7 @@ class NetcdfStringToTime(EOProductStore):
         start = pd.to_datetime("1970-1-1T0:0:0.000000Z")
         end = pd.to_datetime(time_da)
         time_delta = (end - start) // pd.Timedelta("1microsecond")
-        eov: EOVariable = EOVariable(data=time_delta)
+        eov: EOVariable = EOVariable(data=time_delta, attrs={"unit":"microseconds since 1970-1-1T0:0:0.000000Z"})
         return eov
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
