@@ -956,15 +956,15 @@
                     "processorVersion": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/sentinel-safe:software/@version"
                 }
             }
+        },
+        "namespaces": {
+            "xfdu": "urn:ccsds:schema:xfdu:1",
+            "gml": "http://www.opengis.net/gml",
+            "sentinel-safe": "http://www.esa.int/safe/sentinel/1.1",
+            "sentinel3": "http://www.esa.int/safe/sentinel/sentinel-3/1.0",
+            "olci": "http://www.esa.int/safe/sentinel/sentinel-3/olci/1.0",
+            "slstr": "http://www.esa.int/safe/sentinel/sentinel-3/slstr/1.0",
+            "syn": "http://www.esa.int/safe/sentinel/sentinel-3/synergy/1.0"
         }
-    },
-    "namespaces": {
-        "xfdu": "urn:ccsds:schema:xfdu:1",
-        "gml": "http://www.opengis.net/gml",
-        "sentinel-safe": "http://www.esa.int/safe/sentinel/1.1",
-        "sentinel3": "http://www.esa.int/safe/sentinel/sentinel-3/1.0",
-        "olci": "http://www.esa.int/safe/sentinel/sentinel-3/olci/1.0",
-        "slstr": "http://www.esa.int/safe/sentinel/sentinel-3/slstr/1.0",
-        "syn": "http://www.esa.int/safe/sentinel/sentinel-3/synergy/1.0"
     }
 }
