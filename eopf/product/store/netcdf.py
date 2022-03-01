@@ -70,6 +70,7 @@ class NetCDFStore(EOProductStore):
             raise KeyError(e)
         if self.is_group(key):
             return EOGroup(attrs=obj.__dict__)
+        print(obj)
         return EOVariable(data=obj, attrs=obj.__dict__, dims=obj.dimensions)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
@@ -80,11 +81,14 @@ class NetCDFStore(EOProductStore):
         if isinstance(value, EOGroup):
             self._root.createGroup(key)
         elif isinstance(value, EOVariable):
-            for idx, dim in enumerate(value.dims):
+            dimensions = []
+            # FIXME: dimensions between value._data and value can mismatch ...
+            for idx, (dim, _) in enumerate(zip(value.dims, value._data.dims)):
                 if dim not in self._root.dimensions:
                     self._root.createDimension(dim, size=value._data.shape[idx])
-            variable = self._root.createVariable(key, value._data.dtype, dimensions=value.dims)
-            variable[:] = value._data
+                dimensions.append(dim)
+            variable = self._root.createVariable(key, value._data.dtype, dimensions=dimensions)
+            variable[:] = value._data.values
         else:
             raise TypeError("Only EOGroup and EOVariable can be set")
         self.write_attrs(key, value.attrs)
@@ -162,7 +166,7 @@ class NetcdfStringToTime(EOProductStore):
         start = pd.to_datetime("1970-1-1T0:0:0.000000Z")
         end = pd.to_datetime(time_da)
         time_delta = (end - start) // pd.Timedelta("1microsecond")
-        eov: EOVariable = EOVariable(data=time_delta, attrs={"unit":"microseconds since 1970-1-1T0:0:0.000000Z"})
+        eov: EOVariable = EOVariable(data=time_delta, attrs={"unit": "microseconds since 1970-1-1T0:0:0.000000Z"})
         return eov
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
