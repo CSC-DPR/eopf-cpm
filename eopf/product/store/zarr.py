@@ -15,19 +15,16 @@ if TYPE_CHECKING:
 
 class EOZarrStore(EOProductStore):
     """Store representation to access to a Zarr file on the given URL
-
     Parameters
     ----------
     url: str
         path url or the target store
-
     Attributes
     ----------
     url: str
         url to the target store
     sep: str
         file separator
-
     See Also
     -------
     zarr.storage
@@ -60,10 +57,55 @@ class EOZarrStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         return contains_array(self._fs, path=path)
 
+    def conv(self, obj: Any) -> Any:
+        # check if list or tuple
+        if isinstance(obj, list) or isinstance(obj, tuple):
+            tmp_lst = []
+            for element in obj:
+                tmp_lst.append(self.conv(element))
+            if isinstance(obj, list):
+                return tmp_lst
+            return tuple(tmp_lst)
+
+        # check int
+        try:
+            int(obj)
+        except (ValueError, TypeError):
+            pass
+        else:
+            return int(obj)
+
+        # check float
+        try:
+            float(obj)
+        except (ValueError, TypeError):
+            pass
+        else:
+            return float(obj)
+
+        # check str
+        try:
+            str(obj)
+        except (ValueError, TypeError):
+            pass
+        else:
+            return str(obj)
+
+        # if no conversion can be done
+        raise Exception(f"Can NOT convert {obj} of type {type(obj)}")
+
+    def attrs_convert(self, d: MutableMapping[str, Any]) -> MutableMapping[str, Any]:
+        for key, value in d.items():
+            if isinstance(d[key], MutableMapping):
+                d[key] = self.attrs_convert(value)
+            else:
+                d[key] = self.conv(value)
+        return d
+
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        self._root[group_path].attrs.update(attrs)
+        self._root[group_path].attrs.update(self.attrs_convert(attrs))
 
     def iter(self, path: str) -> Iterator[str]:
         if self._root is None:

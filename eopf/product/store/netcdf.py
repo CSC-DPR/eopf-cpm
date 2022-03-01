@@ -49,7 +49,8 @@ class NetCDFStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         current_node = self._select_node(group_path)
         attrs = {attr: value for attr, value in attrs.items() if attr not in self.RESTRICTED_ATTR_KEY}
-        current_node.setncatts(attrs)
+        if group_path not in ["", "/"]:
+            current_node.setncatts(attrs)
 
     def iter(self, path: str) -> Iterator[str]:
         if self._root is None:
@@ -79,11 +80,14 @@ class NetCDFStore(EOProductStore):
         if isinstance(value, EOGroup):
             self._root.createGroup(key)
         elif isinstance(value, EOVariable):
-            for idx, dim in enumerate(value.dims):
+            dimensions = []
+            # FIXME: dimensions between value._data and value can mismatch ...
+            for idx, (dim, _) in enumerate(zip(value.dims, value._data.dims)):
                 if dim not in self._root.dimensions:
                     self._root.createDimension(dim, size=value._data.shape[idx])
-            variable = self._root.createVariable(key, value._data.dtype, dimensions=value.dims)
-            variable[:] = value._data
+                dimensions.append(dim)
+            variable = self._root.createVariable(key, value._data.dtype, dimensions=dimensions)
+            variable[:] = value._data.values
         else:
             raise TypeError("Only EOGroup and EOVariable can be set")
         self.write_attrs(key, value.attrs)
