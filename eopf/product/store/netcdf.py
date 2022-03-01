@@ -70,7 +70,6 @@ class NetCDFStore(EOProductStore):
             raise KeyError(e)
         if self.is_group(key):
             return EOGroup(attrs=obj.__dict__)
-        print(obj)
         return EOVariable(data=obj, attrs=obj.__dict__, dims=obj.dimensions)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:

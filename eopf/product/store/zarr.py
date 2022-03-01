@@ -60,46 +60,46 @@ class EOZarrStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         return contains_array(self._fs, path=path)
 
-    def conv(self, obj: Any):
+    def conv(self, obj: Any) -> Any:
 
-            #check if list or tuple
-            if isinstance(obj, list) or isinstance(obj, tuple):
-                tmp_lst = []
-                for element in obj:
-                    tmp_lst.append(self.conv(element))
-                if isinstance(obj, list):
-                    return tmp_lst
-                else:
-                    return tuple(tmp_lst)
-
-            # check int
-            try:
-                int(obj)
-            except:
-                pass
+        # check if list or tuple
+        if isinstance(obj, list) or isinstance(obj, tuple):
+            tmp_lst = []
+            for element in obj:
+                tmp_lst.append(self.conv(element))
+            if isinstance(obj, list):
+                return tmp_lst
             else:
-                return int(obj)
+                return tuple(tmp_lst)
 
-            # check float
-            try:
-                float(obj)
-            except:
-                pass
-            else:
-                return float(obj)
+        # check int
+        try:
+            int(obj)
+        except TypeError:
+            pass
+        else:
+            return int(obj)
 
-            # check str
-            try:
-                str(obj)
-            except:
-                pass
-            else:
-                return str(obj)
+        # check float
+        try:
+            float(obj)
+        except TypeError:
+            pass
+        else:
+            return float(obj)
 
-            # if no conversion can be done
-            return "Can NOT convert"
+        # check str
+        try:
+            str(obj)
+        except TypeError:
+            pass
+        else:
+            return str(obj)
 
-    def attrs_convert(self, d: MutableMapping[str, Any]):
+        # if no conversion can be done
+        return "Can NOT convert"
+
+    def attrs_convert(self, d: MutableMapping[str, Any]) -> MutableMapping[str, Any]:
 
         for key in d.keys():
             if isinstance(d[key], MutableMapping):
