@@ -60,8 +60,14 @@ class EOZarrStore(EOProductStore):
         return contains_array(self._fs, path=path)
 
     def conv(self, obj: Any) -> Any:
+        # check dict
+        if isinstance(obj, dict):
+            tmp_dict = {}
+            for k, v in obj.items():
+                tmp_dict[k] = self.conv(v)
+            return tmp_dict
 
-        # check if list or tuple
+        # check if list or tuple or set
         if isinstance(obj, list) or isinstance(obj, tuple) or isinstance(obj, set):
             tmp_lst = []
             for element in obj:
@@ -78,24 +84,12 @@ class EOZarrStore(EOProductStore):
             return self.conv(obj.tolist())
 
         # check np int
-        if isinstance(obj, (int64, int32, int16, int)):
-            return int(obj)
-
-        # check np int
-        if isinstance(obj, (uint64, uint32, uint16)):
+        if isinstance(obj, (int64, int32, int16, uint64, uint32, uint16, int)):
             return int(obj)
 
         # check np float
         if isinstance(obj, (float64, float32, float16, float)):
             return float(obj)
-
-        # check dict
-        if isinstance(obj, dict):
-            return dict(obj)
-
-        # check set
-        if isinstance(obj, set):
-            return set(obj)
 
         # check str
         if isinstance(obj, str):
