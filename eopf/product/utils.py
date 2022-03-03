@@ -194,22 +194,11 @@ def conv(obj: Any) -> Any:
 
     # check dict
     if isinstance(obj, dict):
-        tmp_dict = {}
-        for k, v in obj.items():
-            tmp_dict[k] = conv(v)
-        return tmp_dict
+        return {k: conv(v) for k, v in obj.items()}
 
     # check if list or tuple or set
-    if isinstance(obj, list) or isinstance(obj, tuple) or isinstance(obj, set):
-        tmp_lst = []
-        for element in obj:
-            tmp_lst.append(conv(element))
-        if isinstance(obj, list):
-            return tmp_lst
-        if isinstance(obj, list):
-            return set(tmp_lst)
-        else:
-            return tuple(tmp_lst)
+    if isinstance(obj, (list, tuple, set)):
+        return type(obj)(map(conv, obj))
 
     # check numpy
     if isinstance(obj, ndarray):
@@ -228,4 +217,4 @@ def conv(obj: Any) -> Any:
         return str(obj)
 
     # if no conversion can be done
-    raise Exception(f"Can NOT convert {obj} of type {type(obj)}")
+    raise TypeError(f"Can NOT convert {obj} of type {type(obj)}")
