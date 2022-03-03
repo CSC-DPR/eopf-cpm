@@ -176,3 +176,45 @@ def product_relative_path(eo_context: str, eo_path: str) -> str:
     if first_level_relative_path is None:
         return ""
     return first_level_relative_path
+
+
+def conv(obj: Any) -> Any:
+    from numpy import (
+        float16,
+        float32,
+        float64,
+        int16,
+        int32,
+        int64,
+        ndarray,
+        uint16,
+        uint32,
+        uint64,
+    )
+
+    # check dict
+    if isinstance(obj, dict):
+        return {k: conv(v) for k, v in obj.items()}
+
+    # check if list or tuple or set
+    if isinstance(obj, (list, tuple, set)):
+        return type(obj)(map(conv, obj))
+
+    # check numpy
+    if isinstance(obj, ndarray):
+        return conv(obj.tolist())
+
+    # check np int
+    if isinstance(obj, (int64, int32, int16, uint64, uint32, uint16, int)):
+        return int(obj)
+
+    # check np float
+    if isinstance(obj, (float64, float32, float16, float)):
+        return float(obj)
+
+    # check str
+    if isinstance(obj, str):
+        return str(obj)
+
+    # if no conversion can be done
+    raise TypeError(f"Can NOT convert {obj} of type {type(obj)}")
