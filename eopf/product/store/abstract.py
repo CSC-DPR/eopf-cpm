@@ -155,7 +155,7 @@ class EOProductStore(MutableMapping[str, Any]):
             If the store is closed
         """
 
-    def __delitem__(self, key: str) -> None:
+    def __delitem__(self, key: str) -> None:  # pragma: no cover
         raise NotImplementedError()
 
     @staticmethod

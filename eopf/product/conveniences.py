@@ -1,9 +1,5 @@
-import glob
-import os
-from collections import defaultdict
-from typing import Any, Dict, MutableMapping, Optional, Union
+from typing import Any, Dict, Optional, Union
 
-import xarray as xr
 from lxml import etree
 
 from eopf.product.core import EOProduct
@@ -35,125 +31,6 @@ def init_product(
     for group_name in product.MANDATORY_FIELD:
         product.add_group(group_name)
     return product
-
-
-def filter_paths_by(paths: list[str], filters: list[str]) -> list[str]:
-    """Filter the paths basename in a list of paths by taking into account given filters.
-
-    Parameters
-    ----------
-    file_paths : list[str]
-        Directories in which the search is performed.
-    filters : list[str]
-        Tokens to be contained in the filename.
-
-    Returns
-    -------
-    filtered files : list[str]
-    """
-    filtered_file_paths: list[str] = []
-
-    try:
-        for path in paths:
-            if path[-1] == os.path.sep:
-                file_name = os.path.basename(path[:-1])
-            else:
-                file_name = os.path.basename(path)
-            for filter in filters:
-                if filter in file_name:
-                    filtered_file_paths.append(path)
-                    break
-    except Exception as e:
-        print(f"Exception encountered while filtering files: {e} ")
-        return []
-
-    return filtered_file_paths
-
-
-def get_dir_files(dir_path: str, glob_pattern: str = "*") -> list[str]:
-    """Find the files from a given directory with respect to a pattern.
-
-    Parameters
-    ----------
-    dir_path : str
-        Path to the directory.
-
-    glob_pattern : str, optional:
-        Pattern to be respected by the filenames.
-        Defaults to "*"
-
-    Returns:
-    -------
-    list of files: list[str]
-    """
-    dir_files: list[str] = []
-
-    abs_dir_path = os.path.abspath(dir_path)
-    if os.path.isdir(abs_dir_path):
-        glob_search = os.path.join(abs_dir_path, glob_pattern)
-        paths_in_dir = glob.glob(glob_search)
-        for path in paths_in_dir:
-            if os.path.isfile(path):
-                dir_files.append(path)
-
-    return dir_files
-
-
-def read_xrd(
-    files: list[str],
-    skip: list[str] = [],
-    pick: list[str] = [],
-) -> Union[xr.Dataset, None]:
-    """Read multiple xarray.Dataset from files.
-    Optionally, filter the variables based on name.
-
-    Parameters
-    ----------
-    files : list[str]:
-        Paths of the files to be read from.
-    skip : list[str], optional
-        Variables which should not be read from . Defaults to [].
-    pick : list[str], optional
-        Variables which should be read from. Defaults to [].
-    decode_times : bool, optional
-        If True, decode variables and coordinates with time units into timedelta objects.
-        If False, leave them encoded as numbers.
-        Defaults to False.
-    mask_and_scale : bool, optional
-         If True, replace array values equal to _FillValue with NA and scale values
-         according to the formula original_values * scale_factor + add_offset,
-         where _FillValue, scale_factor and add_offset are taken from variable attributes (if they exist).
-         Defaults to False.
-
-    See Also
-    --------
-    xarray.open_dataset
-
-    Returns
-    -------
-    dataset with the selected variables : xr.Dataset
-    """
-    variables: MutableMapping[Any, Any] = {}
-
-    try:
-        for file in files:
-            file_ds = xr.open_dataset(file, decode_times=False, mask_and_scale=False)
-
-            for k in file_ds.variables.keys():
-                if k in skip:
-                    continue
-                if pick and (k not in pick):
-                    continue
-                variables[k] = file_ds.get(k)
-
-        if variables == {}:
-            return None
-
-        return xr.Dataset(data_vars=variables)
-
-    except Exception as e:
-        print(f"Exception encountered: {e}")
-        return None
 
 
 def parse_xml(path: Any) -> Any:
@@ -224,45 +101,8 @@ def apply_xpath(dom: Any, xpath: str, namespaces: Dict[str, str]) -> str:
         if len(target) == 1 and isinstance(target[0], etree._Element):
             if target[0].tag.endswith("posList"):
                 values = target[0].text.split(" ")
-                accu = "POLYGON((" + values[1] + " " + values[0]
-                for i in range(2, len(values), 2):
-                    accu += "," + values[i + 1] + " " + values[i]
-                accu += "))"
-                return accu
-            else:
-                return target[0].text
-        else:
-            return ",".join(target)
+                merged_values = ",".join(" ".join([n, i]) for i, n in zip(values, values[1:]))
+                return f"POLYGON(({merged_values}))"
+            return target[0].text
+        return ",".join(target)
     return target
-
-
-def etree_to_dict(t: etree._Element) -> dict[Any, Any]:
-    """Convert the ElementTree into a dictionaty
-
-    Parameters
-    ----------
-    t : Any
-        Corresponds to the root element
-
-    Returns
-    -------
-    Corresponding dictionary to the tree : dict
-    """
-    d: dict[Any, Any] = {t.tag: {} if t.attrib else None}
-    children = list(t)
-    if children:
-        dd = defaultdict(list)
-        for dc in map(etree_to_dict, children):
-            for k, v in dc.items():
-                dd[k].append(v)
-        d = {t.tag: {k: v[0] if len(v) == 1 else v for k, v in dd.items()}}
-    if t.attrib:
-        d[t.tag].update(("@" + k, v) for k, v in t.attrib.items())
-    if t.text:
-        text = t.text.strip()
-        if children or t.attrib:
-            if text:
-                d[t.tag]["#text"] = text
-        else:
-            d[t.tag] = text
-    return d

@@ -8,6 +8,7 @@ import zarr
 from pyfakefs.fake_filesystem import FakeFilesystem
 
 from eopf.exceptions import MissingConfigurationParameter, StoreNotOpenError
+from eopf.exceptions.warnings import AlreadyClose, AlreadyOpen
 from eopf.product.core import EOGroup, EOProduct, EOVariable
 from eopf.product.store import EOProductStore, EOZarrStore, NetCDFStore
 from eopf.product.store.manifest import ManifestStore
@@ -15,7 +16,10 @@ from eopf.product.store.manifest import ManifestStore
 from .decoder import Netcdfdecoder
 from .utils import assert_contain
 
-_FILES = ["test_ncdf_file_.nc", "test_h5py_file_.h5", "test_metadata_file_.json"]
+_FILES = {
+    "netcdf": "test_ncdf_file_.nc",
+    "json": "test_metadata_file_.json",
+}
 
 
 @pytest.fixture
@@ -150,11 +154,27 @@ def test_load_product_from_zarr(zarr_file: str, fs: FakeFilesystem):
         product.store["an_utem"] = "A_Value"
 
 
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "store, readable, writable, listable, erasable",
+    [
+        (EOZarrStore(zarr.MemoryStore()), True, True, True, True),
+        (NetCDFStore(_FILES["netcdf"]), True, True, True, True),
+    ],
+)
+def test_check_capabilities(store, readable, writable, listable, erasable):
+    assert store.is_readable == readable
+    assert store.is_writeable == writable
+    assert store.is_listable == listable
+    assert store.is_erasable == erasable
+
+
+@pytest.mark.unit
 @pytest.mark.parametrize(
     "store, decoder_type",
     [
         (EOZarrStore(zarr.MemoryStore()), zarr.open),
-        (NetCDFStore(_FILES[0]), Netcdfdecoder),
+        (NetCDFStore(_FILES["netcdf"]), Netcdfdecoder),
     ],
 )
 def test_write_stores(fs: FakeFilesystem, store: EOProductStore, decoder_type: Any):
@@ -178,7 +198,7 @@ def test_write_stores(fs: FakeFilesystem, store: EOProductStore, decoder_type: A
     "store",
     [
         EOZarrStore(zarr.MemoryStore()),
-        NetCDFStore(_FILES[0]),
+        NetCDFStore(_FILES["netcdf"]),
     ],
 )
 def test_read_stores(fs: FakeFilesystem, store: EOProductStore):
@@ -209,7 +229,7 @@ def test_abstract_store_cant_be_instantiate():
     "store",
     [
         EOZarrStore("a_product"),
-        NetCDFStore(_FILES[0]),
+        NetCDFStore(_FILES["netcdf"]),
     ],
 )
 def test_store_must_be_open(fs: FakeFilesystem, store: EOProductStore):
@@ -245,7 +265,7 @@ def test_store_must_be_open(fs: FakeFilesystem, store: EOProductStore):
     "store",
     [
         EOZarrStore("a_product"),
-        NetCDFStore(_FILES[0]),
+        NetCDFStore(_FILES["netcdf"]),
     ],
 )
 def test_store_structure(fs: FakeFilesystem, store: EOProductStore):
@@ -268,7 +288,7 @@ def test_store_structure(fs: FakeFilesystem, store: EOProductStore):
 @pytest.fixture(autouse=True)
 def cleanup_files():
     yield
-    for file in _FILES:
+    for file in _FILES.values():
         if os.path.isfile(file):
             os.remove(file)
         if os.path.isdir(file):
@@ -276,11 +296,44 @@ def cleanup_files():
 
 
 @pytest.mark.unit
+@pytest.mark.filterwarnings("error")
+@pytest.mark.parametrize(
+    "store, exceptions",
+    [
+        (EOZarrStore(zarr.MemoryStore()), (AlreadyOpen, AlreadyClose)),
+        (NetCDFStore(_FILES["netcdf"]), (AlreadyOpen, StoreNotOpenError)),
+    ],
+)
+def test_open_close_already(store, exceptions):
+    store.open(mode="w")
+    with pytest.raises(exceptions[0]):
+        store.open()
+    store.close()
+    with pytest.raises(exceptions[1]):
+        store.close()
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "store, formats, results",
+    [
+        (EOZarrStore(zarr.MemoryStore()), (".zarr", "", ".nc"), (True, True, False)),
+        (NetCDFStore(_FILES["netcdf"]), (".nc", "", ".zarr"), (True, False, False)),
+        (ManifestStore(_FILES["json"]), (".nc", ".zarr", ""), (False, False, False)),
+    ],
+)
+def test_guess_read_format(store, formats, results):
+    assert len(formats) == len(results)
+    for format, res in zip(formats, results):
+        assert store.guess_can_read(f"file{format}") == res
+
+
+@pytest.mark.unit
 def test_mtd_store_must_be_open(fs: FakeFilesystem):
     """Given a manifest store, when accessing items inside it without previously opening it,
     the function must raise a StoreNotOpenError error.
     """
-    store = ManifestStore(_FILES[2])
+    store = ManifestStore(_FILES["json"])
     with pytest.raises(StoreNotOpenError):
         store["a_group"]
 
@@ -299,6 +352,7 @@ def test_init_manifest_store():
     assert manifest.url == url
 
 
+@pytest.mark.unit
 @pytest.mark.parametrize(
     "config, exception_type",
     [
@@ -313,7 +367,7 @@ def test_open_manifest_store(config: Optional[dict], exception_type: Exception):
     """Given a manifest store, without passing configuration parameters
     the function must raise a MissingConfigurationParameter error.
     """
-    store = ManifestStore(_FILES[2])
+    store = ManifestStore(_FILES["json"])
     with pytest.raises(exception_type):
         store.open(config=config)
 
@@ -323,7 +377,7 @@ def test_close_manifest_store():
     """Given a manifest store, when trying to close it while not previously opening it,
     the function must raise a StoreNotOpen error.
     """
-    store = ManifestStore(_FILES[2])
+    store = ManifestStore(_FILES["json"])
     with pytest.raises(StoreNotOpenError):
         store.close()
 

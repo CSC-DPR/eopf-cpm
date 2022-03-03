@@ -96,7 +96,7 @@ class EOGroup(EOContainer, EOObject):
     def __repr__(self) -> str:
         return f"[EOGroup]{hex(id(self))}"
 
-    def _repr_html_(self) -> str:
+    def _repr_html_(self) -> str:  # pragma: no cover
         return renderer("group.html", group=self)
 
     def to_product(self) -> "EOProduct":
