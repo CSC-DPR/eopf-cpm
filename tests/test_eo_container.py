@@ -1,7 +1,6 @@
-from typing import Any, Iterable, Iterator, MutableMapping, Optional
+from typing import Any, Iterator, MutableMapping
 from unittest.mock import patch
 
-import fsspec
 import numpy as np
 import pytest
 import xarray
@@ -44,48 +43,17 @@ class EmptyTestStore(EOProductStore):
     def __delitem__(self, v: Any) -> None:
         raise KeyError()
 
-    @property
-    def map(self) -> fsspec.FSMap:
-        raise KeyError()
-
-    def listdir(self, path: Optional[str] = None) -> Iterable[str]:
-        return iter([])
-
-    def rmdir(self, path: Optional[str] = None) -> None:
-        raise KeyError()
-
-    def clear(self) -> None:
-        pass
-
-    def getsize(self, path: Optional[str] = None) -> None:
-        raise NotImplementedError()
-
-    def dir_path(self, path: Optional[str] = None) -> None:
-        raise NotImplementedError()
-
     def is_group(self, path: str) -> bool:
         raise KeyError()
 
     def is_variable(self, path: str) -> bool:
         raise KeyError()
 
-    def add_group(self, name: str, relative_path: list[str] = [], attrs: dict[str, Any] = {}) -> None:
-        pass
-
-    def add_variables(self, name: str, dataset: xarray.Dataset, relative_path: Iterable[str] = []) -> None:
-        pass
-
     def iter(self, path: str) -> Iterator[str]:
         return iter([])
 
-    def get_data(self, key: str) -> tuple:
-        raise KeyError()
-
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = ...):
         return super().write_attrs(group_path, attrs)
-
-    def delete_attr(self, group_path: str, attr_name: str):
-        return super().delete_attr(group_path, attr_name)
 
 
 @pytest.fixture

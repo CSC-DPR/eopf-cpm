@@ -2,7 +2,6 @@ import os
 import os.path
 from typing import Any, Optional
 
-import h5py
 import pytest
 import xarray
 import zarr
@@ -10,7 +9,7 @@ from pyfakefs.fake_filesystem import FakeFilesystem
 
 from eopf.exceptions import MissingConfigurationParameter, StoreNotOpenError
 from eopf.product.core import EOGroup, EOProduct, EOVariable
-from eopf.product.store import EOHDF5Store, EOProductStore, EOZarrStore, NetCDFStore
+from eopf.product.store import EOProductStore, EOZarrStore, NetCDFStore
 from eopf.product.store.manifest import ManifestStore
 
 from .decoder import Netcdfdecoder
@@ -156,7 +155,6 @@ def test_load_product_from_zarr(zarr_file: str, fs: FakeFilesystem):
     [
         (EOZarrStore(zarr.MemoryStore()), zarr.open),
         (NetCDFStore(_FILES[0]), Netcdfdecoder),
-        (EOHDF5Store(_FILES[1]), h5py.File),
     ],
 )
 def test_write_stores(fs: FakeFilesystem, store: EOProductStore, decoder_type: Any):
@@ -181,7 +179,6 @@ def test_write_stores(fs: FakeFilesystem, store: EOProductStore, decoder_type: A
     [
         EOZarrStore(zarr.MemoryStore()),
         NetCDFStore(_FILES[0]),
-        EOHDF5Store(_FILES[1]),
     ],
 )
 def test_read_stores(fs: FakeFilesystem, store: EOProductStore):
@@ -213,7 +210,6 @@ def test_abstract_store_cant_be_instantiate():
     [
         EOZarrStore("a_product"),
         NetCDFStore(_FILES[0]),
-        EOHDF5Store(_FILES[1]),
     ],
 )
 def test_store_must_be_open(fs: FakeFilesystem, store: EOProductStore):
@@ -250,7 +246,6 @@ def test_store_must_be_open(fs: FakeFilesystem, store: EOProductStore):
     [
         EOZarrStore("a_product"),
         NetCDFStore(_FILES[0]),
-        EOHDF5Store(_FILES[1]),
     ],
 )
 def test_store_structure(fs: FakeFilesystem, store: EOProductStore):

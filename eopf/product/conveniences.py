@@ -1,7 +1,7 @@
 import glob
 import os
 from collections import defaultdict
-from typing import Any, Dict, Hashable, Iterable, MutableMapping, Optional, Tuple, Union
+from typing import Any, Dict, MutableMapping, Optional, Union
 
 import xarray as xr
 from lxml import etree
@@ -156,27 +156,6 @@ def read_xrd(
         return None
 
 
-def xrd_to_eovs(xrd: xr.Dataset) -> Iterable[Tuple[Hashable, xr.Variable]]:
-    """Convert the variables contained in xarray.Dataset into EOVariable objects.
-
-    Parameters
-    ----------
-    xrd : xr.Dataset
-        Dataset which contains the variables to be converted.
-
-    Returns
-    -------
-    dictionary with key corresponding to the name of the variable and
-        value corresponding to the data contained : ItemsView[Hashable, Any]
-
-    Yields
-    ------
-    Iterator[ItemsView[Hashable, Any]]
-    """
-    for xrd_var, xrd_val in sorted(xrd.variables.items()):
-        yield xrd_var, xrd_val
-
-
 def parse_xml(path: Any) -> Any:
     """Parse an XML file taking into account the pattern of the filename
 
@@ -193,22 +172,6 @@ def parse_xml(path: Any) -> Any:
     """
     dom = etree.parse(path)
     return dom
-
-
-def parse_xml_string(content: Any) -> etree._ElementTree:
-    """Parse and XML string
-
-    Parameters
-    ----------
-    content : Any
-        The content to be parsed
-
-    Returns
-    -------
-    ElementTree object loaded with source elements : etree._ElementTree
-    """
-    dom = etree.fromstring(content)
-    return etree._ElementTree(dom)
 
 
 def translate_structure(
