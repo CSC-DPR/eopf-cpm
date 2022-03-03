@@ -96,7 +96,9 @@ class EOProduct(EOContainer):
         return f"[EOProduct]{hex(id(self))}"
 
     def _repr_html_(self) -> str:
-        return renderer("product.html", product=self)
+        import json
+
+        return renderer("product.html", product=self, attributes=json.dumps(self.attributes, indent=4))
 
     def _add_local_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> EOVariable:
         raise InvalidProductError("Products can't directly store variables.")
