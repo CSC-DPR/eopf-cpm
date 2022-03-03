@@ -58,8 +58,8 @@ To run all the test, be sure to have the needed data.
 
 Also, we have some mark to help to contegorized test and only run unit test at integration time.
 
-- to mark use case test integration, please mark them with ```python @pytest.mark.usecase```
-- to mark unit test integration, please mark them with ```python @pytest.mark.unit```
+- to mark use case test integration, please mark them with ```@pytest.mark.usecase```
+- to mark unit test integration, please mark them with ```@pytest.mark.unit```
 
 # Linting and formatting
 
