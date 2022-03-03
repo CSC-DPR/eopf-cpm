@@ -179,7 +179,18 @@ def product_relative_path(eo_context: str, eo_path: str) -> str:
 
 
 def conv(obj: Any) -> Any:
-    from numpy import ndarray, int64, int32, int16, uint64, uint32, uint16, float64, float32, float16
+    from numpy import (
+        float16,
+        float32,
+        float64,
+        int16,
+        int32,
+        int64,
+        ndarray,
+        uint16,
+        uint32,
+        uint64,
+    )
 
     # check dict
     if isinstance(obj, dict):

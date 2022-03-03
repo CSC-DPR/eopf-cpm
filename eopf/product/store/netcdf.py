@@ -3,12 +3,12 @@ import os
 import pathlib
 from collections.abc import MutableMapping
 from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
-from eopf.product.utils import conv
 
 from netCDF4 import Dataset, Group, Variable
 
 from eopf.exceptions import StoreNotOpenError
 from eopf.product.store import EOProductStore
+from eopf.product.utils import conv
 
 if TYPE_CHECKING:
     from eopf.product.core.eo_object import EOObject
@@ -50,6 +50,7 @@ class NetCDFStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         current_node = self._select_node(group_path)
         from json import dumps
+
         attrs = {attr: dumps(conv(value)) for attr, value in attrs.items() if attr not in self.RESTRICTED_ATTR_KEY}
         current_node.setncatts(attrs)
 

@@ -4,11 +4,9 @@ from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional
 import zarr
 from zarr.hierarchy import Group
 from zarr.storage import FSStore, contains_array, contains_group
-from eopf.product.utils import conv
-
-from numpy import int64, int32, int16, uint64, uint32, uint16, float64, float32, float16, ndarray
 
 from eopf.exceptions import StoreNotOpenError
+from eopf.product.utils import conv
 
 from .abstract import EOProductStore
 
