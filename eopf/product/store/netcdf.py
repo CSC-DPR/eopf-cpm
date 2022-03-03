@@ -3,6 +3,7 @@ import os
 import pathlib
 from collections.abc import MutableMapping
 from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
+from eopf.product.utils import conv
 
 from netCDF4 import Dataset, Group, Variable
 
@@ -48,7 +49,8 @@ class NetCDFStore(EOProductStore):
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         current_node = self._select_node(group_path)
-        attrs = {attr: str(value) for attr, value in attrs.items() if attr not in self.RESTRICTED_ATTR_KEY}
+        from json import dumps
+        attrs = {attr: dumps(conv(value)) for attr, value in attrs.items() if attr not in self.RESTRICTED_ATTR_KEY}
         current_node.setncatts(attrs)
 
     def iter(self, path: str) -> Iterator[str]:

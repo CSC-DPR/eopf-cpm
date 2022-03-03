@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional
 import zarr
 from zarr.hierarchy import Group
 from zarr.storage import FSStore, contains_array, contains_group
+from eopf.product.utils import conv
 
 from numpy import int64, int32, int16, uint64, uint32, uint16, float64, float32, float16, ndarray
 
@@ -59,49 +60,10 @@ class EOZarrStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         return contains_array(self._fs, path=path)
 
-    def conv(self, obj: Any) -> Any:
-        # check dict
-        if isinstance(obj, dict):
-            tmp_dict = {}
-            for k, v in obj.items():
-                tmp_dict[k] = self.conv(v)
-            return tmp_dict
-
-        # check if list or tuple or set
-        if isinstance(obj, list) or isinstance(obj, tuple) or isinstance(obj, set):
-            tmp_lst = []
-            for element in obj:
-                tmp_lst.append(self.conv(element))
-            if isinstance(obj, list):
-                return tmp_lst
-            if isinstance(obj, list):
-                return set(tmp_lst)
-            else:
-                return tuple(tmp_lst)
-
-        # check np
-        if isinstance(obj, ndarray):
-            return self.conv(obj.tolist())
-
-        # check np int
-        if isinstance(obj, (int64, int32, int16, uint64, uint32, uint16, int)):
-            return int(obj)
-
-        # check np float
-        if isinstance(obj, (float64, float32, float16, float)):
-            return float(obj)
-
-        # check str
-        if isinstance(obj, str):
-            return str(obj)
-
-        # if no conversion can be done
-        raise Exception(f"Can NOT convert {obj} of type {type(obj)}")
-
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        self._root[group_path].attrs.update(self.conv(attrs))
+        self._root[group_path].attrs.update(conv(attrs))
 
     def iter(self, path: str) -> Iterator[str]:
         if self._root is None:
