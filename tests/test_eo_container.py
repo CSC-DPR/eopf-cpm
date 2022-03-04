@@ -439,29 +439,39 @@ def test_hierarchy_html(product):
         "name": "product_name",
         "groups": {
             "coordinates": {
-                "c1": {"Attributes": {"_EOPF_DIMENSIONS :": "['dim_0']"}, "Dimensions": "", "Coordinates": ""},
-                "c2": {"Attributes": {"_EOPF_DIMENSIONS :": "['dim_0']"}, "Dimensions": "", "Coordinates": ""},
-                "group2": {"Attributes": {"_EOPF_DIMENSIONS :": "['dim_0']"}, "Dimensions": "", "Coordinates": ""},
+                "c1": {"Attributes": {"_EOPF_DIMENSIONS": "['dim_0']"}, "Dimensions": "['dim_0']", "Coordinates": {}},
+                "c2": {"Attributes": {"_EOPF_DIMENSIONS": "['dim_0']"}, "Dimensions": "['dim_0']", "Coordinates": {}},
+                "group2": {
+                    "Attributes": {"_EOPF_DIMENSIONS": "['dim_0']"},
+                    "Dimensions": "['dim_0']",
+                    "Coordinates": {},
+                },
             },
             "measurements": {
                 "group1": {
-                    "Attributes": {"_EOPF_DIMENSIONS :": "['c1', 'c2', 'group2']"},
+                    "Attributes": {"_EOPF_DIMENSIONS": "['c1', 'c2', 'group2']"},
+                    "Coordinates": {
+                        "c1": " /->coordinates -> c1",
+                        "c2": " /->coordinates -> c2",
+                        "group2": " /->coordinates -> group2",
+                    },
                     "group2": {
-                        "Attributes": {"_EOPF_DIMENSIONS :": "['c1']"},
-                        "variable_b": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
+                        "Attributes": {"_EOPF_DIMENSIONS": "['c1']"},
+                        "Coordinates": {"c1": " /->coordinates -> c1"},
+                        "variable_b": {"Attributes": {}, "Dimensions": "()", "Coordinates": {}},
                         "variable_c": {
-                            "Attributes": {"_EOPF_DIMENSIONS :": "['c1']"},
-                            "Dimensions": "",
-                            "Coordinates": " /->coordinates -> c1])",
+                            "Attributes": {"_EOPF_DIMENSIONS": "['c1']"},
+                            "Dimensions": "['c1']",
+                            "Coordinates": {"c1": " /->coordinates -> c1"},
                         },
-                        "variable_d": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
+                        "variable_d": {"Attributes": {}, "Dimensions": "()", "Coordinates": {}},
                     },
                     "group2b": {"group3": {}, "group3b": {}},
-                    "variable_a": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
+                    "variable_a": {"Attributes": {}, "Dimensions": "()", "Coordinates": {}},
                 },
                 "group3": {
-                    "sgroup3": {"variable_f": {"Attributes": {}, "Dimensions": "", "Coordinates": ""}},
-                    "variable_e": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
+                    "sgroup3": {"variable_f": {"Attributes": {}, "Dimensions": "()", "Coordinates": {}}},
+                    "variable_e": {"Attributes": {}, "Dimensions": "()", "Coordinates": {}},
                 },
             },
             "group0": {},

@@ -102,12 +102,22 @@ def group_details(section_detail: dict, section_structure: dict) -> None:
                 section_structure[item_name] = item_structure
             else:
                 section_structure[item_name] = {}
-    elif item_name == "Dimensions" or item_name == "Coordinates":
+    elif item_name == "Dimensions":
         dimensions = section_detail.xpath("div/div/text()")
         if dimensions:
             dimension_value = dimensions[-1].strip("', :").strip()
-            dimension_value = dimension_value.partition("->")[2]
             section_structure[item_name] = dimension_value
+    elif item_name == "Coordinates":
+        coordinates = section_detail.xpath("div/dl")
+        coordinates_dict = {}
+        if coordinates:
+            coordinates = coordinates[0]
+            coordinates_len = len(coordinates) // 2
+            for i in range(0, coordinates_len):
+                coord_key = coordinates.xpath("dt/span/text()")[i].strip()
+                coord_value = coordinates.xpath("dd/text()")[i].strip().partition("->")[2]
+                coordinates_dict[coord_key] = coord_value
+        section_structure[item_name] = coordinates_dict
 
     subgroups = section_detail.xpath("div/div/ul/li")
     if subgroups:
