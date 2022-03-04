@@ -2,6 +2,7 @@ import pathlib
 from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional
 
 import zarr
+from dask import array as da
 from zarr.hierarchy import Group
 from zarr.storage import FSStore, contains_array, contains_group
 
@@ -77,7 +78,8 @@ class EOZarrStore(EOProductStore):
         obj = self._root[key]
         if self.is_group(key):
             return EOGroup(attrs=obj.attrs)
-        return EOVariable(data=obj, attrs=obj.attrs)
+        lazy_data = da.from_array(obj)
+        return EOVariable(data=lazy_data, attrs=obj.attrs)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
         from eopf.product.core import EOGroup, EOVariable
@@ -87,6 +89,7 @@ class EOZarrStore(EOProductStore):
         if isinstance(value, EOGroup):
             self._root.create_group(key, overwrite=True)
         elif isinstance(value, EOVariable):
+            da.to_zarr(value._data.data, self._root, key)
             self._root.create_dataset(key, data=value._data.values)
             if hasattr(self._root.store, "path"):
                 zarr.consolidate_metadata(self.sep.join([self._root.store.path, self._root[key].path]))
