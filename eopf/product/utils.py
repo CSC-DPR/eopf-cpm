@@ -179,6 +179,20 @@ def product_relative_path(eo_context: str, eo_path: str) -> str:
 
 
 def conv(obj: Any) -> Any:
+    """Convert an object to native python data types if possible,
+    otherwise return the the obj as it is
+
+    Parameters
+    ----------
+    obj: Any
+        an object
+
+    Returns
+    ----------
+    Any
+        either the obj conververted to native python data type,
+        or the obj as received
+    """
     from numpy import (
         float16,
         float32,
@@ -221,11 +235,22 @@ def conv(obj: Any) -> Any:
 
 
 def decode_attrs(attrs: Any) -> Any:
-    from json import loads, JSONDecodeError
+    """Try to decode attributes as json if possible,
+    otherwise return the attrs as they are
+
+    Parameters
+    ----------
+    attrs: Any
+        an object containing attributes
+
+    Returns
+    ----------
+    Any
+        either the attributes as json or the attributes as received
+    """
+    from json import JSONDecodeError, loads
 
     try:
         attrs = loads(attrs)
     except (JSONDecodeError, TypeError):
         return attrs
-
-
