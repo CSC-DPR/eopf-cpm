@@ -1,9 +1,6 @@
-from pathlib import Path
-
 import pytest
 
 from eopf.product import EOProduct
-from eopf.product.store.mapping_factory import MappingFactory
 from eopf.product.store.safe import EOSafeStore
 
 copy_target = (
@@ -39,30 +36,6 @@ def test_load_write_product():
     product = EOProduct("my_product", store_or_path_url=EOSafeStore(store_path))
     product.open()
     product.load()
-    product.store.close()
-    product.open(mode="w", store_or_path_url=EOSafeStore(copy_target))
-    product.write()
-    product.store.close()
-
-
-@pytest.mark.usecase
-def test_load_product_custom_json():
-    mapping_factory = MappingFactory(False)
-    mapping_factory.register_mapping(str(Path(__file__).parent / "data/test_safe_mapping.json"))
-    product = EOProduct("my_product", store_or_path_url=EOSafeStore(store_path, mapping_factory=mapping_factory))
-    product.open()
-    product.load()
-    product.store.close()
-
-
-@pytest.mark.usecase
-def test_load_write_product_custom_json():
-    mapping_factory = MappingFactory(False)
-    mapping_factory.register_mapping(str(Path(__file__).parent / "data/test_safe_mapping.json"))
-    product = EOProduct("my_product", store_or_path_url=EOSafeStore(store_path, mapping_factory=mapping_factory))
-    product.open()
-    product.load()
-    product.store.close()
     product.open(mode="w", store_or_path_url=EOSafeStore(copy_target))
     product.write()
     product.store.close()
