@@ -10,10 +10,6 @@ class StoreNotOpenError(Exception):
     pass
 
 
-class InvalidStructureError(Exception):
-    pass
-
-
 class EOObjectExistError(Exception):
     pass
 

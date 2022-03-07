@@ -1,7 +1,6 @@
-from typing import Any, Iterable, Iterator, MutableMapping, Optional
+from typing import Any, Iterator, MutableMapping
 from unittest.mock import patch
 
-import fsspec
 import numpy as np
 import pytest
 import xarray
@@ -44,48 +43,17 @@ class EmptyTestStore(EOProductStore):
     def __delitem__(self, v: Any) -> None:
         raise KeyError()
 
-    @property
-    def map(self) -> fsspec.FSMap:
-        raise KeyError()
-
-    def listdir(self, path: Optional[str] = None) -> Iterable[str]:
-        return iter([])
-
-    def rmdir(self, path: Optional[str] = None) -> None:
-        raise KeyError()
-
-    def clear(self) -> None:
-        pass
-
-    def getsize(self, path: Optional[str] = None) -> None:
-        raise NotImplementedError()
-
-    def dir_path(self, path: Optional[str] = None) -> None:
-        raise NotImplementedError()
-
     def is_group(self, path: str) -> bool:
         raise KeyError()
 
     def is_variable(self, path: str) -> bool:
         raise KeyError()
 
-    def add_group(self, name: str, relative_path: list[str] = [], attrs: dict[str, Any] = {}) -> None:
-        pass
-
-    def add_variables(self, name: str, dataset: xarray.Dataset, relative_path: Iterable[str] = []) -> None:
-        pass
-
     def iter(self, path: str) -> Iterator[str]:
         return iter([])
 
-    def get_data(self, key: str) -> tuple:
-        raise KeyError()
-
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = ...):
         return super().write_attrs(group_path, attrs)
-
-    def delete_attr(self, group_path: str, attr_name: str):
-        return super().delete_attr(group_path, attr_name)
 
 
 @pytest.fixture
@@ -201,6 +169,10 @@ def test_coordinates(product):
 
     assert set(product["measurements/group1"].coordinates.keys()) == {"c1", "c2", "group2"}
     assert np.all(product.coordinates[key] == value for key, value in product.measurements.group1.coordinates.items())
+    assert product.get_coordinate("c1") == product.coordinates.c1
+    with pytest.raises(KeyError, match=r"Unknown coordinate [\w]+ in context [\S]+ \."):
+        product.get_coordinate("fake_one")
+
     for p in paths:
         container = product[p] if p != "/" else product
         assert container.get_coordinate("c1") == c1[p]
@@ -244,7 +216,12 @@ def test_setitem(product):
     product["/measurements/"]["/measurements/group1b"] = EOGroup("group1b", None)
     product["group1f"] = EOGroup("group1f", product)
     product["measurements/group1h"] = EOGroup("group1h", product["/measurements"])
-    product["measurements/group1/variable_v1"] = EOVariable("variable_v1", None)
+
+    variable_v1 = EOVariable("variable_v1", None)
+    assert variable_v1.path == variable_v1.name
+    product["measurements/group1/variable_v1"] = variable_v1
+    assert variable_v1.path == "/measurements/group1/variable_v1"
+
     product["/measurements/group1/variable_v2"] = EOVariable("variable_v1", None)
     product["measurements/group1"]["variable_v3"] = EOVariable("variable_v3", None)
     product["measurements/group1"]["variable_v3"] = EOVariable("variable_v3", None)
@@ -273,6 +250,8 @@ def test_setitem(product):
         assert product[path].path == path
         assert product[path].product == product
         assert product[path].name == upsplit_eo_path(path)[1]
+    with pytest.raises(KeyError):
+        product["measurements/group1/group2/variable_b/sub/values"] = [1, 2, 3]
     np.testing.assert_equal(product["measurements/group1"]["variable_v5"], [1, 2])
 
 
@@ -306,11 +285,14 @@ def test_delitem(product):
     product["measurements"]
     product["measurements/group1/group2/variable_b"]
 
+    with pytest.raises(KeyError, match="EOVariable not support item deletion"):
+        del product["measurements/group1/group2/variable_b/sub/values"]
+
     del product["measurements/group1/group2/variable_b"]
     with pytest.raises(KeyError):
         product["measurements/group1/group2/variable_b"]
-
     del product["measurements/group1/"]["group2/variable_c"]
+
     with pytest.raises(KeyError):
         product["measurements/group1/group2/variable_b"]
     product["measurements/group1/group2"]
@@ -357,6 +339,9 @@ def test_create_product_on_memory(fs: FakeFilesystem):
 
     with pytest.raises(StoreNotDefinedError):
         product._store_key("a key")
+
+    with pytest.raises(StoreNotDefinedError):
+        product.write()
 
     assert product._store is None, "store must be None"
     assert not (fs.isdir(product.name) or fs.isfile(product.name)), "Product must not create any thing on fs"
@@ -483,3 +468,9 @@ def test_eovariable_plot():
         variable.plot(yincrease=False)
 
     mock_method.assert_called_once_with(yincrease=False)
+
+
+@pytest.mark.unit
+def test_group_to_product(product):
+    with pytest.raises(NotImplementedError):
+        product.measurements.to_product()

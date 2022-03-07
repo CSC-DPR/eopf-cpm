@@ -1,8 +1,6 @@
-import functools
 import posixpath
-import weakref
 from pathlib import PurePosixPath
-from typing import Any, Callable, Optional
+from typing import Any, Optional
 
 
 def join_path(*subpath: str, sep: str = "/") -> str:
@@ -19,25 +17,6 @@ def join_path(*subpath: str, sep: str = "/") -> str:
     str
     """
     return sep.join(subpath)
-
-
-def weak_cache(func: Callable[..., Any]) -> Callable[..., Any]:
-    """weak ref version of lru_cache for method
-
-    See Also
-    --------
-    functools.cache
-    """
-
-    @functools.cache
-    def _func(_self: Any, *args: Any, **kwargs: Any) -> Any:
-        return func(_self(), *args, **kwargs)
-
-    @functools.wraps(func)
-    def inner(self: Any, *args: Any, **kwargs: Any) -> Any:
-        return _func(weakref.ref(self), *args, **kwargs)
-
-    return inner
 
 
 # We need to use a mix of posixpath (normpath) and pathlib (partition) in the eo_path methods.

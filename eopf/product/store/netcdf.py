@@ -10,7 +10,7 @@ from eopf.exceptions import StoreNotOpenError
 from eopf.product.store import EOProductStore
 from eopf.product.utils import conv
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_object import EOObject
 
 
