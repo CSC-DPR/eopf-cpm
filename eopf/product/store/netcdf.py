@@ -60,7 +60,7 @@ class NetCDFStore(EOProductStore):
         current_node = self._select_node(path)
         return it.chain(iter(current_node.groups), iter(current_node.variables))
 
-    def _to_dict(self, attrs: Any):
+    def _to_dict(self, attrs: Any) -> Any:
         try:
             from json import loads
 
