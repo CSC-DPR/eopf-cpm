@@ -8,7 +8,7 @@ from jinja2 import Environment, FileSystemLoader
 from eopf.product.utils import conv
 
 
-def renderer(template_name: str, attrs: dict[str, Any] = {}, **parameters: Any) -> str:
+def renderer(template_name: str, **parameters: Any) -> str:
     """Render a eopf template from the given name
 
     Parameters
@@ -23,7 +23,7 @@ def renderer(template_name: str, attrs: dict[str, Any] = {}, **parameters: Any) 
     str
     """
 
-    def human_readable_attrs(value):
+    def human_readable_attrs(value: dict[str, Any]) -> str:
         return json.dumps(conv(value), indent=4)
 
     dir_path = Path(__file__).resolve().parent
