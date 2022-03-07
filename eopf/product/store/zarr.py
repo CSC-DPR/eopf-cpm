@@ -2,6 +2,7 @@ import pathlib
 from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional
 
 import zarr
+from dask import array as da
 from zarr.hierarchy import Group
 from zarr.storage import FSStore, contains_array, contains_group
 
@@ -87,7 +88,11 @@ class EOZarrStore(EOProductStore):
         if isinstance(value, EOGroup):
             self._root.create_group(key, overwrite=True)
         elif isinstance(value, EOVariable):
-            self._root.create_dataset(key, data=value._data.values)
+            dask_array = da.asarray(value._data.data)  # .data is generally already a dask array.
+            zarr_array = self._root.create(key, shape=dask_array.shape)
+            # While it's possible to create the array with to_zarr,
+            # it fail to create the array on some array shapes (ex : empty)
+            da.to_zarr(dask_array, zarr_array)
             if hasattr(self._root.store, "path"):
                 zarr.consolidate_metadata(self.sep.join([self._root.store.path, self._root[key].path]))
         else:
