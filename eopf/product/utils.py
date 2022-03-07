@@ -218,3 +218,14 @@ def conv(obj: Any) -> Any:
 
     # if no conversion can be done
     return obj
+
+
+def decode_attrs(attrs: Any) -> Any:
+    from json import loads, JSONDecodeError
+
+    try:
+        attrs = loads(attrs)
+    except (JSONDecodeError, TypeError):
+        return attrs
+
+
