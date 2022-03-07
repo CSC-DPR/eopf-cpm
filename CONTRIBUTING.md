@@ -75,7 +75,8 @@ We try to follow the following scope order to have harmonized structure:
 - protected property/methods/function
 - private property/methods/function
 - public staticmethod and classmethod (for classes)
-- public staticmethod and classmethod (for classes)
+- protected staticmethod and classmethod (for classes)
+- private staticmethod and classmethod (for classes)
 
 Each scope follow the alphabetic order
 
