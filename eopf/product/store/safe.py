@@ -12,11 +12,10 @@ from typing import (
 
 from eopf.exceptions import StoreNotOpenError
 
-from ..core import EOGroup
 from ..utils import join_eo_path_optional, upsplit_eo_path
 from .abstract import EOProductStore, StorageStatus
-from .mapping_factory import MappingFactory
-from .store_factory import StoreFactory
+from .mapping_factory import EOMappingFactory
+from .store_factory import EOStoreFactory
 
 if TYPE_CHECKING:
     from eopf.product.core.eo_object import EOObject
@@ -54,12 +53,16 @@ class SafeHierarchy(EOProductStore):
         raise NotImplementedError()
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
+        from ..core import EOGroup
+
         cond1 = not isinstance(value, EOGroup)
         cond2 = key != "" and value.name not in self._child_list
         if cond1 or cond2:
             raise KeyError("Safe can't write key outside of it's dictionary")
 
     def __getitem__(self, key: str) -> "EOObject":
+        from ..core import EOGroup
+
         if key in ["", "/"]:
             return EOGroup()
         raise NotImplementedError()
@@ -99,13 +102,13 @@ class EOSafeStore(EOProductStore):
     def __init__(
         self,
         url: str,
-        store_factory: Optional[StoreFactory] = None,
-        mapping_factory: Optional[MappingFactory] = None,
+        store_factory: Optional[EOStoreFactory] = None,
+        mapping_factory: Optional[EOMappingFactory] = None,
     ) -> None:
         if store_factory is None:
-            store_factory = StoreFactory(default_stores=True)
+            store_factory = EOStoreFactory(default_stores=True)
         if mapping_factory is None:
-            mapping_factory = MappingFactory(default_mappings=True)
+            mapping_factory = EOMappingFactory(default_mappings=True)
         if url[-1] != "/":
             url = url + "/"
         # FIXME Need to think of a way to manage urlak ospath on windows. Especially with the path in the json.
@@ -305,6 +308,8 @@ class EOSafeStore(EOProductStore):
 
         """
         # Should at least merge dims and attributes of EOVariables/Group.
+        from ..core import EOGroup
+
         if not eo_obj_list:
             raise KeyError("Empty object match.")
         if len(eo_obj_list) == 1:
@@ -399,6 +404,8 @@ class EOSafeStore(EOProductStore):
         return iter(key_set)
 
     def __getitem__(self, key: str) -> "EOObject":
+        from ..core import EOGroup
+
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
 

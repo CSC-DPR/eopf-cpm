@@ -10,7 +10,7 @@ from pyfakefs.fake_filesystem import FakeFilesystem
 
 from eopf.exceptions import MissingConfigurationParameter, StoreNotOpenError
 from eopf.product.core import EOGroup, EOProduct, EOVariable
-from eopf.product.store import EOHDF5Store, EOProductStore, EOZarrStore, NetCDFStore
+from eopf.product.store import EOHDF5Store, EONetCDFStore, EOProductStore, EOZarrStore
 from eopf.product.store.manifest import ManifestStore
 
 from .decoder import Netcdfdecoder
@@ -155,7 +155,7 @@ def test_load_product_from_zarr(zarr_file: str, fs: FakeFilesystem):
     "store, decoder_type",
     [
         (EOZarrStore(zarr.MemoryStore()), zarr.open),
-        (NetCDFStore(_FILES[0]), Netcdfdecoder),
+        (EONetCDFStore(_FILES[0]), Netcdfdecoder),
         (EOHDF5Store(_FILES[1]), h5py.File),
     ],
 )
@@ -180,7 +180,7 @@ def test_write_stores(fs: FakeFilesystem, store: EOProductStore, decoder_type: A
     "store",
     [
         EOZarrStore(zarr.MemoryStore()),
-        NetCDFStore(_FILES[0]),
+        EONetCDFStore(_FILES[0]),
         EOHDF5Store(_FILES[1]),
     ],
 )
@@ -212,7 +212,7 @@ def test_abstract_store_cant_be_instantiate():
     "store",
     [
         EOZarrStore("a_product"),
-        NetCDFStore(_FILES[0]),
+        EONetCDFStore(_FILES[0]),
         EOHDF5Store(_FILES[1]),
     ],
 )
@@ -249,7 +249,7 @@ def test_store_must_be_open(fs: FakeFilesystem, store: EOProductStore):
     "store",
     [
         EOZarrStore("a_product"),
-        NetCDFStore(_FILES[0]),
+        EONetCDFStore(_FILES[0]),
         EOHDF5Store(_FILES[1]),
     ],
 )
