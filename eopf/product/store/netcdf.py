@@ -60,6 +60,14 @@ class NetCDFStore(EOProductStore):
         current_node = self._select_node(path)
         return it.chain(iter(current_node.groups), iter(current_node.variables))
 
+    def _to_dict(self, attrs: Any):
+        try:
+            from json import loads
+
+            attrs = loads(attrs)
+        finally:
+            return attrs
+
     def __getitem__(self, key: str) -> "EOObject":
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
@@ -71,8 +79,8 @@ class NetCDFStore(EOProductStore):
         except IndexError as e:  # if key is invalid, netcdf4 raise IndexError ...
             raise KeyError(e)
         if self.is_group(key):
-            return EOGroup(attrs=obj.__dict__)
-        return EOVariable(data=obj, attrs=obj.__dict__, dims=obj.dimensions)
+            return EOGroup(attrs=self._to_dict(obj.__dict__))
+        return EOVariable(data=obj, attrs=self._to_dict(obj.__dict__), dims=obj.dimensions)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
         from eopf.product.core import EOGroup, EOVariable

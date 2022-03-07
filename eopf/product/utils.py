@@ -217,4 +217,4 @@ def conv(obj: Any) -> Any:
         return str(obj)
 
     # if no conversion can be done
-    raise TypeError(f"Can NOT convert {obj} of type {type(obj)}")
+    return obj
