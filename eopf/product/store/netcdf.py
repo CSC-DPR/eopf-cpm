@@ -4,7 +4,6 @@ import pathlib
 from collections.abc import MutableMapping
 from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
 
-from dask import array as da
 from netCDF4 import Dataset, Group, Variable
 
 from eopf.exceptions import StoreNotOpenError
@@ -73,8 +72,7 @@ class NetCDFStore(EOProductStore):
             raise KeyError(e)
         if self.is_group(key):
             return EOGroup(attrs=obj.__dict__)
-        lazy_data = da.from_array(obj)
-        return EOVariable(data=lazy_data, attrs=obj.__dict__, dims=obj.dimensions)
+        return EOVariable(data=obj, attrs=obj.__dict__, dims=obj.dimensions)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
         from eopf.product.core import EOGroup, EOVariable

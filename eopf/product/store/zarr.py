@@ -78,8 +78,7 @@ class EOZarrStore(EOProductStore):
         obj = self._root[key]
         if self.is_group(key):
             return EOGroup(attrs=obj.attrs)
-        lazy_data = da.from_array(obj)
-        return EOVariable(data=lazy_data, attrs=obj.attrs)
+        return EOVariable(data=obj, attrs=obj.attrs)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
         from eopf.product.core import EOGroup, EOVariable
@@ -89,7 +88,7 @@ class EOZarrStore(EOProductStore):
         if isinstance(value, EOGroup):
             self._root.create_group(key, overwrite=True)
         elif isinstance(value, EOVariable):
-            dask_array = da.from_array(value._data.data)  # .data is generally already a dask array.
+            dask_array = da.asarray(value._data.data)  # .data is generally already a dask array.
             zarr_array = self._root.create(key, shape=dask_array.shape)
             # While it's possible to create the array with to_zarr,
             # it fail to create the array on some array shapes (ex : empty)
