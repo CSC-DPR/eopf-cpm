@@ -1,11 +1,9 @@
 stages:
-  - .pre
-  - quality
   - install
+  - quality
   - test
   - build
   - deploy
-  - .post
 
 pipenv-setup:
   stage: install
