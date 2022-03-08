@@ -8,6 +8,7 @@ stages:
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   PIPENV_VENV_IN_PROJECT: "enabled"
+  CONDA_PKGS_DIRS: "$CI_PROJECT_DIR/.conda-pkgs-cache/"
 
 # TODO: caching not enabled right now, so we have to see with the SDE team
 # cache:
@@ -16,8 +17,20 @@ variables:
 #       - Pipfile
 #     paths:
 #     - $CI_PROJECT_DIR/.venv
-#     - $CI_PROJECT_DIR/.cache/pip
+#     - $PIP_CACHE_DIR
+#   - key:
+#       files:
+#       - environment.yaml
+#     paths:
+#     - $CONDA_PKGS_DIRS/*.conda
+#     - $CONDA_PKGS_DIRS/*.tar.bz2
+#     - $CONDA_PKGS_DIRS/urls*
+#     - $CONDA_PKGS_DIRS/cache
+#     - $PIP_CACHE_DIR
 
+#############################################
+############ PIPENV SECTION #################
+#############################################
 # pipenv-setup:
 #   stage: install
 #   image: python:3.9
@@ -130,6 +143,107 @@ pipenv-complexity:
   - pipenv run xenon --max-average B --max-modules C --max-absolute D eopf
   allow_failure: true
 
+#############################################
+############# CONDA SECTION #################
+#############################################
+# conda-setup:
+#   stage: install
+#   image: python:3.9
+#   script:
+#   - conda env create -f environment.yml
+#   - source activate eopf-dev
+#   artifacts:
+#     paths:
+#     - $CONDA_PKGS_DIRS/*.conda
+#     - $CONDA_PKGS_DIRS/*.tar.bz2
+#     - $CONDA_PKGS_DIRS/urls*
+#     - $CONDA_PKGS_DIRS/cache
+#     - $PIP_CACHE_DIR
+
+conda-linter:
+  stage: quality
+  image: python:3.9
+  before_script:
+  - conda env create -f environment.yml
+  - source activate eopf-dev
+  # dependencies:
+  # - conda-setup
+  script:
+  - python -m flake8 eopf tests
+
+conda-formater:
+  stage: quality
+  image: python:3.9
+  before_script:
+  - conda env create -f environment.yml
+  - source activate eopf-dev
+  # dependencies:
+  # - conda-setup
+  script:
+  - python -m black --check .
+  - python -m isort eopf tests --check --diff
+
+conda-typing:
+  stage: quality
+  image: python:3.9
+  before_script:
+  - conda env create -f environment.yml
+  - source activate eopf-dev
+  # dependencies:
+  # - conda-setup
+  script:
+  - python -m mypy eopf
+
+conda-test:
+  stage: test
+  image: python:3.9
+  before_script:
+  - conda env create -f environment.yml
+  - source activate eopf-dev
+  # dependencies:
+  # - conda-setup
+  script:
+  - python -m pytest --cov=eopf --cov-report=term-missing --cov-fail-under=70 -m unit
+
+conda-sec:
+  stage: quality
+  image: python:3.9
+  before_script:
+  - conda env create -f environment.yml
+  - source activate eopf-dev
+  # dependencies:
+  # - conda-setup
+  script:
+  - python -m bandit -c bandit.yml eopf
+
+conda-docs-cov:
+  stage: quality
+  image: python:3.9
+  before_script:
+  - conda env create -f environment.yml
+  - source activate eopf-dev
+  # dependencies:
+  # - conda-setup
+  script:
+  - docstr-coverage eopf -F 20
+  allow_failure: true
+
+conda-complexity:
+  stage: quality
+  image: python:3.9
+  before_script:
+  - conda env create -f environment.yml
+  - source activate eopf-dev
+  # dependencies:
+  # - conda-setup
+  script:
+  - python -m xenon --max-average B --max-modules C --max-absolute D eopf
+  allow_failure: true
+
+
+#############################################
+############# BUILD SECTION #################
+#############################################
 build-package:
   stage: build
   image: python:3.9
