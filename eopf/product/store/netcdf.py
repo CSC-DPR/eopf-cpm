@@ -8,7 +8,7 @@ from netCDF4 import Dataset, Group, Variable
 
 from eopf.exceptions import StoreNotOpenError
 from eopf.product.store import EOProductStore
-from eopf.product.utils import conv
+from eopf.product.utils import conv, decode_attrs
 
 if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_object import EOObject
@@ -71,8 +71,8 @@ class NetCDFStore(EOProductStore):
         except IndexError as e:  # if key is invalid, netcdf4 raise IndexError ...
             raise KeyError(e)
         if self.is_group(key):
-            return EOGroup(attrs=obj.__dict__)
-        return EOVariable(data=obj, attrs=obj.__dict__, dims=obj.dimensions)
+            return EOGroup(attrs=decode_attrs(obj.__dict__))
+        return EOVariable(data=obj, attrs=decode_attrs(obj.__dict__), dims=obj.dimensions)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
         from eopf.product.core import EOGroup, EOVariable
