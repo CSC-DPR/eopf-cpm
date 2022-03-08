@@ -1,8 +1,6 @@
-import functools
 import posixpath
-import weakref
 from pathlib import PurePosixPath
-from typing import Any, Callable, Optional
+from typing import Any, Optional
 
 
 def join_path(*subpath: str, sep: str = "/") -> str:
@@ -19,25 +17,6 @@ def join_path(*subpath: str, sep: str = "/") -> str:
     str
     """
     return sep.join(subpath)
-
-
-def weak_cache(func: Callable[..., Any]) -> Callable[..., Any]:
-    """weak ref version of lru_cache for method
-
-    See Also
-    --------
-    functools.cache
-    """
-
-    @functools.cache
-    def _func(_self: Any, *args: Any, **kwargs: Any) -> Any:
-        return func(_self(), *args, **kwargs)
-
-    @functools.wraps(func)
-    def inner(self: Any, *args: Any, **kwargs: Any) -> Any:
-        return _func(weakref.ref(self), *args, **kwargs)
-
-    return inner
 
 
 # We need to use a mix of posixpath (normpath) and pathlib (partition) in the eo_path methods.
@@ -179,6 +158,20 @@ def product_relative_path(eo_context: str, eo_path: str) -> str:
 
 
 def conv(obj: Any) -> Any:
+    """Convert an object to native python data types if possible,
+    otherwise return the the obj as it is
+
+    Parameters
+    ----------
+    obj: Any
+        an object
+
+    Returns
+    ----------
+    Any
+        either the obj conververted to native python data type,
+        or the obj as received
+    """
     from numpy import (
         float16,
         float32,
@@ -217,4 +210,26 @@ def conv(obj: Any) -> Any:
         return str(obj)
 
     # if no conversion can be done
-    raise TypeError(f"Can NOT convert {obj} of type {type(obj)}")
+    return obj
+
+
+def decode_attrs(attrs: Any) -> Any:
+    """Try to decode attributes as json if possible,
+    otherwise return the attrs as they are
+
+    Parameters
+    ----------
+    attrs: Any
+        an object containing attributes
+
+    Returns
+    ----------
+    Any
+        either the attributes as json or the attributes as received
+    """
+    from json import JSONDecodeError, loads
+
+    try:
+        attrs = loads(attrs)
+    except (JSONDecodeError, TypeError):
+        return attrs

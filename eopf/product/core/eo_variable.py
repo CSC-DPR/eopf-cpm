@@ -158,7 +158,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         -------
         chunked : eopf.product.EOVariable
         """
-        self._data = self._data.chunk(chunks, name_prefix=name_prefix, token=token, lock=lock)  # pyre-ignore[6]
+        self._data = self._data.chunk(chunks, name_prefix=name_prefix, token=token, lock=lock)
         return self
 
     def map_chunk(
@@ -203,7 +203,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         --------
         dask.array.map_blocks, xarray.apply_ufunc, xarray.Dataset.map_blocks, xarray.DataArray.map_blocks
         """
-        self._data = self._data.map_blocks(func, args, kwargs, template=template)  # pyre-ignore[6]
+        self._data = self._data.map_blocks(func, args, kwargs, template=template)
         return self
 
     def isel(
@@ -324,8 +324,8 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return EOVariable(
             self.name,
             self._data.sel(
-                indexers=indexers,  # pyre-ignore[6]
-                method=method,  # pyre-ignore[6]
+                indexers=indexers,
+                method=method,
                 tolerance=tolerance,
                 drop=drop,
                 **indexers_kwargs,

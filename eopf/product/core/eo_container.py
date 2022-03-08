@@ -51,8 +51,8 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
         key, subkeys = downsplit_eo_path(key)
         if subkeys:
             sub_container = self[key]
-            if not isinstance(sub_container, EOContainer):
-                raise KeyError("__delitem__ can't take an absolute path as argument")
+            if not isinstance(sub_container, EOContainer):  # sub_container is a EOVariable
+                raise KeyError("EOVariable not support support item assignment")
             sub_container[subkeys] = value
             return
 
@@ -115,8 +115,8 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
                 del self.store[store_key]
         else:
             sub_container = self[name]
-            if not isinstance(sub_container, EOContainer):
-                raise KeyError("__delitem__ can't take an absolute path as argument")
+            if not isinstance(sub_container, EOContainer):  # sub_container is a EOVariable
+                raise KeyError("EOVariable not support item deletion")
             del sub_container[keys]
 
     def __len__(self) -> int:
@@ -377,7 +377,7 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
         EOProduct.open
         EOProduct.load
         """
-        if self.store is None:
+        if self.store is None:  # pragma: no cover
             raise StoreNotDefinedError("Store must be defined")
         for name, item in self._groups.items():
             self.store[self._store_key(name)] = item
@@ -407,13 +407,10 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
         """
         from .eo_group import EOGroup
 
-        if self.store is None:
+        if self.store is None:  # pragma: no cover
             raise StoreNotDefinedError("Store must be defined")
         for key in self.store.iter(self.path):
-            try:
-                eo_object = self.store[self._store_key(key)]
-            except TypeError:
-                continue
+            eo_object = self.store[self._store_key(key)]
             self[key] = eo_object
             if isinstance(eo_object, EOGroup):
                 eo_object.load()
@@ -423,7 +420,7 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
         """dict[str, Any]: Attributes defined by this object"""
         return self._attrs
 
-    def _ipython_key_completions_(self) -> list[str]:
+    def _ipython_key_completions_(self) -> list[str]:  # pragma: no cover
         return [key for key in self.keys()]
 
     @property
