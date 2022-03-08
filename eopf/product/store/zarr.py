@@ -6,6 +6,7 @@ from zarr.hierarchy import Group
 from zarr.storage import FSStore, contains_array, contains_group
 
 from eopf.exceptions import StoreNotOpenError
+from eopf.product.utils import conv
 
 from .abstract import EOProductStore
 
@@ -15,19 +16,16 @@ if TYPE_CHECKING:
 
 class EOZarrStore(EOProductStore):
     """Store representation to access to a Zarr file on the given URL
-
     Parameters
     ----------
     url: str
         path url or the target store
-
     Attributes
     ----------
     url: str
         url to the target store
     sep: str
         file separator
-
     See Also
     -------
     zarr.storage
@@ -63,7 +61,7 @@ class EOZarrStore(EOProductStore):
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        self._root[group_path].attrs.update(attrs)
+        self._root[group_path].attrs.update(conv(attrs))
 
     def iter(self, path: str) -> Iterator[str]:
         if self._root is None:
