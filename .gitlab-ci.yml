@@ -152,8 +152,8 @@ conda-quality:
   image: continuumio/miniconda3:latest
   before_script:
   - conda env create -f environment.yaml --prefix $CONDA_FOLDER
-  - conda install -c anaconda gcc_linux-64 -n eopf-dev
-  - source activate eopf-dev
+  - conda activate $CONDA_FOLDER
+  - conda install -c anaconda gcc_linux-64
   script:
   - python -m flake8 eopf tests
   - python -m black --check .
@@ -167,8 +167,8 @@ conda-docs-cov:
   image: continuumio/miniconda3:latest
   before_script:
   - conda env create -f environment.yaml --prefix $CONDA_FOLDER
-  - conda install -c anaconda gcc_linux-64 -n eopf-dev
-  - source activate eopf-dev
+  - conda activate $CONDA_FOLDER
+  - conda install -c anaconda gcc_linux-64
   script:
   - docstr-coverage eopf -F 20
   allow_failure: true
@@ -178,8 +178,8 @@ conda-complexity:
   image: continuumio/miniconda3:latest
   before_script:
   - conda env create -f environment.yaml --prefix $CONDA_FOLDER
-  - conda install -c anaconda gcc_linux-64 -n eopf-dev
-  - source activate eopf-dev
+  - conda activate $CONDA_FOLDER
+  - conda install -c anaconda gcc_linux-6
   script:
   - python -m xenon --max-average B --max-modules C --max-absolute D eopf
   allow_failure: true
