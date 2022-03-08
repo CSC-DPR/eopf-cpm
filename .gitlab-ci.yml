@@ -5,32 +5,27 @@ stages:
   - build
   - deploy
 
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  PIPENV_VENV_IN_PROJECT: "enabled"
+
 cache:
   - key:
       files:
       - Pipfile
     paths:
-    - $CI_PROJECT_DIR/.local/share/virtualenvs
+    - $CI_PROJECT_DIR/.venv
     - $CI_PROJECT_DIR/.cache/pip
-    - $CI_PROJECT_DIR/.cache/pipenv
-  - key:
-      files:
-      - environment.yaml
-    paths:
-    - $CI_PROJECT_DIR/miniconda3/envs
+
+before_script:
+  - pip install -U pipenv pip
 
 pipenv-setup:
   stage: install
   image: python:3.9
   script:
-  - pip install -U pipenv pip
   - pipenv install --dev --skip-lock
   - pipenv run pip install --no-deps -e .
-  artifacts:
-    paths:
-    - $CI_PROJECT_DIR/.local/share/virtualenvs
-    - $CI_PROJECT_DIR/.cache/pip
-    - $CI_PROJECT_DIR/.cache/pipenv
 
 pipenv-linter:
   stage: quality
