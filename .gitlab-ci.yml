@@ -5,6 +5,20 @@ stages:
   - build
   - deploy
 
+cache:
+  - key:
+      files:
+      - Pipfile
+    paths:
+    - $CI_PROJECT_DIR/.local/share/virtualenvs
+    - $CI_PROJECT_DIR/.cache/pip
+    - $CI_PROJECT_DIR/.cache/pipenv
+  - key:
+      files:
+      - environment.yaml
+      paths:
+      - $CI_PROJECT_DIR/miniconda3/envs
+
 pipenv-setup:
   stage: install
   image: python:3.9
