@@ -28,9 +28,9 @@ pipenv-setup:
   - pipenv run pip install --no-deps -e .
   artifacts:
     paths:
-    - .local/share/virtualenvs
-    - .cache/pip
-    - .cache/pipenv
+    - $CI_PROJECT_DIR/.local/share/virtualenvs
+    - $CI_PROJECT_DIR/.cache/pip
+    - $CI_PROJECT_DIR/.cache/pipenv
 
 pipenv-linter:
   stage: quality
