@@ -12,6 +12,7 @@ from typing import (
 )
 
 import xarray
+from dask import array as da
 
 from eopf.product.core.eo_mixins import EOVariableOperatorsMixin
 from eopf.product.core.eo_object import EOObject
@@ -66,7 +67,8 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
 
         existing_dims = attrs.pop(_DIMENSIONS_NAME, [])
         if not isinstance(data, (xarray.DataArray, EOVariable)) and data is not None:
-            data = xarray.DataArray(data=data, name=name, attrs=attrs, **kwargs)
+            lazy_data = da.asarray(data)
+            data = xarray.DataArray(data=lazy_data, name=name, attrs=attrs, **kwargs)
         if data is None:
             data = xarray.DataArray(name=name, attrs=attrs, **kwargs)
 
