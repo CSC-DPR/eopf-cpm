@@ -9,7 +9,7 @@ pipenv-setup:
   stage: install
   image: python:3.9
   script:
-  - python install -U pipenv pip
+  - pip install -U pipenv pip
   - pipenv install --dev --skip-lock
   - pipenv install --no-deps -e .
   artifacts:
