@@ -46,7 +46,7 @@ linter = [
     "isort ==5.10.1",
 ]
 sec = ["bandit ==1.7.1", "safety"]
-doc = ["jupyter_sphinx ==0.3.2", "yummy-sphinx-theme ==0.1.1"]
+doc = ["jupyter_sphinx ==0.3.2", "sphinx-book-theme ==0.2.0"]
 notebook = ["jupyter", "Jinja2"]
 
 [tool.isort]
