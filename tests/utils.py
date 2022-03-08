@@ -38,22 +38,42 @@ def group_details(section_detail: dict, section_structure: dict) -> None:
         section_structure[subgroup_name] = {}
 
 
-def compute_tree_structure(tree) -> dict:
-    product_name = str(tree.xpath("/html/body/div/label/text()")[-1]).strip("', :").strip()
-    sections = tree.xpath("/html/body/div/div/ul/li")
-    product_structure = {"name": product_name, "groups": {}}
-
+def _compute_rec(node):
+    try:
+        name = str(node.xpath("label/text()")[-1]).strip("', :").strip()
+    except Exception:
+        return {}
+    sections = node.xpath("div/ul/li/div")
+    structure = {}
     for section in sections:
-        section_structure = {}
-        section_name = str(section.xpath("div/label/text()")[-1]).strip("', :").strip()
-        section_details = section.xpath("div/div/ul/li")
-        if section_details:
-            for section_detail in section_details:
-                group_details(section_detail, section_structure)
-                product_structure["groups"][section_name] = section_structure
-        else:
-            product_structure["groups"][section_name] = section_structure
-    return product_structure
+        structure |= _compute_rec(section)
+    import json
+
+    node_attrs = node.xpath('div/ul/li/div/dl[@class="eopf-attrs"][1]/dd')
+    attrs = {}
+    coords = []
+    if node_attrs:
+        attrs = json.loads(node_attrs[0].text)
+        if len(node_attrs) > 1:
+            coords = [i.text.strip().split("coordinates -> ")[-1] for i in node_attrs[1:]]
+
+    node_dims = node.xpath('div/ul/li/div/div[@class="eopf-section-inline-details"]')
+    dims = []
+    if node_dims:
+        for d in node_dims[0].text.strip()[1:-1].split(","):
+            d = d[1:-1]
+            if d:
+                dims.append(d)
+    structure["dims"] = tuple(dims)
+
+    structure["attrs"] = attrs
+    structure["coords"] = coords
+    return {name: structure}
+
+
+def compute_tree_structure(tree) -> dict:
+    root = tree.xpath("/html/body/div")[0]
+    return _compute_rec(root)
 
 
 def assert_contain(container: EOContainer, path: str, expect_type, path_offset="/"):

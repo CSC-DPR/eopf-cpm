@@ -70,10 +70,13 @@ def product() -> EOProduct:
         product.measurements["group1"].add_variable("variable_a")
 
         product["measurements/group1"].add_variable("group2/variable_b")
-        product["measurements/group1"]["group2"].add_variable("/measurements/group1/group2/variable_c", dims=["c1"])
+        product["measurements/group1"]["group2"].add_variable(
+            "/measurements/group1/group2/variable_c",
+            dims=["c1", "c2"],
+        )
         product.measurements.group1.group2.assign_dims(["c1"])
 
-        product.measurements.add_variable("group3/variable_e")
+        product.measurements.add_variable("group3/variable_e", attrs={"HELLO": "WORLD"})
         product.measurements.add_variable("group3/sgroup3/variable_f")
 
         product.add_variable("measurements/group1/group2/variable_d")
@@ -417,39 +420,64 @@ def test_product_tree(capsys):
 
 @pytest.mark.unit
 def test_hierarchy_html(product):
-    parser = etree.HTMLParser()
-    tree = etree.fromstring(product._repr_html_(), parser)
+    tree = etree.HTML(product._repr_html_())
     tree_structure = compute_tree_structure(tree)
     assert tree_structure == {
-        "name": "product_name",
-        "groups": {
+        "product_name": {
             "coordinates": {
-                "c1": {"Attributes": {"_EOPF_DIMENSIONS :": "['dim_0']"}, "Dimensions": "", "Coordinates": ""},
-                "c2": {"Attributes": {"_EOPF_DIMENSIONS :": "['dim_0']"}, "Dimensions": "", "Coordinates": ""},
-                "group2": {"Attributes": {"_EOPF_DIMENSIONS :": "['dim_0']"}, "Dimensions": "", "Coordinates": ""},
+                "c1": {"dims": ("dim_0",), "attrs": {"_EOPF_DIMENSIONS": ["dim_0"]}, "coords": []},
+                "c2": {"dims": ("dim_0",), "attrs": {"_EOPF_DIMENSIONS": ["dim_0"]}, "coords": []},
+                "group2": {"dims": ("dim_0",), "attrs": {"_EOPF_DIMENSIONS": ["dim_0"]}, "coords": []},
+                "dims": (),
+                "attrs": {},
+                "coords": [],
             },
             "measurements": {
                 "group1": {
-                    "Attributes": {"_EOPF_DIMENSIONS :": "['c1', 'c2', 'group2']"},
                     "group2": {
-                        "Attributes": {"_EOPF_DIMENSIONS :": "['c1']"},
-                        "variable_b": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
+                        "variable_b": {"dims": (), "attrs": {}, "coords": []},
                         "variable_c": {
-                            "Attributes": {"_EOPF_DIMENSIONS :": "['c1']"},
-                            "Dimensions": "",
-                            "Coordinates": " /->coordinates -> c1])",
+                            "dims": ("c1", "'c2"),
+                            "attrs": {"_EOPF_DIMENSIONS": ["c1", "c2"]},
+                            "coords": ["c1", "c2"],
                         },
-                        "variable_d": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
+                        "variable_d": {"dims": (), "attrs": {}, "coords": []},
+                        "dims": (),
+                        "attrs": {"_EOPF_DIMENSIONS": ["c1"]},
+                        "coords": [],
                     },
-                    "group2b": {"group3": {}, "group3b": {}},
-                    "variable_a": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
+                    "group2b": {
+                        "group3": {"dims": (), "attrs": {}, "coords": []},
+                        "group3b": {"dims": (), "attrs": {}, "coords": []},
+                        "dims": (),
+                        "attrs": {},
+                        "coords": [],
+                    },
+                    "variable_a": {"dims": (), "attrs": {}, "coords": []},
+                    "dims": (),
+                    "attrs": {"_EOPF_DIMENSIONS": ["c1", "c2", "group2"]},
+                    "coords": [],
                 },
                 "group3": {
-                    "sgroup3": {"variable_f": {"Attributes": {}, "Dimensions": "", "Coordinates": ""}},
-                    "variable_e": {"Attributes": {}, "Dimensions": "", "Coordinates": ""},
+                    "sgroup3": {
+                        "variable_f": {"dims": (), "attrs": {}, "coords": []},
+                        "dims": (),
+                        "attrs": {},
+                        "coords": [],
+                    },
+                    "variable_e": {"dims": (), "attrs": {"HELLO": "WORLD"}, "coords": []},
+                    "dims": (),
+                    "attrs": {},
+                    "coords": [],
                 },
+                "dims": (),
+                "attrs": {},
+                "coords": [],
             },
-            "group0": {},
+            "group0": {"dims": (), "attrs": {}, "coords": []},
+            "dims": (),
+            "attrs": {},
+            "coords": [],
         },
     }
 
