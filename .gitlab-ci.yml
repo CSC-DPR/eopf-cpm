@@ -148,7 +148,7 @@ pipenv-complexity:
 #############################################
 # conda-setup:
 #   stage: install
-#   image: python:3.9
+#   image: continuumio/miniconda3:latest
 #   script:
 #   - conda env create -f environment.yml
 #   - source activate eopf-dev
@@ -162,7 +162,7 @@ pipenv-complexity:
 
 conda-linter:
   stage: quality
-  image: python:3.9
+  image: continuumio/miniconda3:latest
   before_script:
   - conda env create -f environment.yml
   - source activate eopf-dev
@@ -173,7 +173,7 @@ conda-linter:
 
 conda-formater:
   stage: quality
-  image: python:3.9
+  image: continuumio/miniconda3:latest
   before_script:
   - conda env create -f environment.yml
   - source activate eopf-dev
@@ -185,7 +185,7 @@ conda-formater:
 
 conda-typing:
   stage: quality
-  image: python:3.9
+  image: continuumio/miniconda3:latest
   before_script:
   - conda env create -f environment.yml
   - source activate eopf-dev
@@ -196,7 +196,7 @@ conda-typing:
 
 conda-test:
   stage: test
-  image: python:3.9
+  image: continuumio/miniconda3:latest
   before_script:
   - conda env create -f environment.yml
   - source activate eopf-dev
@@ -207,7 +207,7 @@ conda-test:
 
 conda-sec:
   stage: quality
-  image: python:3.9
+  image: continuumio/miniconda3:latest
   before_script:
   - conda env create -f environment.yml
   - source activate eopf-dev
@@ -218,7 +218,7 @@ conda-sec:
 
 conda-docs-cov:
   stage: quality
-  image: python:3.9
+  image: continuumio/miniconda3:latest
   before_script:
   - conda env create -f environment.yml
   - source activate eopf-dev
@@ -230,7 +230,7 @@ conda-docs-cov:
 
 conda-complexity:
   stage: quality
-  image: python:3.9
+  image: continuumio/miniconda3:latest
   before_script:
   - conda env create -f environment.yml
   - source activate eopf-dev
