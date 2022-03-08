@@ -1,5 +1,4 @@
 stages:
-  - install
   - quality
   - test
   - build
@@ -19,27 +18,18 @@ cache:
 
 before_script:
   - pip install -U pipenv pip
-
-pipenv-setup:
-  stage: install
-  image: python:3.9
-  script:
   - pipenv install --dev --skip-lock
   - pipenv run pip install --no-deps -e .
 
 pipenv-linter:
   stage: quality
   image: python:3.9
-  dependencies:
-  - pipenv-setup
   script:
   - pipenv run flake8 eopf tests
 
 pipenv-formater:
   stage: quality
   image: python:3.9
-  dependencies:
-  - pipenv-setup
   script:
   - pipenv run black --check .
   - pipenv run isort eopf tests --check --diff
@@ -47,32 +37,24 @@ pipenv-formater:
 pipenv-typing:
   stage: quality
   image: python:3.9
-  dependencies:
-  - pipenv-setup
   script:
   - pipenv run mypy eopf
 
 pipenv-test:
   stage: test
   image: python:3.9
-  dependencies:
-  - pipenv-setup
   script:
   - pipenv run pytest --cov=eopf --cov-report=term-missing --cov-fail-under=70 -m unit
 
 pipenv-sec:
   stage: quality
   image: python:3.9
-  dependencies:
-  - pipenv-setup
   script:
   - pipenv run bandit -c bandit.yml eopf
 
 pipenv-deps-sec:
   stage: quality
   image: python:3.9
-  dependencies:
-  - pipenv-setup
   script:
   - pipenv check
   allow_failure: true
@@ -80,8 +62,6 @@ pipenv-deps-sec:
 pipenv-docs-cov:
   stage: quality
   image: python:3.9
-  dependencies:
-  - pipenv-setup
   script:
   - pipenv run docstr-coverage eopf -F 20
   allow_failure: true
@@ -89,8 +69,6 @@ pipenv-docs-cov:
 pipenv-complexity:
   stage: quality
   image: python:3.9
-  dependencies:
-  - pipenv-setup
   script:
   - pipenv run xenon --max-average B --max-modules C --max-absolute D eopf
   allow_failure: true
