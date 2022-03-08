@@ -11,7 +11,7 @@ pipenv-setup:
   script:
   - pip install -U pipenv pip
   - pipenv install --dev --skip-lock
-  - pipenv install --no-deps -e .
+  - pipenv run pip install --no-deps -e .
   artifacts:
     paths:
     - .local/share/virtualenvs
