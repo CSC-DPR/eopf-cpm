@@ -14,7 +14,7 @@ if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_object import EOObject
 
 
-class NetCDFStore(EOProductStore):
+class EONetCDFStore(EOProductStore):
     RESTRICTED_ATTR_KEY = ("_FillValue",)
 
     def __init__(self, url: str) -> None:

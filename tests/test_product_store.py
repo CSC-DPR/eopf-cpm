@@ -10,7 +10,7 @@ from pyfakefs.fake_filesystem import FakeFilesystem
 from eopf.exceptions import MissingConfigurationParameter, StoreNotOpenError
 from eopf.exceptions.warnings import AlreadyClose, AlreadyOpen
 from eopf.product.core import EOGroup, EOProduct, EOVariable
-from eopf.product.store import EOProductStore, EOZarrStore, NetCDFStore
+from eopf.product.store import EONetCDFStore, EOProductStore, EOZarrStore
 from eopf.product.store.manifest import ManifestStore
 
 from .decoder import Netcdfdecoder
@@ -159,7 +159,7 @@ def test_load_product_from_zarr(zarr_file: str, fs: FakeFilesystem):
     "store, readable, writable, listable, erasable",
     [
         (EOZarrStore(zarr.MemoryStore()), True, True, True, True),
-        (NetCDFStore(_FILES["netcdf"]), True, True, True, True),
+        (EONetCDFStore(_FILES["netcdf"]), True, True, True, True),
     ],
 )
 def test_check_capabilities(store, readable, writable, listable, erasable):
@@ -174,7 +174,7 @@ def test_check_capabilities(store, readable, writable, listable, erasable):
     "store, decoder_type",
     [
         (EOZarrStore(zarr.MemoryStore()), zarr.open),
-        (NetCDFStore(_FILES["netcdf"]), Netcdfdecoder),
+        (EONetCDFStore(_FILES["netcdf"]), Netcdfdecoder),
     ],
 )
 def test_write_stores(fs: FakeFilesystem, store: EOProductStore, decoder_type: Any):
@@ -198,7 +198,7 @@ def test_write_stores(fs: FakeFilesystem, store: EOProductStore, decoder_type: A
     "store",
     [
         EOZarrStore(zarr.MemoryStore()),
-        NetCDFStore(_FILES["netcdf"]),
+        EONetCDFStore(_FILES["netcdf"]),
     ],
 )
 def test_read_stores(fs: FakeFilesystem, store: EOProductStore):
@@ -229,7 +229,7 @@ def test_abstract_store_cant_be_instantiate():
     "store",
     [
         EOZarrStore("a_product"),
-        NetCDFStore(_FILES["netcdf"]),
+        EONetCDFStore(_FILES["netcdf"]),
     ],
 )
 def test_store_must_be_open(fs: FakeFilesystem, store: EOProductStore):
@@ -265,7 +265,7 @@ def test_store_must_be_open(fs: FakeFilesystem, store: EOProductStore):
     "store",
     [
         EOZarrStore("a_product"),
-        NetCDFStore(_FILES["netcdf"]),
+        EONetCDFStore(_FILES["netcdf"]),
     ],
 )
 def test_store_structure(fs: FakeFilesystem, store: EOProductStore):
@@ -301,7 +301,7 @@ def cleanup_files():
     "store, exceptions",
     [
         (EOZarrStore(zarr.MemoryStore()), (AlreadyOpen, AlreadyClose)),
-        (NetCDFStore(_FILES["netcdf"]), (AlreadyOpen, StoreNotOpenError)),
+        (EONetCDFStore(_FILES["netcdf"]), (AlreadyOpen, StoreNotOpenError)),
     ],
 )
 def test_open_close_already(store, exceptions):
@@ -318,7 +318,7 @@ def test_open_close_already(store, exceptions):
     "store, formats, results",
     [
         (EOZarrStore(zarr.MemoryStore()), (".zarr", "", ".nc"), (True, True, False)),
-        (NetCDFStore(_FILES["netcdf"]), (".nc", "", ".zarr"), (True, False, False)),
+        (EONetCDFStore(_FILES["netcdf"]), (".nc", "", ".zarr"), (True, False, False)),
         (ManifestStore(_FILES["json"]), (".nc", ".zarr", ""), (False, False, False)),
     ],
 )
