@@ -2,29 +2,33 @@ import os
 import os.path
 from typing import Any, Optional
 
+import hypothesis.strategies as st
 import pytest
 import xarray
 import zarr
+from hypothesis import given
 from pyfakefs.fake_filesystem import FakeFilesystem
 
 from eopf.exceptions import MissingConfigurationParameter, StoreNotOpenError
 from eopf.exceptions.warnings import AlreadyClose, AlreadyOpen
+from eopf.product.conveniences import init_product, open_store
 from eopf.product.core import EOGroup, EOProduct, EOVariable
-from eopf.product.store import EONetCDFStore, EOProductStore, EOZarrStore
+from eopf.product.store import EONetCDFStore, EOProductStore, EOZarrStore, convert
 from eopf.product.store.manifest import ManifestStore
 
 from .decoder import Netcdfdecoder
-from .utils import assert_contain
+from .utils import assert_contain, combinaison_of
 
 _FILES = {
     "netcdf": "test_ncdf_file_.nc",
     "json": "test_metadata_file_.json",
+    "zarr": "file://test_attributes",
 }
 
 
 @pytest.fixture
 def zarr_file(fs: FakeFilesystem):
-    file_name = "file://test_attributes"
+    file_name = _FILES["zarr"]
     dims = "_EOPF_DIMENSIONS"
 
     root = zarr.open(file_name, mode="w")
@@ -454,3 +458,16 @@ def test_retrieve_from_manifest_store():
             },
         },
     }
+
+
+@pytest.mark.unit
+@given(st.sampled_from(combinaison_of(elements=[EOZarrStore(_FILES["zarr"]), EONetCDFStore(_FILES["netcdf"])])))
+def test_convert(read_write_stores):
+    read_stores, write_stores = read_write_stores
+    product = init_product("a_product", store_or_path_url=read_stores)
+    with open_store(product, mode="w"):
+        product.write()
+    new_product = EOProduct("new_one", store_or_path_url=convert(read_stores, write_stores))
+    with open_store(new_product, mode="r"):
+        new_product["measurements"]
+        new_product["coordinates"]

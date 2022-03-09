@@ -1,4 +1,5 @@
-from typing import Any, Dict, Optional, Union
+import contextlib
+from typing import Any, Dict, Iterator, Optional, Union
 
 from lxml import etree
 
@@ -106,3 +107,39 @@ def apply_xpath(dom: Any, xpath: str, namespaces: Dict[str, str]) -> str:
             return target[0].text
         return ",".join(target)
     return target
+
+
+@contextlib.contextmanager
+def open_store(
+    store_or_product: Union[EOProduct, EOProductStore], mode: str = "r", **kwargs: Any
+) -> Iterator[EOProductStore]:
+    """Open an EOProductStore in the given mode.
+
+    help you to open EOProductStore from EOProduct or directly to use
+    it as a standard python open function.
+
+    Parameters
+    ----------
+    store_or_product: EOProductStore or EOProduct
+        store to open
+    mode: str, optional
+        mode to open the store (default = 'r')
+    kwargs: any
+        store specific kwargs
+    Returns
+    -------
+    store
+        store opened with given arguments
+    """
+    if isinstance(store_or_product, EOProduct):
+        store = store_or_product.store
+    else:
+        store = store_or_product
+    if store is None:
+        raise Exception()
+
+    try:
+        store.open(mode=mode, **kwargs)
+        yield store
+    finally:
+        store.close()

@@ -81,3 +81,11 @@ def assert_contain(container: EOContainer, path: str, expect_type, path_offset="
     assert obj.path == path_offset + path
     assert obj.name == path.rpartition("/")[2]
     assert isinstance(obj, expect_type)
+
+
+def combinaison_of(elements):
+    zip_size = len(elements)
+    final_list = []
+    for idx, element in enumerate(elements):
+        final_list += list(zip([element] * zip_size, elements[idx + 1 :]))  # noqa: E203
+    return final_list
