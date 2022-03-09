@@ -28,26 +28,30 @@ dependencies = [
     "fsspec ==2021.11.1",
     "h5py==3.6.0",
     "lxml==4.7.1",
-
 ]
 license = {file = "LICENSE"}
 
 [project.optional-dependencies]
-test = [
-    "pytest ==6.2.5",
-    "pytest-cov ==3.0.0",
-    "hypothesis ==6.29.0",
-    "pyfakefs ==4.5.4",
+tests = [
+    "pytest >=6.2.5",
+    "pytest-cov >=3.0.0",
+    "hypothesis >=6.29.0",
+    "pyfakefs >=4.5.4",
 ]
-linter = [
-    "flake8 ==4.0.1",
-    "black ==21.11b1",
-    "mypy ==0.931",
-    "isort ==5.10.1",
+linter = ["flake8 >=4.0.1"]
+typing = ["mypy >=0.931"]
+formatter = ["black >=21.11b1", "isort >=5.10.1"]
+security = ["bandit >=1.7.1", "safety >=1.10.3"]
+doc = ["jupyter-sphinx >=0.3.2", "sphinx-book-theme >=0.2.0"]
+notebook = ["jupyter >=1.0.0", "Jinja2 >=3.0.3"]
+complexity = ["xenon >=0.8.0"]
+doc-cov = ["docstr-coverage >=2.1.1"]
+dev = [
+    "pre-commit >=2.16.0",
+    "eopf[complexity]", "eopf[tests]", "eopf[doc-cov]",
+    "eopf[linter]", "eopf[typing]", "eopf[formatter]",
+    "eopf[security]", "eopf[doc]", "eopf[notebook]",
 ]
-sec = ["bandit ==1.7.1", "safety"]
-doc = ["jupyter_sphinx ==0.3.2", "sphinx-book-theme ==0.2.0"]
-notebook = ["jupyter", "Jinja2"]
 
 [tool.isort]
 profile = "black"
