@@ -4,16 +4,14 @@ You can use any tools you want to manage your virtual environment (ex: poetry, p
 
 ## Install eopf as development package
 
-To install eopf as development package, run
-the pip install command inside your environment:
+After creating your virtual environment, and activate it (ex: `conda activate` or `pipenv shell`),
+at the root level of the eopf-cpm project, run the following installation command:
 ```bash
-pip install -e path/to/eopf/folder[dev]
+pip install -e .[dev]
 ```
-
 the extra `[dev]` arguments extract all packages for development
 
 > **WARNING** If pip is not up to date, you can have an error, so, try `pip install -U pip` before.
-
 
 ## Pre-commit hook
 
