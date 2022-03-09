@@ -1,5 +1,4 @@
 stages:
-  - install
   - test
   - build
   - deploy
@@ -10,17 +9,6 @@ variables:
 #############################################
 ############ PIP SECTION #################
 #############################################
-
-installation:
-  stage: install
-  image: python:3.9
-  script:
-    - pip install .[dev]
-  artifacts:
-    paths:
-    - .cache/pip
-
-
 linter:
   stage: test
   image: python:3.9
@@ -28,8 +16,6 @@ linter:
     - pip install .[linter]
   script:
   - python -m flake8 eopf tests
-  dependencies:
-    - installation
 
 formater:
   stage: test
@@ -39,8 +25,6 @@ formater:
   script:
   - python -m black --check .
   - python -m isort eopf tests --check --diff
-  dependencies:
-    - installation
 
 typing:
   stage: test
@@ -49,8 +33,6 @@ typing:
     - pip install .[typing]
   script:
   - python -m mypy eopf
-  dependencies:
-    - installation
 
 tests:
   stage: test
@@ -59,8 +41,6 @@ tests:
     - pip install .[tests] .[notebook]
   script:
   - python -m pytest --cov=eopf --cov-report=term-missing --cov-fail-under=70 -m unit
-  dependencies:
-    - installation
 
 security:
   stage: test
@@ -69,8 +49,6 @@ security:
     - pip install .[security]
   script:
   - python -m bandit -c bandit.yml eopf
-  dependencies:
-    - installation
 
 deps-sec:
   stage: test
@@ -79,8 +57,6 @@ deps-sec:
     - pip install .[security]
   script:
   - safety check
-  dependencies:
-    - installation
   allow_failure: true
 
 docs-cov:
@@ -90,8 +66,6 @@ docs-cov:
     - pip install .[doc-cov]
   script:
   - docstr-coverage eopf -F 20
-  dependencies:
-    - installation
   allow_failure: true
 
 complexity:
@@ -101,8 +75,6 @@ complexity:
     - pip install .[complexity]
   script:
   - python -m xenon --max-average B --max-modules C --max-absolute D eopf
-  dependencies:
-    - installation
   allow_failure: true
 
 
