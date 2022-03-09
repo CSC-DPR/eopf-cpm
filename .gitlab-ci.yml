@@ -8,8 +8,6 @@ stages:
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   PIPENV_VENV_IN_PROJECT: "enabled"
-  CONDA_PKGS_DIRS: "$CI_PROJECT_DIR/.conda-pkgs-cache/"
-  CONDA_FOLDER: "$CI_PROJECT_DIR/.envs"
 # TODO: caching not enabled right now, so we have to see with the SDE team
 # cache:
 #   - key:
