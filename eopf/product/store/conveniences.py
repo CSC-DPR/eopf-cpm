@@ -10,12 +10,31 @@ def convert(
     source_kwargs: dict[str, Any] = {},
     target_kwargs: dict[str, Any] = {},
 ) -> EOProductStore:
+    """Help to convert a source store format to another by
+    writting everything in the target store.
+
+    `source` is open in 'r' mode, and `target` in 'w' mode.
+
+    Parameters
+    ----------
+    source: EOProductStore
+        store to read to retrieve data
+    target: EOProductStore
+        store to write retrived data
+    source_kwargs: dict
+        specific arguments to open the source store
+    target_kwargs: dict
+        specific arguments to open the write store
+    Returns
+    -------
+    EOProductStore
+    """
     from eopf.product import open_store
 
-    def _convert(level: list[str]):
-        if len(level) == 1 and level[0] in ["", "/"]:
+    def _convert(level: list[str]) -> None:
+        if len(level) == 1:
             node_path = ""
-            target.write_attrs("", source[node_path].attrs)
+            target.write_attrs(node_path, source[node_path].attrs)
         else:
             node_path = join_path(*level, sep=source.sep)
             target[join_path(*level, sep=target.sep)] = source[node_path]

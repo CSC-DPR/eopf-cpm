@@ -17,7 +17,7 @@ from eopf.product.store import EONetCDFStore, EOProductStore, EOZarrStore, conve
 from eopf.product.store.manifest import ManifestStore
 
 from .decoder import Netcdfdecoder
-from .utils import assert_contain, combinaison_of
+from .utils import assert_contain, couple_combinaison_from
 
 _FILES = {
     "netcdf": "test_ncdf_file_.nc",
@@ -461,7 +461,9 @@ def test_retrieve_from_manifest_store():
 
 
 @pytest.mark.unit
-@given(st.sampled_from(combinaison_of(elements=[EOZarrStore(_FILES["zarr"]), EONetCDFStore(_FILES["netcdf"])])))
+@given(
+    st.sampled_from(couple_combinaison_from(elements=[EOZarrStore(_FILES["zarr"]), EONetCDFStore(_FILES["netcdf"])])),
+)
 def test_convert(read_write_stores):
     read_stores, write_stores = read_write_stores
     product = init_product("a_product", store_or_path_url=read_stores)

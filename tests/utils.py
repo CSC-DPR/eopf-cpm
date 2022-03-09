@@ -1,3 +1,5 @@
+from typing import Any
+
 from eopf.product.core.eo_container import EOContainer
 
 
@@ -76,14 +78,15 @@ def compute_tree_structure(tree) -> dict:
     return _compute_rec(root)
 
 
-def assert_contain(container: EOContainer, path: str, expect_type, path_offset="/"):
+def assert_contain(container: EOContainer, path: str, expect_type, path_offset="/") -> None:
     obj = container[path]
     assert obj.path == path_offset + path
     assert obj.name == path.rpartition("/")[2]
     assert isinstance(obj, expect_type)
 
 
-def combinaison_of(elements):
+def couple_combinaison_from(elements: list[Any]) -> list[tuple[Any, Any]]:
+    """create all possible combinaison of two elements from the input list"""
     zip_size = len(elements)
     final_list = []
     for idx, element in enumerate(elements):

@@ -3,8 +3,37 @@ from typing import Any, Dict, Iterator, Optional, Union
 
 from lxml import etree
 
+from eopf.exceptions import StoreNotDefinedError
 from eopf.product.core import EOProduct
 from eopf.product.store.abstract import EOProductStore
+
+
+def apply_xpath(dom: Any, xpath: str, namespaces: Dict[str, str]) -> str:
+    """Apply the XPath on the DOM
+
+    Parameters
+    ----------
+    dom : Any
+        The DOM to be parsed with xpath
+    xpath : str
+        The value of the corresponding XPath rule
+    namespaces : dict
+        The associated namespaces
+
+    Returns
+    -------
+    The result of the XPath : str
+    """
+    target = dom.xpath(xpath, namespaces=namespaces)
+    if isinstance(target, list):
+        if len(target) == 1 and isinstance(target[0], etree._Element):
+            if target[0].tag.endswith("posList"):
+                values = target[0].text.split(" ")
+                merged_values = ",".join(" ".join([n, i]) for i, n in zip(values, values[1:]))
+                return f"POLYGON(({merged_values}))"
+            return target[0].text
+        return ",".join(target)
+    return target
 
 
 def init_product(
@@ -32,6 +61,42 @@ def init_product(
     for group_name in product.MANDATORY_FIELD:
         product.add_group(group_name)
     return product
+
+
+@contextlib.contextmanager
+def open_store(
+    store_or_product: Union[EOProduct, EOProductStore], mode: str = "r", **kwargs: Any
+) -> Iterator[EOProductStore]:
+    """Open an EOProductStore in the given mode.
+
+    help you to open EOProductStore from EOProduct or directly to use
+    it as a standard python open function.
+
+    Parameters
+    ----------
+    store_or_product: EOProductStore or EOProduct
+        store to open
+    mode: str, optional
+        mode to open the store (default = 'r')
+    kwargs: any
+        store specific kwargs
+    Returns
+    -------
+    store
+        store opened with given arguments
+    """
+    if isinstance(store_or_product, EOProduct):
+        store = store_or_product.store
+    else:
+        store = store_or_product
+    if store is None:
+        raise StoreNotDefinedError()
+
+    try:
+        store.open(mode=mode, **kwargs)
+        yield store
+    finally:
+        store.close()
 
 
 def parse_xml(path: Any) -> Any:
@@ -79,67 +144,3 @@ def translate_structure(
         return {attr: translate_structure(map_value[attr], dom, namespaces) for attr in map_value}
     elif isinstance(map_value, str):
         return apply_xpath(dom, map_value, namespaces)
-
-
-def apply_xpath(dom: Any, xpath: str, namespaces: Dict[str, str]) -> str:
-    """Apply the XPath on the DOM
-
-    Parameters
-    ----------
-    dom : Any
-        The DOM to be parsed with xpath
-    xpath : str
-        The value of the corresponding XPath rule
-    namespaces : dict
-        The associated namespaces
-
-    Returns
-    -------
-    The result of the XPath : str
-    """
-    target = dom.xpath(xpath, namespaces=namespaces)
-    if isinstance(target, list):
-        if len(target) == 1 and isinstance(target[0], etree._Element):
-            if target[0].tag.endswith("posList"):
-                values = target[0].text.split(" ")
-                merged_values = ",".join(" ".join([n, i]) for i, n in zip(values, values[1:]))
-                return f"POLYGON(({merged_values}))"
-            return target[0].text
-        return ",".join(target)
-    return target
-
-
-@contextlib.contextmanager
-def open_store(
-    store_or_product: Union[EOProduct, EOProductStore], mode: str = "r", **kwargs: Any
-) -> Iterator[EOProductStore]:
-    """Open an EOProductStore in the given mode.
-
-    help you to open EOProductStore from EOProduct or directly to use
-    it as a standard python open function.
-
-    Parameters
-    ----------
-    store_or_product: EOProductStore or EOProduct
-        store to open
-    mode: str, optional
-        mode to open the store (default = 'r')
-    kwargs: any
-        store specific kwargs
-    Returns
-    -------
-    store
-        store opened with given arguments
-    """
-    if isinstance(store_or_product, EOProduct):
-        store = store_or_product.store
-    else:
-        store = store_or_product
-    if store is None:
-        raise Exception()
-
-    try:
-        store.open(mode=mode, **kwargs)
-        yield store
-    finally:
-        store.close()
