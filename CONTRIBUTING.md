@@ -1,44 +1,17 @@
 # Install your environment
 
-## Conda developer
-
-If you are using conda, to setup the development environment just load it from
-the environment.yaml:
-```bash
-conda env create -f environment.yaml
-```
-
-you will be able to access to a `eopf-dev` conda environment.
-
-
-## Pipenv developer
-
-If you are using pipenv, to setup the development environment just load it from
-the Pipfile:
-```bash
-pipenv install --dev
-```
-
-to access to the environment, once you are on the correct folder, just run:
-```bash
-pipenv shell
-```
-
-or if you just want to run a command inside:
-```bash
-pipenv run my_cmd args
-```
+You can use any tools you want to manage your virtual environment (ex: poetry, pipenv, conda, etc ...).
 
 ## Install eopf as development package
 
-Once your environment is setup, to install eopf as development package, run
-the pip install command:
+After creating your virtual environment, and activate it (ex: `conda activate` or `pipenv shell`),
+at the root level of the eopf-cpm project, run the following installation command:
 ```bash
-pip install -e path/to/eopf/folder
+pip install -e .[dev]
 ```
+the extra `[dev]` arguments extract all packages for development
 
 > **WARNING** If pip is not up to date, you can have an error, so, try `pip install -U pip` before.
-
 
 ## Pre-commit hook
 
