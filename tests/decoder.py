@@ -1,3 +1,5 @@
+import json
+
 from netCDF4 import Dataset
 
 
@@ -9,7 +11,8 @@ class Netcdfdecoder:
             self._node = url_or_obj
 
     def __getitem__(self, key: str):
-        return Netcdfdecoder(self._root[key])
+        return Netcdfdecoder(self._node[key])
 
+    @property
     def attrs(self):
-        return self._node.__dict__
+        return {k: json.loads(v) for k, v in self._node.__dict__.items()}

@@ -163,7 +163,7 @@ class EOProduct(EOContainer):
         exc_value: Optional[BaseException],
         traceback: Optional[TracebackType],
     ) -> None:
-        if self.store is None:
+        if self.store is None:  # pragma: no cover
             raise StoreNotDefinedError("Store must be defined")
         self.store.close()
 
@@ -203,12 +203,12 @@ class EOProduct(EOContainer):
             Instance of EOProduct if the environment is interactive (e.g. Jupyter Notebook)
             Oterwise, returns None.
         """
-        try:
+        try:  # pragma: no cover
             from IPython import get_ipython
 
             if get_ipython():
                 return self
-        except ModuleNotFoundError:
+        except ModuleNotFoundError:  # pragma: no cover
             import warnings
 
             warnings.warn("IPython not found")
@@ -221,7 +221,7 @@ class EOProduct(EOContainer):
     def coordinates(self) -> EOGroup:
         """EOGroup: Coordinates mandatory group"""
         coords = self.get("coordinates")
-        if not isinstance(coords, EOGroup):
+        if not isinstance(coords, EOGroup):  # pragma: no cover (theorically impossible)
             raise InvalidProductError("coordinates must be defined at product level and must be an EOGroup")
         return coords
 
