@@ -1,5 +1,6 @@
 import os
 import os.path
+import shutil
 from typing import Any, Optional
 
 import hypothesis.strategies as st
@@ -22,13 +23,13 @@ from .utils import assert_contain, couple_combinaison_from
 _FILES = {
     "netcdf": "test_ncdf_file_.nc",
     "json": "test_metadata_file_.json",
-    "zarr": "file://test_attributes",
+    "zarr": "test_zarr_files_.zarr",
 }
 
 
 @pytest.fixture
 def zarr_file(fs: FakeFilesystem):
-    file_name = _FILES["zarr"]
+    file_name = f"file://{_FILES['zarr']}"
     dims = "_EOPF_DIMENSIONS"
 
     root = zarr.open(file_name, mode="w")
@@ -296,7 +297,7 @@ def cleanup_files():
         if os.path.isfile(file):
             os.remove(file)
         if os.path.isdir(file):
-            os.removedirs(file)
+            shutil.rmtree(file)
 
 
 @pytest.mark.unit
