@@ -1,0 +1,224 @@
+stages:
+  - install
+  - quality
+  - test
+  - build
+  - deploy
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  PIPENV_VENV_IN_PROJECT: "enabled"
+# TODO: caching not enabled right now, so we have to see with the SDE team
+# cache:
+#   - key:
+#       files:
+#       - Pipfile
+#     paths:
+#     - $CI_PROJECT_DIR/.venv
+#     - $PIP_CACHE_DIR
+#   - key:
+#       files:
+#       - environment.yaml
+#     paths:
+#     - $CONDA_PKGS_DIRS/*.conda
+#     - $CONDA_PKGS_DIRS/*.tar.bz2
+#     - $CONDA_PKGS_DIRS/urls*
+#     - $CONDA_PKGS_DIRS/cache
+#     - $PIP_CACHE_DIR
+
+#############################################
+############ PIPENV SECTION #################
+#############################################
+# pipenv-setup:
+#   stage: install
+#   image: python:3.9
+#   script:
+#   - pip install -U pipenv pip
+#   - pipenv install --dev --skip-lock
+#   - pipenv run pip install --no-deps -e .
+#   artifacts:
+#     paths:
+#     - .venv/
+#     - .cache/pip
+
+pipenv-linter:
+  stage: quality
+  image: python:3.9
+  before_script:
+    - pip install -U pipenv pip
+    - pipenv install --dev --skip-lock
+    - pipenv run pip install --no-deps -e .
+  # dependencies:
+  # - pipenv-setup
+  script:
+  - pipenv run flake8 eopf tests
+
+pipenv-formater:
+  stage: quality
+  image: python:3.9
+  before_script:
+    - pip install -U pipenv pip
+    - pipenv install --dev --skip-lock
+    - pipenv run pip install --no-deps -e .
+  # dependencies:
+  # - pipenv-setup
+  script:
+  - pipenv run black --check .
+  - pipenv run isort eopf tests --check --diff
+
+pipenv-typing:
+  stage: quality
+  image: python:3.9
+  before_script:
+    - pip install -U pipenv pip
+    - pipenv install --dev --skip-lock
+    - pipenv run pip install --no-deps -e .
+  # dependencies:
+  # - pipenv-setup
+  script:
+  - pipenv run mypy eopf
+
+pipenv-test:
+  stage: test
+  image: python:3.9
+  before_script:
+    - pip install -U pipenv pip
+    - pipenv install --dev --skip-lock
+    - pipenv run pip install --no-deps -e .
+  # dependencies:
+  # - pipenv-setup
+  script:
+  - pipenv run pytest --cov=eopf --cov-report=term-missing --cov-fail-under=70 -m unit
+
+pipenv-sec:
+  stage: quality
+  image: python:3.9
+  before_script:
+    - pip install -U pipenv pip
+    - pipenv install --dev --skip-lock
+    - pipenv run pip install --no-deps -e .
+  # dependencies:
+  # - pipenv-setup
+  script:
+  - pipenv run bandit -c bandit.yml eopf
+
+pipenv-deps-sec:
+  stage: quality
+  image: python:3.9
+  before_script:
+    - pip install -U pipenv pip
+    - pipenv install --dev --skip-lock
+    - pipenv run pip install --no-deps -e .
+  # dependencies:
+  # - pipenv-setup
+  script:
+  - pipenv check
+  allow_failure: true
+
+pipenv-docs-cov:
+  stage: quality
+  image: python:3.9
+  before_script:
+    - pip install -U pipenv pip
+    - pipenv install --dev --skip-lock
+    - pipenv run pip install --no-deps -e .
+  # dependencies:
+  # - pipenv-setup
+  script:
+  - pipenv run docstr-coverage eopf -F 20
+  allow_failure: true
+
+pipenv-complexity:
+  stage: quality
+  image: python:3.9
+  before_script:
+    - pip install -U pipenv pip
+    - pipenv install --dev --skip-lock
+    - pipenv run pip install --no-deps -e .
+  # dependencies:
+  # - pipenv-setup
+  script:
+  - pipenv run xenon --max-average B --max-modules C --max-absolute D eopf
+  allow_failure: true
+
+#############################################
+############# CONDA SECTION #################
+#############################################
+
+conda-quality:
+  stage: quality
+  image: continuumio/miniconda3:latest
+  before_script:
+  - conda env create -f environment.yaml
+  - source activate eopf-dev
+  script:
+  - python -m flake8 eopf tests
+  - python -m black --check .
+  - python -m isort eopf tests --check --diff
+  - python -m mypy eopf
+  - python -m pytest --cov=eopf --cov-report=term-missing --cov-fail-under=70 -m unit
+  - python -m bandit -c bandit.yml eopf
+
+conda-docs-cov:
+  stage: quality
+  image: continuumio/miniconda3:latest
+  before_script:
+  - conda env create -f environment.yaml
+  - source activate eopf-dev
+  script:
+  - docstr-coverage eopf -F 20
+  allow_failure: true
+
+conda-complexity:
+  stage: quality
+  image: continuumio/miniconda3:latest
+  before_script:
+  - conda env create -f environment.yaml
+  - source activate eopf-dev
+  script:
+  - python -m xenon --max-average B --max-modules C --max-absolute D eopf
+  allow_failure: true
+
+
+#############################################
+############# BUILD SECTION #################
+#############################################
+build-package:
+  stage: build
+  image: python:3.9
+  script:
+    - python -m pip install flit
+    - python -m flit build
+  artifacts:
+    paths:
+    - dist/
+
+deploy-package:
+  stage: deploy
+  image: python:3.9
+  dependencies:
+  - build-package
+  script:
+    - pip install twine
+    - >-
+      TWINE_PASSWORD=${CI_REGISTRY_PASSWORD}
+      TWINE_USERNAME=${CI_REGISTRY_USER}
+      python -m twine upload --repository-url ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi dist/*
+  rules:
+    - if: $CI_COMMIT_TAG
+
+pages:
+  stage: deploy
+  image: python:3.9
+  script:
+  - pip install .[doc]
+  - cd docs
+  - make html
+  # GitLab Pages expects the documentation to be in the 'public'
+  # directory of the repository's root.
+  - mv build/html ../public
+  artifacts:
+    paths:
+    - public
+  rules:
+    - if: $CI_COMMIT_TAG
