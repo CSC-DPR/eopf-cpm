@@ -16,7 +16,7 @@ linter:
   before_script:
     - pip install .[linter]
   script:
-  - pythhon -m flake8 eopf tests
+  - python -m flake8 eopf tests
 
 formater:
   stage: test
