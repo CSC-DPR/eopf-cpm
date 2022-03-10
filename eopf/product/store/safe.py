@@ -349,7 +349,7 @@ class EOSafeStore(EOProductStore):
             dims = eo_obj.dims
 
         attrs = eo_obj.attrs
-        if eo_obj is isinstance(eo_obj, EOVariable):
+        if isinstance(eo_obj, EOVariable):
             data = eo_obj._data
             return EOVariable(data=data, dims=dims, attrs=attrs)
         return EOGroup(dims=dims, attrs=attrs)
