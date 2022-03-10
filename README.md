@@ -1,5 +1,5 @@
-[![Pipeline status](https://gitlab.csc-eopf.csgroup.space/cpm/eopf-cpm/main/pipeline.svg)](https://gitlab.csc-eopf.csgroup.space/cpm/eopf-cpm/commits/master)
-[![Test coverage](https://gitlab.csc-eopf.csgroup.space/cpm/eopf-cpm/main/coverage.svg)](https://gitlab.csc-eopf.csgroup.space/cpm/eopf-cpm/commits/master)
+[![Pipeline status](https://gitlab.csc-eopf.csgroup.space/cpm/eopf-cpm/main/pipeline.svg)](https://gitlab.csc-eopf.csgroup.space/cpm/eopf-cpm/commits/main)
+[![Test coverage](https://gitlab.csc-eopf.csgroup.space/cpm/eopf-cpm/main/coverage.svg)](https://gitlab.csc-eopf.csgroup.space/cpm/eopf-cpm/commits/main)
 
 # eopf-cpm
 
