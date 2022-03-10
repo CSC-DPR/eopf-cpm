@@ -1,30 +1,39 @@
 import os
 import os.path
+import shutil
 from typing import Any, Optional
 
+import hypothesis.strategies as st
 import pytest
 import xarray
 import zarr
+from hypothesis import given
 from pyfakefs.fake_filesystem import FakeFilesystem
 
 from eopf.exceptions import MissingConfigurationParameter, StoreNotOpenError
 from eopf.exceptions.warnings import AlreadyClose, AlreadyOpen
+from eopf.product.conveniences import init_product, open_store
 from eopf.product.core import EOGroup, EOProduct, EOVariable
-from eopf.product.store import EONetCDFStore, EOProductStore, EOZarrStore
+from eopf.product.store import EONetCDFStore, EOProductStore, EOZarrStore, convert
 from eopf.product.store.manifest import ManifestStore
 
 from .decoder import Netcdfdecoder
-from .utils import assert_contain
+from .utils import assert_contain, couple_combinaison_from
 
 _FILES = {
     "netcdf": "test_ncdf_file_.nc",
+    "netcdf0": "test_ncdf_read_file_.nc",
+    "netcdf1": "test_ncdf_write_file_.nc",
     "json": "test_metadata_file_.json",
+    "zarr": "test_zarr_files_.zarr",
+    "zarr0": "test_zarr_read_files_.zarr",
+    "zarr1": "test_zarr_write_files_.zarr",
 }
 
 
 @pytest.fixture
 def zarr_file(fs: FakeFilesystem):
-    file_name = "file://test_attributes"
+    file_name = f"file://{_FILES['zarr']}"
     dims = "_EOPF_DIMENSIONS"
 
     root = zarr.open(file_name, mode="w")
@@ -292,7 +301,7 @@ def cleanup_files():
         if os.path.isfile(file):
             os.remove(file)
         if os.path.isdir(file):
-            os.removedirs(file)
+            shutil.rmtree(file)
 
 
 @pytest.mark.unit
@@ -454,3 +463,28 @@ def test_retrieve_from_manifest_store():
             },
         },
     }
+
+
+_FORMAT = {
+    EOZarrStore: "zarr",
+    EONetCDFStore: "netcdf",
+}
+
+
+@pytest.mark.unit
+@given(
+    st.sampled_from(couple_combinaison_from(elements=[EOZarrStore, EONetCDFStore])),
+)
+def test_convert(read_write_stores):
+
+    cls_read_store, cls_write_store = read_write_stores
+    read_store = cls_read_store(_FILES[f"{_FORMAT[cls_read_store]}0"])
+    write_store = cls_write_store(_FILES[f"{_FORMAT[cls_write_store]}1"])
+
+    product = init_product("a_product", store_or_path_url=read_store)
+    with open_store(product, mode="w"):
+        product.write()
+    new_product = EOProduct("new_one", store_or_path_url=convert(read_store, write_store))
+    with open_store(new_product, mode="r"):
+        new_product["measurements"]
+        new_product["coordinates"]

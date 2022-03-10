@@ -37,7 +37,7 @@ class EONetCDFStore(EOProductStore):
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         current_node = self._select_node(path)
-        return isinstance(current_node, Group)
+        return isinstance(current_node, (Group, Dataset))
 
     def is_variable(self, path: str) -> bool:
         if self._root is None:
