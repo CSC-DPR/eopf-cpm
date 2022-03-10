@@ -13,26 +13,10 @@ Subpackages
 Submodules
 ----------
 
-eopf.product.constants module
------------------------------
-
-.. automodule:: eopf.product.constants
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 eopf.product.conveniences module
 --------------------------------
 
 .. automodule:: eopf.product.conveniences
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-eopf.product.convert module
----------------------------
-
-.. automodule:: eopf.product.convert
    :members:
    :undoc-members:
    :show-inheritance:

@@ -31,7 +31,11 @@ release = __version__
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["sphinx.ext.napoleon", "jupyter_sphinx"]
+extensions = [
+    "sphinx.ext.napoleon",
+    "jupyter_sphinx",
+    "sphinx.ext.intersphinx",
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -48,8 +52,25 @@ exclude_patterns = []
 # a list of builtin themes.
 #
 html_theme = "sphinx_book_theme"
-
+html_theme_options = dict(
+    repository_url="https://github.com/CSC-DPR/eopf-cpm",
+    use_repository_button=True,
+    use_edit_page_button=False,
+    home_page_in_toc=False,
+    logo_only=True,
+)
+html_logo = "_static/logo.jpg"
+html_title = "EOPF - Core Python Modules"
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3/", None),
+    "numpy": ("https://numpy.org/doc/stable", None),
+    "matplotlib": ("https://matplotlib.org/stable/", None),
+    "dask": ("https://docs.dask.org/en/latest", None),
+    "rasterio": ("https://rasterio.readthedocs.io/en/latest", None),
+    "xarray": ("https://docs.xarray.dev/en/stable/", None),
+}
