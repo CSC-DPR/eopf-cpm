@@ -122,6 +122,7 @@ class EOSafeStore(EOProductStore):
         self._config_mapping: dict[str, list[dict[str, Any]]] = dict()  # map source path to config read from Json
         self._accessor_open_config: dict[str, dict[str, Any]] = dict()
         self._mode = "CLOSED"
+        self._open_kwargs: dict[str, Any] = dict()
 
     def _read_product_mapping(self) -> None:
         """Read mapping from the mapping factory and fill _config_mapping from it."""
@@ -208,11 +209,13 @@ class EOSafeStore(EOProductStore):
                 item_format,
             )
         try:
-            if self._status is StorageStatus.OPEN:
+            if self.status is StorageStatus.OPEN:
                 if item_format in self._accessor_open_config:
-                    mapped_store.open(mode=self._mode, config=self._accessor_open_config[item_format])
+                    mapped_store.open(
+                        mode=self._mode, config=self._accessor_open_config[item_format], **self._open_kwargs
+                    )
                 else:
-                    mapped_store.open(mode=self._mode)
+                    mapped_store.open(mode=self._mode, **self._open_kwargs)
         except NotImplementedError:
             mapped_store = None
             warnings.warn("Unimplemented store mode")
@@ -335,13 +338,30 @@ class EOSafeStore(EOProductStore):
 
         """
         # Should for example add the dims from the json config to an EOVariable.
-        return eo_obj
+        if "parameters" not in config:
+            return eo_obj
+        parameters = config["parameters"]
+        from ..core import EOGroup, EOVariable
+
+        if "dimensions" in parameters:
+            dims = parameters["dimensions"]
+        else:
+            dims = eo_obj.dims
+
+        attrs = eo_obj.attrs
+        if eo_obj is isinstance(eo_obj, EOVariable):
+            data = eo_obj._data
+            return EOVariable(data=data, dims=dims, attrs=attrs)
+        return EOGroup(dims=dims, attrs=attrs)
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
-        super().open()
-        self._mode = mode
+        self._open_kwargs = kwargs
         if not self._config_mapping:
             self._read_product_mapping()
+        # Must not read the product mapping between  super.open and accessor.open
+        # Otherwise Hierachy accessor are opened twice.
+        super().open()
+        self._mode = mode
         for key in self._accessor_map:
             accessor = self._accessor_map[key]
             if accessor:
