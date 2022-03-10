@@ -91,4 +91,4 @@ def couple_combinaison_from(elements: list[Any]) -> list[tuple[Any, Any]]:
     return sum(
         (list(zip([element] * zip_size, elements)) for idx, element in enumerate(elements)),
         [],
-    )  # noqa: E203
+    )
