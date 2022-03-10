@@ -38,11 +38,12 @@ def convert(
         else:
             node_path = join_path(*level, sep=source.sep)
             target[join_path(*level, sep=target.sep)] = source[node_path]
-
         if source.is_group(node_path):
             for sublevel in source.iter(join_path(*level, sep=source.sep)):
                 _convert([*level, sublevel])
 
-    with (open_store(source, mode="r", **source_kwargs), open_store(target, mode="w", **target_kwargs)):
+    source_kwargs.setdefault("mode", "r")
+    target_kwargs.setdefault("mode", "w")
+    with (open_store(source, **source_kwargs), open_store(target, **target_kwargs)):
         _convert([""])
     return target

@@ -88,7 +88,7 @@ def assert_contain(container: EOContainer, path: str, expect_type, path_offset="
 def couple_combinaison_from(elements: list[Any]) -> list[tuple[Any, Any]]:
     """create all possible combinaison of two elements from the input list"""
     zip_size = len(elements)
-    final_list = []
-    for idx, element in enumerate(elements):
-        final_list += list(zip([element] * zip_size, elements[idx + 1 :]))  # noqa: E203
-    return final_list
+    return sum(
+        (list(zip([element] * zip_size, elements)) for idx, element in enumerate(elements)),
+        [],
+    )  # noqa: E203
