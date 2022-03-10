@@ -89,6 +89,6 @@ def couple_combinaison_from(elements: list[Any]) -> list[tuple[Any, Any]]:
     """create all possible combinaison of two elements from the input list"""
     zip_size = len(elements)
     return sum(
-        (list(zip([element] * zip_size, elements)) for idx, element in enumerate(elements)),
+        (list(zip([element] * zip_size, elements)) for element in elements),
         [],
     )
