@@ -1,5 +1,5 @@
-[![Build Status]()]
-[![Test Status]()]
+[![Pipeline status](https://gitlab.csc-eopf.csgroup.space/%{project_path}/-/commits/%{default_branch})]
+[![Test coverage](https://gitlab.csc-eopf.csgroup.space/%{project_path}/-/commits/%{default_branch})]
 
 # eopf-cpm
 
