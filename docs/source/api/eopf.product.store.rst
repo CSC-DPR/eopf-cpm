@@ -12,14 +12,6 @@ eopf.product.store.abstract module
    :undoc-members:
    :show-inheritance:
 
-eopf.product.store.hdf5 module
-------------------------------
-
-.. automodule:: eopf.product.store.hdf5
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 eopf.product.store.manifest module
 ----------------------------------
 

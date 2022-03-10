@@ -1,20 +1,30 @@
-.. EOPF Core Python Module documentation master file, created by
-   sphinx-quickstart on Tue Dec 21 11:29:28 2021.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+EOPF CPM: Earth Observation Platform framework for python developers
+====================================================================
 
-Welcome to EOPF Core Python Module's documentation!
-===================================================
+**eopf** is a framework to help developers to manipulate Earth observation data
+by providing high level object.
+
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :hidden:
+   :caption: For users
+
+   Getting Started <getting-started-guide/index>
+   User Guide <user-guide/index>
+   Tutorials <tutorials>
+   API Reference <api/eopf>
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+   :caption: For developers/contributors
+
+   Contributing Guide <contributing>
+   GitHub repository <https://github.com/CSC-DPR/eopf-cpm>
 
 
+License
+-------
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+Xarray is available under the open source `Apache License`__.
