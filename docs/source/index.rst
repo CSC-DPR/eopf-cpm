@@ -1,7 +1,10 @@
 EOPF CPM: Earth Observation Platform framework for python developers
 ====================================================================
 
+|pipeline| |coverage|
+
 **eopf** is a framework to help developers to manipulate Earth observation data
+
 by providing high level object.
 
 
@@ -27,4 +30,10 @@ by providing high level object.
 License
 -------
 
-Xarray is available under the open source `Apache License`__.
+EOPF CPM is available under the open source `Apache License`__.
+
+
+.. |pipeline| https://gitlab.csc-eopf.csgroup.space/cpm/eopf-cpm/badges/main/pipeline.svg
+   :target: https://gitlab.csc-eopf.csgroup.space/cpm/eopf-cpm/-/commits/main
+.. |coverage| image:: https://gitlab.csc-eopf.csgroup.space/cpm/eopf-cpm/badges/main/coverage.svg
+   :target: https://gitlab.csc-eopf.csgroup.space/cpm/eopf-cpm/-/commits/main
