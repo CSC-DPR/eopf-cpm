@@ -4,7 +4,6 @@ EOPF CPM: Earth Observation Platform framework for python developers
 |pipeline| |coverage|
 
 **eopf** is a framework to help developers to manipulate Earth observation data
-
 by providing high level object.
 
 
