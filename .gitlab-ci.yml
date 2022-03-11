@@ -6,6 +6,11 @@ stages:
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
 
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop"
+
 #############################################
 ############ PIP SECTION #################
 #############################################
@@ -90,6 +95,17 @@ build-package:
     paths:
     - dist/
 
+build-doc:
+  stage: build
+  image: python:3.9
+  script:
+  - pip install .[doc]
+  - cd docs
+  - make html
+  artifacts:
+    paths:
+    - docs/build/html
+
 #############################################
 ############# DEPLOY SECTION #################
 #############################################
@@ -107,18 +123,28 @@ deploy-package:
   rules:
     - if: $CI_COMMIT_TAG
 
+test-pages:
+  stage: deploy
+  image: python:3.9
+  dependencies:
+  - build-doc
+  script:
+    mv docs/build/html test-docs
+  artifacts:
+    paths:
+    - test-docs
+  rules:
+    - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
+
 pages:
   stage: deploy
   image: python:3.9
+  dependencies:
+  - build-doc
   script:
-  - pip install .[doc]
-  - cd docs
-  - make html
-  # GitLab Pages expects the documentation to be in the 'public'
-  # directory of the repository's root.
-  - mv build/html ../public
+    mv docs/build/html public
   artifacts:
     paths:
     - public
   rules:
-    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
