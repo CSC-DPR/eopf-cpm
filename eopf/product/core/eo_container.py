@@ -80,6 +80,9 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
         ----------
         key: str
             name of the eovariable or eogroup
+        Returns
+        -------
+        EOObject
         """
         from .eo_group import EOGroup
 

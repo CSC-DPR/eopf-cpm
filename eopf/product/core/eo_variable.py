@@ -33,10 +33,8 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         name of this group
     data: any, optional
         any data accept by :obj:`xarray.DataArray`
-    product: EOProduct, optional
-        product top level
-    relative_path: Iterable[str], optional
-        list like of string representing the path from the product
+    parent: EOProduct or EOGroup, optional
+        parent to link to this group
     attrs: MutableMapping[str, Any], optional
         attributes to assign
     coords: MutableMapping[str, Any], optional
@@ -80,10 +78,12 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
     def _init_similar(self, data: xarray.DataArray) -> "EOVariable":
         return EOVariable(name="", data=data)
 
+    # docstr-coverage: inherited
     @property
     def attrs(self) -> dict[str, Any]:
         return self._data.attrs
 
+    # docstr-coverage: inherited
     @property
     def coords(self) -> ValuesView[Any]:
         return self.coordinates.values()

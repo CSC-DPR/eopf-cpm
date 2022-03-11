@@ -1,13 +1,13 @@
-from typing import Any, Dict, Iterator, MutableMapping, Optional, TextIO
+from typing import Any, Iterator, MutableMapping, Optional, TextIO
 
 from eopf.exceptions import (
     MissingConfigurationParameter,
     StoreNotOpenError,
     XmlParsingError,
 )
-from eopf.product.conveniences import apply_xpath, parse_xml, translate_structure
 from eopf.product.core import EOGroup
 from eopf.product.store import EOProductStore
+from eopf.product.utils import apply_xpath, parse_xml, translate_structure
 
 
 class ManifestStore(EOProductStore):
@@ -22,19 +22,12 @@ class ManifestStore(EOProductStore):
     Attributes
     ----------
     KEYS: list[str]
-        the keys defininf the types of EOProduct attributes
+        the keys defining the types of EOProduct attributes
     """
 
     KEYS = ["CF", "OM_EOP"]
 
     def __init__(self, url: str) -> None:
-        """Instantiate based on the url(file path) of the manifest xml file
-
-        Parameters
-        ----------
-        url: str,
-            file path to the manifest xml file
-        """
         super().__init__(url)
         self._attrs: MutableMapping[str, Any] = {}
         for key in self.KEYS:
@@ -60,10 +53,10 @@ class ManifestStore(EOProductStore):
             raise MissingConfigurationParameter(" The parameter: config; is missing")
         try:
             config_dict: Optional[Any] = kwargs.get("config")
-            if not isinstance(config_dict, Dict):
+            if not isinstance(config_dict, dict):
                 raise MissingConfigurationParameter(" The parameter: config; should be a dictionary")
             self._metada_mapping: MutableMapping[str, Any] = config_dict["metadata_mapping"]
-            self._namespaces: Dict[str, str] = config_dict["namespaces"]
+            self._namespaces: dict[str, str] = config_dict["namespaces"]
         except KeyError as e:
             raise KeyError(f"Missing configuration pameter: {e}")
 

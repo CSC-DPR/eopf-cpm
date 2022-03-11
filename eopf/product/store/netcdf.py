@@ -14,18 +14,22 @@ if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_object import EOObject
 
 
+# docstr-coverage: inherited
 class EONetCDFStore(EOProductStore):
     RESTRICTED_ATTR_KEY = ("_FillValue",)
 
+    # docstr-coverage: inherited
     def __init__(self, url: str) -> None:
         url = os.path.expanduser(url)
         super().__init__(url)
         self._root: Optional[Dataset] = None
 
+    # docstr-coverage: inherited
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         super().open()
         self._root = Dataset(self.url, mode, **kwargs)
 
+    # docstr-coverage: inherited
     def close(self) -> None:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
@@ -33,18 +37,21 @@ class EONetCDFStore(EOProductStore):
         self._root.close()
         self._root = None
 
+    # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         current_node = self._select_node(path)
         return isinstance(current_node, (Group, Dataset))
 
+    # docstr-coverage: inherited
     def is_variable(self, path: str) -> bool:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         current_node = self._select_node(path)
         return isinstance(current_node, Variable)
 
+    # docstr-coverage: inherited
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
@@ -54,6 +61,7 @@ class EONetCDFStore(EOProductStore):
         attrs = {attr: dumps(conv(value)) for attr, value in attrs.items() if attr not in self.RESTRICTED_ATTR_KEY}
         current_node.setncatts(attrs)
 
+    # docstr-coverage: inherited
     def iter(self, path: str) -> Iterator[str]:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
@@ -111,6 +119,7 @@ class EONetCDFStore(EOProductStore):
             return self._root
         return self._root[key]
 
+    # docstr-coverage: inherited
     @staticmethod
     def guess_can_read(file_path: str) -> bool:
         return pathlib.Path(file_path).suffix in [".nc"]

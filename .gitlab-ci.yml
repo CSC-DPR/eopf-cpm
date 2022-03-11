@@ -70,7 +70,10 @@ docs-cov:
   before_script:
     - pip install .[doc-cov]
   script:
-  - docstr-coverage eopf -F 20
+    - docstr-coverage -f -P -m -F 30 eopf -b docstrcov.svg
+  artifacts:
+    paths:
+      - docstrcov.svg
   allow_failure: true
 
 complexity:

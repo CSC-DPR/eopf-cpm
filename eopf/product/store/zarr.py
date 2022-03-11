@@ -36,34 +36,41 @@ class EOZarrStore(EOProductStore):
     _fs: Optional[FSStore] = None
     sep = "/"
 
+    # docstr-coverage: inherited
     def __init__(self, url: str) -> None:
         super().__init__(url)
 
+    # docstr-coverage: inherited
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         super().open()
         self._root: Group = zarr.open(store=self.url, mode=mode, **kwargs)
         self._fs = self._root.store
 
+    # docstr-coverage: inherited
     def close(self) -> None:
         super().close()
         self._root = None
         self._fs = None
 
+    # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
         if self._fs is None:
             raise StoreNotOpenError("Store must be open before access to it")
         return contains_group(self._fs, path=path)
 
+    # docstr-coverage: inherited
     def is_variable(self, path: str) -> bool:
         if self._fs is None:
             raise StoreNotOpenError("Store must be open before access to it")
         return contains_array(self._fs, path=path)
 
+    # docstr-coverage: inherited
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         self._root[group_path].attrs.update(conv(attrs))
 
+    # docstr-coverage: inherited
     def iter(self, path: str) -> Iterator[str]:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
@@ -114,6 +121,7 @@ class EOZarrStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         return iter(self._root)
 
+    # docstr-coverage: inherited
     @staticmethod
     def guess_can_read(file_path: str) -> bool:
         return pathlib.Path(file_path).suffix in [".zarr", ".zip", ""]

@@ -21,9 +21,9 @@ def convert(
         store to read to retrieve data
     target: EOProductStore
         store to write retrived data
-    source_kwargs: dict
+    source_kwargs: dict, optional
         specific arguments to open the source store
-    target_kwargs: dict
+    target_kwargs: dict, optional
         specific arguments to open the write store
     Returns
     -------

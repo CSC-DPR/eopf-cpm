@@ -54,6 +54,7 @@ exclude_patterns = []
 html_theme = "sphinx_book_theme"
 html_theme_options = dict(
     repository_url="https://github.com/CSC-DPR/eopf-cpm",
+    repository_branch="main",
     use_repository_button=True,
     use_edit_page_button=False,
     home_page_in_toc=False,
