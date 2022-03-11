@@ -6,6 +6,10 @@ stages:
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
 
+workflow:
+  rules:
+    if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
 #############################################
 ############ PIP SECTION #################
 #############################################
@@ -97,8 +101,6 @@ build-doc:
   - pip install .[doc]
   - cd docs
   - make html
-  # GitLab Pages expects the documentation to be in the 'public'
-  # directory of the repository's root.
   artifacts:
     paths:
     - docs/build/html
@@ -131,7 +133,7 @@ test-pages:
     paths:
     - test-docs
   rules:
-    - if: '$CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH'
+    - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
 
 pages:
   stage: deploy
@@ -144,4 +146,4 @@ pages:
     paths:
     - public
   rules:
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
