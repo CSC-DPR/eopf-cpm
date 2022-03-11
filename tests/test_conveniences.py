@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from eopf.product.conveniences import apply_xpath, parse_xml, translate_structure
+from eopf.product.utils import apply_xpath, parse_xml, translate_structure
 
 
 @pytest.fixture
