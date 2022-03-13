@@ -22,10 +22,26 @@ class EONetCDFStore(EOProductStore):
         url = os.path.expanduser(url)
         super().__init__(url)
         self._root: Optional[Dataset] = None
+        self.zlib: bool = True
+        self.complevel: int = 4
+        self.shuffle: bool = True
+        self.scale: bool = False
 
     # docstr-coverage: inherited
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         super().open()
+        if "zlib" in kwargs:
+            self.zlib = bool(kwargs.get("zlib"))
+            kwargs.pop("zlib")
+        if "complevel" in kwargs:
+            self.complevel = int(str(kwargs.get("complevel")))
+            kwargs.pop("complevel")
+        if "shuffle" in kwargs:
+            self.shuffle = bool(kwargs.get("shuffle"))
+            kwargs.pop("shuffle")
+        if "scale" in kwargs:
+            self.scale = bool(kwargs.get("scale"))
+            kwargs.pop("scale")
         self._root = Dataset(self.url, mode, **kwargs)
 
     # docstr-coverage: inherited
@@ -56,8 +72,19 @@ class EONetCDFStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         current_node = self._select_node(group_path)
         from json import dumps
+        from numbers import Number
 
-        attrs = {attr: dumps(conv(value)) for attr, value in attrs.items() if attr not in self.RESTRICTED_ATTR_KEY}
+        # convert attributes to python data types
+        # if not a number convert to json dict
+        # since netCDF4 does not allow dictionary imbrication
+        for attr, value in attrs.items():
+            if attr not in self.RESTRICTED_ATTR_KEY:
+                py_converted_obj = conv(value)
+                if isinstance(py_converted_obj, Number):
+                    attrs[attr] = py_converted_obj
+                else:
+                    attrs[attr] = dumps(py_converted_obj)
+
         current_node.setncatts(attrs)
 
     # docstr-coverage: inherited
@@ -95,7 +122,15 @@ class EONetCDFStore(EOProductStore):
                 if dim not in self._root.dimensions:
                     self._root.createDimension(dim, size=value._data.shape[idx])
                 dimensions.append(dim)
-            variable = self._root.createVariable(key, value._data.dtype, dimensions=dimensions)
+            variable = self._root.createVariable(
+                key,
+                value._data.dtype,
+                dimensions=dimensions,
+                zlib=self.zlib,
+                complevel=self.complevel,
+                shuffle=self.shuffle,
+            )
+            variable.set_auto_scale(self.scale)
             variable[:] = value._data.values
         else:
             raise TypeError("Only EOGroup and EOVariable can be set")
