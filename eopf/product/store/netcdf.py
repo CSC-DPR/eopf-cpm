@@ -14,7 +14,6 @@ if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_object import EOObject
 
 
-# docstr-coverage: inherited
 class EONetCDFStore(EOProductStore):
     RESTRICTED_ATTR_KEY = ("_FillValue",)
 
