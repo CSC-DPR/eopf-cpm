@@ -15,4 +15,10 @@ class Netcdfdecoder:
 
     @property
     def attrs(self):
-        return {k: json.loads(v) for k, v in self._node.__dict__.items()}
+        result = dict()
+        for key, value in self._node.__dict__.items():
+            try:
+                result[key] = json.loads(value)
+            except json.decoder.JSONDecodeError:
+                result[key] = value
+        return result
