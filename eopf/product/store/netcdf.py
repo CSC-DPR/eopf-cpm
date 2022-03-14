@@ -77,13 +77,10 @@ class EONetCDFStore(EOProductStore):
         # convert attributes to python data types
         # if not a number convert to json dict
         # since netCDF4 does not allow dictionary imbrication
-        for attr, value in attrs.items():
-            if attr not in self.RESTRICTED_ATTR_KEY:
-                py_converted_obj = conv(value)
-                if isinstance(py_converted_obj, Number):
-                    attrs[attr] = py_converted_obj
-                else:
-                    attrs[attr] = dumps(py_converted_obj)
+        if group_path == "/" or group_path == "":
+            attrs = {attr: dumps(conv(value)) for attr, value in attrs.items() if attr not in self.RESTRICTED_ATTR_KEY}
+        else:
+            attrs = {attr: conv(value) for attr, value in attrs.items() if attr not in self.RESTRICTED_ATTR_KEY}
 
         current_node.setncatts(attrs)
 
