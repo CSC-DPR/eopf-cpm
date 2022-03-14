@@ -10,7 +10,6 @@ from eopf.product.utils import join_eo_path
 if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_container import EOContainer
     from eopf.product.core.eo_product import EOProduct
-    from eopf.product.core.eo_variable import EOVariable
 
 
 _DIMENSIONS_NAME = "_EOPF_DIMENSIONS"
@@ -99,6 +98,14 @@ class EOObject(EOAbstract):
         self._parent = parent
 
     @property
+    def coordinates(self) -> MappingProxyType[str, "EOObject"]:
+        """MappingProxyType[str, Any]: Coordinates defined by this object"""
+        coords_group = self.product.coordinates
+        coords_list = coords_group._find_by_dim(self.dims)
+        cood_map = {coord.path: coord for coord in coords_list}
+        return MappingProxyType(cood_map)
+
+    @property
     def dims(self) -> tuple[str, ...]:
         """tupple[str, ...]: dimensions"""
         return self.attrs.get(_DIMENSIONS_NAME, tuple())
@@ -144,17 +151,13 @@ class EOObject(EOAbstract):
     def store(self) -> Optional[EOProductStore]:
         return self.product.store
 
-    @property
-    def coordinates(self) -> MappingProxyType[str, Any]:
-        """MappingProxyType[str, Any]: Coordinates defined by this object"""
-        coords_group = self.product.coordinates
-        retrieved_coords = {}
-        for dim in self.dims:
-            if coords := coords_group.get(dim):
-                retrieved_coords[dim] = coords
-        return MappingProxyType(retrieved_coords)
-
-    def get_coordinate(self, name: str, context: Optional[str] = None) -> "EOVariable":
-        if context is None:
-            context = self.path
-        return self.product.get_coordinate(name, context)
+    def _find_by_dim(self, dims: Iterable[str], shape: Optional[tuple[int]] = None) -> list["EOObject"]:
+        for dim_index, dim_name in enumerate(dims):
+            if dim_name in self.dims:
+                if shape:
+                    self_shape = getattr(self, "shape", None)
+                    self_dim_index = self.dims.index(dim_name)
+                    if not self_shape or shape[dim_index] != self_shape[self_dim_index]:
+                        continue
+                return [self]
+        return []

@@ -2,7 +2,6 @@ from types import TracebackType
 from typing import Any, Iterable, MutableMapping, Optional, Type, Union
 
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError, StoreNotOpenError
-from eopf.product.utils import join_eo_path, partition_eo_path, product_relative_path
 
 from ..formatting import renderer
 from ..store.abstract import EOProductStore, StorageStatus
@@ -166,24 +165,6 @@ class EOProduct(EOContainer):
         if self.store is None:  # pragma: no cover
             raise StoreNotDefinedError("Store must be defined")
         self.store.close()
-
-    def get_coordinate(self, name: str, context: Optional[str] = None) -> EOVariable:
-        if context is None:
-            context = self.path
-        context_split = list(partition_eo_path(product_relative_path(context, name)))
-        if len(context_split) == 0 or context_split[0] != "coordinates":
-            context_split = ["coordinates"] + context_split
-        while len(context_split) > 0:
-            try:
-                coord = self[join_eo_path(*context_split, name)]
-                if isinstance(coord, EOVariable):
-                    # It is valid to have a subgroup with the name of a coordinate of an ancestor.
-                    # ex : /coordinate/coord_name et /coordinate/group1/coord_name/obj
-                    return coord
-            except KeyError:
-                pass
-            context_split.pop()
-        raise KeyError(f"Unknown coordinate {name} in context {context} .")
 
     def _create_structure(self, group: Union[EOGroup, tuple[str, EOGroup]], level: int) -> None:
         if isinstance(group, tuple):

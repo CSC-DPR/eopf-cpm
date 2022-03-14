@@ -1,5 +1,5 @@
 from collections.abc import MutableMapping
-from typing import TYPE_CHECKING, Any, Iterator, Optional
+from typing import TYPE_CHECKING, Any, Iterable, Iterator, Optional
 
 from eopf.exceptions import StoreNotDefinedError
 from eopf.product.core.eo_container import EOContainer
@@ -138,3 +138,9 @@ class EOGroup(EOContainer, EOObject):
         super().write()
         for var_name, item in self._variables.items():
             self.store[self._store_key(var_name)] = item
+
+    def _find_by_dim(self, dims: Iterable[str], shape: Optional[tuple[int]] = None) -> list["EOObject"]:
+        var_found = []
+        for path in self:
+            var_found += self[path]._find_by_dim(dims, shape)
+        return var_found

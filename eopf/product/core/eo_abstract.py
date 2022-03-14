@@ -5,7 +5,6 @@ from eopf.product.store import EOProductStore
 
 if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_product import EOProduct
-    from eopf.product.core.eo_variable import EOVariable
 
 
 class EOAbstract(ABC):  # pragma: no cover
@@ -62,28 +61,3 @@ class EOAbstract(ABC):  # pragma: no cover
     @abstractmethod
     def attrs(self) -> dict[str, Any]:
         """dict[str, Any]: Dictionary of this EOObject attributes."""
-
-    @abstractmethod
-    def get_coordinate(self, name: str, context: Optional[str] = None) -> "EOVariable":
-        """Get coordinate in the context. Consider coordinate inheritance.
-        Allow to modify the coordinate.
-
-        Parameters
-        ----------
-        name: str
-            name of th ecoordinate
-        context: str, optional
-            path of the context (default to this object)
-
-        Returns
-        -------
-        EOVariable
-            variable containing this coordinate.
-
-        Raises
-        ------
-        InvalidProductError
-            If this object doesn't have a (valid) product.
-        KeyError
-            If there is no coordinate name in the context
-        """

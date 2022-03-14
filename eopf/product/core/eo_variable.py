@@ -350,6 +350,10 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         except Exception as e:
             warnings.warn(f"Cannot display plot. Error {e}")
 
+    @property
+    def shape(self) -> tuple[int, ...]:
+        return self._data.shape
+
     def __getitem__(self, key: Any) -> "EOVariable":
         return EOVariable(key, self._data[key])
 
