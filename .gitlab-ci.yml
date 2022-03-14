@@ -102,9 +102,10 @@ build-doc:
   stage: build
   image: python:3.9
   variables:
-    GIT_STRATEGY: fetch
-    GIT_FETCH_EXTRA_FLAGS: --all
+    GIT_STRATEGY: none
   script:
+  - git clone $CI_REPOSITORY_URL
+  - git fetch --all
   - pip install .[doc]
   - cd docs
   - sphinx-multiversion source build/html
