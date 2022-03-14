@@ -66,7 +66,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         existing_dims = attrs.pop(_DIMENSIONS_NAME, [])
         if not isinstance(data, (xarray.DataArray, EOVariable)) and data is not None:
             lazy_data = da.asarray(data)
-            if isinstance(data, list):
+            if isinstance(data, (list, dict)):
                 data = xarray.DataArray(data=lazy_data, name=name, attrs=attrs, **kwargs)
             else:
                 input_dtype = data.dtype
