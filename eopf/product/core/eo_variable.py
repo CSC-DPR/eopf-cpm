@@ -67,7 +67,10 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         if not isinstance(data, (xarray.DataArray, EOVariable)) and data is not None:
             input_dtype = data.dtype
             lazy_data = da.asarray(data)
-            data = xarray.DataArray(data=lazy_data, name=name, attrs=attrs, **kwargs).astype(input_dtype)
+            if isinstance(data, list):
+                data = xarray.DataArray(data=lazy_data, name=name, attrs=attrs, **kwargs)
+            else:
+                data = xarray.DataArray(data=lazy_data, name=name, attrs=attrs, **kwargs).astype(input_dtype)
         if data is None:
             data = xarray.DataArray(name=name, attrs=attrs, **kwargs)
 
