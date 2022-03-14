@@ -72,7 +72,6 @@ class EONetCDFStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         current_node = self._select_node(group_path)
         from json import dumps
-        from numbers import Number
 
         # convert attributes to python data types
         # if not a number convert to json dict
