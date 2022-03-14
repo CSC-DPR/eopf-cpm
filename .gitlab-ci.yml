@@ -103,9 +103,11 @@ build-doc:
   image: python:3.9
   variables:
     GIT_STRATEGY: none
-  script:
+  before_script:
   - git clone $CI_REPOSITORY_URL
+  - cd $CI_PROJECT_NAME
   - git fetch --all
+  script:
   - pip install .[doc]
   - cd docs
   - sphinx-multiversion source build/html
