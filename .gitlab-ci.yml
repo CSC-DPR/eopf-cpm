@@ -102,7 +102,7 @@ build-doc:
   stage: build
   image: python:3.9
   variables:
-    GIT_STRATEGY: none
+    GIT_STRATEGY: fetch
     GIT_FETCH_EXTRA_FLAGS: --all
   script:
   - pip install .[doc]
