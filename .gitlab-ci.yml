@@ -111,7 +111,7 @@ build-doc:
   script:
   - pip install .[doc]
   - cd docs
-  - sphinx-multiversion source build/html
+  - sphinx-multiversion source ../../docs/build/html
   artifacts:
     paths:
     - docs/build/html
