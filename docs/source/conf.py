@@ -70,6 +70,7 @@ html_static_path = ["_static"]
 html_sidebars = {"**": ["sidebar-logo.html", "search-field.html", "sbt-sidebar-nav.html", "versioning.html"]}
 
 # multiple versions options
+smv_remote_whitelist = r"^.*$"
 smv_tag_whitelist = r"^v\d+\.\d+\.\d+$"
 smv_branch_whitelist = r"^(main|develop).*$"
 
