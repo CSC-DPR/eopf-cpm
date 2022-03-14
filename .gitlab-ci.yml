@@ -5,11 +5,16 @@ stages:
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  BRANCH_NAME: $CI_COMMIT_REF_NAME
 
 workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      variables:
+        BRANCH_NAME: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop"
+      variables:
+        BRANCH_NAME: $CI_COMMIT_BRANCH
 
 #############################################
 ############ PIP SECTION #################
@@ -107,7 +112,7 @@ build-doc:
   - git clone $CI_REPOSITORY_URL
   - cd $CI_PROJECT_NAME
   - git fetch --all
-  - git checkout $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+  - git checkout $BRANCH_NAME
   script:
   - pip install .[doc]
   - cd docs
