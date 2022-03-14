@@ -104,7 +104,7 @@ build-doc:
   script:
   - pip install .[doc]
   - cd docs
-  - make html
+  - sphinx-multiversion source build/html
   artifacts:
     paths:
     - docs/build/html

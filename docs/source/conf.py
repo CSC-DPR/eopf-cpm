@@ -33,8 +33,9 @@ release = __version__
 # ones.
 extensions = [
     "sphinx.ext.napoleon",
-    "jupyter_sphinx",
     "sphinx.ext.intersphinx",
+    "jupyter_sphinx",
+    "sphinx_multiversion",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -66,6 +67,12 @@ html_title = "EOPF - Core Python Modules"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+html_sidebars = {"**": ["sidebar-logo.html", "search-field.html", "sbt-sidebar-nav.html", "versioning.html"]}
+
+# multiple versions options
+smv_remote_whitelist = r"^.*$"
+smv_tag_whitelist = r"^v\d+\.\d+\.\d+$"
+smv_branch_whitelist = r"^(main|develop).*$"
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3/", None),
