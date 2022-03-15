@@ -1,0 +1,15 @@
+{% if versions %}
+<div>{{ _('Versions') }}</div>
+<select name="versions" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+  {%- for item in versions.branches %}
+  <option value="{{item.url}}" {% if current_version == item %}selected{%endif%}>
+    {{ item.name }}
+  </option>
+  {%- endfor %}
+  {%- for item in versions.tags %}
+  <option value="{{item.url}}" {% if current_version == item %}selected{%endif%}>
+    {{ item.name }}
+  </option>
+  {%- endfor %}
+</select>
+{%endif%}

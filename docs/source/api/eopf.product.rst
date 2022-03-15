@@ -1,6 +1,11 @@
 eopf.product package
 ====================
 
+.. automodule:: eopf.product
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Subpackages
 -----------
 
@@ -33,14 +38,6 @@ eopf.product.utils module
 -------------------------
 
 .. automodule:: eopf.product.utils
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: eopf.product
    :members:
    :undoc-members:
    :show-inheritance:

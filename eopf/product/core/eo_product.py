@@ -59,22 +59,27 @@ class EOProduct(EOContainer):
         """
         return self.attrs
 
+    # docstr-coverage: inherited
     @property
     def product(self) -> "EOProduct":
         return self
 
+    # docstr-coverage: inherited
     @property
     def store(self) -> Optional[EOProductStore]:
         return self._store
 
+    # docstr-coverage: inherited
     @property
     def path(self) -> str:
         return "/"
 
+    # docstr-coverage: inherited
     @property
     def relative_path(self) -> Iterable[str]:
         return []
 
+    # docstr-coverage: inherited
     @property
     def name(self) -> str:
         return self._name
@@ -167,6 +172,7 @@ class EOProduct(EOContainer):
             raise StoreNotDefinedError("Store must be defined")
         self.store.close()
 
+    # docstr-coverage: inherited
     def get_coordinate(self, name: str, context: Optional[str] = None) -> EOVariable:
         if context is None:
             context = self.path
@@ -225,6 +231,7 @@ class EOProduct(EOContainer):
             raise InvalidProductError("coordinates must be defined at product level and must be an EOGroup")
         return coords
 
+    # docstr-coverage: inherited
     def write(self) -> None:
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
@@ -233,6 +240,7 @@ class EOProduct(EOContainer):
         self.store.write_attrs("", attrs=self.attrs)
         return super().write()
 
+    # docstr-coverage: inherited
     def load(self) -> None:
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")

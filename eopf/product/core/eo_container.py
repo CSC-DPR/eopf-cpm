@@ -76,10 +76,15 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
 
         if store is defined and key not already loaded in this group,
         data is loaded from it.
+
         Parameters
         ----------
         key: str
             name of the eovariable or eogroup
+
+        Returns
+        -------
+        EOObject
         """
         from .eo_group import EOGroup
 

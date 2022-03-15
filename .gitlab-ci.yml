@@ -5,11 +5,16 @@ stages:
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  BRANCH_NAME: $CI_COMMIT_REF_NAME
 
 workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      variables:
+        BRANCH_NAME: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop"
+      variables:
+        BRANCH_NAME: $CI_COMMIT_BRANCH
 
 #############################################
 ############ PIP SECTION #################
@@ -70,7 +75,10 @@ docs-cov:
   before_script:
     - pip install .[doc-cov]
   script:
-  - docstr-coverage eopf -F 20
+    - docstr-coverage -f -P -m -F 30 eopf -b docstrcov.svg
+  artifacts:
+    paths:
+      - docstrcov.svg
   allow_failure: true
 
 complexity:
@@ -98,10 +106,17 @@ build-package:
 build-doc:
   stage: build
   image: python:3.9
+  variables:
+    GIT_STRATEGY: none
+  before_script:
+  - git clone $CI_REPOSITORY_URL
+  - cd $CI_PROJECT_NAME
+  - git fetch --all
+  - git checkout $BRANCH_NAME
   script:
   - pip install .[doc]
   - cd docs
-  - make html
+  - sphinx-multiversion source ../../docs/build/html
   artifacts:
     paths:
     - docs/build/html
