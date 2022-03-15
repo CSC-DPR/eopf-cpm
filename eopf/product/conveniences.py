@@ -19,10 +19,12 @@ def init_product(
         a EOProductStore or a string to create to a EOZarrStore
     **kwargs: any
         Any valid named arguments for EOProduct
+
     Returns
     -------
     EOProduct
         newly created product
+
     See Also
     --------
     eopf.product.EOProduct
@@ -52,10 +54,12 @@ def open_store(
         mode to open the store (default = 'r')
     kwargs: any
         store specific kwargs
+
     Returns
     -------
     store
         store opened with given arguments
+
     See Also
     --------
     EOProductStore.open

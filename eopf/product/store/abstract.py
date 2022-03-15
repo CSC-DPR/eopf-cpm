@@ -172,6 +172,7 @@ class EOProductStore(MutableMapping[str, Any]):
         ----------
         file_path: str
             File path to check
+
         Returns
         -------
         bool

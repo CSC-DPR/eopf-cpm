@@ -102,6 +102,7 @@ class ManifestStore(EOProductStore):
         ----------
         key: str, optional
             unused
+
         Returns
         ----------
         The CF an OM_EOP dictionary as attributes of a EOGroup: MutableMapping[str, Any]:
@@ -132,7 +133,8 @@ class ManifestStore(EOProductStore):
 
         Returns
         ----------
-        An iterator over self.KEYS : Iterator[str]
+        Iterator[str]:
+            An iterator over self.KEYS
         """
         if self._xml_fobj is None:
             raise StoreNotOpenError("Store must be open before access to it")

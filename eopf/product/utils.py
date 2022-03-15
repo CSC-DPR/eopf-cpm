@@ -200,6 +200,7 @@ def join_eo_path_optional(*subpaths: Optional[str]) -> str:
 
 def norm_eo_path(eo_path: str) -> str:
     """Normalize an eo object path.
+
     Parameters
     ----------
     eo_path: str
@@ -271,6 +272,7 @@ def translate_structure(
     namespaces: dict[str, str],
 ) -> Union[dict[Any, Any], Any]:
     """Translate the structure into the appropiate data format.
+
     If the map is a dictionary, calls recursively the function in order to
     assign the values for each key.
     If the map is a string, calls `apply_xpath` function to determine the value.

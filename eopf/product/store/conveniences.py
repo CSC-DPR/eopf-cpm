@@ -25,6 +25,7 @@ def convert(
         specific arguments to open the source store
     target_kwargs: dict, optional
         specific arguments to open the write store
+
     Returns
     -------
     EOProductStore

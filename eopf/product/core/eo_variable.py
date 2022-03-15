@@ -279,6 +279,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
             da.isel(x=[0, 1, 2])[1] = -1
           Assigning values with the chained indexing using ``.sel`` or
           ``.isel`` fails silently.
+
         Parameters
         ----------
         indexers : dict, optional
@@ -305,6 +306,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         **indexers_kwargs : {dim: indexer, ...}, optional
             The keyword arguments form of ``indexers``.
             One of indexers or indexers_kwargs must be provided.
+
         Returns
         -------
         obj : EOVariable
@@ -315,6 +317,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
             In general, each array's data will be a view of the array's data
             in this EOVariable, unless vectorized indexing was triggered by using
             an array indexer, in which case the data will be a copy.
+
         See Also
         --------
         DataArray.isel

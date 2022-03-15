@@ -110,7 +110,8 @@ class EOObject(EOAbstract):
     @property
     def parent(self) -> "Optional[EOContainer]":
         """
-        Parent COntainer/Product of this object in it's Product.
+        Parent Container/Product of this object in it's Product.
+
         Returns
         -------
 

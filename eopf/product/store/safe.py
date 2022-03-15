@@ -83,16 +83,19 @@ class SafeHierarchy(EOProductStore):
 
 class EOSafeStore(EOProductStore):
     """Store representation to access to a Safe file on the given URL
+
     Parameters
     ----------
     url: str
         path url or the target store
+
     Attributes
     ----------
     url: str
         url to the target store
     sep: str
         file separator
+
     See Also
     -------
     zarr.storage
@@ -167,10 +170,6 @@ class EOSafeStore(EOProductStore):
         ----------
         target_path
         config
-
-        Returns
-        -------
-
         """
         if target_path in self._config_mapping:
             self._config_mapping[target_path].append(config)
@@ -251,6 +250,7 @@ class EOSafeStore(EOProductStore):
     ) -> Sequence[Tuple[EOProductStore, Optional[Any], dict[str, Any]]]:
         """Get all accessor corresponding to the configs of conf_path.
         As multiple mapping car match a single conf_path, it can return multiple accessors.
+
         Parameters
         ----------
         conf_path

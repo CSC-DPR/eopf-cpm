@@ -17,16 +17,19 @@ if TYPE_CHECKING:
 
 class EOZarrStore(EOProductStore):
     """Store representation to access to a Zarr file on the given URL
+
     Parameters
     ----------
     url: str
         path url or the target store
+
     Attributes
     ----------
     url: str
         url to the target store
     sep: str
         file separator
+
     See Also
     -------
     zarr.storage
