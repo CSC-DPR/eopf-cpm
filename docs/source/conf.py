@@ -19,7 +19,7 @@
 from eopf import __version__
 
 project = "EOPF Core Python Modules"
-copyright = "2022, CSGroup"
+copyright = "2022, ESA"
 author = "CSGroup"
 
 # The full version, including alpha/beta/rc tags
