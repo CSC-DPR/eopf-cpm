@@ -10,7 +10,6 @@ from typing import (
     Union,
     ValuesView,
 )
-from numpy import dtype
 
 import xarray
 from dask import array as da
