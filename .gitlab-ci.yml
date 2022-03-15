@@ -38,12 +38,12 @@ linter:
   script:
   - >-
     python -m flake8 ${SOURCES} ${TESTS}
-    --output-file ${REPORTS}/linter.txt
+    --output-file linter.txt
   - python -m flake8 ${SOURCES} ${TESTS}
   artifacts:
     expire_in: 1h
     paths:
-    - $REPORTS
+    - linter.txt
 
 formater:
   stage: test
@@ -92,12 +92,12 @@ security:
   script:
   - >-
     python -m bandit -c bandit.yml -r ${SOURCES}
-    -f json -o ${REPORTS}/vulnerability.json
+    -f json -o vulnerability.json
   - python -m bandit -c bandit.yml -r ${SOURCES}
   artifacts:
     expire_in: 1h
     paths:
-    - $REPORTS
+    - vulnerability.json
 
 deps-sec:
   stage: test
@@ -180,6 +180,7 @@ deploy-package:
 test-pages:
   stage: deploy
   image: python:3.9
+  needs: [build-doc]
   dependencies:
   - build-doc
   script:
@@ -193,6 +194,7 @@ test-pages:
 pages:
   stage: deploy
   image: python:3.9
+  needs: [build-doc]
   dependencies:
   - build-doc
   script:
@@ -210,9 +212,9 @@ sonar-job:
   stage: sonarqube-runner
   image: sonarsource/sonar-scanner-cli
   needs:
-    - tests
-    - linter
-    - security
+  - tests
+  - linter
+  - security
   dependencies:
   - tests
   - linter
@@ -235,7 +237,7 @@ sonar-job:
       -Dsonar.sourceEncoding=${SQ_ENCODING}
       -Dsonar.language=${SQ_LANGUAGE}
       -Dsonar.python.version=3
+      -Dsonar.python.flake8.reportPaths="linter.txt"
+      -Dsonar.python.bandit.reportPaths="vulnerability.json"
       -Dsonar.python.xunit.reportPath="${REPORTS}/TEST-*.xml"
-      -Dsonar.python.flake8.reportPaths="${REPORTS}/linter.txt"
-      -Dsonar.python.bandit.reportPaths="${REPORTS}/vulnerability.json"
       -Dsonar.python.coverage.reportPaths="${REPORTS}/coverage.xml"
