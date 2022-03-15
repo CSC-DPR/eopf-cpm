@@ -166,6 +166,7 @@ build-doc:
 deploy-package:
   stage: deploy
   image: python:3.9
+  needs: [build-package]
   dependencies:
   - build-package
   script:
