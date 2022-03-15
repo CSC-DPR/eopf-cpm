@@ -202,8 +202,10 @@ class EONetCDFStore(EOProductStore):
         """Retrieve and return the netcdf4 object corresponding to the node at the given path
 
         Returns
+        -------
         Union of Dataset, Group, Variable
-        ----------
+            node correponding to the given key path
+
         Raises
         ------
         StoreNotOpenError
