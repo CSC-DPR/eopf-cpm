@@ -27,7 +27,14 @@ class EONetCDFStore(EOProductStore):
     ----------
     url: str
         path url or the target store
-
+    zlib: bool
+        enable/disable compression
+    complevel: int [1-9]
+        level of the compression
+    shuffle: bool
+        enable/disable hdf5 shuffle
+    scale: bool
+        enable/disable automatic variable scaling
     """
 
     RESTRICTED_ATTR_KEY = ("_FillValue",)
@@ -37,12 +44,9 @@ class EONetCDFStore(EOProductStore):
         url = os.path.expanduser(url)
         super().__init__(url)
         self._root: Optional[Dataset] = None
-        # Set default values for compression arguments
-        # Compression level can be set within range [0, 9]
         self.zlib: bool = True
         self.complevel: int = 4
         self.shuffle: bool = True
-        # Scale is used to enable/disable automatic variable scaling
         self.scale: bool = False
 
     # docstr-coverage: inherited
