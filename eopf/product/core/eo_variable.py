@@ -383,10 +383,10 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return len(self._data)
 
     def __str__(self) -> str:
-        return self.__repr__()
+        return self.path
 
     def __repr__(self) -> str:
-        return f'{self.product!r} -> {"->".join(self.relative_path)} -> {self.name}'
+        return self.__str__()
 
     def _repr_html_(self) -> str:
         return renderer("variable.html", variable=self)

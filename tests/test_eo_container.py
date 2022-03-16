@@ -416,9 +416,23 @@ def test_hierarchy_html(product):
     assert tree_structure == {
         "product_name": {
             "coordinates": {
-                "c1": {"dims": ("dim_0",), "attrs": {dim_attr_key: ["dim_0"]}, "coords": []},
-                "c2": {"dims": ("dim_0",), "attrs": {dim_attr_key: ["dim_0"]}, "coords": []},
-                "group2": {"dims": ("dim_0",), "attrs": {dim_attr_key: ["dim_0"]}, "coords": []},
+                "coord_a": {"dims": ("c1",), "attrs": {dim_attr_key: ["c1"]}, "coords": ["/coordinates/coord_a"]},
+                "coord_b": {"dims": ("c3",), "attrs": {dim_attr_key: ["c3"]}, "coords": ["/coordinates/coord_b"]},
+                "coord_d": {
+                    "dims": ("c2",),
+                    "attrs": {dim_attr_key: ["c2"]},
+                    "coords": ["/coordinates/g1/coord_c", "/coordinates/coord_d"],
+                },
+                "g1": {
+                    "coord_c": {
+                        "attrs": {"_ARRAY_DIMENSIONS": ["c2"]},
+                        "coords": ["/coordinates/g1/coord_c", "/coordinates/coord_d"],
+                        "dims": ("c2",),
+                    },
+                    "dims": (),
+                    "attrs": {},
+                    "coords": [],
+                },
                 "dims": (),
                 "attrs": {},
                 "coords": [],
@@ -430,7 +444,7 @@ def test_hierarchy_html(product):
                         "variable_c": {
                             "dims": ("c1", "'c2"),
                             "attrs": {dim_attr_key: ["c1", "c2"]},
-                            "coords": ["c1", "c2"],
+                            "coords": ["/coordinates/g1/coord_c", "/coordinates/coord_a", "/coordinates/coord_d"],
                         },
                         "variable_d": {"dims": (), "attrs": {}, "coords": []},
                         "dims": (),
