@@ -1,4 +1,3 @@
-from types import MappingProxyType
 from typing import TYPE_CHECKING, Iterable, Optional
 
 from eopf.exceptions import EOObjectMultipleParentError, InvalidProductError
@@ -80,12 +79,11 @@ class EOObject(EOAbstract):
         self._parent = parent
 
     @property
-    def coordinates(self) -> MappingProxyType[str, "EOObject"]:
-        """MappingProxyType[str, Any]: Coordinates defined by this object"""
+    def coordinates(self) -> Iterable["EOObject"]:
+        """Iterable[EOObject]: Coordinates defined by this object"""
         coords_group = self.product.coordinates
         coords_list = coords_group._find_by_dim(self.dims)
-        cood_map = {coord.path: coord for coord in coords_list}
-        return MappingProxyType(cood_map)
+        return coords_list
 
     @property
     def dims(self) -> tuple[str, ...]:
