@@ -27,8 +27,6 @@ class EOObject(EOAbstract):
         product top level
     relative_path: Iterable[str], optional
         list like of string representing the path from the product
-    coords: MutableMapping[str, Any], optional
-        coordinates to assign
     dims: tuple[str], optional
         dimensions to assign
     """

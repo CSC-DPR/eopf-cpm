@@ -8,7 +8,7 @@ from typing import (
     MutableMapping,
     Optional,
     Union,
-    ValuesView,
+    ValuesView, Iterable,
 )
 
 import xarray
@@ -76,6 +76,12 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
 
     def _init_similar(self, data: xarray.DataArray) -> "EOVariable":
         return EOVariable(name="", data=data)
+
+    def assign_dims(self, dims: Iterable[str]) -> None:
+        if len(dims) != len(self._data.dims):
+            raise ValueError("Invalid number of dimensions.")
+        self._data.rename(zip(self._data.dims, dims))
+        super().assign_dims(dims)
 
     @property
     def attrs(self) -> dict[str, Any]:

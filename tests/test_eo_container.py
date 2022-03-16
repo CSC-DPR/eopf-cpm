@@ -71,6 +71,7 @@ def product() -> EOProduct:
         product["measurements/group1"].add_variable("group2/variable_b")
         product["measurements/group1"]["group2"].add_variable(
             "/measurements/group1/group2/variable_c",
+            np.array([[1,2,3],[4,5,6]]),
             dims=["c1", "c2"],
         )
         product.measurements.group1.group2.assign_dims(["c1"])
