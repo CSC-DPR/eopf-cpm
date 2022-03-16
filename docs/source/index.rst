@@ -41,5 +41,5 @@ __ https://www.apache.org/licenses/LICENSE-2.0.html
 .. |coverage| image:: https://gitlab.csc-eopf.csgroup.space/cpm/eopf-cpm/badges/main/coverage.svg
    :target: https://github.com/CSC-DPR/eopf-cpm/tree/main
 
-.. |docstr-coverage| image:: https://gitlab.csc-eopf.csgroup.space/cpm/eopf-cpm/-/jobs/main/artifacts/raw/docstrcov.svg?job=docs-cov
+.. |docstr-coverage| image:: https://gitlab.csc-eopf.csgroup.space/cpm/eopf-cpm/-/jobs/artifacts/main/raw/docstrcov.svg?job=docs-cov
    :target: https://github.com/CSC-DPR/eopf-cpm/tree/main
