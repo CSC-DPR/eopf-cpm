@@ -33,8 +33,6 @@ class EOGroup(EOContainer, EOObject):
         data for :obj:`EOVariable`
     attrs: MutableMapping[str, Any], optional
         attributes to assign
-    coords: MutableMapping[str, Any], optional
-        coordinates to assign
     dims: tuple[str], optional
         dimensions to assign
 
@@ -54,7 +52,6 @@ class EOGroup(EOContainer, EOObject):
         parent: "Optional[EOProduct]" = None,
         variables: Optional[dict[str, EOVariable]] = None,
         attrs: Optional[MutableMapping[str, Any]] = None,
-        coords: MutableMapping[str, Any] = {},
         dims: tuple[str, ...] = tuple(),
     ) -> None:
         EOContainer.__init__(self, attrs=attrs)
@@ -68,7 +65,7 @@ class EOGroup(EOContainer, EOObject):
                 if not isinstance(key, str):
                     raise TypeError(f"The dataset key {str(key)} is type {type(key)} instead of str")
         self._variables = variables
-        EOObject.__init__(self, name, parent, coords=coords, dims=dims)
+        EOObject.__init__(self, name, parent, dims=dims)
 
     def _get_item(self, key: str) -> "EOObject":
         if key in self._variables:

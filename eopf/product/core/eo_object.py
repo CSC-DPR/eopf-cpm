@@ -1,6 +1,5 @@
-import itertools as it
 from types import MappingProxyType
-from typing import TYPE_CHECKING, Any, Iterable, MutableMapping, Optional
+from typing import TYPE_CHECKING, Iterable, Optional
 
 from eopf.exceptions import EOObjectMultipleParentError, InvalidProductError
 from eopf.product.core.eo_abstract import EOAbstract
@@ -38,13 +37,11 @@ class EOObject(EOAbstract):
         self,
         name: str,
         parent: "Optional[EOContainer]" = None,
-        coords: MutableMapping[str, Any] = {},
         dims: tuple[str, ...] = tuple(),
     ) -> None:
         self._name: str = ""
         self._parent: Optional["EOContainer"] = None
         self._repath(name, parent)
-        self.assign_coords(coords=coords)
         self.assign_dims(dims=dims)
 
     def assign_dims(self, dims: Iterable[str]) -> None:
@@ -57,19 +54,6 @@ class EOObject(EOAbstract):
         """
         for dim in dims:
             self.attrs.setdefault(_DIMENSIONS_NAME, []).append(dim)
-
-    def assign_coords(self, coords: MutableMapping[str, Any] = {}, **kwargs: Any) -> None:
-        """Assign coordinates to this object
-
-        Coordinates should be set in the given key-value pair format: {"path/under/coordinates/group" : array_like}.
-
-        Parameters
-        ----------
-        coords: MutableMapping[str, Any] optional
-            coordinates to assign
-        """
-        for path, coords_value in it.chain(coords.items(), kwargs.items()):
-            self.product.coordinates.add_variable(path, data=coords_value)
 
     def _repath(self, name: str, parent: "Optional[EOContainer]") -> None:
         """Set the name, product and relative_path attributes of this EObject.

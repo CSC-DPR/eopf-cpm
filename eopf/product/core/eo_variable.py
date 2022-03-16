@@ -39,8 +39,6 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         list like of string representing the path from the product
     attrs: MutableMapping[str, Any], optional
         attributes to assign
-    coords: MutableMapping[str, Any], optional
-        coordinates to assign
     dims: tuple[str], optional
         dimensions to assign
     **kwargs: Any
@@ -57,7 +55,6 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         data: Optional[Any] = None,
         parent: Optional["EOContainer"] = None,
         attrs: Optional[MutableMapping[str, Any]] = None,
-        coords: MutableMapping[str, Any] = {},
         dims: tuple[str, ...] = tuple(),
         **kwargs: Any,
     ):
@@ -75,7 +72,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         if not dims:
             dims = existing_dims or data.dims
         self._data: xarray.DataArray = data
-        EOObject.__init__(self, name, parent, coords=coords, dims=tuple(dims))
+        EOObject.__init__(self, name, parent, dims=tuple(dims))
 
     def _init_similar(self, data: xarray.DataArray) -> "EOVariable":
         return EOVariable(name="", data=data)

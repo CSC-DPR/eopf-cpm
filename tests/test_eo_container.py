@@ -62,8 +62,7 @@ def product() -> EOProduct:
     with product.open(mode="w"):
         product.add_group(
             "measurements/group1",
-            coords={"c1": [2], "c2": [3], "group2": [4]},
-            dims=["c1", "c2", "group2"],
+            dims=("c1", "c2", "group2"),
         )
         product.add_group("group0")
 
@@ -84,6 +83,11 @@ def product() -> EOProduct:
         product["measurements"]["group1"].add_group("group2b")
         product.measurements["group1"].add_group("/measurements/group1/group2b/group3")
         product.add_group("measurements/group1/group2b/group3b")
+
+        product.add_variable("coordinates/coord_a", data=[1], dims=["c1"])
+        product.add_variable("coordinates/coord_b", data=[1], dims=["c3"])
+        product.add_variable("coordinates/g1/coord_c", data=[1], dims=["c2"])
+        product.add_variable("coordinates/coord_d", data=[1], dims=["c2"])
 
     return product
 
