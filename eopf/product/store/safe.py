@@ -12,11 +12,10 @@ from typing import (
 
 from eopf.exceptions import StoreNotOpenError
 
-from ..core import EOGroup
 from ..utils import join_eo_path_optional, upsplit_eo_path
 from .abstract import EOProductStore, StorageStatus
-from .mapping_factory import MappingFactory
-from .store_factory import StoreFactory
+from .mapping_factory import EOMappingFactory
+from .store_factory import EOStoreFactory
 
 if TYPE_CHECKING:
     from eopf.product.core.eo_object import EOObject
@@ -25,6 +24,7 @@ if TYPE_CHECKING:
 class SafeHierarchy(EOProductStore):
     """A very simple Store implementation allowing to iterate over a group direct child."""
 
+    # docstr-coverage: inherited
     def __init__(self) -> None:
         super().__init__("")
         self._child_list: list[str] = []
@@ -32,19 +32,23 @@ class SafeHierarchy(EOProductStore):
     def __iter__(self) -> Iterator[str]:
         return iter(self._child_list)
 
+    # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
         if path in ["", "/"]:
             return True
         raise NotImplementedError()
 
+    # docstr-coverage: inherited
     def is_variable(self, path: str) -> bool:
         if path in ["", "/"]:
             return False
         raise NotImplementedError()
 
+    # docstr-coverage: inherited
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         pass
 
+    # docstr-coverage: inherited
     def iter(self, path: str) -> Iterator[str]:
         if path != "":
             raise NotImplementedError()
@@ -54,12 +58,16 @@ class SafeHierarchy(EOProductStore):
         raise NotImplementedError()
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
+        from ..core import EOGroup
+
         cond1 = not isinstance(value, EOGroup)
         cond2 = key != "" and value.name not in self._child_list
         if cond1 or cond2:
             raise KeyError("Safe can't write key outside of it's dictionary")
 
     def __getitem__(self, key: str) -> "EOObject":
+        from ..core import EOGroup
+
         if key in ["", "/"]:
             return EOGroup()
         raise NotImplementedError()
@@ -75,16 +83,19 @@ class SafeHierarchy(EOProductStore):
 
 class EOSafeStore(EOProductStore):
     """Store representation to access to a Safe file on the given URL
+
     Parameters
     ----------
     url: str
         path url or the target store
+
     Attributes
     ----------
     url: str
         url to the target store
     sep: str
         file separator
+
     See Also
     -------
     zarr.storage
@@ -96,16 +107,17 @@ class EOSafeStore(EOProductStore):
     CONFIG_TARGET = "target_path"
     CONFIG_SOURCE_FILE = "source_path"
 
+    # docstr-coverage: inherited
     def __init__(
         self,
         url: str,
-        store_factory: Optional[StoreFactory] = None,
-        mapping_factory: Optional[MappingFactory] = None,
+        store_factory: Optional[EOStoreFactory] = None,
+        mapping_factory: Optional[EOMappingFactory] = None,
     ) -> None:
         if store_factory is None:
-            store_factory = StoreFactory(default_stores=True)
+            store_factory = EOStoreFactory(default_stores=True)
         if mapping_factory is None:
-            mapping_factory = MappingFactory(default_mappings=True)
+            mapping_factory = EOMappingFactory(default_mappings=True)
         if url[-1] != "/":
             url = url + "/"
         # FIXME Need to think of a way to manage urlak ospath on windows. Especially with the path in the json.
@@ -119,6 +131,7 @@ class EOSafeStore(EOProductStore):
         self._config_mapping: dict[str, list[dict[str, Any]]] = dict()  # map source path to config read from Json
         self._accessor_open_config: dict[str, dict[str, Any]] = dict()
         self._mode = "CLOSED"
+        self._open_kwargs: dict[str, Any] = dict()
 
     def _read_product_mapping(self) -> None:
         """Read mapping from the mapping factory and fill _config_mapping from it."""
@@ -157,10 +170,6 @@ class EOSafeStore(EOProductStore):
         ----------
         target_path
         config
-
-        Returns
-        -------
-
         """
         if target_path in self._config_mapping:
             self._config_mapping[target_path].append(config)
@@ -205,11 +214,13 @@ class EOSafeStore(EOProductStore):
                 item_format,
             )
         try:
-            if self._status is StorageStatus.OPEN:
+            if self.status is StorageStatus.OPEN:
                 if item_format in self._accessor_open_config:
-                    mapped_store.open(mode=self._mode, config=self._accessor_open_config[item_format])
+                    mapped_store.open(
+                        mode=self._mode, config=self._accessor_open_config[item_format], **self._open_kwargs
+                    )
                 else:
-                    mapped_store.open(mode=self._mode)
+                    mapped_store.open(mode=self._mode, **self._open_kwargs)
         except NotImplementedError:
             mapped_store = None
             warnings.warn("Unimplemented store mode")
@@ -239,6 +250,7 @@ class EOSafeStore(EOProductStore):
     ) -> Sequence[Tuple[EOProductStore, Optional[Any], dict[str, Any]]]:
         """Get all accessor corresponding to the configs of conf_path.
         As multiple mapping car match a single conf_path, it can return multiple accessors.
+
         Parameters
         ----------
         conf_path
@@ -302,9 +314,11 @@ class EOSafeStore(EOProductStore):
 
         Returns
         -------
-
+        EOObject
         """
         # Should at least merge dims and attributes of EOVariables/Group.
+        from ..core import EOGroup
+
         if not eo_obj_list:
             raise KeyError("Empty object match.")
         if len(eo_obj_list) == 1:
@@ -323,20 +337,41 @@ class EOSafeStore(EOProductStore):
 
         Parameters
         ----------
-        eo_obj
+        eo_obj: EOObject
+            object to modify
+        config: dict
+            configuration to apply
 
         Returns
         -------
-
+        EOObject
         """
         # Should for example add the dims from the json config to an EOVariable.
-        return eo_obj
+        if "parameters" not in config:
+            return eo_obj
+        parameters = config["parameters"]
+        from ..core import EOGroup, EOVariable
 
+        if "dimensions" in parameters:
+            dims = parameters["dimensions"]
+        else:
+            dims = eo_obj.dims
+
+        attrs = eo_obj.attrs
+        if isinstance(eo_obj, EOVariable):
+            data = eo_obj._data
+            return EOVariable(data=data, dims=dims, attrs=attrs)
+        return EOGroup(dims=dims, attrs=attrs)
+
+    # docstr-coverage: inherited
     def open(self, mode: str = "r", **kwargs: Any) -> None:
-        super().open()
-        self._mode = mode
+        self._open_kwargs = kwargs
         if not self._config_mapping:
             self._read_product_mapping()
+        # Must not read the product mapping between  super.open and accessor.open
+        # Otherwise Hierachy accessor are opened twice.
+        super().open()
+        self._mode = mode
         for key in self._accessor_map:
             accessor = self._accessor_map[key]
             if accessor:
@@ -347,6 +382,7 @@ class EOSafeStore(EOProductStore):
             except FileExistsError:
                 ...
 
+    # docstr-coverage: inherited
     def close(self) -> None:
         super().close()
         self._mode = "CLOSED"
@@ -355,6 +391,7 @@ class EOSafeStore(EOProductStore):
             if accessor:
                 accessor.close()
 
+    # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
@@ -366,6 +403,7 @@ class EOSafeStore(EOProductStore):
                     return True
         return False
 
+    # docstr-coverage: inherited
     def is_variable(self, path: str) -> bool:
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
@@ -377,6 +415,7 @@ class EOSafeStore(EOProductStore):
                     return True
         return False
 
+    # docstr-coverage: inherited
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
@@ -386,6 +425,7 @@ class EOSafeStore(EOProductStore):
                 # We might want to catch Unimplemented/KeyError and throw one if none write_attrs suceed
                 accessor.write_attrs(config_accessor_path)
 
+    # docstr-coverage: inherited
     def iter(self, path: str) -> Iterator[str]:
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
@@ -399,6 +439,8 @@ class EOSafeStore(EOProductStore):
         return iter(key_set)
 
     def __getitem__(self, key: str) -> "EOObject":
+        from ..core import EOGroup
+
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
 

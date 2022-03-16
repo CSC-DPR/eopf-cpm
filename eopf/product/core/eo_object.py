@@ -25,10 +25,8 @@ class EOObject(EOAbstract):
     ----------
     name: str, optional
         name of this group
-    product: EOProduct, optional
-        product top level
-    relative_path: Iterable[str], optional
-        list like of string representing the path from the product
+    parent: EOProduct or EOGroup, optional
+        parent to link to this group
     coords: MutableMapping[str, Any], optional
         coordinates to assign
     dims: tuple[str], optional
@@ -53,7 +51,7 @@ class EOObject(EOAbstract):
 
         Parameters
         ----------
-        retrive_dims: Iterable[str], optional
+        dims: Iterable[str], optional
             dimensions to assign
         """
         for dim in dims:
@@ -74,14 +72,15 @@ class EOObject(EOAbstract):
 
     def _repath(self, name: str, parent: "Optional[EOContainer]") -> None:
         """Set the name, product and relative_path attributes of this EObject.
-         This method won't repath the object in a way that result in it being the child of multiple product,
-         or at multiple path.
+        This method won't repath the object in a way that result in it being the child of multiple product,
+        or at multiple path.
 
-         Parameters
-         ----------
-         name: str
-         product: Optional[EOProduct]
-         relative_path: Optional[Iterable[str]]
+        Parameters
+        ----------
+        name: str
+            name of this object
+        parent: EOProduct or EOGroup, optional
+            parent to link to this group
 
         Raises
          ------
@@ -100,9 +99,10 @@ class EOObject(EOAbstract):
 
     @property
     def dims(self) -> tuple[str, ...]:
-        """tupple[str, ...]: dimensions"""
+        """tuple[str, ...]: dimensions"""
         return self.attrs.get(_DIMENSIONS_NAME, tuple())
 
+    # docstr-coverage: inherited
     @property
     def name(self) -> str:
         return self._name
@@ -110,13 +110,15 @@ class EOObject(EOAbstract):
     @property
     def parent(self) -> "Optional[EOContainer]":
         """
-        Parent COntainer/Product of this object in it's Product.
+        Parent Container/Product of this object in it's Product.
+
         Returns
         -------
 
         """
         return self._parent
 
+    # docstr-coverage: inherited
     @property
     def path(self) -> str:
         if self.parent is None:
@@ -124,12 +126,14 @@ class EOObject(EOAbstract):
         else:
             return join_eo_path(self.parent.path, self.name)
 
+    # docstr-coverage: inherited
     @property
     def product(self) -> "EOProduct":
         if self.parent is None:
             raise InvalidProductError("Undefined product")
         return self.parent.product
 
+    # docstr-coverage: inherited
     @property
     def relative_path(self) -> Iterable[str]:
         rel_path: list[str] = list()
@@ -140,6 +144,7 @@ class EOObject(EOAbstract):
             rel_path.append(self.parent.name)
         return rel_path
 
+    # docstr-coverage: inherited
     @property
     def store(self) -> Optional[EOProductStore]:
         return self.product.store
@@ -154,6 +159,7 @@ class EOObject(EOAbstract):
                 retrieved_coords[dim] = coords
         return MappingProxyType(retrieved_coords)
 
+    # docstr-coverage: inherited
     def get_coordinate(self, name: str, context: Optional[str] = None) -> "EOVariable":
         if context is None:
             context = self.path

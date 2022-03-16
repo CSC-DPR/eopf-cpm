@@ -8,6 +8,7 @@ from eopf.exceptions.warnings import AlreadyClose, AlreadyOpen
 
 
 class StorageStatus(enum.Enum):
+    """Possible status of an EOProductStore"""
 
     OPEN = "open"
     CLOSE = "close"
@@ -96,6 +97,11 @@ class EOProductStore(MutableMapping[str, Any]):
         -------
         bool
             it is a group representation or not
+
+        Raises
+        ------
+        StoreNotOpenError
+            If the store is closed
         """
 
     @abstractmethod
@@ -155,9 +161,20 @@ class EOProductStore(MutableMapping[str, Any]):
             If the store is closed
         """
 
-    def __delitem__(self, key: str) -> None:
+    def __delitem__(self, key: str) -> None:  # pragma: no cover
         raise NotImplementedError()
 
     @staticmethod
     def guess_can_read(file_path: str) -> bool:
+        """The given file path is readable or not by this store
+
+        Parameters
+        ----------
+        file_path: str
+            File path to check
+
+        Returns
+        -------
+        bool
+        """
         return False

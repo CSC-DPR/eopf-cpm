@@ -6,7 +6,7 @@ from typing import Any
 import fsspec
 
 
-class MappingFactory:
+class EOMappingFactory:
     def __init__(self, default_mappings: bool = True) -> None:
         self.mapping_set: set[str] = set()
         if default_mappings:

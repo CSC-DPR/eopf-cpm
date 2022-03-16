@@ -22,10 +22,9 @@ dependencies = [
     "dask ==2021.11.2",
     "xarray ==0.20.1",
     "netcdf4 ==1.5.7",
-    "numpy ==1.20.3",
+    "numpy ==1.22.3",
     "zarr ==2.10.3",
     "fsspec ==2021.11.1",
-    "h5py==3.6.0",
     "lxml==4.7.1",
 ]
 license = {file = "LICENSE"}
@@ -41,7 +40,7 @@ linter = ["flake8 >=4.0.1"]
 typing = ["mypy >=0.931"]
 formatter = ["black >=21.11b1", "isort >=5.10.1"]
 security = ["bandit >=1.7.1", "safety >=1.10.3"]
-doc = ["jupyter-sphinx >=0.3.2", "sphinx-book-theme >=0.2.0"]
+doc = ["jupyter-sphinx >=0.3.2", "sphinx-book-theme >=0.2.0", "sphinx-multiversion >=0.2.4"]
 notebook = ["jupyter >=1.0.0", "Jinja2 >=3.0.3"]
 complexity = ["xenon >=0.8.0"]
 doc-cov = ["docstr-coverage >=2.1.1"]

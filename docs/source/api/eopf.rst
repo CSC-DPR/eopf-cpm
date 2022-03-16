@@ -1,6 +1,11 @@
 eopf package
 ============
 
+.. automodule:: eopf
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Subpackages
 -----------
 
@@ -15,11 +20,3 @@ Subpackages
    eopf.remotesensing
    eopf.tracing
    eopf.triggering
-
-Module contents
----------------
-
-.. automodule:: eopf
-   :members:
-   :undoc-members:
-   :show-inheritance:

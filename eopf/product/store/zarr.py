@@ -2,6 +2,7 @@ import pathlib
 from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional
 
 import zarr
+from dask import array as da
 from zarr.hierarchy import Group
 from zarr.storage import FSStore, contains_array, contains_group
 
@@ -16,16 +17,19 @@ if TYPE_CHECKING:
 
 class EOZarrStore(EOProductStore):
     """Store representation to access to a Zarr file on the given URL
+
     Parameters
     ----------
     url: str
         path url or the target store
+
     Attributes
     ----------
     url: str
         url to the target store
     sep: str
         file separator
+
     See Also
     -------
     zarr.storage
@@ -35,34 +39,41 @@ class EOZarrStore(EOProductStore):
     _fs: Optional[FSStore] = None
     sep = "/"
 
+    # docstr-coverage: inherited
     def __init__(self, url: str) -> None:
         super().__init__(url)
 
+    # docstr-coverage: inherited
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         super().open()
         self._root: Group = zarr.open(store=self.url, mode=mode, **kwargs)
         self._fs = self._root.store
 
+    # docstr-coverage: inherited
     def close(self) -> None:
         super().close()
         self._root = None
         self._fs = None
 
+    # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
         if self._fs is None:
             raise StoreNotOpenError("Store must be open before access to it")
         return contains_group(self._fs, path=path)
 
+    # docstr-coverage: inherited
     def is_variable(self, path: str) -> bool:
         if self._fs is None:
             raise StoreNotOpenError("Store must be open before access to it")
         return contains_array(self._fs, path=path)
 
+    # docstr-coverage: inherited
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         self._root[group_path].attrs.update(conv(attrs))
 
+    # docstr-coverage: inherited
     def iter(self, path: str) -> Iterator[str]:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
@@ -87,7 +98,11 @@ class EOZarrStore(EOProductStore):
         if isinstance(value, EOGroup):
             self._root.create_group(key, overwrite=True)
         elif isinstance(value, EOVariable):
-            self._root.create_dataset(key, data=value._data.values)
+            dask_array = da.asarray(value._data.data)  # .data is generally already a dask array.
+            zarr_array = self._root.create(key, shape=dask_array.shape)
+            # While it's possible to create the array with to_zarr,
+            # it fail to create the array on some array shapes (ex : empty)
+            da.to_zarr(dask_array, zarr_array)
             if hasattr(self._root.store, "path"):
                 zarr.consolidate_metadata(self.sep.join([self._root.store.path, self._root[key].path]))
         else:
@@ -109,6 +124,7 @@ class EOZarrStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         return iter(self._root)
 
+    # docstr-coverage: inherited
     @staticmethod
     def guess_can_read(file_path: str) -> bool:
         return pathlib.Path(file_path).suffix in [".zarr", ".zip", ""]

@@ -1,5 +1,5 @@
 from collections.abc import MutableMapping
-from typing import TYPE_CHECKING, Any, Iterator, Optional
+from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
 
 from eopf.exceptions import StoreNotDefinedError
 from eopf.product.core.eo_container import EOContainer
@@ -9,7 +9,7 @@ from ..formatting import renderer
 from .eo_variable import EOVariable
 
 if TYPE_CHECKING:  # pragma: no cover
-    from eopf.product.core.eo_product import EOProduct
+    from eopf.product.core import EOProduct
 
 
 class EOGroup(EOContainer, EOObject):
@@ -25,12 +25,10 @@ class EOGroup(EOContainer, EOObject):
     ----------
     name: str, optional
         name of this group
-    product: EOProduct, optional
-        product top level
-    relative_path: Iterable[str], optional
-        list like of string representing the path from the product
-    dataset: xarray.Dataset, optional
-        data for :obj:`EOVariable`
+    parent: EOProduct or EOGroup, optional
+        parent to link to this group
+    variables: MutableMapping[str, EOVariable], optional
+        dict-like object with name as key and :obj:`EOVariable` as value to set
     attrs: MutableMapping[str, Any], optional
         attributes to assign
     coords: MutableMapping[str, Any], optional
@@ -51,8 +49,8 @@ class EOGroup(EOContainer, EOObject):
     def __init__(
         self,
         name: str = "",
-        parent: "Optional[EOProduct]" = None,
-        variables: Optional[dict[str, EOVariable]] = None,
+        parent: Optional[Union["EOProduct", "EOGroup"]] = None,
+        variables: Optional[MutableMapping[str, EOVariable]] = None,
         attrs: Optional[MutableMapping[str, Any]] = None,
         coords: MutableMapping[str, Any] = {},
         dims: tuple[str, ...] = tuple(),
@@ -62,14 +60,15 @@ class EOGroup(EOContainer, EOObject):
         if variables is None:
             variables = dict()
         else:
-            if not isinstance(variables, dict):
-                raise TypeError("dataset parameters must be a dictionary")
+            if not isinstance(variables, MutableMapping):
+                raise TypeError("dataset parameters must be a MutableMapping")
             for key in variables:
                 if not isinstance(key, str):
                     raise TypeError(f"The dataset key {str(key)} is type {type(key)} instead of str")
-        self._variables = variables
+        self._variables = dict(variables)
         EOObject.__init__(self, name, parent, coords=coords, dims=dims)
 
+    # docstr-coverage: inherited
     def _get_item(self, key: str) -> "EOObject":
         if key in self._variables:
             return self._variables[key]
@@ -96,7 +95,7 @@ class EOGroup(EOContainer, EOObject):
     def __repr__(self) -> str:
         return f"[EOGroup]{hex(id(self))}"
 
-    def _repr_html_(self) -> str:
+    def _repr_html_(self) -> str:  # pragma: no cover
         return renderer("group.html", group=self)
 
     def to_product(self) -> "EOProduct":
@@ -132,6 +131,7 @@ class EOGroup(EOContainer, EOObject):
 
         return variable
 
+    # docstr-coverage: inherited
     def write(self) -> None:
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")

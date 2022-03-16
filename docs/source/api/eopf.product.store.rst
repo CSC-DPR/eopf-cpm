@@ -1,6 +1,11 @@
 eopf.product.store package
 ==========================
 
+.. automodule:: eopf.product.store
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Submodules
 ----------
 
@@ -12,10 +17,10 @@ eopf.product.store.abstract module
    :undoc-members:
    :show-inheritance:
 
-eopf.product.store.hdf5 module
-------------------------------
+eopf.product.store.conveniences module
+--------------------------------------
 
-.. automodule:: eopf.product.store.hdf5
+.. automodule:: eopf.product.store.conveniences
    :members:
    :undoc-members:
    :show-inheritance:
@@ -64,14 +69,6 @@ eopf.product.store.zarr module
 ------------------------------
 
 .. automodule:: eopf.product.store.zarr
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: eopf.product.store
    :members:
    :undoc-members:
    :show-inheritance:

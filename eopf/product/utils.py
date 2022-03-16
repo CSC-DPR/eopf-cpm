@@ -1,124 +1,117 @@
-import functools
-import posixpath
-import weakref
-from pathlib import PurePosixPath
-from typing import Any, Callable, Optional
-
-
-def join_path(*subpath: str, sep: str = "/") -> str:
-    """Join elements from specific separator
-
-    Parameters
-    ----------
-    *subpath: str
-    sep: str, optional
-        separator
-
-    Returns
-    -------
-    str
-    """
-    return sep.join(subpath)
-
-
-def weak_cache(func: Callable[..., Any]) -> Callable[..., Any]:
-    """weak ref version of lru_cache for method
-
-    See Also
-    --------
-    functools.cache
-    """
-
-    @functools.cache
-    def _func(_self: Any, *args: Any, **kwargs: Any) -> Any:
-        return func(_self(), *args, **kwargs)
-
-    @functools.wraps(func)
-    def inner(self: Any, *args: Any, **kwargs: Any) -> Any:
-        return _func(weakref.ref(self), *args, **kwargs)
-
-    return inner
-
-
 # We need to use a mix of posixpath (normpath) and pathlib (partition) in the eo_path methods.
 # As we work with strings we use posixpath (the unix path specific implementation of os.path) as much as possible.
+import posixpath
+from pathlib import PurePosixPath
+from typing import Any, Optional, Union
+
+from lxml import etree
 
 
-def norm_eo_path(eo_path: str) -> str:
-    """Normalize an eo object path.
+def apply_xpath(dom: Any, xpath: str, namespaces: dict[str, str]) -> str:
+    """Apply the XPath on the DOM
+
     Parameters
     ----------
-    eo_path: str
+    dom : Any
+        The DOM to be parsed with xpath
+    xpath : str
+        The value of the corresponding XPath rule
+    namespaces : dict
+        The associated namespaces
 
     Returns
     -------
     str
+        The result of the XPath
     """
-    if eo_path == "":
-        raise KeyError("Invalid empty eo_path")
-    eo_path = posixpath.normpath(eo_path)  # Do not use pathlib (does not remove ..)
-    if eo_path.startswith("//"):  # text is a special path so it's not normalised by normpath
-        eo_path = eo_path[1:]
-    return eo_path
+    target = dom.xpath(xpath, namespaces=namespaces)
+    if isinstance(target, list):
+        if len(target) == 1 and isinstance(target[0], etree._Element):
+            if target[0].tag.endswith("posList"):
+                values = target[0].text.split(" ")
+                merged_values = ",".join(" ".join([n, i]) for i, n in zip(values, values[1:]))
+                return f"POLYGON(({merged_values}))"
+            return target[0].text
+        return ",".join(target)
+    return target
 
 
-def join_eo_path(*subpaths: str) -> str:
-    """Join eo object paths.
+def conv(obj: Any) -> Any:
+    """Convert an object to native python data types if possible,
+    otherwise return the the obj as it is
 
     Parameters
     ----------
-    *subpaths: str
+    obj: Any
+        an object
 
     Returns
-    -------
-    str
+    ----------
+    Any
+        either the obj conververted to native python data type,
+        or the obj as received
     """
-    return norm_eo_path(posixpath.join(*subpaths))
+    from numpy import (
+        float16,
+        float32,
+        float64,
+        int16,
+        int32,
+        int64,
+        ndarray,
+        uint16,
+        uint32,
+        uint64,
+    )
+
+    # check dict
+    if isinstance(obj, dict):
+        return {k: conv(v) for k, v in obj.items()}
+
+    # check if list or tuple or set
+    if isinstance(obj, (list, tuple, set)):
+        return type(obj)(map(conv, obj))
+
+    # check numpy
+    if isinstance(obj, ndarray):
+        return conv(obj.tolist())
+
+    # check np int
+    if isinstance(obj, (int64, int32, int16, uint64, uint32, uint16, int)):
+        return int(obj)
+
+    # check np float
+    if isinstance(obj, (float64, float32, float16, float)):
+        return float(obj)
+
+    # check str
+    if isinstance(obj, str):
+        return str(obj)
+
+    # if no conversion can be done
+    return obj
 
 
-def join_eo_path_optional(*subpaths: Optional[str]) -> str:
-    """Join eo object paths.
+def decode_attrs(attrs: Any) -> Any:
+    """Try to decode attributes as json if possible,
+    otherwise return the attrs as they are
 
     Parameters
     ----------
-    *subpaths: str
+    attrs: Any
+        an object containing attributes
 
     Returns
-    -------
-    str
-    """
-    valid_subpaths = [path for path in subpaths if path]
-    if not valid_subpaths:
-        return ""
-    return join_eo_path(*valid_subpaths)
-
-
-def partition_eo_path(eo_path: str) -> tuple[str, ...]:
-    """Extract each elements of the eo_path
-
-    Parameters
     ----------
-    eo_path: str
-
-    Returns
-    -------
-    tuple[str, ...]
+    Any
+        either the attributes as json or the attributes as received
     """
-    return PurePosixPath(eo_path).parts
+    from json import JSONDecodeError, loads
 
-
-def upsplit_eo_path(eo_path: str) -> tuple[str, ...]:
-    """Split the given path
-
-    Parameters
-    ----------
-    eo_path: str
-
-    Returns
-    -------
-    tuple[str, ...]
-    """
-    return posixpath.split(eo_path)
+    try:
+        attrs = loads(attrs)
+    except (JSONDecodeError, TypeError):
+        return attrs
 
 
 def downsplit_eo_path(eo_path: str) -> tuple[str, Optional[str]]:
@@ -158,6 +151,87 @@ def is_absolute_eo_path(eo_path: str) -> bool:
     return first_level in ["/", ".."]
 
 
+def join_path(*subpath: str, sep: str = "/") -> str:
+    """Join elements from specific separator
+
+    Parameters
+    ----------
+    *subpath: str
+    sep: str, optional
+        separator
+
+    Returns
+    -------
+    str
+    """
+    return sep.join(subpath)
+
+
+def join_eo_path(*subpaths: str) -> str:
+    """Join eo object paths.
+
+    Parameters
+    ----------
+    *subpaths: str
+
+    Returns
+    -------
+    str
+    """
+    return norm_eo_path(posixpath.join(*subpaths))
+
+
+def join_eo_path_optional(*subpaths: Optional[str]) -> str:
+    """Join eo object paths.
+
+    Parameters
+    ----------
+    *subpaths: str
+
+    Returns
+    -------
+    str
+    """
+    valid_subpaths = [path for path in subpaths if path]
+    if not valid_subpaths:
+        return ""
+    return join_eo_path(*valid_subpaths)
+
+
+def norm_eo_path(eo_path: str) -> str:
+    """Normalize an eo object path.
+
+    Parameters
+    ----------
+    eo_path: str
+
+    Returns
+    -------
+    str
+    """
+    if eo_path == "":
+        raise KeyError("Invalid empty eo_path")
+    eo_path = posixpath.normpath(eo_path)  # Do not use pathlib (does not remove ..)
+    if eo_path.startswith("//"):  # text is a special path so it's not normalised by normpath
+        eo_path = eo_path[1:]
+    return eo_path
+
+
+def parse_xml(path: Any) -> Any:
+    """Parse an XML file and create an object
+
+    Parameters
+    ----------
+    path: str
+        Path to the directory of the product
+    Returns
+    -------
+    Any
+        ElementTree object loaded with source elements :
+    """
+    return etree.parse(path)
+
+
 def product_relative_path(eo_context: str, eo_path: str) -> str:
     """Return eo_path relative to the product (an absolute path without the leading /).
 
@@ -178,43 +252,59 @@ def product_relative_path(eo_context: str, eo_path: str) -> str:
     return first_level_relative_path
 
 
-def conv(obj: Any) -> Any:
-    from numpy import (
-        float16,
-        float32,
-        float64,
-        int16,
-        int32,
-        int64,
-        ndarray,
-        uint16,
-        uint32,
-        uint64,
-    )
+def partition_eo_path(eo_path: str) -> tuple[str, ...]:
+    """Extract each elements of the eo_path
 
-    # check dict
-    if isinstance(obj, dict):
-        return {k: conv(v) for k, v in obj.items()}
+    Parameters
+    ----------
+    eo_path: str
 
-    # check if list or tuple or set
-    if isinstance(obj, (list, tuple, set)):
-        return type(obj)(map(conv, obj))
+    Returns
+    -------
+    tuple[str, ...]
+    """
+    return PurePosixPath(eo_path).parts
 
-    # check numpy
-    if isinstance(obj, ndarray):
-        return conv(obj.tolist())
 
-    # check np int
-    if isinstance(obj, (int64, int32, int16, uint64, uint32, uint16, int)):
-        return int(obj)
+def translate_structure(
+    map_value: Union[dict[Any, Any], str],
+    dom: Any,
+    namespaces: dict[str, str],
+) -> Union[dict[Any, Any], Any]:
+    """Translate the structure into the appropiate data format.
 
-    # check np float
-    if isinstance(obj, (float64, float32, float16, float)):
-        return float(obj)
+    If the map is a dictionary, calls recursively the function in order to
+    assign the values for each key.
+    If the map is a string, calls `apply_xpath` function to determine the value.
 
-    # check str
-    if isinstance(obj, str):
-        return str(obj)
+    Parameters
+    ----------
+    map_value : Union[dict, str]
+        Corresponds either to the xpath value, or to the dictionary of attributes
+    dom : Any
+        The DOM to be parsed with xpath
+    namespaces : dict
+        The associated namespaces
+    Returns
+    -------
+    str
+        Translated structure
+    """
+    if isinstance(map_value, dict):
+        return {attr: translate_structure(map_value[attr], dom, namespaces) for attr in map_value}
+    elif isinstance(map_value, str):
+        return apply_xpath(dom, map_value, namespaces)
 
-    # if no conversion can be done
-    raise TypeError(f"Can NOT convert {obj} of type {type(obj)}")
+
+def upsplit_eo_path(eo_path: str) -> tuple[str, ...]:
+    """Split the given path
+
+    Parameters
+    ----------
+    eo_path: str
+
+    Returns
+    -------
+    tuple[str, ...]
+    """
+    return posixpath.split(eo_path)

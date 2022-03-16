@@ -12,6 +12,7 @@ from typing import (
 )
 
 import xarray
+from dask import array as da
 
 from eopf.product.core.eo_mixins import EOVariableOperatorsMixin
 from eopf.product.core.eo_object import EOObject
@@ -32,10 +33,8 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         name of this group
     data: any, optional
         any data accept by :obj:`xarray.DataArray`
-    product: EOProduct, optional
-        product top level
-    relative_path: Iterable[str], optional
-        list like of string representing the path from the product
+    parent: EOProduct or EOGroup, optional
+        parent to link to this group
     attrs: MutableMapping[str, Any], optional
         attributes to assign
     coords: MutableMapping[str, Any], optional
@@ -66,7 +65,12 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
 
         existing_dims = attrs.pop(_DIMENSIONS_NAME, [])
         if not isinstance(data, (xarray.DataArray, EOVariable)) and data is not None:
-            data = xarray.DataArray(data=data, name=name, attrs=attrs, **kwargs)
+            lazy_data = da.asarray(data)
+            if not hasattr(data, "dtype"):
+                data = xarray.DataArray(data=lazy_data, name=name, attrs=attrs, **kwargs)
+            else:
+                input_dtype = data.dtype
+                data = xarray.DataArray(data=lazy_data, name=name, attrs=attrs, **kwargs).astype(input_dtype)
         if data is None:
             data = xarray.DataArray(name=name, attrs=attrs, **kwargs)
 
@@ -78,10 +82,12 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
     def _init_similar(self, data: xarray.DataArray) -> "EOVariable":
         return EOVariable(name="", data=data)
 
+    # docstr-coverage: inherited
     @property
     def attrs(self) -> dict[str, Any]:
         return self._data.attrs
 
+    # docstr-coverage: inherited
     @property
     def coords(self) -> ValuesView[Any]:
         return self.coordinates.values()
@@ -156,7 +162,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         -------
         chunked : eopf.product.EOVariable
         """
-        self._data = self._data.chunk(chunks, name_prefix=name_prefix, token=token, lock=lock)  # pyre-ignore[6]
+        self._data = self._data.chunk(chunks, name_prefix=name_prefix, token=token, lock=lock)
         return self
 
     def map_chunk(
@@ -201,7 +207,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         --------
         dask.array.map_blocks, xarray.apply_ufunc, xarray.Dataset.map_blocks, xarray.DataArray.map_blocks
         """
-        self._data = self._data.map_blocks(func, args, kwargs, template=template)  # pyre-ignore[6]
+        self._data = self._data.map_blocks(func, args, kwargs, template=template)
         return self
 
     def isel(
@@ -277,6 +283,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
             da.isel(x=[0, 1, 2])[1] = -1
           Assigning values with the chained indexing using ``.sel`` or
           ``.isel`` fails silently.
+
         Parameters
         ----------
         indexers : dict, optional
@@ -303,6 +310,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         **indexers_kwargs : {dim: indexer, ...}, optional
             The keyword arguments form of ``indexers``.
             One of indexers or indexers_kwargs must be provided.
+
         Returns
         -------
         obj : EOVariable
@@ -313,6 +321,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
             In general, each array's data will be a view of the array's data
             in this EOVariable, unless vectorized indexing was triggered by using
             an array indexer, in which case the data will be a copy.
+
         See Also
         --------
         DataArray.isel
@@ -322,8 +331,8 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return EOVariable(
             self.name,
             self._data.sel(
-                indexers=indexers,  # pyre-ignore[6]
-                method=method,  # pyre-ignore[6]
+                indexers=indexers,
+                method=method,
                 tolerance=tolerance,
                 drop=drop,
                 **indexers_kwargs,

@@ -1,10 +1,34 @@
 stages:
-  - test
-  - build
-  - deploy
+- test
+- sonarqube-runner
+- build
+- deploy
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  BRANCH_NAME: $CI_COMMIT_REF_NAME
+  SOURCES: eopf
+  TESTS: tests
+  REPORTS: .reports
+  # SonarQube
+  SQ_PROJECTKEY: eopf-cpm
+  SQ_PROJECTNAME: 'EOPF CPM'
+  SQ_ENCODING: UTF-8
+  SQ_PROJECTBASE: .
+  SQ_LANGUAGE: py
+
+
+workflow:
+  rules:
+  - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    variables:
+      BRANCH_NAME: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+  - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop"
+    variables:
+      BRANCH_NAME: $CI_COMMIT_BRANCH
+  - if: $CI_COMMIT_TAG
+    variables:
+      BRANCH_NAME: $CI_COMMIT_TAG
 
 #############################################
 ############ PIP SECTION #################
@@ -13,70 +37,100 @@ linter:
   stage: test
   image: python:3.9
   before_script:
-    - pip install .[linter]
+  - pip install .[linter]
   script:
-  - python -m flake8 eopf tests
+  - >-
+    python -m flake8 ${SOURCES} ${TESTS}
+    --output-file linter.txt
+  - python -m flake8 ${SOURCES} ${TESTS}
+  artifacts:
+    expire_in: 1h
+    paths:
+    - linter.txt
 
 formater:
   stage: test
   image: python:3.9
   before_script:
-    - pip install .[formatter]
+  - pip install .[formatter]
   script:
   - python -m black --check .
-  - python -m isort eopf tests --check --diff
+  - python -m isort ${SOURCES} ${TESTS} --check --diff
 
 typing:
   stage: test
   image: python:3.9
   before_script:
-    - pip install .[typing]
+  - pip install .[typing]
   script:
-  - python -m mypy eopf
+  - python -m mypy ${SOURCES}
 
 tests:
   stage: test
   image: python:3.9
   before_script:
-    - pip install .[tests] .[notebook]
+  - pip install .[tests] .[notebook]
   script:
-  - python -m pytest --cov=eopf --cov-report=term-missing --cov-fail-under=70 -m unit
+  - >-
+    python -m pytest
+    --cov=${SOURCES}
+    --junit-xml=${REPORTS}/TEST-pytests.xml
+    --cov-report=term-missing
+    --cov-report=xml:${REPORTS}/coverage.xml
+    --cov-fail-under=70 -m unit
+  artifacts:
+    expire_in: 1h
+    reports:
+      cobertura: $REPORTS/coverage.xml
+      junit:
+        - $REPORTS/TEST-*.xml
+    paths:
+    - $REPORTS
 
 security:
   stage: test
   image: python:3.9
   before_script:
-    - pip install .[security]
+  - pip install .[security]
   script:
-  - python -m bandit -c bandit.yml eopf
+  - >-
+    python -m bandit -c bandit.yml -r ${SOURCES}
+    -f json -o vulnerability.json
+  - python -m bandit -c bandit.yml -r ${SOURCES}
+  artifacts:
+    expire_in: 1h
+    paths:
+    - vulnerability.json
 
 deps-sec:
   stage: test
   image: python:3.9
   before_script:
-    - pip install .[security]
+  - pip install .[security]
   script:
-  - safety check
+  - safety check --full-report
   allow_failure: true
 
 docs-cov:
   stage: test
   image: python:3.9
   before_script:
-    - pip install .[doc-cov]
+  - pip install .[doc-cov]
   script:
-  - docstr-coverage eopf -F 20
+  - docstr-coverage -f -P -m -F 30 ${SOURCES} -b docstrcov.svg
+  artifacts:
+    paths:
+    - docstrcov.svg
   allow_failure: true
 
 complexity:
   stage: test
   image: python:3.9
   before_script:
-    - pip install .[complexity]
+  - pip install .[complexity]
   script:
-  - python -m xenon --max-average B --max-modules C --max-absolute D eopf
+  - python -m xenon --max-average B --max-modules C --max-absolute D ${SOURCES}
   allow_failure: true
-
 
 #############################################
 ############# BUILD SECTION #################
@@ -90,12 +144,32 @@ build-package:
     paths:
     - dist/
 
+build-doc:
+  stage: build
+  image: python:3.9
+  variables:
+    GIT_STRATEGY: none
+  before_script:
+  - git clone $CI_REPOSITORY_URL
+  - cd $CI_PROJECT_NAME
+  - git fetch --all
+  - git checkout $BRANCH_NAME
+  script:
+  - pip install .[doc]
+  - cd docs
+  - sphinx-multiversion source ../../docs/build/html
+  artifacts:
+    expire_in: 1h
+    paths:
+    - docs/build/html
+
 #############################################
-############# DEPLOY SECTION #################
+############# DEPLOY SECTION ################
 #############################################
 deploy-package:
   stage: deploy
   image: python:3.9
+  needs: [build-package]
   dependencies:
   - build-package
   script:
@@ -107,18 +181,70 @@ deploy-package:
   rules:
     - if: $CI_COMMIT_TAG
 
+test-pages:
+  stage: deploy
+  image: python:3.9
+  needs: [build-doc]
+  dependencies:
+  - build-doc
+  script:
+    mv docs/build/html test-docs
+  artifacts:
+    paths:
+    - test-docs
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
 pages:
   stage: deploy
   image: python:3.9
+  needs: [build-doc]
+  dependencies:
+  - build-doc
   script:
-  - pip install .[doc]
-  - cd docs
-  - make html
-  # GitLab Pages expects the documentation to be in the 'public'
-  # directory of the repository's root.
-  - mv build/html ../public
+    mv docs/build/html public
   artifacts:
     paths:
     - public
   rules:
-    - if: $CI_COMMIT_TAG
+  - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop") || $CI_COMMIT_TAG
+
+#############################################
+############### SONARQUBE ###################
+#############################################
+sonar-job:
+  stage: sonarqube-runner
+  image: sonarsource/sonar-scanner-cli
+  needs:
+  - tests
+  - linter
+  - security
+  dependencies:
+  - tests
+  - linter
+  - security
+  variables:
+    SONAR_PROJECT_BASE_DIR: "${CI_PROJECT_DIR}"
+    GIT_DEPTH: 0
+  script:
+    - >-
+      sonar-scanner -X
+      -Dsonar.qualitygate.wait=true
+      -Dsonar.host.url=${SQ_URL}
+      -Dsonar.login=${SQ_LOGIN}
+      -Dsonar.projectKey=${SQ_PROJECTKEY}
+      -Dsonar.projectName="${SQ_PROJECTNAME}"
+      -Dsonar.links.homepage=${CI_PROJECT_URL}
+      -Dsonar.projectBaseDir=${SQ_PROJECTBASE}
+      -Dsonar.branch.name=${BRANCH_NAME}
+      -Dsonar.sources=${SOURCES}
+      -Dsonar.tests=${TESTS}
+      -Dsonar.sourceEncoding=${SQ_ENCODING}
+      -Dsonar.language=${SQ_LANGUAGE}
+      -Dsonar.python.version=3
+      -Dsonar.python.flake8.reportPaths="linter.txt"
+      -Dsonar.python.bandit.reportPaths="vulnerability.json"
+      -Dsonar.python.xunit.reportPath="${REPORTS}/TEST-*.xml"
+      -Dsonar.python.coverage.reportPaths="${REPORTS}/coverage.xml"
+  rules:
+  - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop") || $CI_COMMIT_TAG

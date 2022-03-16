@@ -59,22 +59,27 @@ class EOProduct(EOContainer):
         """
         return self.attrs
 
+    # docstr-coverage: inherited
     @property
     def product(self) -> "EOProduct":
         return self
 
+    # docstr-coverage: inherited
     @property
     def store(self) -> Optional[EOProductStore]:
         return self._store
 
+    # docstr-coverage: inherited
     @property
     def path(self) -> str:
         return "/"
 
+    # docstr-coverage: inherited
     @property
     def relative_path(self) -> Iterable[str]:
         return []
 
+    # docstr-coverage: inherited
     @property
     def name(self) -> str:
         return self._name
@@ -163,10 +168,11 @@ class EOProduct(EOContainer):
         exc_value: Optional[BaseException],
         traceback: Optional[TracebackType],
     ) -> None:
-        if self.store is None:
+        if self.store is None:  # pragma: no cover
             raise StoreNotDefinedError("Store must be defined")
         self.store.close()
 
+    # docstr-coverage: inherited
     def get_coordinate(self, name: str, context: Optional[str] = None) -> EOVariable:
         if context is None:
             context = self.path
@@ -203,12 +209,12 @@ class EOProduct(EOContainer):
             Instance of EOProduct if the environment is interactive (e.g. Jupyter Notebook)
             Oterwise, returns None.
         """
-        try:
+        try:  # pragma: no cover
             from IPython import get_ipython
 
             if get_ipython():
                 return self
-        except ModuleNotFoundError:
+        except ModuleNotFoundError:  # pragma: no cover
             import warnings
 
             warnings.warn("IPython not found")
@@ -221,10 +227,11 @@ class EOProduct(EOContainer):
     def coordinates(self) -> EOGroup:
         """EOGroup: Coordinates mandatory group"""
         coords = self.get("coordinates")
-        if not isinstance(coords, EOGroup):
+        if not isinstance(coords, EOGroup):  # pragma: no cover (theorically impossible)
             raise InvalidProductError("coordinates must be defined at product level and must be an EOGroup")
         return coords
 
+    # docstr-coverage: inherited
     def write(self) -> None:
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
@@ -233,6 +240,7 @@ class EOProduct(EOContainer):
         self.store.write_attrs("", attrs=self.attrs)
         return super().write()
 
+    # docstr-coverage: inherited
     def load(self) -> None:
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
