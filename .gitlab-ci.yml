@@ -26,6 +26,9 @@ workflow:
   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop"
     variables:
       BRANCH_NAME: $CI_COMMIT_BRANCH
+  - if: $CI_COMMIT_TAG
+    variables:
+      BRANCH_NAME: $CI_COMMIT_TAG
 
 #############################################
 ############ PIP SECTION #################
@@ -190,7 +193,7 @@ test-pages:
     paths:
     - test-docs
   rules:
-    - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 pages:
   stage: deploy
@@ -204,7 +207,7 @@ pages:
     paths:
     - public
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop") || $CI_COMMIT_TAG
 
 #############################################
 ############### SONARQUBE ###################
@@ -243,3 +246,5 @@ sonar-job:
       -Dsonar.python.bandit.reportPaths="vulnerability.json"
       -Dsonar.python.xunit.reportPath="${REPORTS}/TEST-*.xml"
       -Dsonar.python.coverage.reportPaths="${REPORTS}/coverage.xml"
+  rules:
+  - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop") || $CI_COMMIT_TAG
