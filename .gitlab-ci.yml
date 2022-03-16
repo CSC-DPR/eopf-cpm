@@ -233,6 +233,7 @@ sonar-job:
       -Dsonar.projectName="${SQ_PROJECTNAME}"
       -Dsonar.links.homepage=${CI_PROJECT_URL}
       -Dsonar.projectBaseDir=${SQ_PROJECTBASE}
+      -Dsonar.branch.name=${BRANCH_NAME}
       -Dsonar.sources=${SOURCES}
       -Dsonar.tests=${TESTS}
       -Dsonar.sourceEncoding=${SQ_ENCODING}
