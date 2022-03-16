@@ -1,6 +1,6 @@
 [![Pipeline status](https://gitlab.csc-eopf.csgroup.space/cpm/eopf-cpm/badges/main/pipeline.svg)](https://github.com/CSC-DPR/eopf-cpm/tree/main)
 [![Test coverage](https://gitlab.csc-eopf.csgroup.space/cpm/eopf-cpm/badges/main/coverage.svg)](https://github.com/CSC-DPR/eopf-cpm/tree/main)
-[![Doc coverage](https://gitlab.csc-eopf.csgroup.space/cpm/eopf-cpm/-/jobs/main/artifacts/raw/docstrcov.svg?job=docs-cov)](https://github.com/CSC-DPR/eopf-cpm/tree/main)
+[![Doc coverage](https://gitlab.csc-eopf.csgroup.space/cpm/eopf-cpm/-/jobs/artifacts/main/raw/docstrcov.svg?job=docs-cov)](https://github.com/CSC-DPR/eopf-cpm/tree/main)
 
 
 # eopf-cpm
