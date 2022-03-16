@@ -3,12 +3,13 @@ from typing import (
     Any,
     Callable,
     Hashable,
+    Iterable,
     Iterator,
     Mapping,
     MutableMapping,
     Optional,
     Union,
-    ValuesView, Iterable,
+    ValuesView,
 )
 
 import xarray
@@ -78,6 +79,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return EOVariable(name="", data=data)
 
     def assign_dims(self, dims: Iterable[str]) -> None:
+        dims = tuple(dims)
         if len(dims) != len(self._data.dims):
             raise ValueError("Invalid number of dimensions.")
         self._data.rename(zip(self._data.dims, dims))
