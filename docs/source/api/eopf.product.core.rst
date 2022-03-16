@@ -1,6 +1,11 @@
 eopf.product.core package
 =========================
 
+.. automodule:: eopf.product.core
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Submodules
 ----------
 
@@ -56,14 +61,6 @@ eopf.product.core.eo\_variable module
 -------------------------------------
 
 .. automodule:: eopf.product.core.eo_variable
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: eopf.product.core
    :members:
    :undoc-members:
    :show-inheritance:

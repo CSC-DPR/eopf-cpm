@@ -21,6 +21,7 @@ def renderer(template_name: str, **parameters: Any) -> str:
     Returns
     -------
     str
+        jinja template rendered
     """
 
     def human_readable_attrs(value: dict[str, Any]) -> str:

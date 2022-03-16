@@ -34,10 +34,8 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         name of this group
     data: any, optional
         any data accept by :obj:`xarray.DataArray`
-    product: EOProduct, optional
-        product top level
-    relative_path: Iterable[str], optional
-        list like of string representing the path from the product
+    parent: EOProduct or EOGroup, optional
+        parent to link to this group
     attrs: MutableMapping[str, Any], optional
         attributes to assign
     dims: tuple[str], optional
@@ -66,7 +64,11 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         existing_dims = attrs.pop(_DIMENSIONS_NAME, [])
         if not isinstance(data, (xarray.DataArray, EOVariable)) and data is not None:
             lazy_data = da.asarray(data)
-            data = xarray.DataArray(data=lazy_data, name=name, attrs=attrs, **kwargs)
+            if not hasattr(data, "dtype"):
+                data = xarray.DataArray(data=lazy_data, name=name, attrs=attrs, **kwargs)
+            else:
+                input_dtype = data.dtype
+                data = xarray.DataArray(data=lazy_data, name=name, attrs=attrs, **kwargs).astype(input_dtype)
         if data is None:
             data = xarray.DataArray(name=name, attrs=attrs, **kwargs)
 
@@ -85,10 +87,12 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         self._data.rename(zip(self._data.dims, dims))
         super().assign_dims(dims)
 
+    # docstr-coverage: inherited
     @property
     def attrs(self) -> dict[str, Any]:
         return self._data.attrs
 
+    # docstr-coverage: inherited
     @property
     def coords(self) -> ValuesView[Any]:
         return self.coordinates.values()
@@ -284,6 +288,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
             da.isel(x=[0, 1, 2])[1] = -1
           Assigning values with the chained indexing using ``.sel`` or
           ``.isel`` fails silently.
+
         Parameters
         ----------
         indexers : dict, optional
@@ -310,6 +315,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         **indexers_kwargs : {dim: indexer, ...}, optional
             The keyword arguments form of ``indexers``.
             One of indexers or indexers_kwargs must be provided.
+
         Returns
         -------
         obj : EOVariable
@@ -320,6 +326,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
             In general, each array's data will be a view of the array's data
             in this EOVariable, unless vectorized indexing was triggered by using
             an array indexer, in which case the data will be a copy.
+
         See Also
         --------
         DataArray.isel
