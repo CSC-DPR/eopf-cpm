@@ -71,7 +71,7 @@ def product() -> EOProduct:
         product["measurements/group1"].add_variable("group2/variable_b")
         product["measurements/group1"]["group2"].add_variable(
             "/measurements/group1/group2/variable_c",
-            np.array([[1,2,3],[4,5,6]]),
+            np.array([[1, 2, 3], [4, 5, 6]]),
             dims=["c1", "c2"],
         )
         product.measurements.group1.group2.assign_dims(["c1"])
@@ -165,31 +165,19 @@ def test_invalids_add(product):
 
 @pytest.mark.unit
 def test_coordinates(product):
-    paths = [
-        "measurements",
-        "measurements/group1",
-        "measurements/group1/group2",
-        "measurements/group1/group2/variable_c",
-    ]
-    product.measurements.assign_dims(["c1"])
-    c1 = {p: product[p].coordinates["c1"] for p in paths}
-    c2 = product.measurements.group1.coordinates["c2"]
+    def test_has_coords(obj, coords):
+        assert len(obj.coordinates) == len(coords)
+        for c in obj.coordinates:
+            assert c in coords
 
-    assert set(product["measurements/group1"].coordinates.keys()) == {"c1", "c2", "group2"}
-    assert np.all(product.coordinates[key] == value for key, value in product.measurements.group1.coordinates.items())
-    assert product.get_coordinate("c1") == product.coordinates.c1
-    with pytest.raises(KeyError, match=r"Unknown coordinate [\w]+ in context [\S]+ \."):
-        product.get_coordinate("fake_one")
+    c1_coords = ["coordinates/coord_a"]
+    c2_coords = ["coordinates/coord_b", "coordinates/coord_d"]
 
-    for p in paths:
-        container = product[p] if p != "/" else product
-        assert container.get_coordinate("c1") == c1[p]
-        coord = container.get_coordinate("c2")
-        assert coord.path == c2.path
-        assert coord == c2
-        if "group1" not in p:
-            with pytest.raises(KeyError):
-                container.coordinates["c2"]
+    test_has_coords(product["measurements/group1/variable_a"], [])
+    test_has_coords(product["measurements/group1"], c1_coords + c2_coords)
+    test_has_coords(product["measurements/group1/group2/variable_c"], c1_coords + c2_coords)
+    test_has_coords(product["measurements/group1/group2"], c1_coords)
+    test_has_coords(product["measurements"], [])
 
 
 @pytest.mark.unit
@@ -367,7 +355,7 @@ def test_write_product(product):
     ):
         product.write()
 
-    assert mock_method.call_count == 19
+    assert mock_method.call_count == 21
     assert product._store is not None, "store must be set"
 
     product._store = None
