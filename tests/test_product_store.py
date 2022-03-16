@@ -116,7 +116,7 @@ def test_load_product_from_zarr(zarr_file: str, fs: FakeFilesystem):
         EOVariable,
         "/measurements/geo_position/altitude/",
     )
-    coords = ["coordinates/grid/radiance", "coordinates/tie_point/radiance"]
+    coords = ["/coordinates/grid/radiance", "/coordinates/tie_point/radiance"]
     assert_has_coords(product.measurements.geo_position.altitude.polarian, coords)
     assert_contain(
         product.measurements.geo_position.altitude,
@@ -194,7 +194,7 @@ def test_write_stores(fs: FakeFilesystem, store: EOProductStore, decoder_type: A
     store["a_group"] = EOGroup()
     store.write_attrs("a_group", attrs={"description": "value"})
     store["a_group/a_variable"] = EOVariable(data=[])
-    store["coordinates/a_coord"] = EOVariable(data=[1, 2, 3])
+    store["coordinates/a_coord"] = EOVariable(data=[1, 2, 3], dims=["a"])
     store.close()
 
     decoder = decoder_type(store.url, mode="r")
