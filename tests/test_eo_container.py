@@ -19,7 +19,7 @@ from eopf.product.core import EOGroup, EOProduct, EOVariable
 from eopf.product.store import EOProductStore
 from eopf.product.utils import upsplit_eo_path
 
-from .utils import assert_contain, compute_tree_structure
+from .utils import assert_contain, assert_has_coords, compute_tree_structure
 
 
 class EmptyTestStore(EOProductStore):
@@ -165,19 +165,15 @@ def test_invalids_add(product):
 
 @pytest.mark.unit
 def test_coordinates(product):
-    def test_has_coords(obj, coords):
-        assert len(obj.coordinates) == len(coords)
-        for c in obj.coordinates:
-            assert c in coords
 
     c1_coords = ["coordinates/coord_a"]
     c2_coords = ["coordinates/coord_b", "coordinates/coord_d"]
 
-    test_has_coords(product["measurements/group1/variable_a"], [])
-    test_has_coords(product["measurements/group1"], c1_coords + c2_coords)
-    test_has_coords(product["measurements/group1/group2/variable_c"], c1_coords + c2_coords)
-    test_has_coords(product["measurements/group1/group2"], c1_coords)
-    test_has_coords(product["measurements"], [])
+    assert_has_coords(product["measurements/group1/variable_a"], [])
+    assert_has_coords(product["measurements/group1"], c1_coords + c2_coords)
+    assert_has_coords(product["measurements/group1/group2/variable_c"], c1_coords + c2_coords)
+    assert_has_coords(product["measurements/group1/group2"], c1_coords)
+    assert_has_coords(product["measurements"], [])
 
 
 @pytest.mark.unit

@@ -1,6 +1,16 @@
-from typing import Any
+from typing import TYPE_CHECKING, Any, Union
 
 from eopf.product.core.eo_container import EOContainer
+
+if TYPE_CHECKING:  # pragma: no cover
+    from eopf.product.core.eo_object import EOObject
+
+
+def assert_has_coords(obj: "EOObject", coords: list[Union[str, "EOObject"]]):
+    """Assert that"""
+    assert len(obj.coordinates) == len(coords)
+    for c in obj.coordinates:
+        assert c in coords
 
 
 def group_details(section_detail: dict, section_structure: dict) -> None:

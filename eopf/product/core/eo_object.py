@@ -10,7 +10,8 @@ if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_product import EOProduct
 
 
-_DIMENSIONS_NAME = "_EOPF_DIMENSIONS"
+# Must match xarray zarr one for cross compatibility.
+_DIMENSIONS_NAME = "_ARRAY_DIMENSIONS"
 
 
 class EOObject(EOAbstract):
@@ -88,7 +89,7 @@ class EOObject(EOAbstract):
     @property
     def dims(self) -> tuple[str, ...]:
         """tupple[str, ...]: dimensions"""
-        return self.attrs.get(_DIMENSIONS_NAME, tuple())
+        return tuple(self.attrs.get(_DIMENSIONS_NAME, tuple()))
 
     @property
     def name(self) -> str:
