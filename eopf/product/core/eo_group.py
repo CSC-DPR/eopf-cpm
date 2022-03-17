@@ -136,7 +136,7 @@ class EOGroup(EOContainer, EOObject):
         for var_name, item in self._variables.items():
             self.store[self._store_key(var_name)] = item
 
-    def _find_by_dim(self, dims: Iterable[str], shape: Optional[tuple[int]] = None) -> list["EOObject"]:
+    def _find_by_dim(self, dims: Iterable[str], shape: Optional[tuple[int, ...]] = None) -> list["EOObject"]:
         var_found = super()._find_by_dim(dims, shape)
         for path in self:
             var_found += self[path]._find_by_dim(dims, shape)

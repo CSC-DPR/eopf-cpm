@@ -1,6 +1,8 @@
 from types import MappingProxyType
 from typing import TYPE_CHECKING, Iterable, Optional
 
+from xarray.backends import zarr
+
 from eopf.exceptions import EOObjectMultipleParentError, InvalidProductError
 from eopf.product.core.eo_abstract import EOAbstract
 from eopf.product.store.abstract import EOProductStore
@@ -12,7 +14,7 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 # Must match xarray zarr one for cross compatibility.
-_DIMENSIONS_NAME = "_ARRAY_DIMENSIONS"
+_DIMENSIONS_NAME = zarr.DIMENSION_KEY
 
 
 class EOObject(EOAbstract):
@@ -81,7 +83,7 @@ class EOObject(EOAbstract):
 
     @property
     def coordinates(self) -> MappingProxyType[str, "EOObject"]:
-        """Iterable[EOObject]: Coordinates defined by this object"""
+        """MappingProxyType[str, "EOObject"]: Coordinates defined by this object"""
         coords_group = self.product.coordinates
         coords_list = coords_group._find_by_dim(self.dims)
         return MappingProxyType({coord.path: coord for coord in coords_list})
@@ -138,7 +140,7 @@ class EOObject(EOAbstract):
     def store(self) -> Optional[EOProductStore]:
         return self.product.store
 
-    def _find_by_dim(self, dims: Iterable[str], shape: Optional[tuple[int]] = None) -> list["EOObject"]:
+    def _find_by_dim(self, dims: Iterable[str], shape: Optional[tuple[int, ...]] = None) -> list["EOObject"]:
         for dim_index, dim_name in enumerate(dims):
             if dim_name in self.dims:
                 if shape:
