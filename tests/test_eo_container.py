@@ -16,10 +16,11 @@ from eopf.exceptions import (
 )
 from eopf.product.conveniences import init_product
 from eopf.product.core import EOGroup, EOProduct, EOVariable
+from eopf.product.core.eo_object import _DIMENSIONS_NAME
 from eopf.product.store import EOProductStore
 from eopf.product.utils import upsplit_eo_path
 
-from .utils import assert_contain, compute_tree_structure
+from .utils import assert_contain, assert_has_coords, compute_tree_structure
 
 
 class EmptyTestStore(EOProductStore):
@@ -62,8 +63,7 @@ def product() -> EOProduct:
     with product.open(mode="w"):
         product.add_group(
             "measurements/group1",
-            coords={"c1": [2], "c2": [3], "group2": [4]},
-            dims=["c1", "c2", "group2"],
+            dims=("c1", "c2", "group2"),
         )
         product.add_group("group0")
 
@@ -72,6 +72,7 @@ def product() -> EOProduct:
         product["measurements/group1"].add_variable("group2/variable_b")
         product["measurements/group1"]["group2"].add_variable(
             "/measurements/group1/group2/variable_c",
+            np.array([[1, 2, 3], [4, 5, 6]]),
             dims=["c1", "c2"],
         )
         product.measurements.group1.group2.assign_dims(["c1"])
@@ -84,6 +85,11 @@ def product() -> EOProduct:
         product["measurements"]["group1"].add_group("group2b")
         product.measurements["group1"].add_group("/measurements/group1/group2b/group3")
         product.add_group("measurements/group1/group2b/group3b")
+
+        product.add_variable("coordinates/coord_a", data=[1], dims=["c1"])
+        product.add_variable("coordinates/coord_b", data=[1], dims=["c3"])
+        product.add_variable("coordinates/g1/coord_c", data=[1], dims=["c2"])
+        product.add_variable("coordinates/coord_d", data=[1], dims=["c2"])
 
     return product
 
@@ -160,31 +166,15 @@ def test_invalids_add(product):
 
 @pytest.mark.unit
 def test_coordinates(product):
-    paths = [
-        "measurements",
-        "measurements/group1",
-        "measurements/group1/group2",
-        "measurements/group1/group2/variable_c",
-    ]
-    product.measurements.assign_dims(["c1"])
-    c1 = {p: product[p].coordinates["c1"] for p in paths}
-    c2 = product.measurements.group1.coordinates["c2"]
 
-    assert set(product["measurements/group1"].coordinates.keys()) == {"c1", "c2", "group2"}
-    assert np.all(product.coordinates[key] == value for key, value in product.measurements.group1.coordinates.items())
-    assert product.get_coordinate("c1") == product.coordinates.c1
-    with pytest.raises(KeyError, match=r"Unknown coordinate [\w]+ in context [\S]+ \."):
-        product.get_coordinate("fake_one")
+    c1_coords = ["/coordinates/coord_a"]
+    c2_coords = ["/coordinates/g1/coord_c", "/coordinates/coord_d"]
 
-    for p in paths:
-        container = product[p] if p != "/" else product
-        assert container.get_coordinate("c1") == c1[p]
-        coord = container.get_coordinate("c2")
-        assert coord.path == c2.path
-        assert coord == c2
-        if "group1" not in p:
-            with pytest.raises(KeyError):
-                container.coordinates["c2"]
+    assert_has_coords(product["measurements/group1/variable_a"], [])
+    assert_has_coords(product["measurements/group1"], c1_coords + c2_coords)
+    assert_has_coords(product["measurements/group1/group2/variable_c"], c1_coords + c2_coords)
+    assert_has_coords(product["measurements/group1/group2"], c1_coords)
+    assert_has_coords(product["measurements"], [])
 
 
 @pytest.mark.unit
@@ -362,7 +352,7 @@ def test_write_product(product):
     ):
         product.write()
 
-    assert mock_method.call_count == 19
+    assert mock_method.call_count == 21
     assert product._store is not None, "store must be set"
 
     product._store = None
@@ -422,12 +412,27 @@ def test_product_tree(capsys):
 def test_hierarchy_html(product):
     tree = etree.HTML(product._repr_html_())
     tree_structure = compute_tree_structure(tree)
+    dim_attr_key = _DIMENSIONS_NAME
     assert tree_structure == {
         "product_name": {
             "coordinates": {
-                "c1": {"dims": ("dim_0",), "attrs": {"_EOPF_DIMENSIONS": ["dim_0"]}, "coords": []},
-                "c2": {"dims": ("dim_0",), "attrs": {"_EOPF_DIMENSIONS": ["dim_0"]}, "coords": []},
-                "group2": {"dims": ("dim_0",), "attrs": {"_EOPF_DIMENSIONS": ["dim_0"]}, "coords": []},
+                "coord_a": {"dims": ("c1",), "attrs": {dim_attr_key: ["c1"]}, "coords": ["/coordinates/coord_a"]},
+                "coord_b": {"dims": ("c3",), "attrs": {dim_attr_key: ["c3"]}, "coords": ["/coordinates/coord_b"]},
+                "coord_d": {
+                    "dims": ("c2",),
+                    "attrs": {dim_attr_key: ["c2"]},
+                    "coords": ["/coordinates/g1/coord_c", "/coordinates/coord_d"],
+                },
+                "g1": {
+                    "coord_c": {
+                        "attrs": {"_ARRAY_DIMENSIONS": ["c2"]},
+                        "coords": ["/coordinates/g1/coord_c", "/coordinates/coord_d"],
+                        "dims": ("c2",),
+                    },
+                    "dims": (),
+                    "attrs": {},
+                    "coords": [],
+                },
                 "dims": (),
                 "attrs": {},
                 "coords": [],
@@ -438,12 +443,12 @@ def test_hierarchy_html(product):
                         "variable_b": {"dims": (), "attrs": {}, "coords": []},
                         "variable_c": {
                             "dims": ("c1", "'c2"),
-                            "attrs": {"_EOPF_DIMENSIONS": ["c1", "c2"]},
-                            "coords": ["c1", "c2"],
+                            "attrs": {dim_attr_key: ["c1", "c2"]},
+                            "coords": ["/coordinates/g1/coord_c", "/coordinates/coord_a", "/coordinates/coord_d"],
                         },
                         "variable_d": {"dims": (), "attrs": {}, "coords": []},
                         "dims": (),
-                        "attrs": {"_EOPF_DIMENSIONS": ["c1"]},
+                        "attrs": {dim_attr_key: ["c1"]},
                         "coords": [],
                     },
                     "group2b": {
@@ -455,7 +460,7 @@ def test_hierarchy_html(product):
                     },
                     "variable_a": {"dims": (), "attrs": {}, "coords": []},
                     "dims": (),
-                    "attrs": {"_EOPF_DIMENSIONS": ["c1", "c2", "group2"]},
+                    "attrs": {dim_attr_key: ["c1", "c2", "group2"]},
                     "coords": [],
                 },
                 "group3": {

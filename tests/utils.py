@@ -1,6 +1,16 @@
-from typing import Any
+from typing import TYPE_CHECKING, Any, Union
 
 from eopf.product.core.eo_container import EOContainer
+
+if TYPE_CHECKING:  # pragma: no cover
+    from eopf.product.core.eo_object import EOObject
+
+
+def assert_has_coords(obj: "EOObject", coords: list[Union[str, "EOObject"]]):
+    """Assert that"""
+    assert len(obj.coordinates) == len(coords)
+    for c in obj.coordinates:
+        assert c in coords
 
 
 def group_details(section_detail: dict, section_structure: dict) -> None:
@@ -57,7 +67,7 @@ def _compute_rec(node):
     if node_attrs:
         attrs = json.loads(node_attrs[0].text)
         if len(node_attrs) > 1:
-            coords = [i.text.strip().split("coordinates -> ")[-1] for i in node_attrs[1:]]
+            coords = [i.text for i in node_attrs[1:]]
 
     node_dims = node.xpath('div/ul/li/div/div[@class="eopf-section-inline-details"]')
     dims = []

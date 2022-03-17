@@ -4,6 +4,7 @@ import shutil
 from typing import Any, Optional
 
 import hypothesis.strategies as st
+import numpy as np
 import pytest
 import xarray
 import zarr
@@ -18,7 +19,7 @@ from eopf.product.store import EONetCDFStore, EOProductStore, EOZarrStore, conve
 from eopf.product.store.manifest import ManifestStore
 
 from .decoder import Netcdfdecoder
-from .utils import assert_contain, couple_combinaison_from
+from .utils import assert_contain, assert_has_coords, couple_combinaison_from
 
 _FILES = {
     "netcdf": "test_ncdf_file_.nc",
@@ -34,7 +35,7 @@ _FILES = {
 @pytest.fixture
 def zarr_file(fs: FakeFilesystem):
     file_name = f"file://{_FILES['zarr']}"
-    dims = "_EOPF_DIMENSIONS"
+    dims = "_ARRAY_DIMENSIONS"
 
     root = zarr.open(file_name, mode="w")
     root.attrs["top_level"] = True
@@ -43,11 +44,15 @@ def zarr_file(fs: FakeFilesystem):
     root["coordinates"].attrs["description"] = "coordinates Data Group"
     root["coordinates"].create_group("grid")
     root["coordinates"].create_group("tie_point")
-    xarray.Dataset({"radiance": ["rows", "columns"], "orphan": ["depths", "length"]}).to_zarr(
+    xarray.Dataset(
+        {"radiance": (("rows", "columns"), np.zeros((2, 3))), "orphan": (("depths", "length"), np.zeros((2, 3)))},
+    ).to_zarr(
         store=f"{file_name}/coordinates/grid",
         mode="a",
     )
-    xarray.Dataset({"radiance": ["rows", "columns"], "orphan": ["depths", "length"]}).to_zarr(
+    xarray.Dataset(
+        {"radiance": (("rows", "columns"), np.zeros((2, 3))), "orphan": (("depths", "length"), np.zeros((2, 3)))},
+    ).to_zarr(
         store=f"{file_name}/coordinates/tie_point",
         mode="a",
     )
@@ -61,20 +66,20 @@ def zarr_file(fs: FakeFilesystem):
 
     xarray.Dataset(
         {
-            "polarian": xarray.DataArray([[12, 4], [3, 8]], attrs={dims: ["grid/radiance"]}),
-            "cartesian": xarray.DataArray([[5, -3], [-55, 66]], attrs={dims: ["tie_point/orphan"]}),
+            "polarian": xarray.DataArray([[12, 4], [3, 8]], attrs={dims: ["rows", "dim2"]}),
+            "cartesian": xarray.DataArray([[5, -3], [-55, 66]], attrs={dims: ["rows", "dim2"]}),
         },
     ).to_zarr(store=f"{file_name}/measurements/geo_position/altitude", mode="a")
     xarray.Dataset(
         {
-            "polarian": xarray.DataArray([[1, 2], [3, 4]], attrs={dims: ["grid/radiance"]}),
-            "cartesian": xarray.DataArray([[9, 7], [-12, 81]], attrs={dims: ["tie_point/orphan"]}),
+            "polarian": xarray.DataArray([[1, 2], [3, 4]], attrs={dims: ["rows", "dim2"]}),
+            "cartesian": xarray.DataArray([[9, 7], [-12, 81]], attrs={dims: ["rows", "dim2"]}),
         },
     ).to_zarr(store=f"{file_name}/measurements/geo_position/latitude", mode="a")
     xarray.Dataset(
         {
-            "polarian": xarray.DataArray([[6, 7], [2, 1]], attrs={dims: ["tie_point/radiance"]}),
-            "cartesian": xarray.DataArray([[25, 0], [-5, 72]], attrs={dims: ["grid/orphan"]}),
+            "polarian": xarray.DataArray([[6, 7, 8], [2, 1, -6]], attrs={dims: ["rows", "columns"]}),
+            "cartesian": xarray.DataArray([[25, 0, 11], [-5, 72, 44]], attrs={dims: ["rows", "columns"]}),
         },
     ).to_zarr(store=f"{file_name}/measurements/geo_position/longitude", mode="a")
     return file_name
@@ -111,15 +116,15 @@ def test_load_product_from_zarr(zarr_file: str, fs: FakeFilesystem):
         EOVariable,
         "/measurements/geo_position/altitude/",
     )
-
-    assert isinstance(product.measurements.geo_position.altitude.polarian.coordinates["grid/radiance"], EOVariable)
+    coords = ["/coordinates/grid/radiance", "/coordinates/tie_point/radiance"]
+    assert_has_coords(product.measurements.geo_position.altitude.polarian, coords)
     assert_contain(
         product.measurements.geo_position.altitude,
         "cartesian",
         EOVariable,
         "/measurements/geo_position/altitude/",
     )
-    assert isinstance(product.measurements.geo_position.altitude.cartesian.coordinates["tie_point/orphan"], EOVariable)
+    assert_has_coords(product.measurements.geo_position.altitude.cartesian, coords)
 
     assert_contain(
         product.measurements.geo_position.latitude,
@@ -127,14 +132,14 @@ def test_load_product_from_zarr(zarr_file: str, fs: FakeFilesystem):
         EOVariable,
         "/measurements/geo_position/latitude/",
     )
-    assert isinstance(product.measurements.geo_position.latitude.polarian.coordinates["grid/radiance"], EOVariable)
+    assert_has_coords(product.measurements.geo_position.latitude.polarian, coords)
     assert_contain(
         product.measurements.geo_position.latitude,
         "cartesian",
         EOVariable,
         "/measurements/geo_position/latitude/",
     )
-    assert isinstance(product.measurements.geo_position.latitude.cartesian.coordinates["tie_point/orphan"], EOVariable)
+    assert_has_coords(product.measurements.geo_position.latitude.cartesian, coords)
 
     assert_contain(
         product.measurements.geo_position.longitude,
@@ -142,17 +147,14 @@ def test_load_product_from_zarr(zarr_file: str, fs: FakeFilesystem):
         EOVariable,
         "/measurements/geo_position/longitude/",
     )
-    assert isinstance(
-        product.measurements.geo_position.longitude.polarian.coordinates["tie_point/radiance"],
-        EOVariable,
-    )
+    assert_has_coords(product.measurements.geo_position.longitude.polarian, coords)
     assert_contain(
         product.measurements.geo_position.longitude,
         "cartesian",
         EOVariable,
         "/measurements/geo_position/longitude/",
     )
-    assert isinstance(product.measurements.geo_position.longitude.cartesian.coordinates["grid/orphan"], EOVariable)
+    assert_has_coords(product.measurements.geo_position.longitude.cartesian, coords)
 
     with pytest.raises(KeyError):
         assert_contain(product, "measurements/group2", EOGroup)
@@ -192,7 +194,7 @@ def test_write_stores(fs: FakeFilesystem, store: EOProductStore, decoder_type: A
     store["a_group"] = EOGroup()
     store.write_attrs("a_group", attrs={"description": "value"})
     store["a_group/a_variable"] = EOVariable(data=[])
-    store["coordinates/a_coord"] = EOVariable(data=[1, 2, 3])
+    store["coordinates/a_coord"] = EOVariable(data=[1, 2, 3], dims=["a"])
     store.close()
 
     decoder = decoder_type(store.url, mode="r")

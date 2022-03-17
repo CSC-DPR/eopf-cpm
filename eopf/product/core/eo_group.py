@@ -1,5 +1,5 @@
 from collections.abc import MutableMapping
-from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
+from typing import TYPE_CHECKING, Any, Iterable, Iterator, Optional, Union
 
 from eopf.exceptions import StoreNotDefinedError
 from eopf.product.core.eo_container import EOContainer
@@ -31,8 +31,6 @@ class EOGroup(EOContainer, EOObject):
         dict-like object with name as key and :obj:`EOVariable` as value to set
     attrs: MutableMapping[str, Any], optional
         attributes to assign
-    coords: MutableMapping[str, Any], optional
-        coordinates to assign
     dims: tuple[str], optional
         dimensions to assign
 
@@ -52,7 +50,6 @@ class EOGroup(EOContainer, EOObject):
         parent: Optional[Union["EOProduct", "EOGroup"]] = None,
         variables: Optional[MutableMapping[str, EOVariable]] = None,
         attrs: Optional[MutableMapping[str, Any]] = None,
-        coords: MutableMapping[str, Any] = {},
         dims: tuple[str, ...] = tuple(),
     ) -> None:
         EOContainer.__init__(self, attrs=attrs)
@@ -66,7 +63,7 @@ class EOGroup(EOContainer, EOObject):
                 if not isinstance(key, str):
                     raise TypeError(f"The dataset key {str(key)} is type {type(key)} instead of str")
         self._variables = dict(variables)
-        EOObject.__init__(self, name, parent, coords=coords, dims=dims)
+        EOObject.__init__(self, name, parent, dims=dims)
 
     # docstr-coverage: inherited
     def _get_item(self, key: str) -> "EOObject":
@@ -138,3 +135,9 @@ class EOGroup(EOContainer, EOObject):
         super().write()
         for var_name, item in self._variables.items():
             self.store[self._store_key(var_name)] = item
+
+    def _find_by_dim(self, dims: Iterable[str], shape: Optional[tuple[int, ...]] = None) -> list["EOObject"]:
+        var_found = super()._find_by_dim(dims, shape)
+        for path in self:
+            var_found += self[path]._find_by_dim(dims, shape)
+        return var_found

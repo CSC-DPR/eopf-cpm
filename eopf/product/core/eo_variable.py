@@ -3,6 +3,7 @@ from typing import (
     Any,
     Callable,
     Hashable,
+    Iterable,
     Iterator,
     Mapping,
     MutableMapping,
@@ -37,8 +38,6 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         parent to link to this group
     attrs: MutableMapping[str, Any], optional
         attributes to assign
-    coords: MutableMapping[str, Any], optional
-        coordinates to assign
     dims: tuple[str], optional
         dimensions to assign
     **kwargs: Any
@@ -55,7 +54,6 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         data: Optional[Any] = None,
         parent: Optional["EOContainer"] = None,
         attrs: Optional[MutableMapping[str, Any]] = None,
-        coords: MutableMapping[str, Any] = {},
         dims: tuple[str, ...] = tuple(),
         **kwargs: Any,
     ):
@@ -77,10 +75,17 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         if not dims:
             dims = existing_dims or data.dims
         self._data: xarray.DataArray = data
-        EOObject.__init__(self, name, parent, coords=coords, dims=tuple(dims))
+        EOObject.__init__(self, name, parent, dims=tuple(dims))
 
     def _init_similar(self, data: xarray.DataArray) -> "EOVariable":
         return EOVariable(name="", data=data)
+
+    def assign_dims(self, dims: Iterable[str]) -> None:
+        dims = tuple(dims)
+        if len(dims) != len(self._data.dims):
+            raise ValueError("Invalid number of dimensions.")
+        self._data.rename(zip(self._data.dims, dims))
+        super().assign_dims(dims)
 
     # docstr-coverage: inherited
     @property
@@ -357,6 +362,10 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         except Exception as e:
             warnings.warn(f"Cannot display plot. Error {e}")
 
+    @property
+    def shape(self) -> tuple[int, ...]:
+        return self._data.shape
+
     def __getitem__(self, key: Any) -> "EOVariable":
         return EOVariable(key, self._data[key])
 
@@ -374,10 +383,10 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return len(self._data)
 
     def __str__(self) -> str:
-        return self.__repr__()
+        return self.path
 
     def __repr__(self) -> str:
-        return f'{self.product!r} -> {"->".join(self.relative_path)} -> {self.name}'
+        return self.__str__()
 
     def _repr_html_(self) -> str:
         return renderer("variable.html", variable=self)
