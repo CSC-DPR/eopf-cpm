@@ -158,6 +158,7 @@ build-doc:
   - pip install .[doc]
   - cd docs
   - sphinx-multiversion source ../../docs/build/html
+  - mv source/_redirects ../../docs/build/html
   artifacts:
     expire_in: 1h
     paths:
