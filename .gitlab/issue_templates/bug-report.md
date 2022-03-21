@@ -2,9 +2,9 @@
 
 Summarize the bug encountered concisely
 
-## Parts concerned
+## What is concerned
 
-EOPF CPM version number and optionally a list of either:
+List of either:
 - {file, line number, function name}
 - {permalink (recommended)}
 
