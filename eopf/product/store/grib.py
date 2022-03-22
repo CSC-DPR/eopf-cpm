@@ -7,15 +7,21 @@ import pygrib
 
 from eopf.exceptions import StoreNotOpenError
 from eopf.product.store import EOProductStore
+from eopf.product.utils import downsplit_eo_path
 
 if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_object import EOObject
 
 
-class EONetCDFStore(EOProductStore):
+class EOGribStore(EOProductStore):
     _DATA_KEY = "values"
     _COORDINATE_0_KEY = "distinctLatitudes"
     _COORDINATE_1_KEY = "distinctLongitudes"
+    _DIM_ATTR_MAPPING = {
+        _DATA_KEY: ("Ni", "Nj"),
+        _COORDINATE_0_KEY: ("Ni",),
+        _COORDINATE_1_KEY: ("Nj",),
+    }
     _RESTRICTED_ATTR_KEY = (
         "latLonValues",
         "latitudes",
@@ -54,33 +60,43 @@ class EONetCDFStore(EOProductStore):
     def is_group(self, path: str) -> bool:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        return path in ["", "/"]
+        return path in ["", "/", "coordinates", "/coordinates", "coordinates/", "/coordinates/"]
 
     def is_variable(self, path: str) -> bool:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        return path in self._message_dict
+        dict_path, _ = self._dict_path(path)
+        return dict_path in self._message_dict
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         raise NotImplementedError
 
     def iter(self, path: str) -> Iterator[str]:
-        if path not in ["", "/"]:
-            raise KeyError()
-        return iter(self)
+        if path in ["", "/"]:
+            yield "coordinates"
+            yield from self._message_dict
+            return
+        if path == "coordinates":
+            for message_key in self._message_dict:
+                yield f"{message_key}_lon"
+                yield f"{message_key}_lat"
+            return
+        raise KeyError()
 
     def __getitem__(self, key: str) -> "EOObject":
+        from eopf.product.core import EOGroup, EOVariable
+
+        if self.is_group(key):
+            return EOGroup()
         if not self.is_variable(key):
             raise KeyError()
-        message = self._message_dict[key]
-
-        from eopf.product.core import EOVariable
+        path, data_attr_key = self._dict_path(key)
+        message = self._message_dict[path]
 
         # Copy all non restricted attributes (restricted include multiple representations of data and coordinates)
         attributes = {attr: getattr(message, attr) for attr in message.keys() if attr not in self._RESTRICTED_ATTR_KEY}
-        dimensions = (message.Ni, message.Nj)
-        # TODO : manage coordinates. Maybe put data into measurements, and coordinates into corresponding coordinates.
-        return EOVariable(data=getattr(message, self._DATA_KEY), attrs=attributes, dims=dimensions)
+        dimensions = self._construct_dims(message, data_attr_key)
+        return EOVariable(data=getattr(message, data_attr_key), attrs=attributes, dims=dimensions)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
         raise NotImplementedError
@@ -93,7 +109,24 @@ class EONetCDFStore(EOProductStore):
     def __iter__(self) -> Iterator[str]:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        return iter(self._message_dict)
+        return self.iter("")
+
+    def _dict_path(self, path: str) -> (str, str):
+        """Return corresponding message path, and data key (data, coor1 or coord2)"""
+        group, sub_path = downsplit_eo_path(path)
+        if group == "coordinates":
+            if path.endswith("_lon"):
+                return sub_path[:-4], self._COORDINATE_1_KEY
+            if path.endswith("_lat"):
+                return sub_path[:-4], self._COORDINATE_0_KEY
+            raise KeyError()
+        return path, self._DATA_KEY
+
+    def _construct_dims(self, message: pygrib.gribmessage, attr_key: str) -> tuple[str, ...]:
+        """Get the dimensions names of the array in attr_key of message."""
+        # Attributes containing the dimensions.
+        dim_attrs = self._DIM_ATTR_MAPPING[attr_key]
+        return tuple(getattr(message, dim_attr) for dim_attr in dim_attrs)
 
     @staticmethod
     def guess_can_read(file_path: str) -> bool:
