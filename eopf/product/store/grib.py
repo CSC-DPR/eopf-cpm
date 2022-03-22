@@ -111,10 +111,12 @@ class EOGribStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         return self.iter("")
 
-    def _dict_path(self, path: str) -> (str, str):
+    def _dict_path(self, path: str) -> tuple[str, str]:
         """Return corresponding message path, and data key (data, coor1 or coord2)"""
         group, sub_path = downsplit_eo_path(path)
         if group == "coordinates":
+            if not sub_path:
+                raise ValueError("Can't use _dict_path on the path of a group.")
             if path.endswith("_lon"):
                 return sub_path[:-4], self._COORDINATE_1_KEY
             if path.endswith("_lat"):
