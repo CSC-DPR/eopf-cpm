@@ -186,7 +186,7 @@ EXPECTED_GRIB_MSL_COORD_ATTR = dict(EXPECTED_GRIB_MSL_ATTR)
 EXPECTED_GRIB_MSL_COORD_ATTR["_ARRAY_DIMENSIONS"] = [9]
 
 
-@pytest.mark.unit
+@pytest.mark.usecase
 def test_grib_store():
     grib_store = EOGribStore("../data/AUX_ECMWFT.grib")
     grib_store.open()
