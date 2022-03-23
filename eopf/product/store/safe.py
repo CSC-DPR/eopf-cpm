@@ -106,6 +106,9 @@ class EOSafeStore(EOProductStore):
     CONFIG_FORMAT = "item_format"
     CONFIG_TARGET = "target_path"
     CONFIG_SOURCE_FILE = "source_path"
+    CONFIG_ACCESSOR_CONF_DEC = "accessor_config"
+    CONFIG_ACCESSOR_CONFIG = "accessor_conf_exp"
+    CONFIG_ACCESSOR_ID = "accessor_id"
 
     # docstr-coverage: inherited
     def __init__(
@@ -124,12 +127,14 @@ class EOSafeStore(EOProductStore):
         super().__init__(url)
         self._store_factory = store_factory
         self._mapping_factory = mapping_factory
-        # _accesor_map map the open accessor by file and accessor type to avoid reopening them in case of reuse.
-        self._accessor_map: dict[str, Optional[EOProductStore]] = dict()  # map item_format : source path to Store
+        # _accesor_map map the open accessor by file and accessor type and by config id
+        # to avoid reopening them in case of reuse.
+        # The value is the product store and it's config (to allow reopening)
+        self._accessor_map: dict[str, dict[Any, tuple[Optional[EOProductStore], dict[str, Any]]]] = dict()
+        # map item_format : source path to Store
         # _config_mapping contain the mapping config by target_path read from the json mapping.
         # It's a dictionary of list as we can have multiple mapping for the same target_path.
         self._config_mapping: dict[str, list[dict[str, Any]]] = dict()  # map source path to config read from Json
-        self._accessor_open_config: dict[str, dict[str, Any]] = dict()
         self._mode = "CLOSED"
         self._open_kwargs: dict[str, Any] = dict()
 
@@ -138,10 +143,7 @@ class EOSafeStore(EOProductStore):
         json_data = self._mapping_factory.get_mapping(self.url)
         json_config_list = json_data["data_mapping"]
         for config in json_config_list:
-            self._add_data_mapping(config[self.CONFIG_TARGET], config)
-        self._accessor_open_config["xfdumetadata"] = dict()
-        self._accessor_open_config["xfdumetadata"]["metadata_mapping"] = json_data["metadata_mapping"]
-        self._accessor_open_config["xfdumetadata"]["namespaces"] = json_data["namespaces"]
+            self._add_data_mapping(config[self.CONFIG_TARGET], config, json_data)
 
     def _contain_hierarchy_mapping(self, target_path: str) -> bool:
         """Check if a hierarchy mapping is defined for target_path.
@@ -162,7 +164,7 @@ class EOSafeStore(EOProductStore):
                 return True
         return False
 
-    def _add_data_mapping(self, target_path: str, config: dict[str, Any]) -> None:
+    def _add_data_mapping(self, target_path: str, config: dict[str, Any], json_data: dict[str, Any]) -> None:
         """Add a mapping from the format read from json to our internal format.
         Also add own parents mapping and register new children to ancestors hierarchy store.
 
@@ -171,6 +173,7 @@ class EOSafeStore(EOProductStore):
         target_path
         config
         """
+        self._extract_accessor_config(config, json_data)
         if target_path in self._config_mapping:
             self._config_mapping[target_path].append(config)
         else:
@@ -185,13 +188,19 @@ class EOSafeStore(EOProductStore):
             parent_config["target_path"] = source_path_parent
             parent_config["source_path"] = source_path_parent
             parent_config["item_format"] = self.SAFE_HIERARCHY_FORMAT
-            self._add_data_mapping(source_path_parent, parent_config)
-        safe_hierachy = self._get_accessor(source_path_parent, self.SAFE_HIERARCHY_FORMAT)
+            self._add_data_mapping(source_path_parent, parent_config, json_data)
+        safe_hierachy = self._get_accessor(source_path_parent, self.SAFE_HIERARCHY_FORMAT, frozenset(), dict())
         if not isinstance(safe_hierachy, SafeHierarchy):
             raise TypeError("Unexpected accessor type.")
         safe_hierachy._add_child(name)
 
-    def _add_accessor(self, file_path: str, item_format: str) -> Optional[EOProductStore]:
+    def _add_accessor(
+        self,
+        file_path: str,
+        item_format: str,
+        accessor_config_id: Any,
+        accessor_config: dict[str, Any],
+    ) -> Optional[EOProductStore]:
         """Add an accessor (sub store) to the opened accessor dictionary.
         The accessor is created using the _store_factory (except for SafeHierarchy).
 
@@ -206,28 +215,32 @@ class EOSafeStore(EOProductStore):
         """
 
         mapped_store: Optional[EOProductStore]
+        accessor_id = item_format + ":" + file_path
+        if accessor_id not in self._accessor_map:
+            self._accessor_map[accessor_id] = dict()
         if item_format == "SafeHierarchy":
-            mapped_store = self._accessor_map["SafeHierarchy:" + file_path] = SafeHierarchy()
+            mapped_store = SafeHierarchy()
         else:
-            mapped_store = self._accessor_map[item_format + ":" + file_path] = self._store_factory.get_store(
+            mapped_store = self._store_factory.get_store(
                 self.url + file_path,
                 item_format,
             )
         try:
             if self.status is StorageStatus.OPEN:
-                if item_format in self._accessor_open_config:
-                    mapped_store.open(
-                        mode=self._mode, config=self._accessor_open_config[item_format], **self._open_kwargs
-                    )
-                else:
-                    mapped_store.open(mode=self._mode, **self._open_kwargs)
+                mapped_store.open(mode=self._mode, **accessor_config, **self._open_kwargs)
         except NotImplementedError:
             mapped_store = None
             warnings.warn("Unimplemented store mode")
-        self._accessor_map[item_format + ":" + file_path] = mapped_store
+        self._accessor_map[accessor_id][accessor_config_id] = (mapped_store, accessor_config)
         return mapped_store
 
-    def _get_accessor(self, file_path: str, item_format: str) -> Optional[EOProductStore]:
+    def _get_accessor(
+        self,
+        file_path: str,
+        item_format: str,
+        accessor_config_id: Any,
+        accessor_config: dict[str, Any],
+    ) -> Optional[EOProductStore]:
         """Get an accessor from the opened accessors dictionary. If it's not present a new one is added.
 
         Parameters
@@ -239,10 +252,11 @@ class EOSafeStore(EOProductStore):
         -------
 
         """
-        if item_format + ":" + file_path in self._accessor_map:
-            return self._accessor_map[item_format + ":" + file_path]
+        accessor_id = item_format + ":" + file_path
+        if accessor_id in self._accessor_map and accessor_config_id in self._accessor_map[accessor_id]:
+            return self._accessor_map[accessor_id][accessor_config_id][0]
         else:
-            return self._add_accessor(file_path, item_format)
+            return self._add_accessor(file_path, item_format, accessor_config_id, accessor_config)
 
     def _get_accessors_from_mapping(
         self,
@@ -269,7 +283,12 @@ class EOSafeStore(EOProductStore):
             accessor_local_path = None
             if len(accessor_source_split) == 2:
                 accessor_local_path = accessor_source_split[1]
-            accessor = self._get_accessor(accessor_file, conf[self.CONFIG_FORMAT])
+            accessor = self._get_accessor(
+                accessor_file,
+                conf[self.CONFIG_FORMAT],
+                conf[self.CONFIG_ACCESSOR_ID],
+                conf[self.CONFIG_ACCESSOR_CONFIG],
+            )
             if accessor is not None:  # We also want to append accessor of len 0.
                 results.append((accessor, accessor_local_path, conf))
         return results
@@ -372,10 +391,12 @@ class EOSafeStore(EOProductStore):
         # Otherwise Hierachy accessor are opened twice.
         super().open()
         self._mode = mode
-        for key in self._accessor_map:
-            accessor = self._accessor_map[key]
-            if accessor:
-                accessor.open(mode, **kwargs)
+        for accessor_map_2 in self._accessor_map.values():
+            for accessor, _accessor_config in accessor_map_2.values():
+                # FIXME Should probably check if the accessor is open intead of seting it to None
+                # FIXME when opeing fail, otherwise we can't reopen it later with another mode.
+                if accessor:
+                    accessor.open(mode, **_accessor_config, **kwargs)
         if mode == "w":
             try:
                 os.mkdir(os.path.expanduser(self.url))
@@ -386,10 +407,10 @@ class EOSafeStore(EOProductStore):
     def close(self) -> None:
         super().close()
         self._mode = "CLOSED"
-        for key in self._accessor_map:
-            accessor = self._accessor_map[key]
-            if accessor:
-                accessor.close()
+        for accessor_map_2 in self._accessor_map.values():
+            for accessor, _ in accessor_map_2.values():
+                if accessor:
+                    accessor.close()
 
     # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
@@ -484,3 +505,19 @@ class EOSafeStore(EOProductStore):
 
     def __iter__(self) -> Iterator[str]:
         return self.iter("")
+
+    def _extract_accessor_config(
+        self,
+        config: dict[str, Any],
+        config_definitions: dict[str, Any],
+    ) -> None:
+        """Extract in config the accessor config by matching it to config_definitions and build an hashable id of it."""
+        if self.CONFIG_ACCESSOR_CONF_DEC in config:
+            config_declarations = config[self.CONFIG_ACCESSOR_CONF_DEC]
+        else:
+            config_declarations = dict()
+        accessor_config = {
+            config_key: config_definitions[config_path] for config_key, config_path in config_declarations.items()
+        }
+        config[self.CONFIG_ACCESSOR_ID] = frozenset(config_declarations.items())
+        config[self.CONFIG_ACCESSOR_CONFIG] = accessor_config

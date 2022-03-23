@@ -11,7 +11,7 @@ import zarr
 from hypothesis import given
 from pyfakefs.fake_filesystem import FakeFilesystem
 
-from eopf.exceptions import MissingConfigurationParameter, StoreNotOpenError
+from eopf.exceptions import StoreNotOpenError
 from eopf.exceptions.warnings import AlreadyClose, AlreadyOpen
 from eopf.product.conveniences import init_product, open_store
 from eopf.product.core import EOGroup, EOProduct, EOVariable
@@ -367,10 +367,8 @@ def test_init_manifest_store():
 @pytest.mark.parametrize(
     "config, exception_type",
     [
-        (None, MissingConfigurationParameter),
-        ([0, 1, 2], MissingConfigurationParameter),
-        ({"metadata_mapping": {}}, KeyError),
-        ({"namespaces": {}}, KeyError),
+        ({"metadata_mapping": {}}, TypeError),
+        ({"namespaces": {}}, TypeError),
         ({"namespaces": {}, "metadata_mapping": {}}, FileNotFoundError),
     ],
 )
@@ -380,7 +378,7 @@ def test_open_manifest_store(config: Optional[dict], exception_type: Exception):
     """
     store = ManifestStore(_FILES["json"])
     with pytest.raises(exception_type):
-        store.open(config=config)
+        store.open(**config)
 
 
 @pytest.mark.unit
