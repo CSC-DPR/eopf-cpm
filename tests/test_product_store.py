@@ -410,7 +410,7 @@ def test_retrieve_from_manifest_store():
     mapping_file = open(mapping_file_path)
     map_olci = json.load(mapping_file)
     config = {"namespaces": map_olci["namespaces"], "metadata_mapping": map_olci["metadata_mapping"]}
-    manifest.open(config=config)
+    manifest.open(**config)
     eog = manifest[""]
     assert isinstance(eog, EOGroup)
     returned_cf = eog.attrs["CF"]
