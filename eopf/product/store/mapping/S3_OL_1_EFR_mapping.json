@@ -446,7 +446,11 @@
       "short_name": "metadata",
       "target_path": "",
       "source_path": "xfdumanifest.xml",
-      "item_format": "xfdumetadata"
+      "item_format": "xfdumetadata",
+      "accessor_config": {
+        "metadata_mapping": "metadata_mapping",
+        "namespaces": "namespaces"
+      }
     }
   ],
   "metadata_mapping": {

@@ -1,10 +1,6 @@
 from typing import Any, Iterator, MutableMapping, Optional, TextIO
 
-from eopf.exceptions import (
-    MissingConfigurationParameter,
-    StoreNotOpenError,
-    XmlParsingError,
-)
+from eopf.exceptions import StoreNotOpenError, XmlParsingError
 from eopf.product.core import EOGroup
 from eopf.product.store import EOProductStore
 from eopf.product.utils import apply_xpath, parse_xml, translate_structure
@@ -49,16 +45,11 @@ class ManifestStore(EOProductStore):
             raise NotImplementedError()
 
         # get configuration parameters
-        if "config" not in kwargs.keys():
-            raise MissingConfigurationParameter(" The parameter: config; is missing")
         try:
-            config_dict: Optional[Any] = kwargs.get("config")
-            if not isinstance(config_dict, dict):
-                raise MissingConfigurationParameter(" The parameter: config; should be a dictionary")
-            self._metada_mapping: MutableMapping[str, Any] = config_dict["metadata_mapping"]
-            self._namespaces: dict[str, str] = config_dict["namespaces"]
+            self._metada_mapping: MutableMapping[str, Any] = kwargs["metadata_mapping"]
+            self._namespaces: dict[str, str] = kwargs["namespaces"]
         except KeyError as e:
-            raise KeyError(f"Missing configuration pameter: {e}")
+            raise TypeError(f"Missing configuration pameter: {e}")
 
         # open the manifest xml
         self._xml_fobj = open(self.url, mode="r")
