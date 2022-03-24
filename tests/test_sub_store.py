@@ -3,7 +3,7 @@ import datetime
 import pytest
 from numpy import testing
 
-from eopf.product.store.grib import EOGribStore
+from eopf.product.store.grib import EOGribAccessor
 
 EXPECTED_GRIB_MSL_ATTR = {
     "globalDomain": "g",
@@ -188,7 +188,7 @@ EXPECTED_GRIB_MSL_COORD_ATTR["_ARRAY_DIMENSIONS"] = [9]
 
 @pytest.mark.usecase
 def test_grib_store():
-    grib_store = EOGribStore("../data/AUX_ECMWFT.grib")
+    grib_store = EOGribAccessor("../data/AUX_ECMWFT.grib")
     grib_store.open()
     # test attributes
     assert grib_store["msl"].attrs == EXPECTED_GRIB_MSL_ATTR

@@ -13,7 +13,7 @@ if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_object import EOObject
 
 
-class EOGribStore(EOProductStore):
+class EOGribAccessor(EOProductStore):
     _DATA_KEY = "values"
     _COORDINATE_0_KEY = "distinctLatitudes"
     _COORDINATE_1_KEY = "distinctLongitudes"
