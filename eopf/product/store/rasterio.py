@@ -130,7 +130,7 @@ class EORasterIOAccessor(EOProductStore):
 
         elif isinstance(node, xarray.Dataset):
             return EOGroup(key, attrs=node.attrs)  # type: ignore[arg-type]
-        return EOVariable(key, node)  # type: ignore[arg-type]
+        return EOVariable(key, node)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
         from eopf.product.core.eo_variable import EOVariable
