@@ -1,8 +1,12 @@
 from collections.abc import MutableMapping
-from typing import Any, Iterator
+from typing import TYPE_CHECKING, Any, Iterator
 
-from eopf.product.core import EOGroup, EOVariable
+from eopf.exceptions import StoreNotOpenError
 from eopf.product.store import EOProductStore
+from eopf.product.store.abstract import StorageStatus
+
+if TYPE_CHECKING:  # pragma: no cover
+    from eopf.product.core import EOVariable
 
 
 class EOExtractDimAccessor(EOProductStore):
@@ -29,6 +33,7 @@ class EOExtractDimAccessor(EOProductStore):
 
     def __init__(self, url: str, **kwargs: Any) -> None:
         self._store = self._store_cls(url, **kwargs)
+        super().__init__(url)
 
     # docstr-coverage: inherited
     def open(self, mode: str = "r", **kwargs: Any) -> None:
@@ -45,7 +50,9 @@ class EOExtractDimAccessor(EOProductStore):
     def __iter__(self) -> Iterator[str]:
         return self._store.__iter__()
 
-    def __getitem__(self, key: str) -> EOVariable:
+    def __getitem__(self, key: str) -> "EOVariable":
+        from eopf.product.core import EOGroup, EOVariable
+
         eo_var = self._store.__getitem__(key)
         if not isinstance(eo_var, (EOVariable, EOGroup)):
             raise NotImplementedError()
@@ -55,6 +62,8 @@ class EOExtractDimAccessor(EOProductStore):
         return EOVariable(data=obj)
 
     def __setitem__(self, key: str, value: Any) -> None:
+        if self._status == StorageStatus.CLOSE:
+            raise StoreNotOpenError()
         raise NotImplementedError
 
     def __len__(self) -> int:
@@ -71,8 +80,3 @@ class EOExtractDimAccessor(EOProductStore):
     # docstr-coverage: inherited
     def is_variable(self, path: str) -> bool:
         return self._store.is_variable(path)
-
-    # docstr-coverage: inherited
-    @staticmethod
-    def guess_can_read(file_path: str) -> bool:
-        return True

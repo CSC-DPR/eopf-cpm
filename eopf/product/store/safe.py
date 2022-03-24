@@ -17,7 +17,7 @@ from .abstract import EOProductStore, StorageStatus
 from .mapping_factory import EOMappingFactory
 from .store_factory import EOStoreFactory
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_object import EOObject
 
 

@@ -8,7 +8,7 @@ import xarray
 from eopf.exceptions import StoreNotOpenError
 from eopf.product.store.abstract import EOProductStore
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from distributed import Lock
 
     from eopf.product.core.eo_object import EOObject
@@ -88,7 +88,7 @@ class EORasterIOAccessor(EOProductStore):
     def iter(self, path: str) -> Iterator[str]:
         node = self._select_node(path)
         if isinstance(node, list):
-            return iter(ds.name for ds in node)
+            raise NotImplementedError()
         if isinstance(node, xarray.Dataset):
             return iter(str(i) for i in iter(node))
         return iter([])
@@ -96,9 +96,9 @@ class EORasterIOAccessor(EOProductStore):
     # docstr-coverage: inherited
     @staticmethod
     def guess_can_read(file_path: str) -> bool:
-        return pathlib.Path(file_path).suffix in [".tiff", ".tif"]
+        return pathlib.Path(file_path).suffix in [".tiff", ".tif", ".jp2"]
 
-    def _select_node(self, path: str) -> Union[list[xarray.Dataset], xarray.DataArray, xarray.Dataset]:
+    def _select_node(self, path: str) -> Union[xarray.DataArray, xarray.Dataset]:
         if self._ref is None:
             raise StoreNotOpenError("Store must be open before access to it")
         current, _, sub_path = path.partition(self.sep)
@@ -106,19 +106,16 @@ class EORasterIOAccessor(EOProductStore):
             return self._ref
 
         if isinstance(self._ref, list):
-            for dataset in self._ref:
-                if dataset.name == current:
-                    if not sub_path:
-                        return dataset
-                    if sub_path in dataset:  # path is a datarray
-                        return dataset[sub_path]
+            raise NotImplementedError()
+
+        if isinstance(self._ref, xarray.Dataset):
+            if path in self._ref:
+                return self._ref[path]
             raise KeyError()
 
-        if path in [self._ref.name]:
+        if path == self._ref.name:
             return self._ref
 
-        if isinstance(self._ref, xarray.Dataset) and path in self._ref:
-            return self._ref[path]
         raise KeyError()
 
     def __getitem__(self, key: str) -> "EOObject":
@@ -132,8 +129,8 @@ class EORasterIOAccessor(EOProductStore):
             raise NotImplementedError()
 
         elif isinstance(node, xarray.Dataset):
-            return EOGroup(node.name, attrs=node.attrs)  # type: ignore[arg-type]
-        return EOVariable(node.name, node)  # type: ignore[arg-type]
+            return EOGroup(key, attrs=node.attrs)  # type: ignore[arg-type]
+        return EOVariable(key, node)  # type: ignore[arg-type]
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
         from eopf.product.core.eo_variable import EOVariable

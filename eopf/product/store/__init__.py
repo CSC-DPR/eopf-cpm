@@ -1,5 +1,8 @@
 from .abstract import EOProductStore, StorageStatus
 from .conveniences import convert
+from .extract_dim import EOExtractDimAccessor
+from .flags import EOFlagAccessor
+from .legacy_accessor import EOJP2SpatialRefAccessor, EOJP2XAccessor, EOJP2YAccessor
 from .netcdf import EONetCDFStore
 from .rasterio import EORasterIOAccessor
 from .safe import EOSafeStore
@@ -13,4 +16,9 @@ __all__ = [
     "EONetCDFStore",
     "EOSafeStore",
     "EORasterIOAccessor",
+    "EOFlagAccessor",
+    "EOExtractDimAccessor",
+    "EOJP2SpatialRefAccessor",
+    "EOJP2XAccessor",
+    "EOJP2YAccessor",
 ]
