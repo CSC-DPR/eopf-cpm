@@ -25,6 +25,30 @@ eopf.product.store.conveniences module
    :undoc-members:
    :show-inheritance:
 
+eopf.product.store.extract\_dim module
+--------------------------------------
+
+.. automodule:: eopf.product.store.extract_dim
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+eopf.product.store.flags module
+-------------------------------
+
+.. automodule:: eopf.product.store.flags
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+eopf.product.store.legacy\_accessor module
+------------------------------------------
+
+.. automodule:: eopf.product.store.legacy_accessor
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 eopf.product.store.manifest module
 ----------------------------------
 
@@ -45,6 +69,14 @@ eopf.product.store.netcdf module
 --------------------------------
 
 .. automodule:: eopf.product.store.netcdf
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+eopf.product.store.rasterio module
+----------------------------------
+
+.. automodule:: eopf.product.store.rasterio
    :members:
    :undoc-members:
    :show-inheritance:
