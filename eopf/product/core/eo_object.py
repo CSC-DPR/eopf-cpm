@@ -51,8 +51,8 @@ class EOObject(EOAbstract):
         dims: Iterable[str], optional
             dimensions to assign
         """
-        for dim in dims:
-            self.attrs.setdefault(_DIMENSIONS_NAME, []).append(dim)
+
+        self.attrs[_DIMENSIONS_NAME] = dims
 
     def _repath(self, name: str, parent: "Optional[EOContainer]") -> None:
         """Set the name, product and relative_path attributes of this EObject.
