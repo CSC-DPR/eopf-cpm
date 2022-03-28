@@ -10,7 +10,7 @@ Summarize the bug encountered concisely
 
 ## What is concerned
 
-List of either:
+If you want to refer to a specific cpm source file/part/function give us a list of either :
 - {file, line number, function name}
 - {permalink (recommended)}
 
