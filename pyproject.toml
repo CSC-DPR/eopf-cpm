@@ -27,6 +27,7 @@ dependencies = [
     "fsspec ==2021.11.1",
     "lxml==4.7.1",
     "pygrib ==2.1.4",
+    "rioxarray ==0.10.2",
 ]
 license = {file = "LICENSE"}
 

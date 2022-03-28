@@ -25,6 +25,22 @@ eopf.product.store.conveniences module
    :undoc-members:
    :show-inheritance:
 
+eopf.product.store.flags module
+-------------------------------
+
+.. automodule:: eopf.product.store.flags
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+eopf.product.store.grib module
+------------------------------
+
+.. automodule:: eopf.product.store.grib
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 eopf.product.store.manifest module
 ----------------------------------
 
@@ -45,6 +61,14 @@ eopf.product.store.netcdf module
 --------------------------------
 
 .. automodule:: eopf.product.store.netcdf
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+eopf.product.store.rasterio module
+----------------------------------
+
+.. automodule:: eopf.product.store.rasterio
    :members:
    :undoc-members:
    :show-inheritance:
