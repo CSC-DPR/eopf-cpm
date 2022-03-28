@@ -1,3 +1,9 @@
+(Please add corresponding label to your issue:
+- X.Y.Z: version number, is mandatory to be able to consider the issue
+- Code: bug in the code or unexpected result for example
+- Documentation: missing part/error in the documentation
+)
+
 ## Summary
 
 Summarize the bug encountered concisely
