@@ -1,3 +1,5 @@
+import os
+import tempfile
 import warnings
 from typing import (
     TYPE_CHECKING,
@@ -343,6 +345,9 @@ class SafeMappingManager:
                 fsspec_kwargs[fsspec_key_arg] = fsspec_kwargs.pop(fsspec_key_arg)
 
         self._fs_map_access = fsspec.get_mapper(self._url, **fsspec_kwargs)
+        self._is_compressed = False
+        self._temp_dir: Optional[tempfile.TemporaryDirectory[Any]] = None
+        self._top_level: Optional[str] = None
 
     def __iter__(self) -> Iterator[tuple[EOProductStore, dict[str, Any]]]:
         for accessor_map_2 in self._accessor_map.values():
@@ -355,6 +360,11 @@ class SafeMappingManager:
         self._mode = "CLOSED"
         for accessor, _accessor_config in self:
             accessor.close()
+        self._is_compressed = False
+        if self._temp_dir:
+            self._temp_dir.cleanup()
+            self._temp_dir = None
+            self._top_level = None
 
     def get_accessors_from_mapping(
         self,
@@ -435,11 +445,20 @@ class SafeMappingManager:
         accessor_id = item_format + ":" + file_path
         if accessor_id not in self._accessor_map:
             self._accessor_map[accessor_id] = dict()
+
         if item_format == "SafeHierarchy":
             mapped_store = SafeHierarchy()
         else:
+            if self._is_compressed:
+                if self._temp_dir is None:
+                    self._temp_dir = tempfile.TemporaryDirectory()
+                accessor_file = os.path.join(self._temp_dir.name, file_path)
+                if not os.path.exists(accessor_file):
+                    self._fs_map_access.fs.get_file(f"{self._top_level}{file_path}", accessor_file)
+            else:
+                accessor_file = self._fs_map_access.fs.sep.join([self._fs_map_access.root, file_path])
             mapped_store = self._store_factory.get_store(
-                self._fs_map_access.fs.sep.join([self._fs_map_access.root, file_path]),
+                accessor_file,
                 item_format,
             )
         try:
@@ -518,7 +537,12 @@ class SafeMappingManager:
     def _read_product_mapping(self) -> None:
         """Read mapping from the mapping factory and fill _config_mapping from it."""
         if fsspec.utils.infer_compression(self._url):
-            raise NotImplementedError()
+            top_level = self._fs_map_access.fs.listdir(self._fs_map_access.root, detail=False)
+            if len(top_level) == 0:
+                raise FileNotFoundError()  # pas de repertoire
+            top_level = top_level[0]
+            self._is_compressed = True
+            self._top_level = top_level
         else:
             top_level = self._fs_map_access.root.rpartition(self._fs_map_access.fs.sep)[-1]
         json_data = self._mapping_factory.get_mapping(top_level)
