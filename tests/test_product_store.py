@@ -1,7 +1,7 @@
 import os
 import os.path
 import shutil
-from typing import Any, Iterable, Optional
+from typing import Any, Optional
 from unittest.mock import patch
 
 import hypothesis.strategies as st
@@ -17,13 +17,7 @@ from eopf.exceptions.warnings import AlreadyClose, AlreadyOpen
 from eopf.product.conveniences import init_product, open_store
 from eopf.product.core import EOGroup, EOProduct, EOVariable
 from eopf.product.store import EONetCDFStore, EOProductStore, EOZarrStore, convert
-from eopf.product.store.extract_dim import EOExtractDimAccessor
 from eopf.product.store.flags import EOFlagAccessor
-from eopf.product.store.legacy_accessor import (
-    EOJP2SpatialRefAccessor,
-    EOJP2XAccessor,
-    EOJP2YAccessor,
-)
 from eopf.product.store.manifest import ManifestStore
 from eopf.product.store.rasterio import EORasterIOAccessor
 
@@ -258,9 +252,6 @@ def test_abstract_store_cant_be_instantiate():
         EOZarrStore("a_product"),
         EONetCDFStore(_FILES["netcdf"]),
         EOFlagAccessor("a.jp2"),
-        EOJP2SpatialRefAccessor("a.jp2"),
-        EOJP2XAccessor("a.jp2"),
-        EOJP2YAccessor("a.jp2"),
         EORasterIOAccessor("a.jp2"),
     ],
 )
@@ -535,38 +526,6 @@ def test_convert(read_write_stores):
     with open_store(new_product, mode="r"):
         new_product["measurements"]
         new_product["coordinates"]
-
-
-@pytest.mark.unit
-@pytest.mark.parametrize(
-    "store_cls, format_file, dims, coords, params",
-    [
-        (EOJP2XAccessor, "jp2", ("x",), {"x": [1, 2, 3]}, {}),
-        (EOJP2YAccessor, "jp2", ("y",), {"y": [1, 2, 3]}, {}),
-        (EOJP2SpatialRefAccessor, "jp2", [], {"spatial_ref": xarray.DataArray(data=1)}, {}),
-    ],
-)
-def test_extract_dim_rasters(
-    store_cls: type[EOExtractDimAccessor],
-    format_file: str,
-    dims: Iterable[str],
-    coords: dict[str, Any],
-    params: dict[str, Any],
-):
-    file_name = f"a_file.{format_file}"
-    assert store_cls.guess_can_read(file_name)
-    assert not store_cls.guess_can_read("false_format.false")
-    raster = store_cls(file_name)
-    attrs = {"new_key": "new_value"}
-
-    with patch("rioxarray.open_rasterio") as mock_function:
-        mock_function.return_value = xarray.DataArray(dims=dims, coords=coords)
-        raster.open(mode="r", **params)
-        assert isinstance(raster[""], EOVariable)
-        assert len([i for i in raster.iter("")]) == 0
-        raster.write_attrs("", attrs)
-
-        raster.close()
 
 
 @pytest.mark.unit
