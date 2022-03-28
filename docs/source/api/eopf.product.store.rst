@@ -25,14 +25,6 @@ eopf.product.store.conveniences module
    :undoc-members:
    :show-inheritance:
 
-eopf.product.store.extract\_dim module
---------------------------------------
-
-.. automodule:: eopf.product.store.extract_dim
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 eopf.product.store.flags module
 -------------------------------
 
@@ -41,10 +33,10 @@ eopf.product.store.flags module
    :undoc-members:
    :show-inheritance:
 
-eopf.product.store.legacy\_accessor module
-------------------------------------------
+eopf.product.store.grib module
+------------------------------
 
-.. automodule:: eopf.product.store.legacy_accessor
+.. automodule:: eopf.product.store.grib
    :members:
    :undoc-members:
    :show-inheritance:
