@@ -16,19 +16,16 @@ from eopf.exceptions import StoreNotOpenError
 from eopf.exceptions.warnings import AlreadyClose, AlreadyOpen
 from eopf.product.conveniences import init_product, open_store
 from eopf.product.core import EOGroup, EOProduct, EOVariable
-from eopf.product.store import (
-    EOExtractDimAccessor,
-    EOFlagAccessor,
+from eopf.product.store import EONetCDFStore, EOProductStore, EOZarrStore, convert
+from eopf.product.store.extract_dim import EOExtractDimAccessor
+from eopf.product.store.flags import EOFlagAccessor
+from eopf.product.store.legacy_accessor import (
     EOJP2SpatialRefAccessor,
     EOJP2XAccessor,
     EOJP2YAccessor,
-    EONetCDFStore,
-    EOProductStore,
-    EORasterIOAccessor,
-    EOZarrStore,
-    convert,
 )
 from eopf.product.store.manifest import ManifestStore
+from eopf.product.store.rasterio import EORasterIOAccessor
 
 from .decoder import Netcdfdecoder
 from .utils import (

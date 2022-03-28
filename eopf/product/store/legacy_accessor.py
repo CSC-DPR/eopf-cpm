@@ -28,7 +28,7 @@ class EOJP2YAccessor(EOExtractDimAccessor):
     # docstr-coverage: inherited
     @staticmethod
     def guess_can_read(file_path: str) -> bool:
-        return file_path.endswith(".jp2")
+        return EORasterIOAccessor.guess_can_read(file_path)
 
 
 class EOJP2XAccessor(EOExtractDimAccessor):
@@ -52,7 +52,7 @@ class EOJP2XAccessor(EOExtractDimAccessor):
     # docstr-coverage: inherited
     @staticmethod
     def guess_can_read(file_path: str) -> bool:
-        return file_path.endswith(".jp2")
+        return EORasterIOAccessor.guess_can_read(file_path)
 
 
 class EOJP2SpatialRefAccessor(EOExtractDimAccessor):
@@ -81,4 +81,4 @@ class EOJP2SpatialRefAccessor(EOExtractDimAccessor):
     # docstr-coverage: inherited
     @staticmethod
     def guess_can_read(file_path: str) -> bool:
-        return file_path.endswith(".jp2")
+        return EORasterIOAccessor.guess_can_read(file_path)
