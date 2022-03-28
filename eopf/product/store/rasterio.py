@@ -35,22 +35,36 @@ class EORasterIOAccessor(EOProductStore):
         self._mode: Optional[str] = None
         self._lock: Optional[Lock] = None
 
-    # docstr-coverage: inherited
-    @property
-    def is_writeable(self) -> bool:
-        return False
+    def __getitem__(self, key: str) -> "EOObject":
+        from eopf.product.core.eo_group import EOGroup
+        from eopf.product.core.eo_variable import EOVariable
 
-    # docstr-coverage: inherited
-    @property
-    def is_erasable(self) -> bool:
-        return False
+        if self._ref is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        node = self._select_node(key)
+        if isinstance(node, list):
+            raise NotImplementedError()
 
-    # docstr-coverage: inherited
-    def open(self, mode: str = "r", **kwargs: Any) -> None:
-        super().open(mode=mode)
-        self._ref = rioxarray.open_rasterio(self.url, **kwargs)
-        self._mode = mode
-        self._lock = kwargs.get("lock")
+        elif isinstance(node, xarray.Dataset):
+            return EOGroup(key, attrs=node.attrs)  # type: ignore[arg-type]
+        return EOVariable(key, node)
+
+    def __iter__(self) -> Iterator[str]:
+        return self.iter("")
+
+    def __len__(self) -> int:
+        if self._ref is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        return len(self._ref)
+
+    def __setitem__(self, key: str, value: "EOObject") -> None:
+        from eopf.product.core.eo_variable import EOVariable
+
+        if self._ref is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        if not isinstance(value, EOVariable):
+            raise NotImplementedError()
+        self._ref[key] = value
 
     # docstr-coverage: inherited
     def close(self) -> None:
@@ -68,6 +82,11 @@ class EORasterIOAccessor(EOProductStore):
         self._ref = None
 
     # docstr-coverage: inherited
+    @property
+    def is_erasable(self) -> bool:
+        return False
+
+    # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
         node = self._select_node(path)
         return isinstance(node, (xarray.Dataset, list))
@@ -78,11 +97,9 @@ class EORasterIOAccessor(EOProductStore):
         return isinstance(node, xarray.DataArray)
 
     # docstr-coverage: inherited
-    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
-        node = self._select_node(group_path)
-        if isinstance(node, list):
-            raise NotImplementedError()
-        node.attrs.update(attrs)  # type: ignore[arg-type]
+    @property
+    def is_writeable(self) -> bool:
+        return False
 
     # docstr-coverage: inherited
     def iter(self, path: str) -> Iterator[str]:
@@ -92,6 +109,20 @@ class EORasterIOAccessor(EOProductStore):
         if isinstance(node, xarray.Dataset):
             return iter(str(i) for i in iter(node))
         return iter([])
+
+    # docstr-coverage: inherited
+    def open(self, mode: str = "r", **kwargs: Any) -> None:
+        super().open(mode=mode)
+        self._ref = rioxarray.open_rasterio(self.url, **kwargs)
+        self._mode = mode
+        self._lock = kwargs.get("lock")
+
+    # docstr-coverage: inherited
+    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
+        node = self._select_node(group_path)
+        if isinstance(node, list):
+            raise NotImplementedError()
+        node.attrs.update(attrs)  # type: ignore[arg-type]
 
     # docstr-coverage: inherited
     @staticmethod
@@ -117,34 +148,3 @@ class EORasterIOAccessor(EOProductStore):
             return self._ref
 
         raise KeyError()
-
-    def __getitem__(self, key: str) -> "EOObject":
-        from eopf.product.core.eo_group import EOGroup
-        from eopf.product.core.eo_variable import EOVariable
-
-        if self._ref is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        node = self._select_node(key)
-        if isinstance(node, list):
-            raise NotImplementedError()
-
-        elif isinstance(node, xarray.Dataset):
-            return EOGroup(key, attrs=node.attrs)  # type: ignore[arg-type]
-        return EOVariable(key, node)
-
-    def __setitem__(self, key: str, value: "EOObject") -> None:
-        from eopf.product.core.eo_variable import EOVariable
-
-        if self._ref is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        if not isinstance(value, EOVariable):
-            raise NotImplementedError()
-        self._ref[key] = value
-
-    def __len__(self) -> int:
-        if self._ref is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        return len(self._ref)
-
-    def __iter__(self) -> Iterator[str]:
-        return self.iter("")
