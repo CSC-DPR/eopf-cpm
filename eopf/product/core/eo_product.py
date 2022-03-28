@@ -11,11 +11,11 @@ from .eo_variable import EOVariable
 
 
 class EOProduct(EOContainer):
-    """A EOProduct containing EOGroups (and throught them their EOVariable), linked to it's EOProductStore (if existing).
+    """A EOProduct contains EOGroups (and throught them their EOVariables), linked to its EOProductStore (if existing).
 
-    Read and write both dynamically, or on demand to the EOProductStore.
-    Can be used in a dictionary like manner with relatives and absolutes paths.
-    Has personal attributes and both personal and inherited coordinates.
+    Read and write both dynamically or on demand to the EOProductStore.
+    It can be used in a dictionary like manner with relative and absolute paths.
+    It has personal attributes and both personal and inherited coordinates.
 
     Parameters
     ----------
