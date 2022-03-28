@@ -1,3 +1,4 @@
+import os
 from typing import TYPE_CHECKING, Any, Union
 
 from eopf.product.core.eo_container import EOContainer
@@ -95,6 +96,10 @@ def assert_contain(container: EOContainer, path: str, expect_type, path_offset="
     assert isinstance(obj, expect_type)
 
 
+def assert_issubdict(set_dict: dict, subset_dict: dict) -> bool:
+    assert (set_dict | subset_dict) == set_dict
+
+
 def couple_combinaison_from(elements: list[Any]) -> list[tuple[Any, Any]]:
     """create all possible combinaison of two elements from the input list"""
     zip_size = len(elements)
@@ -102,3 +107,6 @@ def couple_combinaison_from(elements: list[Any]) -> list[tuple[Any, Any]]:
         (list(zip([element] * zip_size, elements)) for element in elements),
         [],
     )
+
+
+PARENT_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..")
