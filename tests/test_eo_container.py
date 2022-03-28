@@ -5,7 +5,6 @@ import numpy as np
 import pytest
 import xarray
 from lxml import etree
-from pyfakefs.fake_filesystem import FakeFilesystem
 
 from eopf.exceptions import (
     EOObjectExistError,
@@ -320,7 +319,7 @@ def test_invalid_dataset():
 
 
 @pytest.mark.unit
-def test_create_product_on_memory(fs: FakeFilesystem):
+def test_create_product_on_memory():
     product = init_product("product_name")
 
     with pytest.raises(StoreNotDefinedError):
@@ -333,7 +332,6 @@ def test_create_product_on_memory(fs: FakeFilesystem):
         product.write()
 
     assert product._store is None, "store must be None"
-    assert not (fs.isdir(product.name) or fs.isfile(product.name)), "Product must not create any thing on fs"
 
 
 @pytest.mark.unit

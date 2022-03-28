@@ -10,7 +10,6 @@ import pytest
 import xarray
 import zarr
 from hypothesis import given
-from pyfakefs.fake_filesystem import FakeFilesystem
 
 from eopf.exceptions import StoreNotOpenError
 from eopf.exceptions.warnings import AlreadyClose, AlreadyOpen
@@ -53,7 +52,7 @@ def cleanup_files():
 
 
 @pytest.fixture
-def zarr_file(fs: FakeFilesystem):
+def zarr_file():
     file_name = f"file://{_FILES['zarr']}"
     dims = "_ARRAY_DIMENSIONS"
 
@@ -106,7 +105,7 @@ def zarr_file(fs: FakeFilesystem):
 
 
 @pytest.mark.unit
-def test_load_product_from_zarr(zarr_file: str, fs: FakeFilesystem):
+def test_load_product_from_zarr(zarr_file: str):
     product = EOProduct("a_product", store_or_path_url=zarr_file)
     with product.open(mode="r"):
         product.load()
@@ -209,7 +208,7 @@ def test_check_capabilities(store, readable, writable, listable, erasable):
         (EONetCDFStore(_FILES["netcdf"]), Netcdfdecoder),
     ],
 )
-def test_write_stores(fs: FakeFilesystem, store: EOProductStore, decoder_type: Any):
+def test_write_stores(store: EOProductStore, decoder_type: Any):
 
     store.open(mode="w")
     store["a_group"] = EOGroup()
@@ -233,7 +232,7 @@ def test_write_stores(fs: FakeFilesystem, store: EOProductStore, decoder_type: A
         EONetCDFStore(_FILES["netcdf"]),
     ],
 )
-def test_read_stores(fs: FakeFilesystem, store: EOProductStore):
+def test_read_stores(store: EOProductStore):
     store.open(mode="w")
     store["a_group"] = EOGroup()
     store["a_group/a_variable"] = EOVariable(data=[])
@@ -266,7 +265,7 @@ def test_abstract_store_cant_be_instantiate():
         EORasterIOAccessor("a.jp2"),
     ],
 )
-def test_store_must_be_open(fs: FakeFilesystem, store: EOProductStore):
+def test_store_must_be_open(store: EOProductStore):
 
     with pytest.raises(StoreNotOpenError):
         store["a_group"]
@@ -302,7 +301,7 @@ def test_store_must_be_open(fs: FakeFilesystem, store: EOProductStore):
         EONetCDFStore(_FILES["netcdf"]),
     ],
 )
-def test_store_structure(fs: FakeFilesystem, store: EOProductStore):
+def test_store_structure(store: EOProductStore):
     store.open(mode="w")
     store["a_group"] = EOGroup()
     store["another_one"] = EOGroup()
@@ -352,7 +351,7 @@ def test_guess_read_format(store, formats, results):
 
 
 @pytest.mark.unit
-def test_mtd_store_must_be_open(fs: FakeFilesystem):
+def test_mtd_store_must_be_open():
     """Given a manifest store, when accessing items inside it without previously opening it,
     the function must raise a StoreNotOpenError error.
     """

@@ -36,7 +36,6 @@ tests = [
     "pytest >=6.2.5",
     "pytest-cov >=3.0.0",
     "hypothesis >=6.29.0",
-    "pyfakefs >=4.5.4",
 ]
 linter = ["flake8 >=4.0.1"]
 typing = ["mypy >=0.931"]
