@@ -3,7 +3,6 @@ from typing import Any, Iterable, MutableMapping, Optional, Type, Union
 
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError, StoreNotOpenError
 
-from ..formatting import renderer
 from ..store.abstract import EOProductStore, StorageStatus
 from .eo_container import EOContainer
 from .eo_group import EOGroup
@@ -100,6 +99,8 @@ class EOProduct(EOContainer):
         return f"[EOProduct]{hex(id(self))}"
 
     def _repr_html_(self) -> str:
+        from ..formatting import renderer
+
         return renderer("product.html", product=self)
 
     def _add_local_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> EOVariable:
