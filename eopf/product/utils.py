@@ -59,6 +59,7 @@ def conv(obj: Any) -> Any:
         int32,
         int64,
         ndarray,
+        uint8,
         uint16,
         uint32,
         uint64,
@@ -77,7 +78,7 @@ def conv(obj: Any) -> Any:
         return conv(obj.tolist())
 
     # check np int
-    if isinstance(obj, (int64, int32, int16, uint64, uint32, uint16, int)):
+    if isinstance(obj, (int64, int32, int16, uint64, uint32, uint16, uint8, int)):
         return int(obj)
 
     # check np float

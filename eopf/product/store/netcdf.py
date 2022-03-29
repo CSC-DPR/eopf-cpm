@@ -33,8 +33,6 @@ class EONetCDFStore(EOProductStore):
         level of the compression
     shuffle: bool
         enable/disable hdf5 shuffle
-    scale: bool
-        enable/disable automatic variable scaling
     """
 
     RESTRICTED_ATTR_KEY = ("_FillValue",)
@@ -47,7 +45,6 @@ class EONetCDFStore(EOProductStore):
         self.zlib: bool = True
         self.complevel: int = 4
         self.shuffle: bool = True
-        self.scale: bool = False
 
     def __getitem__(self, key: str) -> "EOObject":
 
@@ -84,30 +81,28 @@ class EONetCDFStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         if isinstance(value, EOGroup):
             self._root.createGroup(key)
+            self.write_attrs(key, value.attrs)
         elif isinstance(value, EOVariable):
+            dimensions = []
+            # FIXME: dimensions between value._data and value can mismatch ...
             # Recover / create dimensions from target product
-            for idx, dim in enumerate(value.dims):
+            for idx, (dim, _) in enumerate(zip(value.dims, value._data.dims)):
                 if dim not in self._root.dimensions:
                     self._root.createDimension(dim, size=value._data.shape[idx])
-                if len(self._root.dimensions[dim]) != value._data.shape[idx]:
-                    raise ValueError(
-                        "Netdf4 format does not support mutiples dimensions with the same name and different size.",
-                    )
+                dimensions.append(dim)
             # Create and write EOVariable
             variable = self._root.createVariable(
                 key,
-                value._data.dtype,
-                dimensions=value.dims,
+                value._data.values[:].dtype,
+                dimensions=dimensions,
                 zlib=self.zlib,
                 complevel=self.complevel,
                 shuffle=self.shuffle,
             )
-            variable.set_auto_scale(self.scale)
+            self.write_attrs(key, value.attrs, value._data.values[:].dtype)
             variable[:] = value._data.values
-
         else:
             raise TypeError("Only EOGroup and EOVariable can be set")
-        self.write_attrs(key, value.attrs)
 
     # docstr-coverage: inherited
     def close(self) -> None:
@@ -171,12 +166,9 @@ class EONetCDFStore(EOProductStore):
         if "shuffle" in kwargs:
             self.shuffle = bool(kwargs.get("shuffle"))
             kwargs.pop("shuffle")
-        if "scale" in kwargs:
-            self.scale = bool(kwargs.get("scale"))
-            kwargs.pop("scale")
         self._root = Dataset(self.url, mode, **kwargs)
 
-    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
+    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}, data_type: Any = int) -> None:
         """
         This method is used to update attributes in the store
 
@@ -189,25 +181,57 @@ class EONetCDFStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         current_node = self._select_node(group_path)
         from json import dumps
+        from numbers import Number
 
-        # convert attributes to python data types
-        # if not a number convert to json dict
-        # since netCDF4 does not allow dictionary imbrication
-        if group_path == "/" or group_path == "":
-            attrs = {attr: dumps(conv(value)) for attr, value in attrs.items() if attr not in self.RESTRICTED_ATTR_KEY}
+        conv_attr: MutableMapping[str, Any] = {}
+        for attr, value in attrs.items():
+            if attr not in self.RESTRICTED_ATTR_KEY:
+                if isinstance(value, Number):
+                    conv_attr[attr] = value
+                else:
+                    conv_attr[attr] = dumps(conv(value))
+            else:
+                if type(value) is not data_type:
+                    conv_attr[attr] = self._np_conv(data_type, value)
+                else:
+                    conv_attr[attr] = value
+
+        current_node.setncatts(conv_attr)
+
+    def _np_conv(self, data_type: Any, obj: Any) -> Any:
+        """Converts the obj to the data_type
+
+        Returns
+        ----------
+        Any
+        """
+        from numpy import float32, float64, int16, int32, int64, uint8, uint16, uint32
+
+        if data_type == int16:
+            return int16(obj)
+        elif data_type == int32:
+            return int32(obj)
+        elif data_type == int64:
+            return int64(obj)
+        elif data_type == uint8:
+            return uint8(obj)
+        elif data_type == uint16:
+            return uint16(obj)
+        elif data_type == uint32:
+            return uint32(obj)
+        if data_type == float32:
+            return float32(obj)
+        elif data_type == float64:
+            return float64(obj)
         else:
-            attrs = {attr: conv(value) for attr, value in attrs.items() if attr not in self.RESTRICTED_ATTR_KEY}
-
-        current_node.setncatts(attrs)
+            return obj
 
     def _select_node(self, key: str) -> Union[Dataset, Group, Variable]:
         """Retrieve and return the netcdf4 object corresponding to the node at the given path
 
         Returns
-        -------
         Union of Dataset, Group, Variable
-            node correponding to the given key path
-
+        ----------
         Raises
         ------
         StoreNotOpenError
@@ -218,3 +242,110 @@ class EONetCDFStore(EOProductStore):
         if key in ["/", ""]:
             return self._root
         return self._root[key]
+
+
+class EONetcdfStringToTimeAccessor(EOProductStore):
+    """
+    Store representation to access NetCDF date time format of the given URL
+
+    Parameters
+    ----------
+    url: str
+        path url or the target store
+    """
+
+    # docstr-coverage: inherited
+    def __init__(self, url: str) -> None:
+        url = os.path.expanduser(url)
+        super().__init__(url)
+        self._root = None
+
+    def __getitem__(self, key: str) -> "EOObject":
+        import pandas as pd
+
+        from eopf.product.core import EOVariable
+
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+
+        # convert unix start time to date time format
+        time_da = self._root.get(key)
+        start = pd.to_datetime("1970-1-1T0:0:0.000000Z")
+        end = pd.to_datetime(time_da)
+        # compute and convert the time difference into microseconds
+        time_delta = (end - start) // pd.Timedelta("1microsecond")
+
+        # create coresponding attributes
+        attributes = {}
+        attributes["unit"] = "microseconds since 1970-1-1T0:0:0.000000Z"
+        attributes["standard_name"] = "time"
+        if key == "ANX_time":
+            attributes["long_name"] = "Time of ascending node crossing in UTC"
+        if key == "calibration_time":
+            attributes["long_name"] = "Time of calibration in UTC"
+
+        # create an EOVariable and return it
+        eov: EOVariable = EOVariable(data=time_delta, attrs=attributes)
+        return eov
+
+    def __iter__(self) -> Iterator[str]:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        yield from ()
+
+    def __len__(self) -> int:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        return 1
+
+    def __setitem__(self, key: str, value: "EOObject") -> None:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        # set the data
+        self._root[key] = value._data
+        # set the attrs of the value
+        for key, val in value.attrs.items():
+            self._root.attrs[key] = val
+        # write to netcdf
+        self._root.to_netcdf(self.url)
+
+    # docstr-coverage: inherited
+    def close(self) -> None:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        super().close()
+        self._root.close()
+        self._root = None
+
+    # docstr-coverage: inherited
+    def is_group(self, path: str) -> bool:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+
+        return True
+
+    # docstr-coverage: inherited
+    def is_variable(self, path: str) -> bool:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+
+        return False
+
+    # docstr-coverage: inherited
+    def iter(self, path: str) -> Iterator[str]:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        raise NotImplementedError
+
+    # docstr-coverage: inherited
+    def open(self, mode: str = "r", **kwargs: Any) -> None:
+        super().open()
+        import xarray as xr
+
+        self._root = xr.open_dataset(self.url, mode=mode)
+
+    # docstr-coverage: inherited
+    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        raise NotImplementedError
