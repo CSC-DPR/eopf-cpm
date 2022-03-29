@@ -84,18 +84,19 @@ class EONetCDFStore(EOProductStore):
             self._root.createGroup(key)
             self.write_attrs(key, value.attrs)
         elif isinstance(value, EOVariable):
-            dimensions = []
-            # FIXME: dimensions between value._data and value can mismatch ...
             # Recover / create dimensions from target product
-            for idx, (dim, _) in enumerate(zip(value.dims, value._data.dims)):
+            for idx, dim in enumerate(value.dims):
                 if dim not in self._root.dimensions:
                     self._root.createDimension(dim, size=value._data.shape[idx])
-                dimensions.append(dim)
+                if len(self._root.dimensions[dim]) != value._data.shape[idx]:
+                    raise ValueError(
+                        "Netdf4 format does not support mutiples dimensions with the same name and different size.",
+                    )
             # Create and write EOVariable
             variable = self._root.createVariable(
                 key,
                 value._data.values[:].dtype,
-                dimensions=dimensions,
+                dimensions=value.dims,
                 zlib=self.zlib,
                 complevel=self.complevel,
                 shuffle=self.shuffle,
