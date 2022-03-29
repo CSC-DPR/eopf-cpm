@@ -182,6 +182,7 @@ Using groups and variables
             subgroup["sub_new_group"]
 
         .. jupyter-execute::
+
             from eopf.product.core import EOVariable
             product["measurements/group1"]["group2"]["variable_e"] = EOVariable(data=data_e)
             product["measurements/group1"]["group2"]["variable_e"]
