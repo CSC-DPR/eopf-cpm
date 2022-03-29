@@ -335,7 +335,8 @@ class EONetcdfStringToTimeAccessor(EOProductStore):
     def iter(self, path: str) -> Iterator[str]:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        raise NotImplementedError
+        
+        return iter([])
 
     # docstr-coverage: inherited
     def open(self, mode: str = "r", **kwargs: Any) -> None:
