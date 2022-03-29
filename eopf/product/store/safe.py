@@ -291,7 +291,7 @@ class EOSafeStore(EOProductStore):
         EOObject
         """
         # Should at least merge dims and attributes of EOVariables/Group.
-        from ..core import EOGroup
+        from ..core import EOGroup, EOVariable
 
         if not eo_obj_list:
             raise KeyError("Empty object match.")
@@ -299,11 +299,19 @@ class EOSafeStore(EOProductStore):
             return eo_obj_list[0]
         dims: set[str] = set()
         attrs = dict()
+        count_eovar = 0
+
         for eo_obj in eo_obj_list:
-            if not isinstance(eo_obj, EOGroup):
-                raise NotImplementedError
+            if isinstance(eo_obj, EOVariable):
+                count_eovar += 1
+                data = eo_obj._data.variable
+            if count_eovar > 1:
+                raise NotImplementedError()
             dims = dims.union(eo_obj.dims)
             attrs.update(eo_obj.attrs)
+
+        if count_eovar:
+            return EOVariable(data=data, attrs=attrs, dims=tuple(dims))
         return EOGroup(attrs=attrs, dims=tuple(dims))
 
 
