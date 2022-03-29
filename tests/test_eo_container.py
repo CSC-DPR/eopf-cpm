@@ -305,11 +305,9 @@ def test_delitem(product):
     with pytest.raises(KeyError):
         product["measurements/group1/group2"]
 
-    with (
-        patch.object(EmptyTestStore, "__delitem__", return_value=None) as del_method,
-        patch.object(EmptyTestStore, "__contains__", return_value=True) as in_method,
-    ):
-        del product["false_key"]
+    with patch.object(EmptyTestStore, "__delitem__", return_value=None) as del_method:
+        with patch.object(EmptyTestStore, "__contains__", return_value=True) as in_method:
+            del product["false_key"]
     del_method.assert_called_once()
     in_method.assert_called_once()
 
@@ -344,11 +342,9 @@ def test_write_product(product):
     with pytest.raises(StoreNotOpenError):
         product.write()
 
-    with (
-        patch.object(EmptyTestStore, "__setitem__", return_value=None) as mock_method,
-        product.open(mode="w"),
-    ):
-        product.write()
+    with patch.object(EmptyTestStore, "__setitem__", return_value=None) as mock_method:
+        with product.open(mode="w"):
+            product.write()
 
     assert mock_method.call_count == 21
     assert product._store is not None, "store must be set"
@@ -365,8 +361,9 @@ def test_load_product(product):
     with pytest.raises(StoreNotOpenError):
         product.load()
 
-    with (patch.object(EmptyTestStore, "__getitem__", return_value=(EOGroup())) as mock_method, product.open(mode="r")):
-        product.load()
+    with patch.object(EmptyTestStore, "__getitem__", return_value=(EOGroup())) as mock_method:
+        with product.open(mode="r"):
+            product.load()
 
     assert mock_method.call_count == 1
     assert product._store is not None, "store must be set"
