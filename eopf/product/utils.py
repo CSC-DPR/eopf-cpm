@@ -93,6 +93,42 @@ def conv(obj: Any) -> Any:
     return obj
 
 
+def reverse_conv(data_type: Any, obj: Any) -> Any:
+    """Converts the obj to the data_type
+
+    Parameters
+    ----------
+    data_type: Any
+        the data type to be converted to
+    obj: Any
+        an object
+
+    Returns
+    ----------
+    Any
+    """
+    from numpy import float32, float64, int16, int32, int64, uint8, uint16, uint32
+
+    if data_type == int16:
+        return int16(obj)
+    elif data_type == int32:
+        return int32(obj)
+    elif data_type == int64:
+        return int64(obj)
+    elif data_type == uint8:
+        return uint8(obj)
+    elif data_type == uint16:
+        return uint16(obj)
+    elif data_type == uint32:
+        return uint32(obj)
+    if data_type == float32:
+        return float32(obj)
+    elif data_type == float64:
+        return float64(obj)
+
+    return obj
+
+
 def decode_attrs(attrs: Any) -> Any:
     """Try to decode attributes as json if possible,
     otherwise return the attrs as they are
