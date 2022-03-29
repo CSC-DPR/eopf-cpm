@@ -8,13 +8,16 @@ class EOStoreFactory:
         self.item_formats: dict[str, type[EOProductStore]] = dict()
         self.store_types: set[type[EOProductStore]] = set()
         if default_stores:
-            from eopf.product.store.manifest import ManifestStore
             from eopf.product.store.netcdf import EONetCDFStore
+            from eopf.product.store.xml_selector import XMLAccessor
             from eopf.product.store.zarr import EOZarrStore
 
             self.register_store(EOZarrStore)
             self.register_store(EONetCDFStore, "netcdf")
-            self.register_store(ManifestStore, "xfdumetadata")
+            self.register_store(XMLAccessor, "xfdumetadata")
+            self.register_store(XMLAccessor, "xmlangles")
+            self.register_store(XMLAccessor, "xmltpy")
+            self.register_store(XMLAccessor, "xmltpx")
 
     def register_store(self, store_class: type[EOProductStore], *args: str) -> None:
         self.store_types.add(store_class)
