@@ -421,8 +421,8 @@ class SafeMappingManager:
             # Both can be true we then need to return both
             if safe_target_path in self._config_mapping:
                 return_list.append((safe_target_path, join_eo_path_optional(*local_path)))
-            if "/" + safe_target_path in self._config_mapping:
-                return_list.append(("/" + safe_target_path, join_eo_path_optional(*local_path)))
+            if f"/{safe_target_path}" in self._config_mapping:
+                return_list.append((f"/{safe_target_path}", join_eo_path_optional(*local_path)))
             if return_list:
                 return return_list
             safe_target_path, name = upsplit_eo_path(safe_target_path)
@@ -442,7 +442,7 @@ class SafeMappingManager:
         """
 
         mapped_store: Optional[EOProductStore]
-        accessor_id = item_format + ":" + file_path
+        accessor_id = f"{item_format}:{file_path}"
         if accessor_id not in self._accessor_map:
             self._accessor_map[accessor_id] = dict()
 
@@ -528,7 +528,7 @@ class SafeMappingManager:
         accessor_config: dict[str, Any],
     ) -> Optional[EOProductStore]:
         """Get an accessor from the opened accessors dictionary. If it's not present a new one is added."""
-        accessor_id = item_format + ":" + file_path
+        accessor_id = f"{item_format}:{file_path}"
         if accessor_id in self._accessor_map and accessor_config_id in self._accessor_map[accessor_id]:
             return self._accessor_map[accessor_id][accessor_config_id][0]
         else:
