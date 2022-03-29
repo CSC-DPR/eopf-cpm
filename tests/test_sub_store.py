@@ -1,9 +1,15 @@
 import datetime
 
+import numpy
 import pytest
+import xarray
 from numpy import testing
 
+from eopf.product.core import EOVariable
 from eopf.product.store.grib import EOGribAccessor
+from eopf.product.store.xml import EOXmlAnglesAccesor
+
+from .utils import PARENT_DATA_PATH
 
 EXPECTED_GRIB_MSL_ATTR = {
     "globalDomain": "g",
@@ -188,7 +194,7 @@ EXPECTED_GRIB_MSL_COORD_ATTR["_ARRAY_DIMENSIONS"] = [9]
 
 @pytest.mark.usecase
 def test_grib_store():
-    grib_store = EOGribAccessor("../data/AUX_ECMWFT.grib")
+    grib_store = EOGribAccessor(f"{PARENT_DATA_PATH}/data/AUX_ECMWFT.grib")
     grib_store.open()
     # test attributes
     assert grib_store["msl"].attrs == EXPECTED_GRIB_MSL_ATTR
@@ -204,3 +210,29 @@ def test_grib_store():
     # test iterator
     assert set(grib_store) == {"msl", "tco3", "tcwv", "coordinates"}
     assert set(grib_store.iter("coordinates")) == {"tco3_lat", "msl_lon", "tcwv_lat", "tco3_lon", "tcwv_lon", "msl_lat"}
+
+
+EXPECTED_XML_ATTR = {
+    "array_size": (23, 23),
+    "test_xpath_1": "n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/Values_List",
+    "test_xpath_2": "n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Azimuth/Values_List",
+}
+
+
+@pytest.mark.usecase
+def test_xml_store():
+    # Create and open xml angles accessor
+    xml_store = EOXmlAnglesAccesor(f"{PARENT_DATA_PATH}/tests/data/MTD_TL.xml")
+    xml_store.open()
+
+    # verify data shapes / data name / data type
+    assert xml_store[EXPECTED_XML_ATTR["test_xpath_1"]]._data.data.shape == EXPECTED_XML_ATTR["array_size"]
+    assert xml_store[EXPECTED_XML_ATTR["test_xpath_1"]]._name == "sza"
+    assert isinstance(xml_store[EXPECTED_XML_ATTR["test_xpath_1"]], EOVariable)
+
+    # create an xarray with a user defined value
+    dummy_xarray = xarray.DataArray(data=numpy.full(EXPECTED_XML_ATTR["array_size"], 1.23, dtype=float))
+    # check if all data from an xpath match with user defined xarray
+    assert numpy.all(xml_store[EXPECTED_XML_ATTR["test_xpath_2"]]._data.data == dummy_xarray.data)
+    # check if all items from other xpath does not match with user defined xarray
+    assert not numpy.all(xml_store[EXPECTED_XML_ATTR["test_xpath_1"]]._data.data == dummy_xarray.data)
