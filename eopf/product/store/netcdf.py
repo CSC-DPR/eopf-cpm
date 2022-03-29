@@ -4,11 +4,12 @@ import pathlib
 from collections.abc import MutableMapping
 from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
 
+import xarray as xr
 from netCDF4 import Dataset, Group, Variable
 
 from eopf.exceptions import StoreNotOpenError
 from eopf.product.store import EOProductStore
-from eopf.product.utils import conv, decode_attrs
+from eopf.product.utils import conv, decode_attrs, reverse_conv
 
 if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_object import EOObject
@@ -192,46 +193,19 @@ class EONetCDFStore(EOProductStore):
                     conv_attr[attr] = dumps(conv(value))
             else:
                 if type(value) is not data_type:
-                    conv_attr[attr] = self._np_conv(data_type, value)
+                    conv_attr[attr] = reverse_conv(data_type, value)
                 else:
                     conv_attr[attr] = value
 
         current_node.setncatts(conv_attr)
 
-    def _np_conv(self, data_type: Any, obj: Any) -> Any:
-        """Converts the obj to the data_type
-
-        Returns
-        ----------
-        Any
-        """
-        from numpy import float32, float64, int16, int32, int64, uint8, uint16, uint32
-
-        if data_type == int16:
-            return int16(obj)
-        elif data_type == int32:
-            return int32(obj)
-        elif data_type == int64:
-            return int64(obj)
-        elif data_type == uint8:
-            return uint8(obj)
-        elif data_type == uint16:
-            return uint16(obj)
-        elif data_type == uint32:
-            return uint32(obj)
-        if data_type == float32:
-            return float32(obj)
-        elif data_type == float64:
-            return float64(obj)
-        else:
-            return obj
-
     def _select_node(self, key: str) -> Union[Dataset, Group, Variable]:
         """Retrieve and return the netcdf4 object corresponding to the node at the given path
 
         Returns
-        Union of Dataset, Group, Variable
         ----------
+        Union of Dataset, Group, Variable
+
         Raises
         ------
         StoreNotOpenError
@@ -281,7 +255,7 @@ class EONetcdfStringToTimeAccessor(EOProductStore):
         attributes["standard_name"] = "time"
         if key == "ANX_time":
             attributes["long_name"] = "Time of ascending node crossing in UTC"
-        if key == "calibration_time":
+        elif key == "calibration_time":
             attributes["long_name"] = "Time of calibration in UTC"
 
         # create an EOVariable and return it
@@ -299,13 +273,18 @@ class EONetcdfStringToTimeAccessor(EOProductStore):
         return 1
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
+        from eopf.product.core import EOVariable
+
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         # set the data
+        if not isinstance(value, EOVariable):
+            raise TypeError(f"The value {key} must be an EOVariable")
+        self._check_node(key)
+
         self._root[key] = value._data
         # set the attrs of the value
-        for key, val in value.attrs.items():
-            self._root.attrs[key] = val
+        self.write_attrs(key, value.attrs)
         # write to netcdf
         self._root.to_netcdf(self.url)
 
@@ -335,18 +314,36 @@ class EONetcdfStringToTimeAccessor(EOProductStore):
     def iter(self, path: str) -> Iterator[str]:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        
+        self._check_node(path)
         return iter([])
 
     # docstr-coverage: inherited
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         super().open()
-        import xarray as xr
-
         self._root = xr.open_dataset(self.url, mode=mode)
 
     # docstr-coverage: inherited
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        raise NotImplementedError
+        self._check_node(group_path)
+        self._root.attrs.update(attrs)
+
+    def _check_node(self, key: str) -> Union[Dataset, Group, Variable]:
+        """Check if the key exists, only top level is used
+
+        Returns
+        ----------
+        Union of Dataset, Group, Variable
+
+        Raises
+        ------
+        StoreNotOpenError
+            If the store is closed
+        KeyError
+            If the key does not exist
+        """
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        if key not in ["/", ""]:
+            raise KeyError(f"{key} does not exist")
