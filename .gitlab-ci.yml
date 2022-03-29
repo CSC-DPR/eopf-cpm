@@ -242,7 +242,7 @@ sonar-job:
       -Dsonar.tests=${TESTS}
       -Dsonar.sourceEncoding=${SQ_ENCODING}
       -Dsonar.language=${SQ_LANGUAGE}
-      -Dsonar.python.version=3
+      -Dsonar.python.version=3.9
       -Dsonar.python.flake8.reportPaths="linter.txt"
       -Dsonar.python.bandit.reportPaths="vulnerability.json"
       -Dsonar.python.xunit.reportPath="${REPORTS}/TEST-*.xml"
