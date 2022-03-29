@@ -9,7 +9,10 @@ class EOStoreFactory:
         self.store_types: set[type[EOProductStore]] = set()
         if default_stores:
             from eopf.product.store.manifest import ManifestStore
-            from eopf.product.store.netcdf import EONetCDFStore, EONetcdfStringToTimeAccessor
+            from eopf.product.store.netcdf import (
+                EONetCDFStore,
+                EONetcdfStringToTimeAccessor,
+            )
             from eopf.product.store.zarr import EOZarrStore
 
             self.register_store(EOZarrStore)
