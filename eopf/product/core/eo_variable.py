@@ -82,7 +82,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         dims = tuple(dims)
         if len(dims) != len(self._data.dims):
             raise ValueError("Invalid number of dimensions.")
-        self._data.rename(zip(self._data.dims, dims))
+        self._data = self._data.swap_dims(dict(zip(self._data.dims, dims)))
         super().assign_dims(dims)
 
     # docstr-coverage: inherited
