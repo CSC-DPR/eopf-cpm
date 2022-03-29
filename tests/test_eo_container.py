@@ -116,13 +116,11 @@ def test_browse_product(product):
 
     assert len(product) == 3
 
-    with (
-        patch.object(EmptyTestStore, "iter", return_value=iter(["a", "b"])) as iter_method,
-        patch.object(EmptyTestStore, "__getitem__", return_value=EOGroup()),
-        product.open(mode="r"),
-    ):
-        assert sorted(["group0", "measurements", "coordinates", "a", "b"]) == sorted([i for i in product])
-        assert product.get("a") is not None
+    with patch.object(EmptyTestStore, "iter", return_value=iter(["a", "b"])) as iter_method:
+        with patch.object(EmptyTestStore, "__getitem__", return_value=EOGroup()):
+            with product.open(mode="r"):
+                assert sorted(["group0", "measurements", "coordinates", "a", "b"]) == sorted([i for i in product])
+                assert product.get("a") is not None
     assert iter_method.call_count == 1
 
     with pytest.raises(KeyError):
