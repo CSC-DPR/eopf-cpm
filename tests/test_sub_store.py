@@ -1,15 +1,21 @@
 import datetime
+import json
+import os
+from glob import glob
+from typing import Optional
 
 import numpy
 import pytest
 import xarray
 from numpy import testing
+from pyfakefs.fake_filesystem import FakeFilesystem
 
-from eopf.product.core import EOVariable
+from eopf.exceptions import StoreNotOpenError
+from eopf.product.core import EOGroup, EOVariable
 from eopf.product.store.grib import EOGribAccessor
-from eopf.product.store.xml import EOXmlAnglesAccesor
+from eopf.product.store.xml_selector import XMLAccessor
 
-from .utils import PARENT_DATA_PATH
+from .utils import PARENT_DATA_PATH, assert_issubdict
 
 EXPECTED_GRIB_MSL_ATTR = {
     "globalDomain": "g",
@@ -216,23 +222,200 @@ EXPECTED_XML_ATTR = {
     "array_size": (23, 23),
     "test_xpath_1": "n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/Values_List",
     "test_xpath_2": "n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Azimuth/Values_List",
+    "tp_array_size": (23,),
 }
 
 
 @pytest.mark.usecase
-def test_xml_store():
+def test_xml_angles_accessor():
     # Create and open xml angles accessor
-    xml_store = EOXmlAnglesAccesor(f"{PARENT_DATA_PATH}/tests/data/MTD_TL.xml")
-    xml_store.open()
+    xml_accessor = XMLAccessor(f"{PARENT_DATA_PATH}/tests/data/MTD_TL.xml", "xmlangles")
+    xml_accessor.open()
 
     # verify data shapes / data name / data type
-    assert xml_store[EXPECTED_XML_ATTR["test_xpath_1"]]._data.data.shape == EXPECTED_XML_ATTR["array_size"]
-    assert xml_store[EXPECTED_XML_ATTR["test_xpath_1"]]._name == "sza"
-    assert isinstance(xml_store[EXPECTED_XML_ATTR["test_xpath_1"]], EOVariable)
+    assert xml_accessor[EXPECTED_XML_ATTR["test_xpath_1"]]._data.data.shape == EXPECTED_XML_ATTR["array_size"]
+    assert xml_accessor[EXPECTED_XML_ATTR["test_xpath_1"]]._name == "sza"
+    assert isinstance(xml_accessor[EXPECTED_XML_ATTR["test_xpath_1"]], EOVariable)
 
     # create an xarray with a user defined value
     dummy_xarray = xarray.DataArray(data=numpy.full(EXPECTED_XML_ATTR["array_size"], 1.23, dtype=float))
     # check if all data from an xpath match with user defined xarray
-    assert numpy.all(xml_store[EXPECTED_XML_ATTR["test_xpath_2"]]._data.data == dummy_xarray.data)
+    assert numpy.all(xml_accessor[EXPECTED_XML_ATTR["test_xpath_2"]]._data.data == dummy_xarray.data)
     # check if all items from other xpath does not match with user defined xarray
-    assert not numpy.all(xml_store[EXPECTED_XML_ATTR["test_xpath_1"]]._data.data == dummy_xarray.data)
+    assert not numpy.all(xml_accessor[EXPECTED_XML_ATTR["test_xpath_1"]]._data.data == dummy_xarray.data)
+
+
+@pytest.mark.usecase
+def test_xml_tiepoints_accessor():
+    # Compute a user defined tie points array with values similar with ones from XML.
+    col_step = 5000
+    ulx = 300000
+    uly = 4800000
+
+    dummy_x_array = [ulx + idx * col_step + col_step / 2 for idx in range(EXPECTED_XML_ATTR["tp_array_size"][0])]
+    dummy_y_array = [uly - idx * col_step - col_step / 2 for idx in range(EXPECTED_XML_ATTR["tp_array_size"][0])]
+
+    # Create XMLAccessors
+    tp_y_accessor = XMLAccessor(f"{PARENT_DATA_PATH}/tests/data/MTD_TL.xml", "xmltpy")
+    tp_y_accessor.open()
+    assert tp_y_accessor["y"]._data.shape == EXPECTED_XML_ATTR["tp_array_size"]
+
+    tp_x_accessor = XMLAccessor(f"{PARENT_DATA_PATH}/tests/data/MTD_TL.xml", "xmltpx")
+    tp_x_accessor.open()
+    assert tp_x_accessor["x"]._data.shape == EXPECTED_XML_ATTR["tp_array_size"]
+
+    assert all(dummy_x_array == tp_x_accessor["x"]._data)
+    assert all(dummy_y_array == tp_y_accessor["y"]._data)
+    assert not all(dummy_x_array == tp_y_accessor["y"]._data)
+    assert not all(dummy_y_array == tp_x_accessor["x"]._data)
+    # Verify that you cannot access <<Y>> or other item trough an xmltpx accessor
+    try:
+        tp_x_accessor["y"]._data
+    except NotImplementedError:
+        assert True
+    try:
+        tp_y_accessor["Z"]._data
+    except NotImplementedError:
+        assert True
+
+
+@pytest.mark.usecase
+def test_xml_manifest_accessor():
+    olci_path = glob(f"{PARENT_DATA_PATH}/data/S3A_OL_1*.SEN3")[0]
+    manifest_path = os.path.join(olci_path, "xfdumanifest.xml")
+    manifest_accessor = XMLAccessor(manifest_path, "manifest")
+    mapping_file_path = glob("eopf/product/store/mapping/S3_OL_1_EFR_mapping.json")[0]
+    mapping_file = open(mapping_file_path)
+    map_olci = json.load(mapping_file)
+    config = {"namespaces": map_olci["namespaces"], "metadata_mapping": map_olci["metadata_mapping"]}
+    manifest_accessor.open(**config)
+    eog = manifest_accessor[""]
+    assert isinstance(eog, EOGroup)
+    returned_cf = eog.attrs["CF"]
+    returned_om_eop = eog.attrs["OM_EOP"]
+    assert_issubdict(
+        returned_cf,
+        {
+            "title": olci_path.replace(f"{PARENT_DATA_PATH}/data/", ""),
+            "institution": "European Space Agency, Land OLCI Processing and Archiving Centre [LN1]",
+            "source": "Sentinel-3A OLCI Ocean Land Colour Instrument",
+            "comment": "Operational",
+            "references": "https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-2, "
+            "https://sentinels.copernicus.eu/web/sentinel/user-guides/sentinel-2-msi/processing-levels/level-1",
+            # noqa
+            "Conventions": "CF-1.9",
+        },
+    ) and ("history" in returned_cf)
+
+    phenomenon_time = returned_om_eop.get("phenomenonTime", {})
+    import re
+    from datetime import datetime
+
+    assert all(datetime.strptime(phenomenon_time[p], "%Y-%m-%dT%H:%M:%S.%fZ") for p in ("beginPosition", "endPosition"))
+
+    acq_parameter = returned_om_eop.get("procedure", {}).get("acquistionParameters", {})
+
+    assert_issubdict(
+        returned_om_eop.get("procedure", {}),
+        {
+            "platform": {"shortName": "Sentinel-3", "serialIdentifier": "A"},
+            "instrument": {"shortName": "OLCI"},
+            "sensor": {"sensorType": "OPTICAL", "operationalMode": "EO"},
+        },
+    )
+    assert acq_parameter.get("orbitNumber").isnumeric() and acq_parameter.get("orbitDirection") == "descending"
+
+    assert datetime.strptime(returned_om_eop.get("resultTime", {}).get("timePosition", ""), "%Y%m%dT%H%M%S")
+    assert (
+        re.match(
+            r"POLYGON\(\((-?\d*\.\d* -?\d*\.\d*,?)*\)\)",
+            returned_om_eop.get("featureOfInterest", {}).get("multiExtentOf", ""),
+        )
+        is not None
+    )
+    assert_issubdict(
+        returned_om_eop,
+        {
+            "result": {
+                "product": {
+                    "fileName": "./Oa01_radiance.nc,./Oa02_radiance.nc,./Oa03_radiance.nc,./Oa04_radiance.nc,"
+                    "./Oa05_radiance.nc,./Oa06_radiance.nc,./Oa07_radiance.nc,./Oa08_radiance.nc,"
+                    "./Oa09_radiance.nc,./Oa10_radiance.nc,./Oa11_radiance.nc,./Oa12_radiance.nc,"
+                    "./Oa13_radiance.nc,./Oa14_radiance.nc,./Oa15_radiance.nc,./Oa16_radiance.nc,"
+                    "./Oa17_radiance.nc,./Oa18_radiance.nc,./Oa19_radiance.nc,./Oa20_radiance.nc,"
+                    "./Oa21_radiance.nc,./geo_coordinates.nc,./instrument_data.nc,./qualityFlags.nc,"
+                    "./removed_pixels.nc,./tie_geo_coordinates.nc,./tie_geometries.nc,./tie_meteo.nc,"
+                    "./time_coordinates.nc",
+                    # noqa
+                    "timeliness": "NT",
+                },
+            },
+        },
+    )
+
+    metadata_property = returned_om_eop.get("metadataProperty", {})
+    assert_issubdict(
+        metadata_property,
+        {
+            "identifier": olci_path.replace(f"{PARENT_DATA_PATH}/data/", ""),  # noqa
+            "acquisitionType": "Operational",
+            "productType": "OL_1_EFR___",
+            "status": "ARCHIVED",
+            "productQualityStatus": "PASSED",
+        },
+    )
+    assert len(metadata_property.get("productQualityDegradationTag", "")) > 0
+
+    assert datetime.strptime(metadata_property.get("creationDate", ""), "%Y%m%dT%H%M%S")
+    downlinked_to = metadata_property.get("downlinkedTo", {})
+    assert datetime.strptime(downlinked_to.get("acquisitionDate", ""), "%Y-%m-%dT%H:%M:%S.%fZ")
+    assert downlinked_to.get("acquisitionStation", "") == "CGS"
+
+    processing_map = metadata_property.get("processing", {})
+    assert processing_map["processorName"] == "PUG"
+    assert processing_map["processingCenter"] == "Land OLCI Processing and Archiving Centre [LN1]"
+    assert re.match(r"\d{1,2}\.\d{2}", processing_map["processorVersion"])
+    assert datetime.strptime(processing_map["processingDate"], "%Y-%m-%dT%H:%M:%S.%f")
+
+
+_FILES = {
+    "netcdf": "test_ncdf_file_.nc",
+    "netcdf0": "test_ncdf_read_file_.nc",
+    "netcdf1": "test_ncdf_write_file_.nc",
+    "json": "test_metadata_file_.json",
+    "zarr": "test_zarr_files_.zarr",
+    "zarr0": "test_zarr_read_files_.zarr",
+    "zarr1": "test_zarr_write_files_.zarr",
+}
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "config, exception_type",
+    [
+        ({"metadata_mapping": {}}, TypeError),
+        ({"namespaces": {}}, TypeError),
+        ({"namespaces": {}, "metadata_mapping": {}}, FileNotFoundError),
+    ],
+)
+def test_open_manifest_accessor(config: Optional[dict], exception_type: Exception):
+    """Given a manifest store, without passing configuration parameters
+    the function must raise a MissingConfigurationParameter error.
+    """
+    store = XMLAccessor(_FILES["json"], "manifest")
+    with pytest.raises(exception_type):
+        store.open(**config)
+
+
+@pytest.mark.unit
+def test_mtd_store_must_be_open(fs: FakeFilesystem):
+    """Given a manifest store, when accessing items inside it without previously opening it,
+    the function must raise a StoreNotOpenError error.
+    """
+    store = XMLAccessor(_FILES["json"], "manifest")
+    with pytest.raises(StoreNotOpenError):
+        store["a_group"]
+
+    with pytest.raises(StoreNotOpenError):
+        for _ in store:
+            continue
