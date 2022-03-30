@@ -11,7 +11,7 @@ from eopf.product.utils import conv
 
 from .abstract import EOProductStore
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_object import EOObject
 
 

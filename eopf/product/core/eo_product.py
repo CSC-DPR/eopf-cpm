@@ -2,9 +2,7 @@ from types import TracebackType
 from typing import Any, Iterable, MutableMapping, Optional, Type, Union
 
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError, StoreNotOpenError
-from eopf.product.utils import join_eo_path, partition_eo_path, product_relative_path
 
-from ..formatting import renderer
 from ..store.abstract import EOProductStore, StorageStatus
 from .eo_container import EOContainer
 from .eo_group import EOGroup
@@ -12,11 +10,11 @@ from .eo_variable import EOVariable
 
 
 class EOProduct(EOContainer):
-    """A EOProduct containing EOGroups (and throught them their EOVariable), linked to it's EOProductStore (if existing).
+    """A EOProduct contains EOGroups (and throught them their EOVariables), linked to its EOProductStore (if existing).
 
-    Read and write both dynamically, or on demand to the EOProductStore.
-    Can be used in a dictionary like manner with relatives and absolutes paths.
-    Has personal attributes and both personal and inherited coordinates.
+    Read and write both dynamically or on demand to the EOProductStore.
+    It can be used in a dictionary like manner with relative and absolute paths.
+    It has personal attributes and both personal and inherited coordinates.
 
     Parameters
     ----------
@@ -101,6 +99,8 @@ class EOProduct(EOContainer):
         return f"[EOProduct]{hex(id(self))}"
 
     def _repr_html_(self) -> str:
+        from ..formatting import renderer
+
         return renderer("product.html", product=self)
 
     def _add_local_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> EOVariable:
@@ -171,25 +171,6 @@ class EOProduct(EOContainer):
         if self.store is None:  # pragma: no cover
             raise StoreNotDefinedError("Store must be defined")
         self.store.close()
-
-    # docstr-coverage: inherited
-    def get_coordinate(self, name: str, context: Optional[str] = None) -> EOVariable:
-        if context is None:
-            context = self.path
-        context_split = list(partition_eo_path(product_relative_path(context, name)))
-        if len(context_split) == 0 or context_split[0] != "coordinates":
-            context_split = ["coordinates"] + context_split
-        while len(context_split) > 0:
-            try:
-                coord = self[join_eo_path(*context_split, name)]
-                if isinstance(coord, EOVariable):
-                    # It is valid to have a subgroup with the name of a coordinate of an ancestor.
-                    # ex : /coordinate/coord_name et /coordinate/group1/coord_name/obj
-                    return coord
-            except KeyError:
-                pass
-            context_split.pop()
-        raise KeyError(f"Unknown coordinate {name} in context {context} .")
 
     def _create_structure(self, group: Union[EOGroup, tuple[str, EOGroup]], level: int) -> None:
         if isinstance(group, tuple):

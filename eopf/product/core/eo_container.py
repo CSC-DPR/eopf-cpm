@@ -214,7 +214,6 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
         self,
         name: str,
         attrs: MutableMapping[str, Any] = {},
-        coords: MutableMapping[str, Any] = {},
         dims: tuple[str, ...] = tuple(),
     ) -> "EOGroup":
         """Add a group local to the EOContainer. Does not support paths and recursively adding subgroups.
@@ -225,8 +224,6 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
             name of the sub group to add
         attrs: dict[str, Any], optional
             attributes to assign to the new group
-        coords: MutableMapping[str, Any], optional
-            coordinates to assign
         dims: tuple[str, ...], optional
             dimensions to assign
 
@@ -244,7 +241,6 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
         from .eo_group import EOGroup
 
         group = self[name] = EOGroup(attrs=attrs)
-        group.assign_coords(coords=coords)
         group.assign_dims(dims)
         return group
 
@@ -282,7 +278,6 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
         self,
         name: str,
         attrs: dict[str, Any] = {},
-        coords: MutableMapping[str, Any] = {},
         dims: tuple[str, ...] = tuple(),
     ) -> "EOGroup":
         """Construct and add an EOGroup to this container
@@ -297,8 +292,6 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
             name of the future group
         attrs: dict[str, Any], optional
             attributes to assign to the new group
-        coords: MutableMapping[str, Any], optional
-            coordinates to assign
         dims: tuple[str, ...], optional
             dimensions to assign
 
@@ -314,7 +307,7 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
         """
 
         def local_adder(subcontainer: EOContainer, name: str) -> "EOGroup":
-            return subcontainer._add_local_group(name, attrs=attrs, coords=coords, dims=dims)
+            return subcontainer._add_local_group(name, attrs=attrs, dims=dims)
 
         if is_absolute_eo_path(name):
             return self.product.add_group(product_relative_path(self.path, name))

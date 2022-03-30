@@ -1,6 +1,7 @@
-import itertools as it
 from types import MappingProxyType
-from typing import TYPE_CHECKING, Any, Iterable, MutableMapping, Optional
+from typing import TYPE_CHECKING, Iterable, Optional
+
+from xarray.backends import zarr
 
 from eopf.exceptions import EOObjectMultipleParentError, InvalidProductError
 from eopf.product.core.eo_abstract import EOAbstract
@@ -10,10 +11,10 @@ from eopf.product.utils import join_eo_path
 if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_container import EOContainer
     from eopf.product.core.eo_product import EOProduct
-    from eopf.product.core.eo_variable import EOVariable
 
 
-_DIMENSIONS_NAME = "_EOPF_DIMENSIONS"
+# Must match xarray zarr one for cross compatibility.
+_DIMENSIONS_NAME = zarr.DIMENSION_KEY
 
 
 class EOObject(EOAbstract):
@@ -26,9 +27,7 @@ class EOObject(EOAbstract):
     name: str, optional
         name of this group
     parent: EOProduct or EOGroup, optional
-        parent to link to this group
-    coords: MutableMapping[str, Any], optional
-        coordinates to assign
+        parent
     dims: tuple[str], optional
         dimensions to assign
     """
@@ -37,13 +36,11 @@ class EOObject(EOAbstract):
         self,
         name: str,
         parent: "Optional[EOContainer]" = None,
-        coords: MutableMapping[str, Any] = {},
         dims: tuple[str, ...] = tuple(),
     ) -> None:
         self._name: str = ""
         self._parent: Optional["EOContainer"] = None
         self._repath(name, parent)
-        self.assign_coords(coords=coords)
         self.assign_dims(dims=dims)
 
     def assign_dims(self, dims: Iterable[str]) -> None:
@@ -54,21 +51,10 @@ class EOObject(EOAbstract):
         dims: Iterable[str], optional
             dimensions to assign
         """
-        for dim in dims:
-            self.attrs.setdefault(_DIMENSIONS_NAME, []).append(dim)
-
-    def assign_coords(self, coords: MutableMapping[str, Any] = {}, **kwargs: Any) -> None:
-        """Assign coordinates to this object
-
-        Coordinates should be set in the given key-value pair format: {"path/under/coordinates/group" : array_like}.
-
-        Parameters
-        ----------
-        coords: MutableMapping[str, Any] optional
-            coordinates to assign
-        """
-        for path, coords_value in it.chain(coords.items(), kwargs.items()):
-            self.product.coordinates.add_variable(path, data=coords_value)
+        if dims:
+            self.attrs[_DIMENSIONS_NAME] = dims
+        elif not dims and _DIMENSIONS_NAME in self.attrs:
+            del self.attrs[_DIMENSIONS_NAME]
 
     def _repath(self, name: str, parent: "Optional[EOContainer]") -> None:
         """Set the name, product and relative_path attributes of this EObject.
@@ -98,9 +84,16 @@ class EOObject(EOAbstract):
         self._parent = parent
 
     @property
+    def coordinates(self) -> MappingProxyType[str, "EOObject"]:
+        """MappingProxyType[str, "EOObject"]: Coordinates defined by this object"""
+        coords_group = self.product.coordinates
+        coords_list = coords_group._find_by_dim(self.dims)
+        return MappingProxyType({coord.path: coord for coord in coords_list})
+
+    @property
     def dims(self) -> tuple[str, ...]:
         """tuple[str, ...]: dimensions"""
-        return self.attrs.get(_DIMENSIONS_NAME, tuple())
+        return tuple(self.attrs.get(_DIMENSIONS_NAME, tuple()))
 
     # docstr-coverage: inherited
     @property
@@ -149,18 +142,13 @@ class EOObject(EOAbstract):
     def store(self) -> Optional[EOProductStore]:
         return self.product.store
 
-    @property
-    def coordinates(self) -> MappingProxyType[str, Any]:
-        """MappingProxyType[str, Any]: Coordinates defined by this object"""
-        coords_group = self.product.coordinates
-        retrieved_coords = {}
-        for dim in self.dims:
-            if coords := coords_group.get(dim):
-                retrieved_coords[dim] = coords
-        return MappingProxyType(retrieved_coords)
-
-    # docstr-coverage: inherited
-    def get_coordinate(self, name: str, context: Optional[str] = None) -> "EOVariable":
-        if context is None:
-            context = self.path
-        return self.product.get_coordinate(name, context)
+    def _find_by_dim(self, dims: Iterable[str], shape: Optional[tuple[int, ...]] = None) -> list["EOObject"]:
+        for dim_index, dim_name in enumerate(dims):
+            if dim_name in self.dims:
+                if shape:
+                    self_shape = getattr(self, "shape", None)
+                    self_dim_index = self.dims.index(dim_name)
+                    if not self_shape or shape[dim_index] != self_shape[self_dim_index]:
+                        continue
+                return [self]
+        return []

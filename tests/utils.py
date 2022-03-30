@@ -1,6 +1,17 @@
-from typing import Any
+import os
+from typing import TYPE_CHECKING, Any, Union
 
 from eopf.product.core.eo_container import EOContainer
+
+if TYPE_CHECKING:  # pragma: no cover
+    from eopf.product.core.eo_object import EOObject
+
+
+def assert_has_coords(obj: "EOObject", coords: list[Union[str, "EOObject"]]):
+    """Assert that"""
+    assert len(obj.coordinates) == len(coords)
+    for c in obj.coordinates:
+        assert c in coords
 
 
 def group_details(section_detail: dict, section_structure: dict) -> None:
@@ -57,7 +68,7 @@ def _compute_rec(node):
     if node_attrs:
         attrs = json.loads(node_attrs[0].text)
         if len(node_attrs) > 1:
-            coords = [i.text.strip().split("coordinates -> ")[-1] for i in node_attrs[1:]]
+            coords = [i.text for i in node_attrs[1:]]
 
     node_dims = node.xpath('div/ul/li/div/div[@class="eopf-section-inline-details"]')
     dims = []
@@ -85,6 +96,10 @@ def assert_contain(container: EOContainer, path: str, expect_type, path_offset="
     assert isinstance(obj, expect_type)
 
 
+def assert_issubdict(set_dict: dict, subset_dict: dict) -> bool:
+    assert (set_dict | subset_dict) == set_dict
+
+
 def couple_combinaison_from(elements: list[Any]) -> list[tuple[Any, Any]]:
     """create all possible combinaison of two elements from the input list"""
     zip_size = len(elements)
@@ -92,3 +107,6 @@ def couple_combinaison_from(elements: list[Any]) -> list[tuple[Any, Any]]:
         (list(zip([element] * zip_size, elements)) for element in elements),
         [],
     )
+
+
+PARENT_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..")
