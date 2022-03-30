@@ -75,7 +75,6 @@ unit-tests:
     python -m pytest
     --cov=${SOURCES}
     --junit-xml=${REPORTS}/TEST-pytests.xml
-    --cov-report=term-missing
     --cov-report=xml:${REPORTS}/coverage.xml
     -m unit
     -m "not need_files"
