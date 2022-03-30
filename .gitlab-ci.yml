@@ -65,7 +65,7 @@ typing:
   script:
   - python -m mypy ${SOURCES}
 
-tests:
+unit-tests:
   stage: test
   image: python:3.9
   before_script:
@@ -78,6 +78,7 @@ tests:
     --cov-report=term-missing
     --cov-report=xml:${REPORTS}/coverage.xml
     -m unit
+    -m "not need_files"
   artifacts:
     expire_in: 1h
     reports:
@@ -86,6 +87,25 @@ tests:
         - $REPORTS/TEST-*.xml
     paths:
     - $REPORTS
+    - .coverage
+
+integration-tests:
+  stage: test
+  image: python:3.9
+  before_script:
+  - pip install .[tests] .[notebook]
+  needs:
+  - unit-tests
+  dependencies:
+  - unit-tests
+  script:
+  - >-
+    python -m pytest
+    --cov=${SOURCES}
+    --cov-report=term-missing
+    --cov-append
+    -m integration
+    -m "not need_files"
 
 security:
   stage: test
@@ -217,11 +237,11 @@ sonar-job:
   stage: sonarqube-runner
   image: sonarsource/sonar-scanner-cli
   needs:
-  - tests
+  - unit-tests
   - linter
   - security
   dependencies:
-  - tests
+  - unit-tests
   - linter
   - security
   variables:

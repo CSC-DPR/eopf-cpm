@@ -41,6 +41,17 @@ _FILES = {
 }
 
 
+# needed because Netcdf4 have no convenience way to test without create a file ...
+@pytest.fixture(autouse=True)
+def cleanup_files():
+    yield
+    for file in _FILES.values():
+        if os.path.isfile(file):
+            os.remove(file)
+        if os.path.isdir(file):
+            shutil.rmtree(file)
+
+
 @pytest.fixture
 def zarr_file(fs: FakeFilesystem):
     file_name = f"file://{_FILES['zarr']}"
@@ -307,17 +318,6 @@ def test_store_structure(fs: FakeFilesystem, store: EOProductStore):
     store.close()
 
 
-# needed because Netcdf4 have no convenience way to test without create a file ...
-@pytest.fixture(autouse=True)
-def cleanup_files():
-    yield
-    for file in _FILES.values():
-        if os.path.isfile(file):
-            os.remove(file)
-        if os.path.isdir(file):
-            shutil.rmtree(file)
-
-
 @pytest.mark.unit
 @pytest.mark.filterwarnings("error")
 @pytest.mark.parametrize(
@@ -403,7 +403,8 @@ def test_close_manifest_store():
         store.close()
 
 
-@pytest.mark.usecase
+@pytest.mark.need_files
+@pytest.mark.integration
 def test_retrieve_from_manifest_store():
     """Tested on 24th of February on data coming from
     S3A_OL_1_EFR____20220116T092821_20220116T093121_20220117T134858_0179_081_036_2160_LN1_O_NT_002.SEN3

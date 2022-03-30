@@ -4,13 +4,14 @@ import pytest
 
 from eopf.product.utils import apply_xpath, parse_xml, translate_structure
 
+from .utils import PARENT_DATA_PATH
+
 
 @pytest.fixture
 def tree():
-    snippet_path = "tests/data/snippet_xfdumanifest.xml"
-    snippet_file = open(snippet_path)
-    tree = parse_xml(snippet_file)
-    return tree
+    snippet_path = f"{PARENT_DATA_PATH}/tests/data/snippet_xfdumanifest.xml"
+    with open(snippet_path) as f:
+        return parse_xml(f)
 
 
 @pytest.mark.unit
