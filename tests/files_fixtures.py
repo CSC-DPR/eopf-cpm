@@ -12,7 +12,7 @@ ENS_PATH_ENV_VAlUE = "ENS_PATH"
 
 @pytest.fixture
 def S3_OLCI_L1_EFR():
-    file_name = "S3*_OL_1_E*R*zip"
+    file_name = "S3*_OL_1_E*R*.zip"
     if ens_path := os.environ.get(ENS_PATH_ENV_VAlUE):
         now = datetime.datetime.now()
         year = random.randint(2016, now.year)
