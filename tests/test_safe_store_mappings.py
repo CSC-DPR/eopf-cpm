@@ -1,20 +1,20 @@
+from typing import Callable
 from unittest.mock import patch
 
 import pytest
+from pytest_lazyfixture import lazy_fixture
 
 from eopf.product.core import EOGroup, EOProduct, EOVariable
 from eopf.product.store.conveniences import convert
 from eopf.product.store.manifest import ManifestStore
 from eopf.product.store.safe import EOSafeStore
 
+from .files_fixtures import S3_OLCI_L1_EFR  # noqa
 from .utils import PARENT_DATA_PATH
 
 IN_DIR = f"{PARENT_DATA_PATH}/data"
 OUT_DIR = f"{PARENT_DATA_PATH}/data_out"
 
-STORE_PATHS = {
-    "S3": "S3A_OL_1_EFR____20200101T101517_20200101T101817_20200102T141102_0179_053_179_2520_LN1_O_NT_002.SEN3",
-}
 
 
 @pytest.mark.need_files
@@ -22,11 +22,12 @@ STORE_PATHS = {
 @pytest.mark.parametrize(
     "store_type, get_key",
     [
-        ("S3", "/coordinates/image_grid/longitude"),
+        (lazy_fixture("S3_OLCI_L1_EFR"), "/coordinates/image_grid/longitude"),
     ],
 )
 def test_read_product(store_type, get_key):
-    store = EOSafeStore(f"{IN_DIR}/{STORE_PATHS[store_type]}")
+    print(store_type)
+    store = EOSafeStore(store_type)
     product = EOProduct("my_product", store_or_path_url=store)
     product.open()
     product[get_key]
@@ -41,11 +42,11 @@ def test_read_product(store_type, get_key):
 @pytest.mark.parametrize(
     "store_type",
     [
-        "S3",
+        lazy_fixture("S3_OLCI_L1_EFR"),
     ],
 )
 def test_load_product(store_type):
-    store = EOSafeStore(f"{IN_DIR}/{STORE_PATHS[store_type]}")
+    store = EOSafeStore(store_type)
     product = EOProduct("my_product", store_or_path_url=store)
     product.open()
     with patch.object(ManifestStore, "__getitem__", return_value=EOGroup()) as mock_method:
@@ -63,12 +64,11 @@ def test_load_product(store_type):
 @pytest.mark.need_files
 @pytest.mark.unit
 @pytest.mark.parametrize(
-    "store_type",
-    [
-        "S3",
-    ],
+    "store_type, output_formatter",
+    [(lazy_fixture("S3_OLCI_L1_EFR"), lambda name: f"{OUT_DIR}/{name.replace('.zip', '.SEN3')}")],
 )
-def test_load_write_product(store_type):
-    source_store = EOSafeStore(f"{IN_DIR}/{STORE_PATHS[store_type]}")
-    target_store = EOSafeStore(f"{OUT_DIR}/{STORE_PATHS[store_type]}")
+def test_load_write_product(store_type: str, output_formatter: Callable):
+    source_store = EOSafeStore(store_type)
+    _, _, name = store_type.rpartition("/")
+    target_store = EOSafeStore(output_formatter(name))
     convert(source_store, target_store)

@@ -72,6 +72,7 @@ unit-tests:
   - pip install .[tests] .[notebook]
   script:
   - >-
+    ENS_PATH=/ens
     python -m pytest
     --cov=${SOURCES}
     --junit-xml=${REPORTS}/TEST-pytests.xml
