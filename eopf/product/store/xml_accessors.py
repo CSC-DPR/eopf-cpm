@@ -1,31 +1,17 @@
-from typing import Any, MutableMapping, Optional, TextIO, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional, TextIO
+
 import lxml
 import xarray as xr
-import os
-from eopf.exceptions import (
-    MissingConfigurationParameter,
-    StoreNotOpenError,
-    XmlParsingError,
+
+from eopf.exceptions import StoreNotOpenError, XmlParsingError
+from eopf.product.utils import (  # to be reviewed
+    apply_xpath,
+    parse_xml,
+    translate_structure,
 )
-from eopf.product.utils import apply_xpath, parse_xml, translate_structure # to be reviewed
+
 if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_object import EOObject
-
-
-def get_mtd_file_path(path: str) -> str:
-    """
-    This static method is used to locate path of MTD_TL.xml file
-    from a given legacy product path.
-    Parameters
-    -------
-    path: str
-        path to legacy product
-    Returns
-    -------
-    str: path to target file
-    """
-    fpath = os.listdir(f"{path}/GRANULE/")[1]
-    return f"{path}/GRANULE/{fpath}/MTD_TL.xml"
 
 
 class XMLAnglesAccessor:
@@ -35,11 +21,7 @@ class XMLAnglesAccessor:
         self.local_namespaces = {"n1": "https://psd-14.sentinel2.eo.esa.int/PSD/S2_PDI_Level-1C_Tile_Metadata.xsd"}
 
     def open(self) -> None:
-        if "MTD_TL.xml" not in self._url:
-            xml_url = get_mtd_file_path(self._url)
-            self._root = lxml.etree.parse(xml_url)
-        else:
-            self._root = lxml.etree.parse(self._url)
+        self._root = lxml.etree.parse(self._url)
 
     def __getitem__(self, key: str) -> "EOObject":
         """
@@ -59,6 +41,7 @@ class XMLAnglesAccessor:
         EOVariable
         """
         from eopf.product.core import EOVariable
+
         variable_name, variable_data = self.create_eo_variable(key)
         return EOVariable(name=variable_name, data=variable_data)
 
@@ -133,13 +116,9 @@ class XMLTPAccessor:
         self._dim = kwargs["type"][-1]  # x or y
         self.local_namespaces = {"n1": "https://psd-14.sentinel2.eo.esa.int/PSD/S2_PDI_Level-1C_Tile_Metadata.xsd"}
 
-    def open(self, mode: str = "r", **kwargs: Any) -> None:
+    def open(self, mode: str = "r") -> None:
         # Assure that given url is path to legacy product or path to MTD_TL.xml file
-        if "MTD_TL.xml" not in self._url:
-            xml_url = get_mtd_file_path(self._url)
-            self._root = lxml.etree.parse(xml_url)
-        else:
-            self._root = lxml.etree.parse(self._url)
+        self._root = lxml.etree.parse(self._url)
 
     def get_shape(self, xpath: str) -> list[int]:
         """
@@ -157,41 +136,39 @@ class XMLTPAccessor:
         list = self._root.xpath(xpath, namespaces=self.local_namespaces)
         return [len(list), len(list[0].text.split())]
 
-    def tie_points(self, dimension: str) -> xr.DataArray:
-        dom = self._root
-        shape_y_x = self.get_shape("n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/Values_List/VALUES")
-        # To verify if other resolutions values should be read
-        ymax = float(dom.xpath('n1:Geometric_Info/Tile_Geocoding/Geoposition[@resolution="10"]/ULY',
-                               namespaces=self.local_namespaces, )[0].text, )
-        xmin = float(dom.xpath('n1:Geometric_Info/Tile_Geocoding/Geoposition[@resolution="10"]/ULX',
-                               namespaces=self.local_namespaces, )[0].text, )
-        ystep = float(dom.xpath("n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/ROW_STEP",
-                                namespaces=self.local_namespaces, )[0].text, )
-        xstep = float(dom.xpath("n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/COL_STEP",
-                                namespaces=self.local_namespaces, )[0].text, )
-
-        y = [ymax - i * ystep - ystep / 2 for i in range(shape_y_x[0])]
-        x = [xmin + i * xstep + xstep / 2 for i in range(shape_y_x[1])]
-        dataset = xr.Dataset({"y": y, "x": x})
-        return dataset[dimension]
-
     def tie_points_y(self) -> xr.DataArray:
         dom = self._root
         shape_y_x = self.get_shape("n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/Values_List/VALUES")
-        ymax = float(dom.xpath('n1:Geometric_Info/Tile_Geocoding/Geoposition[@resolution="10"]/ULY',
-                               namespaces=self.local_namespaces, )[0].text, )
-        ystep = float(dom.xpath("n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/ROW_STEP",
-                                namespaces=self.local_namespaces, )[0].text, )
+        ymax = float(
+            dom.xpath(
+                'n1:Geometric_Info/Tile_Geocoding/Geoposition[@resolution="10"]/ULY',
+                namespaces=self.local_namespaces,
+            )[0].text,
+        )
+        ystep = float(
+            dom.xpath(
+                "n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/ROW_STEP",
+                namespaces=self.local_namespaces,
+            )[0].text,
+        )
         y = [ymax - i * ystep - ystep / 2 for i in range(shape_y_x[0])]
         return xr.DataArray(y)
 
     def tie_points_x(self) -> xr.DataArray:
         dom = self._root
         shape_y_x = self.get_shape("n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/Values_List/VALUES")
-        xmin = float(dom.xpath('n1:Geometric_Info/Tile_Geocoding/Geoposition[@resolution="10"]/ULX',
-                               namespaces=self.local_namespaces, )[0].text, )
-        xstep = float(dom.xpath("n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/COL_STEP",
-                                namespaces=self.local_namespaces, )[0].text, )
+        xmin = float(
+            dom.xpath(
+                'n1:Geometric_Info/Tile_Geocoding/Geoposition[@resolution="10"]/ULX',
+                namespaces=self.local_namespaces,
+            )[0].text,
+        )
+        xstep = float(
+            dom.xpath(
+                "n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/COL_STEP",
+                namespaces=self.local_namespaces,
+            )[0].text,
+        )
         x = [xmin + i * xstep + xstep / 2 for i in range(shape_y_x[1])]
         return xr.DataArray(x)
 
@@ -213,6 +190,7 @@ class XMLTPAccessor:
         AttributeError, it the given key doesn't match
         """
         from eopf.product.core import EOVariable
+
         if self._dim == "y" and key == "y":
             eo_variable_data = self.tie_points_y()
         elif self._dim == "x" and key == "x":
@@ -247,16 +225,11 @@ class XMLManifestAccessor:
             raise NotImplementedError()
 
         # get configuration parameters
-        if "config" not in kwargs.keys():
-            raise MissingConfigurationParameter(" The parameter: config; is missing")
         try:
-            config_dict: Optional[Any] = kwargs.get("config")
-            if not isinstance(config_dict, dict):
-                raise MissingConfigurationParameter(" The parameter: config; should be a dictionary")
-            self._metada_mapping: MutableMapping[str, Any] = config_dict["metadata_mapping"]
-            self._namespaces: dict[str, str] = config_dict["namespaces"]
+            self._metada_mapping: MutableMapping[str, Any] = kwargs["metadata_mapping"]
+            self._namespaces: dict[str, str] = kwargs["namespaces"]
         except KeyError as e:
-            raise KeyError(f"Missing configuration pameter: {e}")
+            raise TypeError(f"Missing configuration parameter: {e}")
 
         # open the manifest xml
         self._xml_fobj = open(self._url, mode="r")
@@ -284,8 +257,21 @@ class XMLManifestAccessor:
 
         # create an EOGroup and set its attributes with a dictionary containing CF and OM_EOP
         from eopf.product.core import EOGroup
+
         eog: EOGroup = EOGroup("product_metadata", attrs=self._attrs)
         return eog
+
+    def __iter__(self) -> Iterator[str]:
+        """Iterator over the dict containing the CF and OM_EOP attributes of the EOProduct
+
+        Returns
+        ----------
+        Iterator[str]:
+            An iterator over self.KEYS
+        """
+        if self._xml_fobj is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        yield from self.KEYS
 
     def _parse_xml(self) -> None:
         """Parses the manifest xml and saves it in _parsed_xml
