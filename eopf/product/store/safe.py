@@ -112,6 +112,7 @@ class EOSafeStore(EOProductStore):
         url: str,
         store_factory: Optional[EOStoreFactory] = None,
         mapping_factory: Optional[EOMappingFactory] = None,
+        fsspec_kwargs: dict[str, Any] = {},
     ) -> None:
         if store_factory is None:
             store_factory = EOStoreFactory(default_stores=True)
@@ -119,8 +120,8 @@ class EOSafeStore(EOProductStore):
             mapping_factory = EOMappingFactory(default_mappings=True)
         # FIXME Need to think of a way to manage urlak ospath on windows. Especially with the path in the json.
         super().__init__(url)
-        self._accessor_manager = SafeMappingManager(url, store_factory, mapping_factory)
-        self._fs_map_access: fsspec.FSMap = None
+        self._accessor_manager = SafeMappingManager(url, store_factory, mapping_factory, fsspec_kwargs)
+        self._fs_map_access = fsspec.get_mapper(self.url, **fsspec_kwargs)
 
     def __delitem__(self, key: str) -> None:
         if self.status is StorageStatus.CLOSE:
@@ -222,12 +223,8 @@ class EOSafeStore(EOProductStore):
         # Otherwise Hierachy accessor are opened twice.
         super().open()
         self._accessor_manager.open_all(mode, **kwargs)
-        fsspec_kwargs = {}
-        for fsspec_key_arg in ("s3", "client_kwargs"):
-            if fsspec_key_arg in kwargs:
-                fsspec_kwargs[fsspec_key_arg] = kwargs.pop(fsspec_key_arg)
+
         self._open_kwargs = kwargs
-        self._fs_map_access = fsspec.get_mapper(self.url, **fsspec_kwargs)
         if mode == "w":
             if fsspec.utils.infer_compression(self.url):
                 raise NotImplementedError()
@@ -348,9 +345,6 @@ class SafeMappingManager:
         self._config_mapping: dict[str, list[dict[str, Any]]] = dict()  # map source path to config read from Json
         self._mode = "CLOSED"
         self._open_kwargs: dict[str, Any] = dict()
-        for fsspec_key_arg in ("s3", "client_kwargs"):
-            if fsspec_key_arg in fsspec_kwargs:
-                fsspec_kwargs[fsspec_key_arg] = fsspec_kwargs.pop(fsspec_key_arg)
 
         self._fs_map_access = fsspec.get_mapper(self._url, **fsspec_kwargs)
         self._is_compressed = False
