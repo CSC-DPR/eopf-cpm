@@ -88,6 +88,7 @@
                 "step_path": "xml_mapping/xmltp_step/y"
             },
             "parameters": {
+                "xpath": "n1:Geometric_Info/Tile_Geocoding/Geoposition[@resolution='10']/ULY",
                 "dimensions": [ "y_tp" ]
             }
         },
@@ -101,6 +102,7 @@
                 "step_path": "xml_mapping/xmltp_step/x"
             },
             "parameters": {
+                "xpath": "n1:Geometric_Info/Tile_Geocoding/Geoposition[@resolution='10']/ULX",
                 "dimensions": [ "x_tp" ]
             }
         },
