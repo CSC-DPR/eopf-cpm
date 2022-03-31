@@ -421,7 +421,7 @@ def test_retrieve_from_manifest_store(S3_OLCI_L1_EFR: str, S3_OLCI_L1_MAPPING: s
         if key.endswith(manifest_name):
             manifest_path.write_bytes(fsmap[key])
 
-    manifest = ManifestStore(manifest_path.name)
+    manifest = ManifestStore(manifest_path)
 
     mapping_file = open(S3_OLCI_L1_MAPPING)
     map_olci = json.load(mapping_file)
