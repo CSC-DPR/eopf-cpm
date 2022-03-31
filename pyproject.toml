@@ -62,6 +62,7 @@ target-version = ['py39']
 
 [tool.pytest.ini_options]
 markers = [
+    "integration",
     "unit",
-    "usecase",
+    "need_files",
 ]

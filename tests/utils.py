@@ -74,7 +74,7 @@ def _compute_rec(node):
     dims = []
     if node_dims:
         for d in node_dims[0].text.strip()[1:-1].split(","):
-            d = d[1:-1]
+            d = d.strip()[1:-1]
             if d:
                 dims.append(d)
     structure["dims"] = tuple(dims)

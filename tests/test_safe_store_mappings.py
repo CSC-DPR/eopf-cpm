@@ -3,6 +3,7 @@ from unittest.mock import patch
 import pytest
 
 from eopf.product.core import EOGroup, EOProduct, EOVariable
+from eopf.product.store.conveniences import convert
 from eopf.product.store.manifest import ManifestStore
 from eopf.product.store.safe import EOSafeStore
 
@@ -17,7 +18,8 @@ STORE_PATHS = {
 }
 
 
-@pytest.mark.usecase
+@pytest.mark.need_files
+@pytest.mark.unit
 @pytest.mark.parametrize(
     "store_type, get_key",
     [
@@ -35,7 +37,8 @@ def test_read_product(store_type, get_key):
     product.store.close()
 
 
-@pytest.mark.usecase
+@pytest.mark.need_files
+@pytest.mark.unit
 @pytest.mark.parametrize(
     "store_type",
     [
@@ -58,7 +61,8 @@ def test_load_product(store_type):
     product.store.close()
 
 
-@pytest.mark.usecase
+@pytest.mark.need_files
+@pytest.mark.unit
 @pytest.mark.parametrize(
     "store_type",
     [
@@ -68,9 +72,4 @@ def test_load_product(store_type):
 def test_load_write_product(store_type):
     source_store = EOSafeStore(f"{IN_DIR}/{STORE_PATHS[store_type]}")
     target_store = EOSafeStore(f"{OUT_DIR}/{STORE_PATHS[store_type]}")
-    product = EOProduct("my_product", store_or_path_url=source_store)
-    product.open()
-    product.load()
-    product.open(mode="w", store_or_path_url=target_store)
-    product.write()
-    product.store.close()
+    convert(source_store, target_store)
