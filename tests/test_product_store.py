@@ -1,9 +1,11 @@
 import os
 import os.path
+import pathlib
 import shutil
 from typing import Any, Optional
 from unittest.mock import patch
 
+import fsspec
 import hypothesis.strategies as st
 import numpy as np
 import pytest
@@ -403,7 +405,7 @@ def test_close_manifest_store():
 
 @pytest.mark.need_files
 @pytest.mark.integration
-def test_retrieve_from_manifest_store(S3_OLCI_L1_EFR: str, S3_OLCI_L1_MAPPING: str):
+def test_retrieve_from_manifest_store(S3_OLCI_L1_EFR: str, S3_OLCI_L1_MAPPING: str, tmp_path: pathlib.Path):
     """Tested on 24th of February on data coming from
     S3A_OL_1_EFR____20220116T092821_20220116T093121_20220117T134858_0179_081_036_2160_LN1_O_NT_002.SEN3
     Given a manifest XML file from a Legacy product and a mapping file,
@@ -412,8 +414,14 @@ def test_retrieve_from_manifest_store(S3_OLCI_L1_EFR: str, S3_OLCI_L1_MAPPING: s
     """
     import json
 
-    manifest_path = os.path.join(S3_OLCI_L1_EFR, "xfdumanifest.xml")
-    manifest = ManifestStore(manifest_path)
+    fsmap = fsspec.get_mapper(S3_OLCI_L1_EFR)
+    manifest_name = "xfdumanifest.xml"
+    manifest_path = tmp_path / manifest_name
+    for key in fsmap:
+        if key.endswith(manifest_name):
+            manifest_path.write_bytes(fsmap[key])
+
+    manifest = ManifestStore(manifest_path.name)
 
     mapping_file = open(S3_OLCI_L1_MAPPING)
     map_olci = json.load(mapping_file)
@@ -427,7 +435,7 @@ def test_retrieve_from_manifest_store(S3_OLCI_L1_EFR: str, S3_OLCI_L1_MAPPING: s
     assert_issubdict(
         returned_cf,
         {
-            "title": S3_OLCI_L1_EFR.split("/")[-1],
+            "title": S3_OLCI_L1_EFR.split("/")[-1].replace(".zip", ".SEN3"),
             "institution": "European Space Agency, Land OLCI Processing and Archiving Centre [LN1]",
             "source": "Sentinel-3A OLCI Ocean Land Colour Instrument",
             "comment": "Operational",
@@ -478,7 +486,7 @@ def test_retrieve_from_manifest_store(S3_OLCI_L1_EFR: str, S3_OLCI_L1_MAPPING: s
     assert_issubdict(
         metadata_property,
         {
-            "identifier": S3_OLCI_L1_EFR.split("/")[-1],  # noqa
+            "identifier": S3_OLCI_L1_EFR.split("/")[-1].replace(".zip", ".SEN3"),
             "acquisitionType": "Operational",
             "productType": "OL_1_EFR___",
             "status": "ARCHIVED",
