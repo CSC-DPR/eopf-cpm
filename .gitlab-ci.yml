@@ -72,13 +72,12 @@ unit-tests:
   - pip install .[tests] .[notebook]
   script:
   - >-
-    TEST_DATA_FOLDER=/shared
+    TEST_DATA_FOLDER=/data/shared
     python -m pytest
     --cov=${SOURCES}
     --junit-xml=${REPORTS}/TEST-pytests.xml
     --cov-report=xml:${REPORTS}/coverage.xml
     -m unit
-    -m "not need_files"
   artifacts:
     expire_in: 1h
     reports:
@@ -105,7 +104,6 @@ integration-tests:
     --cov-report=term-missing
     --cov-append
     -m integration
-    -m "not need_files"
 
 security:
   stage: test
