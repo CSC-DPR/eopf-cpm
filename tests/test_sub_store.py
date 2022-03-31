@@ -181,10 +181,10 @@ EXPECTED_GRIB_MSL_ATTR = {
     "section5Length": 4,
     "analDate": datetime.datetime(2020, 2, 2, 23, 38),
     "validDate": datetime.datetime(2020, 2, 2, 23, 38),
-    "_ARRAY_DIMENSIONS": [9, 9],
+    "_ARRAY_DIMENSIONS": (9, 9),
 }
 EXPECTED_GRIB_MSL_COORD_ATTR = dict(EXPECTED_GRIB_MSL_ATTR)
-EXPECTED_GRIB_MSL_COORD_ATTR["_ARRAY_DIMENSIONS"] = [9]
+EXPECTED_GRIB_MSL_COORD_ATTR["_ARRAY_DIMENSIONS"] = (9,)
 
 
 @pytest.mark.need_files
