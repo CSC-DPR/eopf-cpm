@@ -72,7 +72,7 @@ unit-tests:
   - pip install .[tests] .[notebook]
   script:
   - >-
-    TEST_DATA_FOLDER=/data/shared
+    TEST_DATA_FOLDER=/data/shared/test_data
     python -m pytest
     --cov=${SOURCES}
     --junit-xml=${REPORTS}/TEST-pytests.xml
@@ -99,6 +99,7 @@ integration-tests:
   - unit-tests
   script:
   - >-
+    TEST_DATA_FOLDER=/data/shared/test_data
     python -m pytest
     --cov=${SOURCES}
     --cov-report=term-missing
