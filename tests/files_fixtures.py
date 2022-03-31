@@ -6,6 +6,7 @@ import pytest
 from .utils import PARENT_DATA_PATH
 
 TEST_DATA_FOLDER = os.environ.get("TEST_DATA_FOLDER", os.path.join(PARENT_DATA_PATH, "data"))
+print(os.path.exists(TEST_DATA_FOLDER))
 
 
 @pytest.fixture
