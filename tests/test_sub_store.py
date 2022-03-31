@@ -1,4 +1,5 @@
 import datetime
+import os
 
 import pytest
 from numpy import testing
@@ -188,8 +189,8 @@ EXPECTED_GRIB_MSL_COORD_ATTR["_ARRAY_DIMENSIONS"] = [9]
 
 @pytest.mark.need_files
 @pytest.mark.unit
-def test_grib_store():
-    grib_store = EOGribAccessor("../data/AUX_ECMWFT.grib")
+def test_grib_store(INPUT_DIR: str):
+    grib_store = EOGribAccessor(os.path.join(INPUT_DIR, "AUX_ECMWFT.grib"))
     grib_store.open()
     # test attributes
     assert grib_store["msl"].attrs == EXPECTED_GRIB_MSL_ATTR

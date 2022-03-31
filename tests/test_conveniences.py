@@ -4,12 +4,10 @@ import pytest
 
 from eopf.product.utils import apply_xpath, parse_xml, translate_structure
 
-from .utils import PARENT_DATA_PATH
-
 
 @pytest.fixture
-def tree():
-    snippet_path = f"{PARENT_DATA_PATH}/tests/data/snippet_xfdumanifest.xml"
+def tree(EMBEDED_TEST_DATA_FOLDER: str):
+    snippet_path = os.path.join(EMBEDED_TEST_DATA_FOLDER, "snippet_xfdumanifest.xml")
     with open(snippet_path) as f:
         return parse_xml(f)
 

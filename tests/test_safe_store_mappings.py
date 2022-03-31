@@ -1,3 +1,4 @@
+import os
 from typing import Callable
 from unittest.mock import patch
 
@@ -9,13 +10,6 @@ from eopf.product.store.conveniences import convert
 from eopf.product.store.manifest import ManifestStore
 from eopf.product.store.safe import EOSafeStore
 
-from .files_fixtures import S3_OLCI_L1_EFR  # noqa
-from .utils import PARENT_DATA_PATH
-
-IN_DIR = f"{PARENT_DATA_PATH}/data"
-OUT_DIR = f"{PARENT_DATA_PATH}/data_out"
-
-
 
 @pytest.mark.need_files
 @pytest.mark.unit
@@ -26,7 +20,6 @@ OUT_DIR = f"{PARENT_DATA_PATH}/data_out"
     ],
 )
 def test_read_product(store_type, get_key):
-    print(store_type)
     store = EOSafeStore(store_type)
     product = EOProduct("my_product", store_or_path_url=store)
     product.open()
@@ -65,10 +58,10 @@ def test_load_product(store_type):
 @pytest.mark.unit
 @pytest.mark.parametrize(
     "store_type, output_formatter",
-    [(lazy_fixture("S3_OLCI_L1_EFR"), lambda name: f"{OUT_DIR}/{name.replace('.zip', '.SEN3')}")],
+    [(lazy_fixture("S3_OLCI_L1_EFR"), lambda name: f"{name.replace('.zip', '.SEN3')}")],
 )
-def test_load_write_product(store_type: str, output_formatter: Callable):
+def test_load_write_product(store_type: str, output_formatter: Callable, OUTPUT_DIR: str):
     source_store = EOSafeStore(store_type)
     _, _, name = store_type.rpartition("/")
-    target_store = EOSafeStore(output_formatter(name))
+    target_store = EOSafeStore(os.path.join(OUTPUT_DIR, output_formatter(name)))
     convert(source_store, target_store)

@@ -22,7 +22,6 @@ from eopf.product.store.rasterio import EORasterIOAccessor
 
 from .decoder import Netcdfdecoder
 from .utils import (
-    PARENT_DATA_PATH,
     assert_contain,
     assert_has_coords,
     assert_issubdict,
@@ -404,7 +403,7 @@ def test_close_manifest_store():
 
 @pytest.mark.need_files
 @pytest.mark.integration
-def test_retrieve_from_manifest_store():
+def test_retrieve_from_manifest_store(S3_OLCI_L1_EFR: str, S3_OLCI_L1_MAPPING: str):
     """Tested on 24th of February on data coming from
     S3A_OL_1_EFR____20220116T092821_20220116T093121_20220117T134858_0179_081_036_2160_LN1_O_NT_002.SEN3
     Given a manifest XML file from a Legacy product and a mapping file,
@@ -412,14 +411,11 @@ def test_retrieve_from_manifest_store():
     must match the ones expected.
     """
     import json
-    from glob import glob
 
-    olci_path = glob(f"{PARENT_DATA_PATH}/data/S3A_OL_1*.SEN3")[0]
-    manifest_path = os.path.join(olci_path, "xfdumanifest.xml")
+    manifest_path = os.path.join(S3_OLCI_L1_EFR, "xfdumanifest.xml")
     manifest = ManifestStore(manifest_path)
 
-    mapping_file_path = glob("eopf/product/store/mapping/S3_OL_1_EFR_mapping.json")[0]
-    mapping_file = open(mapping_file_path)
+    mapping_file = open(S3_OLCI_L1_MAPPING)
     map_olci = json.load(mapping_file)
     config = {"namespaces": map_olci["namespaces"], "metadata_mapping": map_olci["metadata_mapping"]}
     manifest.open(**config)
@@ -431,7 +427,7 @@ def test_retrieve_from_manifest_store():
     assert_issubdict(
         returned_cf,
         {
-            "title": olci_path.replace(f"{PARENT_DATA_PATH}/data/", ""),
+            "title": S3_OLCI_L1_EFR.split("/")[-1],
             "institution": "European Space Agency, Land OLCI Processing and Archiving Centre [LN1]",
             "source": "Sentinel-3A OLCI Ocean Land Colour Instrument",
             "comment": "Operational",
@@ -482,7 +478,7 @@ def test_retrieve_from_manifest_store():
     assert_issubdict(
         metadata_property,
         {
-            "identifier": olci_path.replace(f"{PARENT_DATA_PATH}/data/", ""),  # noqa
+            "identifier": S3_OLCI_L1_EFR.split("/")[-1],  # noqa
             "acquisitionType": "Operational",
             "productType": "OL_1_EFR___",
             "status": "ARCHIVED",
