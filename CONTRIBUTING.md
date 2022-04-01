@@ -27,12 +27,23 @@ or
 # TESTING
 
 Test are writed using [pytest](https://docs.pytest.org/en/7.0.x/).
-To run all the test, be sure to have the needed data.
+To run all the test, be sure to have the needed data or filter them by marks (describe below).
 
-Also, we have some mark to help to contegorized test and only run unit test at integration time.
+Also, we have some mark to help to categorized test and only run unit test or integration test.
 
-- to mark use case test integration, please mark them with ```@pytest.mark.usecase```
-- to mark unit test integration, please mark them with ```@pytest.mark.unit```
+- to mark unit tests, please mark them with `@pytest.mark.integration`
+- to mark integration tests, please mark them with `@pytest.mark.unit`
+- to mark tests that need an external file, please mark them with `@pytest.mark.need_files`
+
+## EXTERNAL TEST DATA
+
+Our test data are managed as `@pytest.fixture`.
+
+An environment variable `TEST_DATA_FOLDER` is used to retrieve them, or in `/<project-folder>/data` by default.
+
+Currently, external test data concern:
+- legacy product (S3, S2, S1, etc ...)
+
 
 # Linting and formatting
 
