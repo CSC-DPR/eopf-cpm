@@ -3,6 +3,7 @@ import os
 
 import pytest
 
+from .utils import PARENT_DATA_PATH
 from eopf.product.utils import (
     apply_xpath,
     convert_to_unix_time,
@@ -49,8 +50,7 @@ def test_translate_structure(tree):
     """Given an input xml,
     the output of the function must match the expected output"""
     MAP = {
-        "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/"
-        "sentinel3:generalProductInformation/sentinel3:productName/text())",
+        "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName/text())",
         # noqa
         "Conventions": "'CF-1.9'",
     }
@@ -73,8 +73,7 @@ def test_apply_xpath(tree):
     """Given an input xml,
     the output of the function must match the expected output"""
     MAP = {
-        "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/"
-        "sentinel3:generalProductInformation/sentinel3:productName/text())",
+        "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName/text())",
         # noqa
         "Conventions": "'CF-1.9'",
     }
