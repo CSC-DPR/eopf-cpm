@@ -456,7 +456,8 @@ class SafeMappingManager:
                     self._temp_dir = tempfile.TemporaryDirectory()
                 accessor_file = os.path.join(self._temp_dir.name, file_path)
                 if not os.path.exists(accessor_file):
-                    self._fs_map_access.fs.get_file(f"{self._top_level}{file_path}", accessor_file)
+                    with open(accessor_file, mode="wb") as file_:
+                        file_.write(self._fs_map_access[f"{self._top_level}{file_path}"])
             else:
                 accessor_file = self._fs_map_access.fs.sep.join([self._fs_map_access.root, file_path])
             mapped_store = self._store_factory.get_store(
