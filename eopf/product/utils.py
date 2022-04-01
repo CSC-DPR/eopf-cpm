@@ -2,6 +2,7 @@
 # As we work with strings we use posixpath (the unix path specific implementation of os.path) as much as possible.
 import posixpath
 import re
+from datetime import datetime
 from pathlib import PurePosixPath
 from typing import Any, Optional, Union
 
@@ -87,12 +88,49 @@ def conv(obj: Any) -> Any:
     if isinstance(obj, (float64, float32, float16, float)):
         return float(obj)
 
-    # check str
+    # check str or datetime-like string
     if isinstance(obj, str):
+        if is_date(obj):
+            return convert_to_unix_time(obj)
         return str(obj)
+
+    # check datetime
+    if isinstance(obj, datetime):
+        return convert_to_unix_time(obj)
 
     # if no conversion can be done
     return obj
+
+
+def is_date(string: str) -> bool:
+    """
+    Return whether the string can be interpreted as a date.
+
+    :param string: str, string to check for date
+    """
+    from dateutil.parser import parse
+
+    try:
+        parse(string)
+        return True
+    except ValueError:
+        return False
+
+
+def convert_to_unix_time(date: Any) -> int:
+    """
+    Convert datetime or datetime-like string to unix time
+    """
+    if isinstance(date, datetime):
+        return int(date.timestamp() * 1000000)  # microseconds
+    elif isinstance(date, str):
+        import pandas as pd
+
+        start = pd.to_datetime("1970-1-1T0:0:0.000000Z")
+        end = pd.to_datetime(date)
+        time_delta = (end - start) // pd.Timedelta("1microsecond")
+        return time_delta
+    raise ValueError(f"{date} cannot be converted to an accepted format!")
 
 
 def reverse_conv(data_type: Any, obj: Any) -> Any:
