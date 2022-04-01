@@ -106,6 +106,7 @@ def test_is_date():
 
 def test_convert_unix_time():
     import pytz
+
     # Define datetime-like string and verify if conversion match with datetime object and expected unix time. (MS)
     string_date = "2020-03-31T17:19:29.230522Z"
     dt_date = datetime.datetime(2020, 3, 31, 17, 19, 29, 230522, pytz.UTC)
