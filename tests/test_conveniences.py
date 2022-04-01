@@ -53,7 +53,6 @@ def test_translate_structure(tree):
     MAP = {
         "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/"
         "sentinel3:generalProductInformation/sentinel3:productName/text())",
-        # noqa
         "Conventions": "'CF-1.9'",
     }
     NAMESPACES = {
@@ -77,7 +76,6 @@ def test_apply_xpath(tree):
     MAP = {
         "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/"
         "sentinel3:generalProductInformation/sentinel3:productName/text())",
-        # noqa
         "Conventions": "'CF-1.9'",
     }
     NAMESPACES = {
@@ -98,12 +96,15 @@ def test_apply_xpath(tree):
 def test_is_date():
     string_date_1 = "2020-03-31T17:19:29.230522Z"  # Zulu time
     string_date_2 = "2020-03-31T17:19:29.230522GMT+3"  # GMT+3 Time
+    string_date_3 = "some_random_string"
     dt_date = datetime.datetime(2020, 3, 31, 17, 19, 29, 230522)
     assert is_date(string_date_1)
     assert is_date(string_date_2)
     assert is_date(str(dt_date))
+    assert not is_date(string_date_3)
 
 
+@pytest.mark.unit
 def test_convert_unix_time():
     import pytz
 
@@ -118,3 +119,10 @@ def test_convert_unix_time():
     string_date = "2020-03-31T17:19:29.230522GMT-3"
     assert convert_to_unix_time(string_date) != convert_to_unix_time(dt_date)
     assert convert_to_unix_time(string_date) != expected_unix_time
+
+    #
+    try:
+        string_date = "a string that is not a valid date"
+        convert_to_unix_time(string_date)
+    except ValueError:
+        assert True

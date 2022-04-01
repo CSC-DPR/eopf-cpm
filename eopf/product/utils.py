@@ -103,10 +103,16 @@ def conv(obj: Any) -> Any:
 
 
 def is_date(string: str) -> bool:
-    """
-    Return whether the string can be interpreted as a date.
+    """Return whether the string can be interpreted as a date.
 
-    :param string: str, string to check for date
+    Parameters
+    ----------
+    string: str
+        string to check for date
+
+    Returns
+    ----------
+    bool
     """
     from dateutil.parser import parse
 
@@ -118,8 +124,17 @@ def is_date(string: str) -> bool:
 
 
 def convert_to_unix_time(date: Any) -> int:
-    """
-    Convert datetime or datetime-like string to unix time
+    """Return whether the string can be interpreted as a date.
+
+    Parameters
+    ----------
+    date: Any
+        string or datetime to convert
+
+    Returns
+    ----------
+    int
+        unix time in microseconds
     """
     if isinstance(date, datetime):
         return int(date.timestamp() * 1000000)  # microseconds
