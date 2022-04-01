@@ -3,7 +3,6 @@ import os
 
 import pytest
 
-from .utils import PARENT_DATA_PATH
 from eopf.product.utils import (
     apply_xpath,
     convert_to_unix_time,
@@ -11,6 +10,8 @@ from eopf.product.utils import (
     parse_xml,
     translate_structure,
 )
+
+from .utils import PARENT_DATA_PATH
 
 
 @pytest.fixture
@@ -50,7 +51,8 @@ def test_translate_structure(tree):
     """Given an input xml,
     the output of the function must match the expected output"""
     MAP = {
-        "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName/text())",
+        "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/"
+        "sentinel3:generalProductInformation/sentinel3:productName/text())",
         # noqa
         "Conventions": "'CF-1.9'",
     }
@@ -73,7 +75,8 @@ def test_apply_xpath(tree):
     """Given an input xml,
     the output of the function must match the expected output"""
     MAP = {
-        "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName/text())",
+        "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/"
+        "sentinel3:generalProductInformation/sentinel3:productName/text())",
         # noqa
         "Conventions": "'CF-1.9'",
     }
@@ -102,14 +105,15 @@ def test_is_date():
 
 
 def test_convert_unix_time():
+    import pytz
     # Define datetime-like string and verify if conversion match with datetime object and expected unix time. (MS)
-    string_date = "2020-03-31T17:19:29.230522GMT-3"
-    dt_date = datetime.datetime(2020, 3, 31, 17, 19, 29, 230522)
-    expected_unix_time = 1585664369230522
+    string_date = "2020-03-31T17:19:29.230522Z"
+    dt_date = datetime.datetime(2020, 3, 31, 17, 19, 29, 230522, pytz.UTC)
+    expected_unix_time = 1585675169230522
 
     assert convert_to_unix_time(string_date) == convert_to_unix_time(dt_date) == expected_unix_time
 
     # Define datetime-like string in Zulu Time Zone, and verify that it doesnt match with expected unix time
-    string_date = "2020-03-31T17:19:29.230522Z"
+    string_date = "2020-03-31T17:19:29.230522GMT-3"
     assert convert_to_unix_time(string_date) != convert_to_unix_time(dt_date)
     assert convert_to_unix_time(string_date) != expected_unix_time
