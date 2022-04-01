@@ -44,6 +44,26 @@ An environment variable `TEST_DATA_FOLDER` is used to retrieve them, or in `/<pr
 Currently, external test data concern:
 - legacy product (S3, S2, S1, etc ...)
 
+You can setup the an output folder to write data with `TEST_OUTPUT_FOLDER`.
+If is not set, a tempory folder is used.
+
+## Example:
+- set a TEST_DATA_FOLDER:
+    - `TEST_DATA_FOLDER=local_data/ pytest tests -m unit`
+    - `TEST_DATA_FOLDER=.data/ pytest tests`
+    - `TEST_DATA_FOLDER=/home/user/data/ pytest tests -m integration`
+- set a TEST_OUTPUT_FOLDER:
+    - `TEST_OUTPUT_FOLDER=/tmp/ouput_test pytest tests -m unit`
+    - `TEST_OUTPUT_FOLDER=.output_dir/ pytest tests`
+    - `TEST_OUTPUT_FOLDER=data_out/ pytest tests -m integration`
+- set both TEST_OUTPUT_FOLDER and TEST_DATA_FOLDER:
+    - `TEST_OUTPUT_FOLDER=/tmp/output_data TEST_DATA_FOLDER=local_data/ pytest tests -m unit`
+    - `TEST_OUTPUT_FOLDER=output_dir/ TEST_DATA_FOLDER=.data/ pytest tests`
+    - `TEST_OUTPUT_FOLDER=.data_out/ TEST_DATA_FOLDER=/home/user/data/ pytest tests -m integration`
+- or using default values (data comes from `data/` and output folder a tempory folder `/tmp/<something>`)
+    - `pytest tests -m unit`
+    - `pytest tests`
+    - `pytest tests -m integration`
 
 # Linting and formatting
 

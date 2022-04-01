@@ -1,5 +1,6 @@
 import glob
 import os
+import shutil
 
 import pytest
 
@@ -16,9 +17,13 @@ def INPUT_DIR():
 
 
 @pytest.fixture
-def OUTPUT_DIR():
+def OUTPUT_DIR(tmp_path):
     """Path to te folder where the data should be writed"""
-    return os.path.join(PARENT_PATH, "data_out")
+    if output_folder := os.environ.get("TEST_OUTPUT_FOLDER"):
+        yield output_folder
+        shutil.rmtree(output_folder)
+    else:
+        yield tmp_path
 
 
 @pytest.fixture

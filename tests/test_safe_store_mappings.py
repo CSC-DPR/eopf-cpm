@@ -31,7 +31,7 @@ def test_read_product(store_type, get_key):
 
 
 @pytest.mark.need_files
-@pytest.mark.unit
+@pytest.mark.integration
 @pytest.mark.parametrize(
     "store_type",
     [
@@ -55,7 +55,7 @@ def test_load_product(store_type):
 
 
 @pytest.mark.need_files
-@pytest.mark.unit
+@pytest.mark.integration
 @pytest.mark.parametrize(
     "store_type, output_formatter",
     [(lazy_fixture("S3_OLCI_L1_EFR"), lambda name: f"{name.replace('.zip', '.SEN3')}")],
