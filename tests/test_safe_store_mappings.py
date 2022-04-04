@@ -61,6 +61,15 @@ def test_load_product(store_type):
     [(lazy_fixture("S3_OLCI_L1_EFR"), lambda name: f"{name.replace('.zip', '.SEN3')}")],
 )
 def test_load_write_product(store_type: str, output_formatter: Callable, OUTPUT_DIR: str):
+    """Test if a product can be read from one place and write to another
+
+    Parameters
+    ----------
+    store_type: str
+        absolute path to an existing input file
+    ouput_formatter: callable
+        callable that convert the input filename to the output filename
+    """
     source_store = EOSafeStore(store_type)
     name = os.path.basename(store_type)
     target_store = EOSafeStore(os.path.join(OUTPUT_DIR, output_formatter(name)))
