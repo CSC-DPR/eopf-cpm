@@ -1,5 +1,5 @@
-import json
 import os
+import pprint
 from pathlib import Path
 from typing import Any
 
@@ -25,7 +25,7 @@ def renderer(template_name: str, **parameters: Any) -> str:
     """
 
     def human_readable_attrs(value: dict[str, Any]) -> str:
-        return json.dumps(conv(value), indent=4)
+        return pprint.pformat(conv(value), indent=4)
 
     dir_path = Path(__file__).resolve().parent
     file_loader = FileSystemLoader(os.path.join(dir_path, "templates"))
