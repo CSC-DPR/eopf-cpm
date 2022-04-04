@@ -71,6 +71,7 @@ def test_grib_store_iter(EMBEDED_TEST_DATA_FOLDER: str, eo_path: str, expected_s
 
     # test iterator
     assert set(grib_store.iter(eo_path)) == expected_set
+    grib_store.close()
 
 
 @pytest.mark.unit
@@ -96,6 +97,7 @@ def test_grib_store_get_item(
     assert grib_store[eo_path].attrs == attrs
     for key, value in sampled_values.items():
         testing.assert_allclose(grib_store[eo_path]._data.to_numpy()[key], value)
+    grib_store.close()
 
 
 @pytest.mark.unit
@@ -110,3 +112,4 @@ def test_grib_exceptions(EMBEDED_TEST_DATA_FOLDER: str):
         grib_store["test"]
     with pytest.raises(KeyError):
         grib_store["coordinates/test"]
+    grib_store.close()
