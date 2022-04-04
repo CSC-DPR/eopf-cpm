@@ -103,8 +103,11 @@ class EOZarrStore(EOProductStore):
             # While it's possible to create the array with to_zarr,
             # it fail to create the array on some array shapes (ex : empty)
             da.to_zarr(dask_array, zarr_array)
-            if hasattr(self._root.store, "path"):
-                zarr.consolidate_metadata(self.sep.join([self._root.store.path, self._root[key].path]))
+            # if (
+            #     isinstance(self._root.store, DirectoryStore) or
+            #     (isinstance(self._root.store, FSStore) and isinstance(self._root.fs, LocalFileSystem))
+            # ):
+            #     zarr.consolidate_metadata(self.sep.join([self._root.store.path, self._root[key].path]))
         else:
             raise TypeError("Only EOGroup and EOVariable can be set")
         self.write_attrs(key, value.attrs)
