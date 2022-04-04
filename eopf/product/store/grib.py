@@ -55,17 +55,22 @@ class EOGribAccessor(EOProductStore):
         raise NotImplementedError
 
     def iter(self, path: str) -> Iterator[str]:
+        if self._ds is None:
+            raise StoreNotOpenError("Store must be open before access to it")
         if path in ["", "/"]:
             yield "coordinates"
-            yield from self._ds
+            yield from self._ds.keys()
             return
         if path in ["coordinates", "/coordinates", "coordinates/", "/coordinates/"]:
-            yield from self._ds.coords
+            yield from self._ds.coords.keys()
             return
         raise KeyError()
 
     def __getitem__(self, key: str) -> "EOObject":
         from eopf.product.core import EOGroup, EOVariable
+
+        if self._ds is None:
+            raise StoreNotOpenError("Store must be open before access to it")
 
         if self.is_group(key):
             return EOGroup()
