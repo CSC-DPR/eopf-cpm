@@ -1,4 +1,5 @@
 import os
+import tempfile
 import warnings
 from typing import (
     TYPE_CHECKING,
@@ -10,9 +11,11 @@ from typing import (
     Tuple,
 )
 
+import fsspec
+
 from eopf.exceptions import StoreNotOpenError
 
-from ..utils import join_eo_path_optional, upsplit_eo_path
+from ..utils import fs_match_path, join_eo_path_optional, upsplit_eo_path
 from .abstract import EOProductStore, StorageStatus
 from .mapping_factory import EOMappingFactory
 from .store_factory import EOStoreFactory
@@ -114,11 +117,10 @@ class EOSafeStore(EOProductStore):
             store_factory = EOStoreFactory(default_stores=True)
         if mapping_factory is None:
             mapping_factory = EOMappingFactory(default_mappings=True)
-        if url[-1] != "/":
-            url = url + "/"
         # FIXME Need to think of a way to manage urlak ospath on windows. Especially with the path in the json.
         super().__init__(url)
         self._accessor_manager = SafeMappingManager(url, store_factory, mapping_factory)
+        self._fs_map_access: Optional[fsspec.FSMap] = None
 
     def __delitem__(self, key: str) -> None:
         if self.status is StorageStatus.CLOSE:
@@ -215,14 +217,19 @@ class EOSafeStore(EOProductStore):
         return iter(key_set)
 
     # docstr-coverage: inherited
-    def open(self, mode: str = "r", **kwargs: Any) -> None:
+    def open(self, mode: str = "r", fsspec_kwargs: dict[str, Any] = {}, **kwargs: Any) -> None:
         # Must not read the product mapping between  super.open and accessor.open
         # Otherwise Hierachy accessor are opened twice.
         super().open()
-        self._accessor_manager.open_all(mode, **kwargs)
+        self._accessor_manager.open_all(mode, fsspec_kwargs=fsspec_kwargs, **kwargs)
+        self._fs_map_access = fsspec.get_mapper(self.url, **fsspec_kwargs)
+
+        self._open_kwargs = kwargs
         if mode == "w":
+            if fsspec.utils.infer_compression(self.url):
+                raise NotImplementedError()
             try:
-                os.mkdir(os.path.expanduser(self.url))
+                self._fs_map_access.fs.mkdir(self._fs_map_access.root)
             except FileExistsError:
                 ...
 
@@ -281,7 +288,7 @@ class EOSafeStore(EOProductStore):
         EOObject
         """
         # Should at least merge dims and attributes of EOVariables/Group.
-        from ..core import EOGroup
+        from ..core import EOGroup, EOVariable
 
         if not eo_obj_list:
             raise KeyError("Empty object match.")
@@ -289,11 +296,19 @@ class EOSafeStore(EOProductStore):
             return eo_obj_list[0]
         dims: set[str] = set()
         attrs = dict()
+        count_eovar = 0
+
         for eo_obj in eo_obj_list:
-            if not isinstance(eo_obj, EOGroup):
-                raise NotImplementedError
+            if isinstance(eo_obj, EOVariable):
+                count_eovar += 1
+                data = eo_obj._data.variable
+            if count_eovar > 1:
+                raise NotImplementedError()
             dims = dims.union(eo_obj.dims)
             attrs.update(eo_obj.attrs)
+
+        if count_eovar:
+            return EOVariable(data=data, attrs=attrs, dims=tuple(dims))
         return EOGroup(attrs=attrs, dims=tuple(dims))
 
 
@@ -309,7 +324,12 @@ class SafeMappingManager:
     CONFIG_ACCESSOR_CONFIG = "accessor_conf_exp"
     CONFIG_ACCESSOR_ID = "accessor_id"
 
-    def __init__(self, url: str, store_factory: EOStoreFactory, mapping_factory: EOMappingFactory) -> None:
+    def __init__(
+        self,
+        url: str,
+        store_factory: EOStoreFactory,
+        mapping_factory: EOMappingFactory,
+    ) -> None:
         # FIXME Need to think of a way to manage urlak ospath on windows. Especially with the path in the json.
         self._url = url
         self._store_factory = store_factory
@@ -325,6 +345,11 @@ class SafeMappingManager:
         self._mode = "CLOSED"
         self._open_kwargs: dict[str, Any] = dict()
 
+        self._is_compressed = False
+        self._temp_dir: Optional[tempfile.TemporaryDirectory[Any]] = None
+        self._top_level: Optional[str] = None
+        self._fs_map_access: Optional[fsspec.FSMap] = None
+
     def __iter__(self) -> Iterator[tuple[EOProductStore, dict[str, Any]]]:
         for accessor_map_2 in self._accessor_map.values():
             for accessor, config in accessor_map_2.values():
@@ -334,8 +359,13 @@ class SafeMappingManager:
     def close_all(self) -> None:
         """Close all managed accessors and switch default mode to closed."""
         self._mode = "CLOSED"
-        for accessor, _accessor_config in self:
+        for accessor, _ in self:
             accessor.close()
+        self._is_compressed = False
+        if self._temp_dir:
+            self._temp_dir.cleanup()
+            self._temp_dir = None
+            self._top_level = None
 
     def get_accessors_from_mapping(
         self,
@@ -354,6 +384,8 @@ class SafeMappingManager:
             accessor_local_path = None
             if len(accessor_source_split) == 2:
                 accessor_local_path = accessor_source_split[1]
+
+            accessor_file = fs_match_path(accessor_file, self._fs_map_access)
             accessor = self._get_accessor(
                 accessor_file,
                 conf[self.CONFIG_FORMAT],
@@ -364,10 +396,11 @@ class SafeMappingManager:
                 results.append((accessor, accessor_local_path, conf))
         return results
 
-    def open_all(self, mode: str = "r", **kwargs: Any) -> None:
+    def open_all(self, mode: str = "r", fsspec_kwargs: dict[str, Any] = {}, **kwargs: Any) -> None:
         """Open all managed accessors and switch default mode to opened.
         On first opening read the json config file.
         """
+        self._fs_map_access = fsspec.get_mapper(self._url, **fsspec_kwargs)
         if not self._config_mapping:
             self._read_product_mapping()
 
@@ -390,8 +423,8 @@ class SafeMappingManager:
             # Both can be true we then need to return both
             if safe_target_path in self._config_mapping:
                 return_list.append((safe_target_path, join_eo_path_optional(*local_path)))
-            if "/" + safe_target_path in self._config_mapping:
-                return_list.append(("/" + safe_target_path, join_eo_path_optional(*local_path)))
+            if f"/{safe_target_path}" in self._config_mapping:
+                return_list.append((f"/{safe_target_path}", join_eo_path_optional(*local_path)))
             if return_list:
                 return return_list
             safe_target_path, name = upsplit_eo_path(safe_target_path)
@@ -409,16 +442,28 @@ class SafeMappingManager:
         """Add an accessor (sub store) to the opened accessor dictionary.
         The accessor is created using the _store_factory (except for SafeHierarchy).
         """
+        if self._fs_map_access is None:
+            raise StoreNotOpenError("Store must be open before access to it")
 
         mapped_store: Optional[EOProductStore]
-        accessor_id = item_format + ":" + file_path
+        accessor_id = f"{item_format}:{file_path}"
         if accessor_id not in self._accessor_map:
             self._accessor_map[accessor_id] = dict()
+
         if item_format == "SafeHierarchy":
             mapped_store = SafeHierarchy()
         else:
+            if self._is_compressed:
+                if self._temp_dir is None:
+                    self._temp_dir = tempfile.TemporaryDirectory()
+                accessor_file = os.path.join(self._temp_dir.name, file_path)
+                if not os.path.exists(accessor_file):
+                    with open(accessor_file, mode="wb") as file_:
+                        file_.write(self._fs_map_access[f"{self._top_level}{file_path}"])
+            else:
+                accessor_file = self._fs_map_access.fs.sep.join([self._fs_map_access.root, file_path])
             mapped_store = self._store_factory.get_store(
-                self._url + file_path,
+                accessor_file,
                 item_format,
             )
         try:
@@ -488,7 +533,7 @@ class SafeMappingManager:
         accessor_config: dict[str, Any],
     ) -> Optional[EOProductStore]:
         """Get an accessor from the opened accessors dictionary. If it's not present a new one is added."""
-        accessor_id = item_format + ":" + file_path
+        accessor_id = f"{item_format}:{file_path}"
         if accessor_id in self._accessor_map and accessor_config_id in self._accessor_map[accessor_id]:
             return self._accessor_map[accessor_id][accessor_config_id][0]
         else:
@@ -496,7 +541,18 @@ class SafeMappingManager:
 
     def _read_product_mapping(self) -> None:
         """Read mapping from the mapping factory and fill _config_mapping from it."""
-        json_data = self._mapping_factory.get_mapping(self._url)
+        if self._fs_map_access is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        if fsspec.utils.infer_compression(self._url):
+            top_level = self._fs_map_access.fs.listdir(self._fs_map_access.root, detail=False)
+            if len(top_level) == 0:
+                raise FileNotFoundError()  # pas de repertoire
+            top_level = top_level[0]
+            self._is_compressed = True
+            self._top_level = top_level
+        else:
+            top_level = self._fs_map_access.root.rpartition(self._fs_map_access.fs.sep)[-1]
+        json_data = self._mapping_factory.get_mapping(top_level)
         json_config_list = json_data["data_mapping"]
         for config in json_config_list:
             self._add_data_mapping(config[self.CONFIG_TARGET], config, json_data)

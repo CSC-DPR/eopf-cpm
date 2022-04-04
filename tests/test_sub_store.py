@@ -1,4 +1,5 @@
 import datetime
+import os
 
 import pytest
 from numpy import testing
@@ -180,16 +181,15 @@ EXPECTED_GRIB_MSL_ATTR = {
     "section5Length": 4,
     "analDate": datetime.datetime(2020, 2, 2, 23, 38),
     "validDate": datetime.datetime(2020, 2, 2, 23, 38),
-    "_ARRAY_DIMENSIONS": [9, 9],
+    "_ARRAY_DIMENSIONS": (9, 9),
 }
 EXPECTED_GRIB_MSL_COORD_ATTR = dict(EXPECTED_GRIB_MSL_ATTR)
-EXPECTED_GRIB_MSL_COORD_ATTR["_ARRAY_DIMENSIONS"] = [9]
+EXPECTED_GRIB_MSL_COORD_ATTR["_ARRAY_DIMENSIONS"] = (9,)
 
 
-@pytest.mark.need_files
 @pytest.mark.unit
-def test_grib_store():
-    grib_store = EOGribAccessor("../data/AUX_ECMWFT.grib")
+def test_grib_store(EMBEDED_TEST_DATA_FOLDER: str):
+    grib_store = EOGribAccessor(os.path.join(EMBEDED_TEST_DATA_FOLDER, "AUX_ECMWFT.grib"))
     grib_store.open()
     # test attributes
     assert grib_store["msl"].attrs == EXPECTED_GRIB_MSL_ATTR

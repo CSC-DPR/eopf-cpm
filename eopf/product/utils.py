@@ -1,9 +1,11 @@
 # We need to use a mix of posixpath (normpath) and pathlib (partition) in the eo_path methods.
 # As we work with strings we use posixpath (the unix path specific implementation of os.path) as much as possible.
 import posixpath
+import re
 from pathlib import PurePosixPath
 from typing import Any, Optional, Union
 
+import fsspec
 from lxml import etree
 
 
@@ -170,6 +172,30 @@ def downsplit_eo_path(eo_path: str) -> tuple[str, Optional[str]]:
     if sub_path == ".":
         sub_path = None
     return folder_name, sub_path
+
+
+def fs_match_path(pattern: str, filesystem: fsspec.FSMap) -> str:
+    """Find and return the first occurence of a path matchin
+    a given pattern.
+
+    If there is no match, pattern is return as it is.
+
+    Parameters
+    ----------
+    pattern: str
+        regex pattern to match
+    filesystem    filesystem representation
+
+    Returns
+    -------
+    str
+        matching path if find, else `pattern`
+    """
+
+    for file_path in filesystem:
+        if re.match(pattern, file_path):
+            return file_path
+    return pattern
 
 
 def is_absolute_eo_path(eo_path: str) -> bool:
