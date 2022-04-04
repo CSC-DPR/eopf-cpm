@@ -428,16 +428,24 @@ def test_hierarchy_html(product: EOProduct):
     assert tree_structure == {
         "product_name": {
             "coordinates": {
-                "coord_a": {"dims": ("c1",), "attrs": {dim_attr_key: ["c1"]}, "coords": ["/coordinates/coord_a"]},
-                "coord_b": {"dims": ("c3",), "attrs": {dim_attr_key: ["c3"]}, "coords": ["/coordinates/coord_b"]},
+                "coord_a": {
+                    "dims": ("c1",),
+                    "attrs": {dim_attr_key: tuple(["c1"])},
+                    "coords": ["/coordinates/coord_a"],
+                },
+                "coord_b": {
+                    "dims": ("c3",),
+                    "attrs": {dim_attr_key: tuple(["c3"])},
+                    "coords": ["/coordinates/coord_b"],
+                },
                 "coord_d": {
                     "dims": ("c2",),
-                    "attrs": {dim_attr_key: ["c2"]},
+                    "attrs": {dim_attr_key: tuple(["c2"])},
                     "coords": ["/coordinates/g1/coord_c", "/coordinates/coord_d"],
                 },
                 "g1": {
                     "coord_c": {
-                        "attrs": {"_ARRAY_DIMENSIONS": ["c2"]},
+                        "attrs": {dim_attr_key: tuple(["c2"])},
                         "coords": ["/coordinates/g1/coord_c", "/coordinates/coord_d"],
                         "dims": ("c2",),
                     },
@@ -455,12 +463,12 @@ def test_hierarchy_html(product: EOProduct):
                         "variable_b": {"dims": (), "attrs": {}, "coords": []},
                         "variable_c": {
                             "dims": ("c1", "c2"),
-                            "attrs": {dim_attr_key: ["c1", "c2"]},
+                            "attrs": {dim_attr_key: tuple(["c1", "c2"])},
                             "coords": ["/coordinates/g1/coord_c", "/coordinates/coord_a", "/coordinates/coord_d"],
                         },
                         "variable_d": {
                             "dims": ("dim_0", "dim_1"),
-                            "attrs": {dim_attr_key: ["dim_0", "dim_1"]},
+                            "attrs": {dim_attr_key: tuple(["dim_0", "dim_1"])},
                             "coords": [],
                         },
                         "dims": (),
@@ -476,7 +484,7 @@ def test_hierarchy_html(product: EOProduct):
                     },
                     "variable_a": {"dims": (), "attrs": {}, "coords": []},
                     "dims": (),
-                    "attrs": {dim_attr_key: ["c1", "c2", "group2"]},
+                    "attrs": {dim_attr_key: tuple(["c1", "c2", "group2"])},
                     "coords": [],
                 },
                 "group3": {

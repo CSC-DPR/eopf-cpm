@@ -62,13 +62,12 @@ def _compute_rec(node):
     structure = {}
     for section in sections:
         structure |= _compute_rec(section)
-    import json
 
     node_attrs = node.xpath('div/ul/li/div/dl[@class="eopf-attrs"][1]/dd')
     attrs = {}
     coords = []
     if node_attrs:
-        attrs = json.loads(node_attrs[0].text)
+        attrs = eval(node_attrs[0].text)
         if len(node_attrs) > 2:
             coords = [i.text for i in node_attrs[2:]]
 
