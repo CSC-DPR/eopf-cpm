@@ -1,11 +1,15 @@
 import datetime
 import os
 import sys
+from cmath import inf, nan
+from datetime import datetime
+from typing import Any
 
-import hypothesis.extra.numpy as et
+import hypothesis.extra.numpy as xps
 import hypothesis.strategies as st
 import numpy
 import pytest
+from hypothesis import assume, given
 
 from eopf.product.utils import (
     apply_xpath,
@@ -25,6 +29,24 @@ def tree(EMBEDED_TEST_DATA_FOLDER: str):
     snippet_path = os.path.join(EMBEDED_TEST_DATA_FOLDER, "snippet_xfdumanifest.xml")
     with open(snippet_path) as f:
         return parse_xml(f)
+
+
+@st.composite
+def value_with_type(draw, elements=st.integers(), expected_type=int, expected_container_type=None):
+    if isinstance(expected_type, st.SearchStrategy):
+        expected_type = draw(expected_type)
+
+    if expected_container_type is not None:
+        if isinstance(expected_container_type, st.SearchStrategy):
+            expected_container_type = draw(expected_container_type)
+        return (draw(elements), expected_type, expected_container_type)
+
+    return (draw(elements), expected_type)
+
+
+@st.composite
+def numpy_value(draw, dtype_st=xps.scalar_dtypes(), allow_infinity=True, allow_nan=True):
+    return draw(xps.from_dtype(draw(dtype_st), allow_infinity=allow_infinity, allow_nan=allow_nan))
 
 
 @pytest.mark.unit
@@ -134,182 +156,83 @@ def test_convert_unix_time():
         assert True
 
 
-@pytest.mark.parametrize(
-    "data_type, values, expected_type",
-    [
-        (
-            dict,
-            {
-                key: numpy.float32(value)
-                for key, value in zip(
-                    st.lists(st.text(min_size=1), min_size=10, unique=True).example(),
-                    st.lists(st.floats(-999, 999), unique=True, min_size=10).example(),
-                )
-            },
+@given(
+    value_and_types=st.one_of(
+        value_with_type(
+            st.lists(elements=st.floats(allow_infinity=False, allow_nan=False), unique=True, min_size=10),
             float,
-        ),
-        (
-            dict,
-            {
-                key: numpy.uint32(value)
-                for key, value in zip(
-                    st.lists(st.text(min_size=1), min_size=10, unique=True).example(),
-                    st.lists(st.integers(-999, 999), unique=True, min_size=10).example(),
-                )
-            },
-            int,
-        ),
-        (
-            dict,
-            {
-                key: numpy.int32(value)
-                for key, value in zip(
-                    st.lists(st.text(min_size=1), min_size=10, unique=True).example(),
-                    st.lists(st.integers(-999, 999), unique=True, min_size=10).example(),
-                )
-            },
-            int,
-        ),
-    ],
-)
-def test_dict_conv(data_type, values, expected_type):
-    converted_dict = conv(values)
-    # Check if data type of converted value doesn't change
-    assert isinstance(converted_dict, data_type)
-    # Check if items of converted value doesn't change
-    assert converted_dict.items() == values.items()
-    for item_value in converted_dict:
-        assert isinstance(converted_dict[item_value], expected_type)
-
-
-@pytest.mark.unit
-@pytest.mark.parametrize(
-    "data_type, values, expected_type",
-    [
-        (
             list,
-            [numpy.float64(item) for item in st.lists(st.floats(-999, 999), unique=True, min_size=10).example()],
+        ),
+        value_with_type(st.lists(elements=st.booleans(), min_size=10), int, list),
+        value_with_type(st.lists(elements=st.integers(), unique=True, min_size=10), int, list),
+        value_with_type(st.sets(elements=st.floats(allow_infinity=False, allow_nan=False), min_size=10), float, set),
+        value_with_type(st.sets(elements=st.booleans(), min_size=2), int, set),
+        value_with_type(st.sets(elements=st.integers(), min_size=10), int, set),
+        value_with_type(st.dictionaries(st.text(), st.integers(), min_size=10), int, dict),
+        value_with_type(st.dictionaries(st.text(), st.booleans(), min_size=10), int, dict),
+        value_with_type(
+            st.dictionaries(st.text(), st.floats(allow_infinity=False, allow_nan=False), min_size=10),
             float,
+            dict,
         ),
-        (
-            list,
-            [numpy.uint32(item) for item in st.lists(st.integers(-999, 999), unique=True, min_size=10).example()],
-            int,
-        ),
-        (
-            list,
-            [numpy.int64(item) for item in st.lists(st.integers(-999, 999), unique=True, min_size=10).example()],
-            int,
-        ),
-    ],
+        value_with_type(xps.arrays(xps.floating_dtypes(), 10, unique=True), float, list),
+        value_with_type(xps.arrays(xps.integer_dtypes(), 10, unique=True), int, list),
+        value_with_type(xps.arrays(xps.boolean_dtypes(), 10, unique=True), int, list),
+    ),
 )
-def test_list_conv(data_type, values, expected_type):
+def test_conv_with_hyp(value_and_types: tuple[Any, type, type]):
+    values, type_, container_type = value_and_types
+    assume(nan not in values)
+    assume(inf not in values)
     converted_list = conv(values)
-    # Check if data type of converted value doesn't change
-    assert isinstance(converted_list, data_type)
+    assert isinstance(converted_list, container_type)
     # Check if size of converted value doesn't change
     assert len(converted_list) == len(values)
+    assert numpy.all(converted_list == values)
     # Check if type of each item from converted value is correct
-    for value in converted_list:
-        assert isinstance(value, expected_type)
+    if isinstance(converted_list, dict):
+        iterator = converted_list.values()
+    else:
+        iterator = converted_list
+    for value in iterator:
+        assert isinstance(value, type_)
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize(
-    "data_type, values, expected_type",
-    [
-        (
-            set,
-            {numpy.float32(item) for item in st.lists(st.floats(-999, 999), unique=True, min_size=10).example()},
-            float,
+@pytest.mark.parametrize("EPSILON", [0.1])
+@given(value=numpy_value(xps.floating_dtypes(), allow_infinity=False, allow_nan=False))
+def test_epsilon_on_fp_conv(value, EPSILON):
+    converted_value = conv(value)
+    assert value - converted_value < EPSILON
+    assert converted_value - value < EPSILON
+
+
+@pytest.mark.unit
+@given(
+    value_and_type=st.one_of(
+        value_with_type(
+            elements=numpy_value(xps.floating_dtypes(), allow_infinity=False, allow_nan=False),
+            expected_type=float,
         ),
-        (
-            set,
-            {numpy.int32(item) for item in st.lists(st.integers(-999, 999), unique=True, min_size=10).example()},
-            int,
+        value_with_type(
+            elements=numpy_value(xps.complex_number_dtypes(), allow_infinity=False, allow_nan=False),
+            expected_type=complex,
         ),
-        (set, {numpy.uint32(item) for item in st.lists(st.floats(-999, 999), unique=True, min_size=10).example()}, int),
-    ],
+        value_with_type(
+            elements=numpy_value(xps.integer_dtypes(), allow_infinity=False, allow_nan=False),
+            expected_type=int,
+        ),
+        value_with_type(
+            elements=numpy_value(xps.datetime64_dtypes(), allow_infinity=False, allow_nan=False),
+            expected_type=datetime,
+        ),
+    ),
 )
-def test_set_conv(data_type, values, expected_type):
-    converted_set = conv(values)
-    # Check if data type of converted value doesn't change
-    assert isinstance(converted_set, data_type)
-    # Check if size of converted value doesn't change
-    assert len(converted_set) == len(values)
-    # Check if type of each item from converted value is correct
-    for value in converted_set:
-        assert isinstance(value, expected_type)
-
-
-@pytest.mark.unit
-@pytest.mark.parametrize(
-    "data_type, values, expected_type",
-    [
-        (list, et.arrays(numpy.float64, 10, elements=st.floats(-999, 999), unique=True).example(), float),
-        (list, et.arrays(numpy.int64, 3, elements=st.integers(-999, 999), unique=True).example(), int),
-    ],
-)
-def test_np_conv(data_type, values, expected_type):
-    converted_nparray = conv(values)
-    assert isinstance(converted_nparray, data_type)
-    assert numpy.all(converted_nparray == values)
-    for value in converted_nparray:
-        assert isinstance(value, expected_type)
-
-
-@pytest.mark.unit
-@pytest.mark.parametrize("tested_value, EPSILON", [(st.floats(-999, 999).example(), 0.1)])
-def test_fp_conv(tested_value, EPSILON):
-    # Floating points
-    np_float_values = [numpy.float64(tested_value), numpy.float32(tested_value), numpy.float16(tested_value)]
-
-    for value in np_float_values:
-        converted_value = conv(value)
-        assert isinstance(converted_value, float)
-        assert value - converted_value < EPSILON
-        assert converted_value - tested_value < EPSILON
-
-
-@pytest.mark.unit
-@pytest.mark.parametrize(
-    "tested_value",
-    [
-        (st.integers(-999, 999).example()),
-    ],
-)
-def test_int_conv(tested_value):
-    # Integer - unsigned integer tests
-    np_values = [
-        numpy.int64(tested_value),
-        numpy.int32(tested_value),
-        numpy.int16(tested_value),
-        # numpy.uint64(tested_value),
-        # numpy.uint32(tested_value),
-        # numpy.uint16(tested_value),
-        # umpy.uint8(tested_value),
-    ]
-
-    for value in np_values:
-        converted_value = conv(value)
-        assert isinstance(converted_value, int)
-        assert converted_value == value
-        assert converted_value == tested_value
-
-
-@pytest.mark.unit
-@pytest.mark.parametrize(
-    "tested_value",
-    [
-        (complex(st.integers(-999, 999).example(), st.integers(-999, 999).example())),
-    ],
-)
-def test_complex_conv(tested_value):
-    # Default type -> test that no conversion is performed
-    converted_value = conv(tested_value)
-    assert isinstance(tested_value, complex)
-    assert isinstance(converted_value, complex)
-    assert tested_value == converted_value
+def test_conv(value_and_type):
+    value, expected_type = value_and_type
+    converted_value = conv(value)
+    assert isinstance(converted_value, expected_type)
+    assert converted_value == value
 
 
 @pytest.mark.unit
@@ -325,41 +248,19 @@ def test_maxint_conv(sysmax, maxint):
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize(
-    "data_values, current_types, data_types",
-    [
-        (
-            [
-                st.integers(-999, 999).example(),
-                st.integers(-999, 999).example(),
-                st.integers(-999, 999).example(),
-                st.integers(-999, 999).example(),
-                st.integers(-999, 999).example(),
-                st.integers(-999, 999).example(),
-                st.floats(-999, 999).example(),
-                st.floats(-999, 999).example(),
-            ],
-            [int, int, int, int, int, int, float, float],
-            [
-                numpy.int16,
-                numpy.int32,
-                numpy.int64,
-                numpy.uint8,
-                numpy.uint16,
-                numpy.uint32,
-                numpy.float64,
-                numpy.float32,
-            ],
-        ),
-    ],
+@given(
+    value_and_types=st.one_of(
+        value_with_type(st.integers(), int, xps.integer_dtypes()),
+        value_with_type(st.floats(), float, xps.floating_dtypes()),
+    ),
 )
-def test_reverse_conv(data_values, current_types, data_types):
-    for (idx, value), type_ in zip(enumerate(data_values), data_types):
-        # verify if the current data type is as expected (int or float)
-        assert type(value) == current_types[idx]
-        # convert value to given data type (int64, int32, float64 etc .. )
-        converted_value = reverse_conv(type_, value)
-        # check if conversion is performed according to given data (int -> numpy.int64, float -> numpy.float64)
-        assert isinstance(converted_value, type_)
-        # check if converted data type is changed and not match with old one
-        assert type(converted_value) != current_types[idx]
+def test_reverse_conv(value_and_types):
+    value, current_type, data_type = value_and_types
+    # verify if the current data type is as expected (int or float)
+    assert isinstance(value, current_type)
+    # convert value to given data type (int64, int32, float64 etc .. )
+    converted_value = reverse_conv(data_type, value)
+    # check if conversion is performed according to given data (int -> numpy.int64, float -> numpy.float64)
+    assert type(converted_value) == data_type
+    # check if converted data type is changed and not match with old one
+    assert type(converted_value) != current_type
