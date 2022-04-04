@@ -62,6 +62,6 @@ def test_load_product(store_type):
 )
 def test_load_write_product(store_type: str, output_formatter: Callable, OUTPUT_DIR: str):
     source_store = EOSafeStore(store_type)
-    _, _, name = store_type.rpartition("/")
+    name = os.path.basename(store_type)
     target_store = EOSafeStore(os.path.join(OUTPUT_DIR, output_formatter(name)))
     convert(source_store, target_store)
