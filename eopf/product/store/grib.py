@@ -52,7 +52,7 @@ class EOGribAccessor(EOProductStore):
         return path in self._ds
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def iter(self, path: str) -> Iterator[str]:
         if self._ds is None:
@@ -84,11 +84,12 @@ class EOGribAccessor(EOProductStore):
         return EOVariable(data=data)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def __len__(self) -> int:
         if self._ds is None:
             raise StoreNotOpenError("Store must be open before access to it")
+        # We have one group (coordinates).
         return 1 + len(self._ds)
 
     def __iter__(self) -> Iterator[str]:

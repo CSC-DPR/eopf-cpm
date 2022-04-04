@@ -1,4 +1,5 @@
 import os
+from typing import Any
 
 import pytest
 from numpy import testing
@@ -55,28 +56,57 @@ EXPECTED_GRIB_LAT_ATTR = {
 
 
 @pytest.mark.unit
-def test_grib_store(EMBEDED_TEST_DATA_FOLDER: str):
+@pytest.mark.parametrize(
+    "eo_path, expected_set",
+    [
+        ("", {"msl", "tco3", "tcwv", "coordinates"}),
+        ("/", {"msl", "tco3", "tcwv", "coordinates"}),
+        ("coordinates", {"number", "surface", "valid_time", "time", "longitude", "latitude", "step"}),
+    ],
+)
+def test_grib_store_iter(EMBEDED_TEST_DATA_FOLDER: str, eo_path: str, expected_set: set[str]):
     grib_store = EOGribAccessor(os.path.join(EMBEDED_TEST_DATA_FOLDER, "AUX_ECMWFT.grib"))
     grib_store.open()
     # test attributes
-    assert grib_store["msl"].attrs == EXPECTED_GRIB_MSL_ATTR
-    assert grib_store["coordinates/longitude"].attrs == EXPECTED_GRIB_LON_ATTR
-    assert grib_store["coordinates/latitude"].attrs == EXPECTED_GRIB_LAT_ATTR
-    testing.assert_allclose(grib_store["msl"]._data.to_numpy()[4, 4], 100971.8125)
-    assert grib_store["msl"].shape == (9, 9)
-    testing.assert_allclose(grib_store["coordinates/longitude"]._data.to_numpy()[4], 161.3225)
-    assert grib_store["coordinates/longitude"].shape == (9,)
-    testing.assert_allclose(grib_store["coordinates/latitude"]._data.to_numpy()[4], -9.534)
-    assert grib_store["coordinates/latitude"].shape == (9,)
 
     # test iterator
-    assert set(grib_store) == {"msl", "tco3", "tcwv", "coordinates"}
-    assert set(grib_store.iter("coordinates")) == {
-        "number",
-        "surface",
-        "valid_time",
-        "time",
-        "longitude",
-        "latitude",
-        "step",
-    }
+    assert set(grib_store.iter(eo_path)) == expected_set
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "eo_path, shape, attrs, sampled_values",
+    [
+        ("msl", (9, 9), EXPECTED_GRIB_MSL_ATTR, {(4, 4): 100971.8125}),
+        ("coordinates/longitude", (9,), EXPECTED_GRIB_LON_ATTR, {(4,): 161.3225}),
+        ("coordinates/latitude", (9,), EXPECTED_GRIB_LAT_ATTR, {(4,): -9.534}),
+    ],
+)
+def test_grib_store_get_item(
+    EMBEDED_TEST_DATA_FOLDER: str,
+    eo_path: str,
+    shape: set[int, ...],
+    attrs: dict[str, Any],
+    sampled_values: dict[set[int, ...], float],
+):
+    grib_store = EOGribAccessor(os.path.join(EMBEDED_TEST_DATA_FOLDER, "AUX_ECMWFT.grib"))
+    grib_store.open()
+
+    assert grib_store[eo_path].shape == shape
+    assert grib_store[eo_path].attrs == attrs
+    for key, value in sampled_values.items():
+        testing.assert_allclose(grib_store[eo_path]._data.to_numpy()[key], value)
+
+
+@pytest.mark.unit
+def test_grib_exceptions(EMBEDED_TEST_DATA_FOLDER: str):
+    grib_store = EOGribAccessor(os.path.join(EMBEDED_TEST_DATA_FOLDER, "AUX_ECMWFT.grib"))
+    grib_store.open()
+    with pytest.raises(KeyError):
+        set(grib_store.iter("test"))
+    with pytest.raises(KeyError):
+        set(grib_store.iter("coordinates/test"))
+    with pytest.raises(KeyError):
+        grib_store["test"]
+    with pytest.raises(KeyError):
+        grib_store["coordinates/test"]
