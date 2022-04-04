@@ -2,6 +2,7 @@ from .abstract import EOProductStore, StorageStatus
 from .conveniences import convert
 from .netcdf import EONetCDFStore
 from .safe import EOSafeStore
+from .cog import EOCogStore
 from .zarr import EOZarrStore
 
 __all__ = [
@@ -11,4 +12,5 @@ __all__ = [
     "StorageStatus",
     "EONetCDFStore",
     "EOSafeStore",
+    "EOCogStore",
 ]

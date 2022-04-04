@@ -27,7 +27,9 @@ class EOStoreFactory:
                 XMLTPAccessor,
             )
             from eopf.product.store.zarr import EOZarrStore
+            from eopf.product.store.cog import EOCogStore
 
+            self.register_store(EOCogStore)
             self.register_store(EOZarrStore)
             self.register_store(FilenameToVariableAccessor, "filename_to_subswath")
             self.register_store(EONetCDFStore, "netcdf")
