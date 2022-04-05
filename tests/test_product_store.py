@@ -11,7 +11,9 @@ import numpy as np
 import pytest
 import xarray
 import zarr
+from fsspec.implementations.local import LocalFileSystem
 from hypothesis import given
+from pytest_lazyfixture import lazy_fixture
 
 from eopf.exceptions import StoreNotOpenError
 from eopf.exceptions.warnings import AlreadyOpen
@@ -24,6 +26,7 @@ from eopf.product.store.rasterio import EORasterIOAccessor
 
 from .decoder import Netcdfdecoder
 from .utils import (
+    S3_CONFIG,
     assert_contain,
     assert_has_coords,
     assert_issubdict,
@@ -616,3 +619,24 @@ def test_rasters(store_cls: type[EORasterIOAccessor], format_file: str, params: 
             raster.close()
             with pytest.raises(StoreNotOpenError):
                 raster.close()
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "product, fakefilename, open_kwargs",
+    [
+        (EOProduct("", store_or_path_url="s3://a_simple_zarr.zarr"), lazy_fixture("zarr_file"), S3_CONFIG),
+        (
+            EOProduct("", store_or_path_url="zip::s3://a_simple_zarr.zarr"),
+            lazy_fixture("zarr_file"),
+            dict(s3=S3_CONFIG),
+        ),
+    ],
+)
+def test_zarr_open_on_different_fs(product: EOProduct, fakefilename: str, open_kwargs: dict[str, Any]):
+    with patch("fsspec.get_mapper") as mock:
+        mock.return_value = fsspec.FSMap(fakefilename, LocalFileSystem())
+        with product.open(storage_options=open_kwargs):
+            product.load()
+        assert mock.call_count == 1
+        mock.assert_called_with(product.store.url, **open_kwargs)

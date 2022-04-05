@@ -56,7 +56,7 @@ class EOZarrStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before close it")
 
         # only if we write
-        if any(self._mode.startswith(mode) for mode in ("w", "a")) or self._mode.endswith("+"):
+        if any(self._mode.startswith(mode) for mode in ("w", "a")) or "+" in self._mode:
             zarr.consolidate_metadata(self._root.store)
 
         super().close()
