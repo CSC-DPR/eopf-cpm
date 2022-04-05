@@ -1,3 +1,4 @@
+from lib2to3.pgen2 import driver
 import pathlib
 from collections.abc import MutableMapping
 from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
@@ -76,6 +77,7 @@ class EOCogStore(EOProductStore):
                 self.url,
                 tiled=True,
                 lock=self._lock,
+                driver="COG"
         )
 
     # docstr-coverage: inherited
