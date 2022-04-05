@@ -2,9 +2,12 @@ import enum
 import warnings
 from abc import abstractmethod
 from collections.abc import MutableMapping
-from typing import Any, Iterator
+from typing import TYPE_CHECKING, Any, Iterator
 
 from eopf.exceptions.warnings import AlreadyClose, AlreadyOpen
+
+if TYPE_CHECKING:  # pragma: no cover
+    from eopf.product.core.eo_object import EOObject
 
 
 class StorageStatus(enum.Enum):
@@ -14,7 +17,7 @@ class StorageStatus(enum.Enum):
     CLOSE = "close"
 
 
-class EOProductStore(MutableMapping[str, Any]):
+class EOProductStore(MutableMapping[str, "EOObject"]):
     """Abstract store representation to access to a files on the given URL
 
     Inherite from MutableMapping to indexes objects with there correponding
@@ -38,6 +41,9 @@ class EOProductStore(MutableMapping[str, Any]):
     def __init__(self, url: str) -> None:
         self.url = url
         self._status = StorageStatus.CLOSE
+
+    def __iter__(self):
+        return self.iter("")
 
     @property
     def is_readable(self) -> bool:
@@ -178,3 +184,26 @@ class EOProductStore(MutableMapping[str, Any]):
         bool
         """
         return False
+
+
+class EOReadOnlyStore(EOProductStore):
+    def __setitem__(self, k: str, v: "EOObject") -> None:
+        raise NotImplementedError()
+
+    @property
+    def is_writeable(self) -> bool:
+        """bool: this store can be write or not"""
+        return False
+
+    @property
+    def is_erasable(self) -> bool:
+        """bool: this store can be erase or not"""
+        return False
+
+    def open(self, mode: str = "r", **kwargs: Any) -> None:
+        if mode != "r":
+            raise NotImplementedError
+        super().open(mode, **kwargs)
+
+    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
+        raise NotImplementedError()

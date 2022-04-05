@@ -1,19 +1,18 @@
 import os
 import pathlib
-from collections.abc import MutableMapping
 from typing import TYPE_CHECKING, Any, Iterable, Iterator, Optional
 
 import xarray as xr
 
 from eopf.exceptions import StoreNotOpenError
-from eopf.product.store import EOProductStore
+from eopf.product.store.abstract import EOReadOnlyStore
 from eopf.product.utils import downsplit_eo_path
 
 if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_object import EOObject
 
 
-class EOGribAccessor(EOProductStore):
+class EOGribAccessor(EOReadOnlyStore):
     _DATA_KEY = "values"
     _COORDINATE_0_KEY = "distinctLatitudes"
     _COORDINATE_1_KEY = "distinctLongitudes"
@@ -25,9 +24,7 @@ class EOGribAccessor(EOProductStore):
         self._ds: Optional[xr.Dataset] = None
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
-        if mode != "r":
-            raise NotImplementedError
-        super().open()
+        super().open(mode, **kwargs)
         # open is a class (constructor).
         self._ds = xr.open_dataset(self.url, engine="cfgrib", **kwargs)
 
@@ -50,9 +47,6 @@ class EOGribAccessor(EOProductStore):
         if group == "coordinates":
             return sub_path in self._ds.coords
         return path in self._ds
-
-    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
-        raise NotImplementedError()
 
     def iter(self, path: str) -> Iterator[str]:
         if self._ds is None:
@@ -83,17 +77,11 @@ class EOGribAccessor(EOProductStore):
             data = self._ds[key]
         return EOVariable(data=data)
 
-    def __setitem__(self, key: str, value: "EOObject") -> None:
-        raise NotImplementedError()
-
     def __len__(self) -> int:
         if self._ds is None:
             raise StoreNotOpenError("Store must be open before access to it")
         # We have one group (coordinates).
         return 1 + len(self._ds)
-
-    def __iter__(self) -> Iterator[str]:
-        return self.iter("")
 
     @staticmethod
     def guess_can_read(file_path: str) -> bool:
