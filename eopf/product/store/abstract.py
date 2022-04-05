@@ -45,7 +45,7 @@ class EOProductStore(MutableMapping[str, "EOObject"]):
     def __delitem__(self, key: str) -> None:  # pragma: no cover
         raise NotImplementedError()
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[str]:
         return self.iter("")
 
     def close(self) -> None:

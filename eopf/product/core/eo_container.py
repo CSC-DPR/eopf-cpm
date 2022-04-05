@@ -102,7 +102,10 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
         elif key in self._groups:
             item = self._groups[key]
         elif self.store is not None:
-            item = self.store[self._store_key(key)]
+            obj = self.store[self._store_key(key)]
+            if not isinstance(obj, EOGroup):
+                raise TypeError
+            item = obj
             self[key] = item
         if subkey is not None:
             return item[subkey]
