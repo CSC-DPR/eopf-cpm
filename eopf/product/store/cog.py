@@ -1,7 +1,10 @@
+from email.mime import base
 from lib2to3.pgen2 import driver
 import pathlib
 from collections.abc import MutableMapping
 from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
+from eopf.product.core.eo_group import EOGroup
+from eopf.product.store.netcdf import EONetCDFStore
 
 import rioxarray
 import xarray
@@ -63,6 +66,28 @@ class EOCogStore(EOProductStore):
             raise NotImplementedError("Only available in reading mode")
         return len(self._ref)
 
+
+    def _write_cog(self, value: "EOObject") -> None:
+        value._data.rio.to_raster(
+            self.url,
+            tiled=True,
+            lock=self._lock,
+            driver="COG"
+        )
+
+    def _write_netCDF4(self, value: "EOObject") -> None:
+        import os
+
+        nc = EONetCDFStore(self.url)
+        nc.open(mode="w")
+        basename = os.path.basename(self.url)
+        if "." in  basename:
+            var_name = basename.split(".")[0]
+        else:
+            var_name = basename
+        nc[var_name] = value
+        nc.close()
+
     def __setitem__(self, key: str, value: "EOObject") -> None:
         from eopf.product.core.eo_variable import EOVariable
 
@@ -70,15 +95,17 @@ class EOCogStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         if self._mode != "w":
             raise NotImplementedError("Only available in writing mode")
-        if not isinstance(value, EOVariable):
-            raise NotImplementedError()
             
-        self._ref.rio.to_raster(
-                self.url,
-                tiled=True,
-                lock=self._lock,
-                driver="COG"
-        )
+        if isinstance(value, EOVariable):
+            if len(value.dims) == 4 and (value.dims[0]=='band'):
+                self._write_cog(value)
+            else:
+                self._write_netCDF4(value)
+                
+        elif isinstance(value, EOGroup):
+            pass
+        else:
+            raise NotImplementedError()
 
     # docstr-coverage: inherited
     def close(self) -> None:
