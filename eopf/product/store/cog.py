@@ -67,29 +67,34 @@ class EOCogStore(EOProductStore):
         return len(self._ref)
 
 
-    def _write_cog(self, value: "EOObject") -> None:
+    def _write_cog(self, value: "EOObject", file_path: str) -> None:
+        file_path += ".cog"
         value._data.rio.to_raster(
-            self.url,
+            file_path,
             tiled=True,
             lock=self._lock,
             driver="COG"
         )
 
-    def _write_netCDF4(self, value: "EOObject") -> None:
-        import os
-
-        nc = EONetCDFStore(self.url)
+    def _write_netCDF4(self, value: "EOObject", file_path: str, var_name: str) -> None:
+        file_path += ".nc"
+        nc = EONetCDFStore(file_path)
         nc.open(mode="w")
-        basename = os.path.basename(self.url)
-        if "." in  basename:
-            var_name = basename.split(".")[0]
-        else:
-            var_name = basename
         nc[var_name] = value
         nc.close()
 
+    def _write_eov(self, value: "EOObject", output_dir: str, var_name: str):
+        from os.path import join
+
+        file_path = join(output_dir, var_name)
+        if len(value.dims) == 3 and (value.dims[0]=='band'):
+            self._write_cog(value, file_path)
+        else:
+            self._write_netCDF4(value, file_path, var_name)  
+
     def __setitem__(self, key: str, value: "EOObject") -> None:
         from eopf.product.core.eo_variable import EOVariable
+        import os
 
         if self._ref is None:
             raise StoreNotOpenError("Store must be open before access to it")
@@ -97,13 +102,12 @@ class EOCogStore(EOProductStore):
             raise NotImplementedError("Only available in writing mode")
             
         if isinstance(value, EOVariable):
-            if len(value.dims) == 4 and (value.dims[0]=='band'):
-                self._write_cog(value)
-            else:
-                self._write_netCDF4(value)
-                
+            self._write_eov(value, self.url, key)
         elif isinstance(value, EOGroup):
-            pass
+            output_dir = os.path.join(self.url, key)
+            os.mkdir(output_dir, mode=777)
+            for var_name, var_val in value.variables:
+                self._write_eov(var_val, output_dir, var_name)
         else:
             raise NotImplementedError()
 
