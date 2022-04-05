@@ -14,7 +14,7 @@ import zarr
 from hypothesis import given
 
 from eopf.exceptions import StoreNotOpenError
-from eopf.exceptions.warnings import AlreadyClose, AlreadyOpen
+from eopf.exceptions.warnings import AlreadyOpen
 from eopf.product.conveniences import init_product, open_store
 from eopf.product.core import EOGroup, EOProduct, EOVariable
 from eopf.product.store import EONetCDFStore, EOProductStore, EOZarrStore, convert
@@ -333,7 +333,7 @@ def test_store_structure(store: EOProductStore):
 @pytest.mark.parametrize(
     "store, exceptions",
     [
-        (EOZarrStore(zarr.MemoryStore()), (AlreadyOpen, AlreadyClose)),
+        (EOZarrStore(zarr.MemoryStore()), (AlreadyOpen, StoreNotOpenError)),
         (EONetCDFStore(_FILES["netcdf"]), (AlreadyOpen, StoreNotOpenError)),
     ],
 )
