@@ -13,7 +13,7 @@ from pyfakefs.fake_filesystem import FakeFilesystem
 from eopf.exceptions import StoreNotOpenError
 from eopf.product.core import EOGroup, EOVariable
 from eopf.product.store.grib import EOGribAccessor
-from eopf.product.store.xml_selector import XMLAccessor
+from eopf.product.store.xml_accessors import (XMLAnglesAccessor, XMLTPAccessor, XMLManifestAccessor)
 
 from .utils import PARENT_DATA_PATH, assert_issubdict
 
@@ -229,12 +229,11 @@ EXPECTED_XML_ATTR = {
 @pytest.mark.usecase
 def test_xml_angles_accessor():
     # Create and open xml angles accessor
-    xml_accessor = XMLAccessor(f"{PARENT_DATA_PATH}/tests/data/MTD_TL.xml", "xmlangles")
+    xml_accessor = XMLAnglesAccessor(f"{PARENT_DATA_PATH}/tests/data/MTD_TL.xml")
     xml_accessor.open()
 
     # verify data shapes / data name / data type
     assert xml_accessor[EXPECTED_XML_ATTR["test_xpath_1"]]._data.data.shape == EXPECTED_XML_ATTR["array_size"]
-    assert xml_accessor[EXPECTED_XML_ATTR["test_xpath_1"]]._name == "sza"
     assert isinstance(xml_accessor[EXPECTED_XML_ATTR["test_xpath_1"]], EOVariable)
 
     # create an xarray with a user defined value
@@ -256,11 +255,11 @@ def test_xml_tiepoints_accessor():
     dummy_y_array = [uly - idx * col_step - col_step / 2 for idx in range(EXPECTED_XML_ATTR["tp_array_size"][0])]
 
     # Create XMLAccessors
-    tp_y_accessor = XMLAccessor(f"{PARENT_DATA_PATH}/tests/data/MTD_TL.xml", "xmltpy")
+    tp_y_accessor = XMLTPAccessor(f"{PARENT_DATA_PATH}/tests/data/MTD_TL.xml", "xmltpy")
     tp_y_accessor.open()
     assert tp_y_accessor["y"]._data.shape == EXPECTED_XML_ATTR["tp_array_size"]
 
-    tp_x_accessor = XMLAccessor(f"{PARENT_DATA_PATH}/tests/data/MTD_TL.xml", "xmltpx")
+    tp_x_accessor = XMLTPAccessor(f"{PARENT_DATA_PATH}/tests/data/MTD_TL.xml", "xmltpx")
     tp_x_accessor.open()
     assert tp_x_accessor["x"]._data.shape == EXPECTED_XML_ATTR["tp_array_size"]
 
@@ -283,7 +282,7 @@ def test_xml_tiepoints_accessor():
 def test_xml_manifest_accessor():
     olci_path = glob(f"{PARENT_DATA_PATH}/data/S3A_OL_1*.SEN3")[0]
     manifest_path = os.path.join(olci_path, "xfdumanifest.xml")
-    manifest_accessor = XMLAccessor(manifest_path, "manifest")
+    manifest_accessor = XMLManifestAccessor(manifest_path)
     mapping_file_path = glob("eopf/product/store/mapping/S3_OL_1_EFR_mapping.json")[0]
     mapping_file = open(mapping_file_path)
     map_olci = json.load(mapping_file)

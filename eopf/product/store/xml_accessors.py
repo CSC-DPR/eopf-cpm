@@ -1,9 +1,11 @@
+from abc import ABC
 from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional, TextIO
 
 import lxml
 import xarray as xr
 
 from eopf.exceptions import StoreNotOpenError, XmlParsingError
+from eopf.product.store import EOProductStore
 from eopf.product.utils import (  # to be reviewed
     apply_xpath,
     parse_xml,
@@ -14,13 +16,15 @@ if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_object import EOObject
 
 
-class XMLAnglesAccessor:
-    def __init__(self, **kwargs: Any) -> None:
+class XMLAnglesAccessor(EOProductStore, ABC):
+    def __init__(self, url, **kwargs: Any) -> None:
+        super().__init__(url)
         self._root = lxml.etree._ElementTree
-        self._url = kwargs["url"]
+        self._url = url
         self.local_namespaces = {"n1": "https://psd-14.sentinel2.eo.esa.int/PSD/S2_PDI_Level-1C_Tile_Metadata.xsd"}
 
     def open(self) -> None:
+        super().open()
         self._root = lxml.etree.parse(self._url)
 
     def __getitem__(self, key: str) -> "EOObject":
@@ -42,8 +46,8 @@ class XMLAnglesAccessor:
         """
         from eopf.product.core import EOVariable
 
-        variable_name, variable_data = self.create_eo_variable(key)
-        return EOVariable(name=variable_name, data=variable_data)
+        variable_data = self.create_eo_variable(key)
+        return EOVariable(data=variable_data)
 
     def create_eo_variable(self, xpath: str) -> tuple[str, xr.DataArray]:
         """
@@ -52,41 +56,8 @@ class XMLAnglesAccessor:
 
         """
         item = self._root.xpath(xpath, namespaces=self.local_namespaces)[0]
-        var_name = self.get_variable_name(self._root.getpath(item))
         eo_variable_data = self.get_values(f"{self._root.getpath(item)}/VALUES")
-        dataset = xr.Dataset({var_name: eo_variable_data})
-        return (var_name, dataset[var_name])
-
-    def get_variable_name(self, path: str) -> str:
-        """
-        This method is used to get a varible name from a given path
-
-        Parameters
-        -------
-        path: str
-            xpath to node item
-
-        Returns
-        -------
-        str, variable name
-        """
-        if "Sun_Angles_Grid" in path.split("/"):
-            # Return <<SAA>> Sun Azimuth Angles or <<SZA>> Sun Zenit Angles if node parent is <<Sun_Angles_Grid>>
-            tile_path = "/".join(path.split("/")[0:5])
-            node_path = self._root.xpath(tile_path, namespaces=self.local_namespaces)
-            return "saa" if "Azimuth" in node_path[0].tag else "sza"
-        else:
-            # Recover band and detector ID, and compose variable name
-            tile_path = "/".join(path.split("/")[0:5])
-            node_path = self._root.xpath(tile_path, namespaces=self.local_namespaces)
-            item = node_path[0]
-            if item.tag == "Viewing_Incidence_Angles_Grids":
-                if "Azimuth" in path.split("/"):
-                    return f"vaa_b{item.attrib['bandId']}_{item.attrib['detectorId']}"
-                else:
-                    return f"vza_b{item.attrib['bandId']}_{item.attrib['detectorId']}"
-        # Return a dummy name if node is neither Sun_Angles_Grid nor Viewing_Incidence_Angles_Grids
-        return "var_name"
+        return eo_variable_data
 
     def get_values(self, path: str) -> xr.DataArray:
         """
@@ -108,12 +79,33 @@ class XMLAnglesAccessor:
         da = xr.DataArray(array, dims=["y_tiepoints", "x_tiepoints"])
         return da
 
+    def __iter__(self):
+        raise NotImplementedError()
 
-class XMLTPAccessor:
-    def __init__(self, **kwargs: Any) -> None:
+    def __len__(self):
+        raise NotImplementedError()
+
+    def __setitem__(self, key, value):
+        raise NotImplementedError()
+
+    def is_group(self, path: str) -> bool:
+        raise NotImplementedError()
+
+    def is_variable(self, path: str) -> bool:
+        raise NotImplementedError()
+
+    def iter(self):
+        raise NotImplementedError()
+
+    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
+        raise NotImplementedError()
+
+
+class XMLTPAccessor(EOProductStore):
+    def __init__(self, url, dim, **kwargs: Any) -> None:
         self._root = lxml.etree._ElementTree
-        self._url = kwargs["url"]
-        self._dim = kwargs["type"][-1]  # x or y
+        self._url = url
+        self._dim = dim[-1]  # x or y
         self.local_namespaces = {"n1": "https://psd-14.sentinel2.eo.esa.int/PSD/S2_PDI_Level-1C_Tile_Metadata.xsd"}
 
     def open(self, mode: str = "r") -> None:
@@ -199,16 +191,37 @@ class XMLTPAccessor:
             raise NotImplementedError("Invalid dimension")
         return EOVariable(name=key, data=eo_variable_data)
 
+    def __iter__(self):
+        raise NotImplementedError()
 
-class XMLManifestAccessor:
+    def __len__(self):
+        raise NotImplementedError()
+
+    def __setitem__(self, key, value):
+        raise NotImplementedError()
+
+    def is_group(self, path: str) -> bool:
+        raise NotImplementedError()
+
+    def is_variable(self, path: str) -> bool:
+        raise NotImplementedError()
+
+    def iter(self):
+        raise NotImplementedError()
+
+    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
+        raise NotImplementedError()
+
+
+class XMLManifestAccessor(EOProductStore):
     KEYS = ["CF", "OM_EOP"]
 
-    def __init__(self, **kwargs: Any) -> None:
+    def __init__(self, url, **kwargs: Any) -> None:
         self._attrs: MutableMapping[str, Any] = {}
         for key in self.KEYS:
             self._attrs[key] = {}
         self._parsed_xml = None
-        self._url = kwargs["url"]
+        self._url = url
         self._xml_fobj: Optional[TextIO] = None
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
@@ -334,3 +347,21 @@ class XMLManifestAccessor:
             self._attrs["OM_EOP"] = eop
         except Exception as e:
             raise XmlParsingError(f"Exception while computing OM_EOP: {e}")
+
+    def __len__(self):
+        raise NotImplementedError()
+
+    def __setitem__(self, key, value):
+        raise NotImplementedError()
+
+    def is_group(self, path: str) -> bool:
+        raise NotImplementedError()
+
+    def is_variable(self, path: str) -> bool:
+        raise NotImplementedError()
+
+    def iter(self):
+        raise NotImplementedError()
+
+    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
+        raise NotImplementedError()
