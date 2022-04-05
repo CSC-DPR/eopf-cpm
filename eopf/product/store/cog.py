@@ -41,6 +41,9 @@ class EOCogStore(EOProductStore):
 
         if self._ref is None:
             raise StoreNotOpenError("Store must be open before access to it")
+        if self._mode != "r":
+            raise NotImplementedError("Only available in reading mode")
+
         node = self._select_node(key)
         if isinstance(node, list):
             raise NotImplementedError()
@@ -55,6 +58,8 @@ class EOCogStore(EOProductStore):
     def __len__(self) -> int:
         if self._ref is None:
             raise StoreNotOpenError("Store must be open before access to it")
+        if self._mode != "r":
+            raise NotImplementedError("Only available in reading mode")
         return len(self._ref)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
@@ -62,21 +67,22 @@ class EOCogStore(EOProductStore):
 
         if self._ref is None:
             raise StoreNotOpenError("Store must be open before access to it")
+        if self._mode != "w":
+            raise NotImplementedError("Only available in writing mode")
         if not isinstance(value, EOVariable):
             raise NotImplementedError()
-        self._ref[key] = value
+            
+        self._ref.rio.to_raster(
+                self.url,
+                tiled=True,
+                lock=self._lock,
+        )
 
     # docstr-coverage: inherited
     def close(self) -> None:
         if self._ref is None:
             raise StoreNotOpenError("Store must be open before access to it")
         super().close()
-        if self._mode == "w":
-            self._ref.rio.to_raster(
-                self.url,
-                tiled=True,
-                lock=self._lock,
-            )
         self._mode = None
         self._lock = None
         self._ref = None
@@ -88,11 +94,15 @@ class EOCogStore(EOProductStore):
 
     # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
+        if self._mode != "w":
+            raise NotImplementedError("Only available in reading mode")
         node = self._select_node(path)
         return isinstance(node, (xarray.Dataset, list))
 
     # docstr-coverage: inherited
     def is_variable(self, path: str) -> bool:
+        if self._mode != "w":
+            raise NotImplementedError("Only available in reading mode")
         node = self._select_node(path)
         return isinstance(node, xarray.DataArray)
 
@@ -103,6 +113,8 @@ class EOCogStore(EOProductStore):
 
     # docstr-coverage: inherited
     def iter(self, path: str) -> Iterator[str]:
+        if self._mode != "w":
+            raise NotImplementedError("Only available in reading mode")
         node = self._select_node(path)
         if isinstance(node, list):
             raise NotImplementedError()
@@ -113,12 +125,20 @@ class EOCogStore(EOProductStore):
     # docstr-coverage: inherited
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         super().open(mode=mode)
-        self._ref = rioxarray.open_rasterio(self.url, **kwargs)
+        
         self._mode = mode
         self._lock = kwargs.get("lock")
+        if mode == "r":
+            self._ref = rioxarray.open_rasterio(self.url, **kwargs)
+        elif mode == "w":
+            self._ref = True
+        else:
+            raise KeyError("Unsuported mode, only (r)ead or (w)rite")
 
     # docstr-coverage: inherited
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
+        if self._mode != "w":
+            raise NotImplementedError("Only available in reading mode")
         node = self._select_node(group_path)
         if isinstance(node, list):
             raise NotImplementedError()
