@@ -58,13 +58,12 @@ class EOGribAccessor(EOProductStore):
         if self._ds is None:
             raise StoreNotOpenError("Store must be open before access to it")
         if path in ["", "/"]:
-            yield "coordinates"
-            yield from self._ds.keys()
-            return
-        if path in ["coordinates", "/coordinates", "coordinates/", "/coordinates/"]:
-            yield from self._ds.coords.keys()
-            return
-        raise KeyError()
+            keys = ["coordinates", *self._ds.keys()]
+        elif path in ["coordinates", "/coordinates", "coordinates/", "/coordinates/"]:
+            keys = self._ds.coords.keys()
+        else:
+            raise KeyError(f"key {path} not exist")
+        return iter(keys)
 
     def __getitem__(self, key: str) -> "EOObject":
         from eopf.product.core import EOGroup, EOVariable
