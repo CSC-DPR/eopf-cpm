@@ -1,7 +1,7 @@
 import os
 import pathlib
 from collections.abc import MutableMapping
-from typing import TYPE_CHECKING, Any, Iterator, Optional
+from typing import TYPE_CHECKING, Any, Iterable, Iterator, Optional
 
 import xarray as xr
 
@@ -57,6 +57,7 @@ class EOGribAccessor(EOProductStore):
     def iter(self, path: str) -> Iterator[str]:
         if self._ds is None:
             raise StoreNotOpenError("Store must be open before access to it")
+        keys: Iterable[str]
         if path in ["", "/"]:
             keys = ["coordinates", *self._ds.keys()]
         elif path in ["coordinates", "/coordinates", "coordinates/", "/coordinates/"]:
