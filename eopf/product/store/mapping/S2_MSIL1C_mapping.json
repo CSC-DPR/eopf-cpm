@@ -108,7 +108,7 @@
         },
         {
             "short_name": "latitude_meteo",
-            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_ECMWFT:coordinates/tcwv_lon",
+            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_ECMWFT:coordinates/latitude",
             "target_path": "/coordinates/meteo/latitude_meteo",
             "item_format": "grib",
             "parameters": {
@@ -121,7 +121,7 @@
         },
         {
             "short_name": "longitude_meteo",
-            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_ECMWFT:coordinates/tcwv_lon",
+            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_ECMWFT:coordinates/longitude",
             "target_path": "/coordinates/meteo/longitude_meteo",
             "item_format": "grib",
             "parameters": {
