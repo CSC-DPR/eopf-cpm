@@ -85,6 +85,14 @@ class EOCogStore(EOProductStore):
         nc.close()
 
     def _is_raster(self, value: "EOObject") -> bool:
+        if len(value.dims) == 2:
+            if value.dims[0] != "y" or value.dims[1] != "x":
+                value._data.rio.set_spatial_dims(
+                    x_dim=value.dims[1], 
+                    y_dim=value.dims[0], 
+                    inplace=True
+                )
+            return True
         if len(value.dims) == 3 and (value.dims[0]=='band'):
             return True
         return False
