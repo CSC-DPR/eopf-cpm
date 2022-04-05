@@ -11,8 +11,6 @@ from eopf.product.utils import (
     translate_structure,
 )
 
-from .utils import PARENT_DATA_PATH
-
 
 @pytest.fixture
 def tree(EMBEDED_TEST_DATA_FOLDER: str):
