@@ -1,4 +1,5 @@
 from email.mime import base
+from genericpath import exists
 from lib2to3.pgen2 import driver
 import pathlib
 from collections.abc import MutableMapping
@@ -105,7 +106,8 @@ class EOCogStore(EOProductStore):
             self._write_eov(value, self.url, key)
         elif isinstance(value, EOGroup):
             output_dir = os.path.join(self.url, key)
-            os.mkdir(output_dir, mode=777)
+            if not os.path.isdir(output_dir):
+                os.makedirs(output_dir)
             for var_name, var_val in value.variables:
                 self._write_eov(var_val, output_dir, var_name)
         else:
