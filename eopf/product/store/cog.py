@@ -84,11 +84,16 @@ class EOCogStore(EOProductStore):
         nc[var_name] = value
         nc.close()
 
+    def _is_raster(self, value: "EOObject") -> bool:
+        if len(value.dims) == 3 and (value.dims[0]=='band'):
+            return True
+        return False
+
     def _write_eov(self, value: "EOObject", output_dir: str, var_name: str):
         from os.path import join
 
         file_path = join(output_dir, var_name)
-        if len(value.dims) == 3 and (value.dims[0]=='band'):
+        if self._is_raster(value):
             self._write_cog(value, file_path)
         else:
             self._write_netCDF4(value, file_path, var_name)  
