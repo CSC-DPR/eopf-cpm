@@ -56,8 +56,8 @@ def cleanup_files():
 
 
 @pytest.fixture
-def zarr_file():
-    file_name = f"file://{_FILES['zarr']}"
+def zarr_file(OUTPUT_DIR: str):
+    file_name = f"file://{os.path.join(OUTPUT_DIR, _FILES['zarr'])}"
     dims = "_ARRAY_DIMENSIONS"
 
     root = zarr.open(file_name, mode="w")

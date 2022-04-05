@@ -78,7 +78,7 @@ EXPECTED_GRIB_LAT_ATTR = {
 )
 def test_grib_store_iter(EMBEDED_TEST_DATA_FOLDER: str, eo_path: str, expected_set: set[str]):
     grib_store = EOGribAccessor(os.path.join(EMBEDED_TEST_DATA_FOLDER, "AUX_ECMWFT.grib"))
-    grib_store.open()
+    grib_store.open(indexpath="")
     # test attributes
 
     # test iterator
@@ -103,7 +103,7 @@ def test_grib_store_get_item(
     sampled_values: dict[tuple[int, ...], float],
 ):
     grib_store = EOGribAccessor(os.path.join(EMBEDED_TEST_DATA_FOLDER, "AUX_ECMWFT.grib"))
-    grib_store.open()
+    grib_store.open(indexpath="")
 
     assert grib_store[eo_path].shape == shape
     assert grib_store[eo_path].attrs == attrs
@@ -115,7 +115,7 @@ def test_grib_store_get_item(
 @pytest.mark.unit
 def test_grib_exceptions(EMBEDED_TEST_DATA_FOLDER: str):
     grib_store = EOGribAccessor(os.path.join(EMBEDED_TEST_DATA_FOLDER, "AUX_ECMWFT.grib"))
-    grib_store.open()
+    grib_store.open(indexpath="")
     with pytest.raises(KeyError):
         set(grib_store.iter("test"))
     with pytest.raises(KeyError):
