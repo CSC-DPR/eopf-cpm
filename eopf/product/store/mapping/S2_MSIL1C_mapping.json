@@ -85,7 +85,8 @@
             "item_format": "xmltp",
             "accessor_config": {
                 "namespace": "xml_mapping/namespace",
-                "step_path": "xml_mapping/xmltp_step/y"
+                "step_path": "xml_mapping/xmltp/step_y",
+                "values_path": "xml_mapping/xmltp/values"
             },
             "parameters": {
                 "xpath": "n1:Geometric_Info/Tile_Geocoding/Geoposition[@resolution='10']/ULY",
@@ -99,7 +100,8 @@
             "item_format": "xmltp",
             "accessor_config": {
                 "namespace": "xml_mapping/namespace",
-                "step_path": "xml_mapping/xmltp_step/x"
+                "step_path": "xml_mapping/xmltp/step_x",
+                "values_path": "xml_mapping/xmltp/values"
             },
             "parameters": {
                 "xpath": "n1:Geometric_Info/Tile_Geocoding/Geoposition[@resolution='10']/ULX",
@@ -3251,9 +3253,10 @@
         "namespace":{
             "n1": "https://psd-14.sentinel2.eo.esa.int/PSD/S2_PDI_Level-1C_Tile_Metadata.xsd"
         },
-        "xmltp_step": {
-            "x": "n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/COL_STEP",
-            "y": "n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/ROW_STEP"
+        "xmltp": {
+            "step_x": "n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/COL_STEP",
+            "step_y": "n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/ROW_STEP",
+            "values": "n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/Values_List/VALUES"
         }
     }
 }
