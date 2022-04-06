@@ -226,15 +226,21 @@ EXPECTED_XML_ATTR = {
     "array_size": (23, 23),
     "test_xpath_1": "n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/Values_List",
     "test_xpath_2": "n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Azimuth/Values_List",
+    "test_xmltpy_path": 'n1:Geometric_Info/Tile_Geocoding/Geoposition[@resolution="10"]/ULY',
+    "test_xmltpx_path": 'n1:Geometric_Info/Tile_Geocoding/Geoposition[@resolution="10"]/ULX',
     "tp_array_size": (23,),
 }
 
 
-@pytest.mark.usecase
+@pytest.mark.unit
 def test_xml_angles_accessor():
     # Create and open xml angles accessor
+    mapping_file_path = glob("eopf/product/store/mapping/S2_MSIL1C_mapping.json")[0]
+    mapping_file = open(mapping_file_path)
+    map = json.load(mapping_file)
+    config = {"namespaces": map["xml_mapping"]["namespace"]}
     xml_accessor = XMLAnglesAccessor(f"{PARENT_DATA_PATH}/tests/data/MTD_TL.xml")
-    xml_accessor.open()
+    xml_accessor.open(**config)
 
     # verify data shapes / data name / data type
     assert xml_accessor[EXPECTED_XML_ATTR["test_xpath_1"]]._data.data.shape == EXPECTED_XML_ATTR["array_size"]
@@ -248,7 +254,7 @@ def test_xml_angles_accessor():
     assert not numpy.all(xml_accessor[EXPECTED_XML_ATTR["test_xpath_1"]]._data.data == dummy_xarray.data)
 
 
-@pytest.mark.usecase
+@pytest.mark.unit
 def test_xml_tiepoints_accessor():
     # Compute a user defined tie points array with values similar with ones from XML.
     col_step = 5000
@@ -258,31 +264,46 @@ def test_xml_tiepoints_accessor():
     dummy_x_array = [ulx + idx * col_step + col_step / 2 for idx in range(EXPECTED_XML_ATTR["tp_array_size"][0])]
     dummy_y_array = [uly - idx * col_step - col_step / 2 for idx in range(EXPECTED_XML_ATTR["tp_array_size"][0])]
 
+    # Create XMLAccessors configuration
+    mapping_file_path = glob("eopf/product/store/mapping/S2_MSIL1C_mapping.json")[0]
+    mapping_file = open(mapping_file_path)
+    map = json.load(mapping_file)
+
+    config = {"namespaces": map["xml_mapping"]["namespace"], "xmltp_step": map["xml_mapping"]["xmltp_step"]}
     # Create XMLAccessors
     tp_y_accessor = XMLTPAccessor(f"{PARENT_DATA_PATH}/tests/data/MTD_TL.xml", "xmltpy")
-    tp_y_accessor.open()
-    assert tp_y_accessor["y"]._data.shape == EXPECTED_XML_ATTR["tp_array_size"]
+    tp_y_accessor.open(**config)
+    assert tp_y_accessor[EXPECTED_XML_ATTR["test_xmltpy_path"]]._data.shape == EXPECTED_XML_ATTR["tp_array_size"]
 
     tp_x_accessor = XMLTPAccessor(f"{PARENT_DATA_PATH}/tests/data/MTD_TL.xml", "xmltpx")
-    tp_x_accessor.open()
-    assert tp_x_accessor["x"]._data.shape == EXPECTED_XML_ATTR["tp_array_size"]
+    tp_x_accessor.open(**config)
+    assert tp_x_accessor[EXPECTED_XML_ATTR["test_xmltpx_path"]]._data.shape == EXPECTED_XML_ATTR["tp_array_size"]
 
-    assert all(dummy_x_array == tp_x_accessor["x"]._data)
-    assert all(dummy_y_array == tp_y_accessor["y"]._data)
-    assert not all(dummy_x_array == tp_y_accessor["y"]._data)
-    assert not all(dummy_y_array == tp_x_accessor["x"]._data)
-    # Verify that you cannot access <<Y>> or other item trough an xmltpx accessor
+    assert all(dummy_x_array == tp_x_accessor[EXPECTED_XML_ATTR["test_xmltpx_path"]]._data)
+    assert all(dummy_y_array == tp_y_accessor[EXPECTED_XML_ATTR["test_xmltpy_path"]]._data)
+    assert not all(dummy_x_array == tp_y_accessor[EXPECTED_XML_ATTR["test_xmltpy_path"]]._data)
+    assert not all(dummy_y_array == tp_x_accessor[EXPECTED_XML_ATTR["test_xmltpx_path"]]._data)
+    # Verify incorrect path
     try:
-        tp_x_accessor["y"]._data
-    except NotImplementedError:
+        tp_x_accessor["random_incorect_xpath"]._data
+    except TypeError:
         assert True
     try:
-        tp_y_accessor["Z"]._data
-    except NotImplementedError:
+        tp_y_accessor["random_incorect_xpath"]._data
+    except TypeError:
+        assert True
+    # Verify cross selection, accesing Y path with X-accessor
+    try:
+        tp_x_accessor[EXPECTED_XML_ATTR["test_xmltpy_path"]]
+    except AttributeError:
+        assert True
+    try:
+        tp_y_accessor[EXPECTED_XML_ATTR["test_xmltpx_path"]]
+    except AttributeError:
         assert True
 
 
-@pytest.mark.usecase
+@pytest.mark.unit
 def test_xml_manifest_accessor():
     olci_path = glob(f"{PARENT_DATA_PATH}/data/S3A_OL_1*.SEN3")[0]
     manifest_path = os.path.join(olci_path, "xfdumanifest.xml")

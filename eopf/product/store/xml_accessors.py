@@ -20,11 +20,20 @@ class XMLAnglesAccessor(EOProductStore):
         super().__init__(url)
         self._root = lxml.etree._ElementTree
         self._url = url
-        self.local_namespaces = {"n1": "https://psd-14.sentinel2.eo.esa.int/PSD/S2_PDI_Level-1C_Tile_Metadata.xsd"}
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         super().open()
+
+        if mode != "r":
+            raise NotImplementedError()
+
+        # Recover configuration
+
         self._root = lxml.etree.parse(self._url)
+        try:
+            self._namespaces: dict[str, str] = kwargs["namespaces"]
+        except KeyError as e:
+            raise TypeError(f"Missing configuration parameter: {e}")
 
     def __getitem__(self, key: str) -> "EOObject":
         """
@@ -54,7 +63,7 @@ class XMLAnglesAccessor(EOProductStore):
         <<VALUES>> tag.
 
         """
-        item = self._root.xpath(xpath, namespaces=self.local_namespaces)[0]
+        item = self._root.xpath(xpath, namespaces=self._namespaces)[0]
         eo_variable_data = self.get_values(f"{self._root.getpath(item)}/VALUES")
         return eo_variable_data
 
@@ -71,7 +80,7 @@ class XMLAnglesAccessor(EOProductStore):
         -------
         xr.DataArray
         """
-        list = self._root.xpath(path, namespaces=self.local_namespaces)
+        list = self._root.xpath(path, namespaces=self._namespaces)
         # Convert every value from xml to a floating point representation
         array = [[float(i) for i in x.text.split()] for x in list]
         # Create 2d DataArray
@@ -95,14 +104,14 @@ class XMLAnglesAccessor(EOProductStore):
         if "Values_List" in path:
             return False
         else:
-            return len(self._root.xpath(path, namespaces=self.local_namespaces)[0].getchildren()) > 0
+            return len(self._root.xpath(path, namespaces=self._namespaces)[0].getchildren()) > 0
 
     # docstr-coverage: inherited
     def is_variable(self, path: str) -> bool:
         if "Values_List" in path:
             return True
         else:
-            return len(self._root.xpath(path, namespaces=self.local_namespaces)[0].getchildren()) == 0
+            return len(self._root.xpath(path, namespaces=self._namespaces)[0].getchildren()) == 0
 
     def iter(self, path: str) -> Iterator[str]:
         """Has no functionality within this store"""
@@ -117,10 +126,15 @@ class XMLTPAccessor(EOProductStore):
         self._root = lxml.etree._ElementTree
         self._url = url
         self._dim = dim[-1]  # x or y
-        self.local_namespaces = {"n1": "https://psd-14.sentinel2.eo.esa.int/PSD/S2_PDI_Level-1C_Tile_Metadata.xsd"}
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         # Assure that given url is path to legacy product or path to MTD_TL.xml file
+
+        try:
+            self._xmltp_step: str = kwargs["xmltp_step"]
+            self._namespaces: dict[str, str] = kwargs["namespaces"]
+        except KeyError as e:
+            raise TypeError(f"Missing configuration parameter: {e}")
         self._root = lxml.etree.parse(self._url)
 
     def get_shape(self, xpath: str) -> list[int]:
@@ -136,42 +150,22 @@ class XMLTPAccessor(EOProductStore):
         list(int):
             List with dimensions
         """
-        list = self._root.xpath(xpath, namespaces=self.local_namespaces)
-        return [len(list), len(list[0].text.split())]
+        list_ = self._root.xpath(xpath, namespaces=self._namespaces)
+        return [len(list_), len(list_[0].text.split())]
 
-    def tie_points_y(self) -> xr.DataArray:
+    def tie_points_y(self, path: str) -> xr.DataArray:
         dom = self._root
         shape_y_x = self.get_shape("n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/Values_List/VALUES")
-        ymax = float(
-            dom.xpath(
-                'n1:Geometric_Info/Tile_Geocoding/Geoposition[@resolution="10"]/ULY',
-                namespaces=self.local_namespaces,
-            )[0].text,
-        )
-        ystep = float(
-            dom.xpath(
-                "n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/ROW_STEP",
-                namespaces=self.local_namespaces,
-            )[0].text,
-        )
+        ymax = float(dom.xpath(path, namespaces=self._namespaces)[0].text)
+        ystep = float(dom.xpath(self._xmltp_step["y"], namespaces=self._namespaces)[0].text)
         y = [ymax - i * ystep - ystep / 2 for i in range(shape_y_x[0])]
         return xr.DataArray(y)
 
-    def tie_points_x(self) -> xr.DataArray:
+    def tie_points_x(self, path: str) -> xr.DataArray:
         dom = self._root
         shape_y_x = self.get_shape("n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/Values_List/VALUES")
-        xmin = float(
-            dom.xpath(
-                'n1:Geometric_Info/Tile_Geocoding/Geoposition[@resolution="10"]/ULX',
-                namespaces=self.local_namespaces,
-            )[0].text,
-        )
-        xstep = float(
-            dom.xpath(
-                "n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/COL_STEP",
-                namespaces=self.local_namespaces,
-            )[0].text,
-        )
+        xmin = float(dom.xpath(path, namespaces=self._namespaces)[0].text)
+        xstep = float(dom.xpath(self._xmltp_step["x"], namespaces=self._namespaces)[0].text)
         x = [xmin + i * xstep + xstep / 2 for i in range(shape_y_x[1])]
         return xr.DataArray(x)
 
@@ -194,12 +188,15 @@ class XMLTPAccessor(EOProductStore):
         """
         from eopf.product.core import EOVariable
 
-        if self._dim == "y" and key == "y":
-            eo_variable_data = self.tie_points_y()
-        elif self._dim == "x" and key == "x":
-            eo_variable_data = self.tie_points_x()
+        if not len(self._root.xpath(key, namespaces=self._namespaces)):
+            raise TypeError(f"Incorrect xpath {key}")
+
+        if self._dim == "y" and key[-1] == "Y":
+            eo_variable_data = self.tie_points_y(key)
+        elif self._dim == "x" and key[-1] == "X":
+            eo_variable_data = self.tie_points_x(key)
         else:
-            raise NotImplementedError("Invalid dimension")
+            raise AttributeError("Invalid dimension")
         return EOVariable(name=key, data=eo_variable_data)
 
     def __iter__(self) -> Iterator[str]:
