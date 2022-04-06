@@ -69,7 +69,9 @@ class EOCogStore(EOProductStore):
 
 
     def _write_cog(self, value: "EOObject", file_path: str) -> None:
+        # add .cog extension to the name of the file
         file_path += ".cog"
+        # write the COG file
         value._data.rio.to_raster(
             file_path,
             tiled=True,
@@ -78,14 +80,19 @@ class EOCogStore(EOProductStore):
         )
 
     def _write_netCDF4(self, value: "EOObject", file_path: str, var_name: str) -> None:
+        # add .nc extension to the name of the file
         file_path += ".nc"
+        # write the netCDF4 file
         nc = EONetCDFStore(file_path)
         nc.open(mode="w")
         nc[var_name] = value
         nc.close()
 
     def _is_raster(self, value: "EOObject") -> bool:
+        # if the variable has 2 dimensions, it is probably a raster
         if len(value.dims) == 2:
+            # if the dimension names are not x,y we need to let
+            # rioxarray know which dimension is x and y
             if value.dims[0] != "y" or value.dims[1] != "x":
                 value._data.rio.set_spatial_dims(
                     x_dim=value.dims[1], 
@@ -93,6 +100,7 @@ class EOCogStore(EOProductStore):
                     inplace=True
                 )
             return True
+        # with S2 L1C image variables have 3 dimesions (band, x, y)
         if len(value.dims) == 3 and (value.dims[0]=='band'):
             return True
         return False
@@ -101,6 +109,7 @@ class EOCogStore(EOProductStore):
         from os.path import join
 
         file_path = join(output_dir, var_name)
+        # determine if variable is a raster, i.e. can be written as cog
         if self._is_raster(value):
             self._write_cog(value, file_path)
         else:
@@ -118,9 +127,15 @@ class EOCogStore(EOProductStore):
         if isinstance(value, EOVariable):
             self._write_eov(value, self.url, key)
         elif isinstance(value, EOGroup):
+            # if the key starts with / the join will not be carried
+            if key[0] == os.path.sep:
+                key = key[1:]
             output_dir = os.path.join(self.url, key)
+            # create the output dir if it does not exist
             if not os.path.isdir(output_dir):
                 os.makedirs(output_dir)
+            # iterate trough all variables of the EOGroup 
+            # and write each in one file, cog or netCDF4
             for var_name, var_val in value.variables:
                 self._write_eov(var_val, output_dir, var_name)
         else:
@@ -185,12 +200,11 @@ class EOCogStore(EOProductStore):
 
     # docstr-coverage: inherited
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
-        if self._mode != "w":
-            raise NotImplementedError("Only available in reading mode")
-        node = self._select_node(group_path)
-        if isinstance(node, list):
-            raise NotImplementedError()
-        node.attrs.update(attrs)  # type: ignore[arg-type]
+        if self._mode == "r":
+            node = self._select_node(group_path)
+            if isinstance(node, list):
+                raise NotImplementedError()
+            node.attrs.update(attrs)  # type: ignore[arg-type]
 
     # docstr-coverage: inherited
     @staticmethod
