@@ -13,7 +13,11 @@ from pyfakefs.fake_filesystem import FakeFilesystem
 from eopf.exceptions import StoreNotOpenError
 from eopf.product.core import EOGroup, EOVariable
 from eopf.product.store.grib import EOGribAccessor
-from eopf.product.store.xml_accessors import (XMLAnglesAccessor, XMLTPAccessor, XMLManifestAccessor)
+from eopf.product.store.xml_accessors import (
+    XMLAnglesAccessor,
+    XMLManifestAccessor,
+    XMLTPAccessor,
+)
 
 from .utils import PARENT_DATA_PATH, assert_issubdict
 
@@ -401,7 +405,7 @@ def test_open_manifest_accessor(config: Optional[dict], exception_type: Exceptio
     """Given a manifest store, without passing configuration parameters
     the function must raise a MissingConfigurationParameter error.
     """
-    store = XMLAccessor(_FILES["json"], "manifest")
+    store = XMLManifestAccessor(_FILES["json"])
     with pytest.raises(exception_type):
         store.open(**config)
 
@@ -411,7 +415,7 @@ def test_mtd_store_must_be_open(fs: FakeFilesystem):
     """Given a manifest store, when accessing items inside it without previously opening it,
     the function must raise a StoreNotOpenError error.
     """
-    store = XMLAccessor(_FILES["json"], "manifest")
+    store = XMLManifestAccessor(_FILES["json"])
     with pytest.raises(StoreNotOpenError):
         store["a_group"]
 

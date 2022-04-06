@@ -2,8 +2,8 @@ from .abstract import EOProductStore, StorageStatus
 from .conveniences import convert
 from .netcdf import EONetCDFStore
 from .safe import EOSafeStore
+from .xml_accessors import XMLAnglesAccessor, XMLManifestAccessor, XMLTPAccessor
 from .zarr import EOZarrStore
-from .xml_accessors import XMLAnglesAccessor, XMLTPAccessor, XMLManifestAccessor
 
 __all__ = [
     "convert",
@@ -14,5 +14,5 @@ __all__ = [
     "EOSafeStore",
     "XMLAnglesAccessor",
     "XMLTPAccessor",
-    "XMLManifestAccessor"
+    "XMLManifestAccessor",
 ]

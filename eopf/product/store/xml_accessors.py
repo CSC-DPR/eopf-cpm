@@ -1,4 +1,3 @@
-from abc import ABC
 from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional, TextIO
 
 import lxml
@@ -16,14 +15,14 @@ if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_object import EOObject
 
 
-class XMLAnglesAccessor(EOProductStore, ABC):
-    def __init__(self, url, **kwargs: Any) -> None:
+class XMLAnglesAccessor(EOProductStore):
+    def __init__(self, url: str, **kwargs: Any) -> None:
         super().__init__(url)
         self._root = lxml.etree._ElementTree
         self._url = url
         self.local_namespaces = {"n1": "https://psd-14.sentinel2.eo.esa.int/PSD/S2_PDI_Level-1C_Tile_Metadata.xsd"}
 
-    def open(self) -> None:
+    def open(self, mode: str = "r", **kwargs: Any) -> None:
         super().open()
         self._root = lxml.etree.parse(self._url)
 
@@ -49,7 +48,7 @@ class XMLAnglesAccessor(EOProductStore, ABC):
         variable_data = self.create_eo_variable(key)
         return EOVariable(data=variable_data)
 
-    def create_eo_variable(self, xpath: str) -> tuple[str, xr.DataArray]:
+    def create_eo_variable(self, xpath: str) -> xr.DataArray:
         """
         This method is used to recover and create datasets with angles values stored under
         <<VALUES>> tag.
@@ -79,36 +78,48 @@ class XMLAnglesAccessor(EOProductStore, ABC):
         da = xr.DataArray(array, dims=["y_tiepoints", "x_tiepoints"])
         return da
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[str]:
+        """Has no functionality within this store"""
+        yield from ()
+
+    def __len__(self) -> int:
+        """Has no functionality within this accessor"""
+        return 0
+
+    def __setitem__(self, key: str, value: Any) -> None:
+        """Has no functionality within this store"""
         raise NotImplementedError()
 
-    def __len__(self):
-        raise NotImplementedError()
-
-    def __setitem__(self, key, value):
-        raise NotImplementedError()
-
+    # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
-        raise NotImplementedError()
+        if "Values_List" in path:
+            return False
+        else:
+            return len(self._root.xpath(path, namespaces=self.local_namespaces)[0].getchildren()) > 0
 
+    # docstr-coverage: inherited
     def is_variable(self, path: str) -> bool:
-        raise NotImplementedError()
+        if "Values_List" in path:
+            return True
+        else:
+            return len(self._root.xpath(path, namespaces=self.local_namespaces)[0].getchildren()) == 0
 
-    def iter(self):
-        raise NotImplementedError()
+    def iter(self, path: str) -> Iterator[str]:
+        """Has no functionality within this store"""
+        yield from ()
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         raise NotImplementedError()
 
 
 class XMLTPAccessor(EOProductStore):
-    def __init__(self, url, dim, **kwargs: Any) -> None:
+    def __init__(self, url: str, dim: str, **kwargs: Any) -> None:
         self._root = lxml.etree._ElementTree
         self._url = url
         self._dim = dim[-1]  # x or y
         self.local_namespaces = {"n1": "https://psd-14.sentinel2.eo.esa.int/PSD/S2_PDI_Level-1C_Tile_Metadata.xsd"}
 
-    def open(self, mode: str = "r") -> None:
+    def open(self, mode: str = "r", **kwargs: Any) -> None:
         # Assure that given url is path to legacy product or path to MTD_TL.xml file
         self._root = lxml.etree.parse(self._url)
 
@@ -191,23 +202,27 @@ class XMLTPAccessor(EOProductStore):
             raise NotImplementedError("Invalid dimension")
         return EOVariable(name=key, data=eo_variable_data)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[str]:
+        yield from ()
+
+    def __len__(self) -> int:
+        """Has no functionality within this store"""
         raise NotImplementedError()
 
-    def __len__(self):
-        raise NotImplementedError()
-
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: str, value: Any) -> None:
+        """Has no functionality within this store"""
         raise NotImplementedError()
 
     def is_group(self, path: str) -> bool:
-        raise NotImplementedError()
+        # xmlTP accessors only returns variables
+        return False
 
     def is_variable(self, path: str) -> bool:
-        raise NotImplementedError()
+        return True
 
-    def iter(self):
-        raise NotImplementedError()
+    def iter(self, path: str) -> Iterator[str]:
+        """Has no functionality within this store"""
+        yield from ()
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         raise NotImplementedError()
@@ -216,7 +231,7 @@ class XMLTPAccessor(EOProductStore):
 class XMLManifestAccessor(EOProductStore):
     KEYS = ["CF", "OM_EOP"]
 
-    def __init__(self, url, **kwargs: Any) -> None:
+    def __init__(self, url: str, **kwargs: Any) -> None:
         self._attrs: MutableMapping[str, Any] = {}
         for key in self.KEYS:
             self._attrs[key] = {}
@@ -348,10 +363,11 @@ class XMLManifestAccessor(EOProductStore):
         except Exception as e:
             raise XmlParsingError(f"Exception while computing OM_EOP: {e}")
 
-    def __len__(self):
+    def __len__(self) -> int:
+        """Has no functionality within this store"""
         raise NotImplementedError()
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: str, value: "EOObject") -> None:
         raise NotImplementedError()
 
     def is_group(self, path: str) -> bool:
@@ -360,7 +376,8 @@ class XMLManifestAccessor(EOProductStore):
     def is_variable(self, path: str) -> bool:
         raise NotImplementedError()
 
-    def iter(self):
+    def iter(self, path: str) -> Iterator[str]:
+        """Has no functionality within this store"""
         raise NotImplementedError()
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
