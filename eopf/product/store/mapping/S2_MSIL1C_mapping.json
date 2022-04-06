@@ -304,7 +304,7 @@
                     "flag_meanings": "OPAQUE CIRRUS SNOW_ICE"
                 },
                 "dimensions": [ "y_60m", "x_60m" ],
-                "bit_pack": "band"
+                "pack_bits": "band"
             }
         },
         {
@@ -319,7 +319,7 @@
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
                 "dimensions": [ "y_60m", "x_60m" ],
-                "bit_pack": "band"
+                "pack_bits": "band"
             }
         },
         {
@@ -334,7 +334,7 @@
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
                 "dimensions": [ "y_10m", "x_10m" ],
-                "bit_pack": "band"
+                "pack_bits": "band"
             }
         },
         {
@@ -349,7 +349,7 @@
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
                 "dimensions": [ "y_10m", "x_10m" ],
-                "bit_pack": "band"
+                "pack_bits": "band"
             }
         },
         {
@@ -364,7 +364,7 @@
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
                 "dimensions": [ "y_10m", "x_10m" ],
-                "bit_pack": "band"
+                "pack_bits": "band"
             }
         },
         {
@@ -379,7 +379,7 @@
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
                 "dimensions": [ "y_20m", "x_20m" ],
-                "bit_pack": "band"
+                "pack_bits": "band"
             }
         },
         {
@@ -394,7 +394,7 @@
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
                 "dimensions": [ "y_20m", "x_20m" ],
-                "bit_pack": "band"
+                "pack_bits": "band"
             }
         },
         {
@@ -409,7 +409,7 @@
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
                 "dimensions": [ "y_20m", "x_20m" ],
-                "bit_pack": "band"
+                "pack_bits": "band"
             }
         },
         {
@@ -424,7 +424,7 @@
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
                 "dimensions": [ "y_20m", "x_20m" ],
-                "bit_pack": "band"
+                "pack_bits": "band"
             }
         },
         {
@@ -439,7 +439,7 @@
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
                 "dimensions": [ "y_20m", "x_20m" ],
-                "bit_pack": "band"
+                "pack_bits": "band"
             }
         },
         {
@@ -454,7 +454,7 @@
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
                 "dimensions": [ "y_60m", "x_60m" ],
-                "bit_pack": "band"
+                "pack_bits": "band"
             }
         },
         {
@@ -469,7 +469,7 @@
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
                 "dimensions": [ "y_60m", "x_60m" ],
-                "bit_pack": "band"
+                "pack_bits": "band"
             }
         },
         {
@@ -484,7 +484,7 @@
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
                 "dimensions": [ "y_20m", "x_20m" ],
-                "bit_pack": "band"
+                "pack_bits": "band"
             }
         },
         {
@@ -499,7 +499,7 @@
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
                 "dimensions": [ "y_20m", "x_20m" ],
-                "bit_pack": "band"
+                "pack_bits": "band"
             }
         },
 
