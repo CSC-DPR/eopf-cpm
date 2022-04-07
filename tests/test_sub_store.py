@@ -280,11 +280,11 @@ def test_xml_tiepoints_accessor():
         "xmltp_values": map["xml_mapping"]["xmltp"]["values"],
     }
     # Create XMLAccessors
-    tp_y_accessor = XMLTPAccessor(f"{PARENT_DATA_PATH}/tests/data/MTD_TL.xml", "xmltpy")
+    tp_y_accessor = XMLTPAccessor(f"{PARENT_DATA_PATH}/tests/data/MTD_TL.xml")
     tp_y_accessor.open(**config_x)
     assert tp_y_accessor[EXPECTED_XML_ATTR["test_xmltpy_path"]]._data.shape == EXPECTED_XML_ATTR["tp_array_size"]
 
-    tp_x_accessor = XMLTPAccessor(f"{PARENT_DATA_PATH}/tests/data/MTD_TL.xml", "xmltpx")
+    tp_x_accessor = XMLTPAccessor(f"{PARENT_DATA_PATH}/tests/data/MTD_TL.xml")
     tp_x_accessor.open(**config_y)
     assert tp_x_accessor[EXPECTED_XML_ATTR["test_xmltpx_path"]]._data.shape == EXPECTED_XML_ATTR["tp_array_size"]
 

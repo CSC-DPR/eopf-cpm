@@ -122,10 +122,9 @@ class XMLAnglesAccessor(EOProductStore):
 
 
 class XMLTPAccessor(EOProductStore):
-    def __init__(self, url: str, dim: str, **kwargs: Any) -> None:
+    def __init__(self, url: str, **kwargs: Any) -> None:
         self._root = lxml.etree._ElementTree
         self._url = url
-        self._dim = dim[-1]  # x or y
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         # Assure that given url is path to legacy product or path to MTD_TL.xml file
@@ -159,10 +158,12 @@ class XMLTPAccessor(EOProductStore):
         shape_y_x = self.get_shape(self._xmltp_value)
         resolution = float(dom.xpath(path, namespaces=self._namespaces)[0].text)
         step = float(dom.xpath(self._xmltp_step, namespaces=self._namespaces)[0].text)
-        if self._dim == "y":
+        if path[-1] == "Y":
             data = [resolution - i * step - step / 2 for i in range(shape_y_x[0])]
-        else:
+        elif path[-1] == "X":
             data = [resolution + i * step + step / 2 for i in range(shape_y_x[1])]
+        else:
+            raise AttributeError("Invalid dimension")
         return xr.DataArray(data)
 
     def __getitem__(self, key: str) -> "EOObject":
