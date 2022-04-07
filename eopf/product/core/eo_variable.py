@@ -103,6 +103,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         Cannot be modified directly, but can be modified by calling .chunk().
         Differs from EOVariable.chunks because it returns a mapping of dimensions to chunk shapes
         instead of a tuple of chunk shapes.
+
         See Also
         --------
         EOVariable.chunk
@@ -115,12 +116,34 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         """
         Tuple of block lengths for this dataarray's data, in order of dimensions, or None if
         the underlying data is not a dask array.
+
         See Also
         --------
         EOVariable.chunk
         EOVariable.chunksizes
         """
         return self._data.chunks
+
+    def compute(self, **kwargs: Any) -> "EOVariable":
+        """Manually trigger loading of this array's data from disk or a
+        remote source into memory and return a new array. The original is
+        left unaltered.
+        Normally, it should not be necessary to call this method in user code,
+        because all xarray functions should either work on deferred data or
+        load data automatically. However, this method can be necessary when
+        working with many file objects on disk.
+
+        Parameters
+        ----------
+        **kwargs : dict
+            Additional keyword arguments passed on to ``dask.compute``.
+
+        See Also
+        --------
+        xarray.DataArray.compute
+        dask.compute
+        """
+        return self._init_similar(self._data.compute())
 
     @property
     def sizes(self) -> Mapping[Hashable, int]:
@@ -258,6 +281,24 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
             ),
         )
 
+    def persist(self, **kwargs: Any) -> "EOVariable":
+        """Trigger computation in constituent dask arrays
+        This keeps them as dask arrays but encourages them to keep data in
+        memory.  This is particularly useful when on a distributed machine.
+        When on a single machine consider using ``.compute()`` instead.
+
+        Parameters
+        ----------
+        **kwargs : dict
+            Additional keyword arguments passed on to ``dask.persist``.
+
+        See Also
+        --------
+        xarray.Dataset.persist
+        dask.persist
+        """
+        return self._init_similar(self._data.persist())
+
     def sel(
         self,
         indexers: Optional[Mapping[Any, Any]] = None,
@@ -384,7 +425,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return self.path
 
     def __repr__(self) -> str:
-        return self.__str__()
+        return repr(self._data)
 
     def _repr_html_(self) -> str:
         from ..formatting import renderer

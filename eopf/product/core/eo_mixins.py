@@ -17,22 +17,24 @@ class EOVariableOperatorsMixin(Generic[EOV_TYPE]):
     """
 
     __slots__ = ()
+    _data: xr.DataArray
 
-    def _init_similar(self: EOV_TYPE, data: xr.DataArray) -> EOV_TYPE:
+    def _init_similar(self: EOV_TYPE, data: xr.DataArray) -> EOV_TYPE:  # pragma: no cover
         raise NotImplementedError
 
     def __apply_binary_ops__(
         self: EOV_TYPE,
-        other: object,
+        other: Any,
         ops: Callable[[Any, Any], Any],
         reflexive: Optional[bool] = False,
     ) -> EOV_TYPE:
         if isinstance(other, EOVariableOperatorsMixin):
-            other_value = other._data  # type: ignore[has-type]
+            other_value = other._data
         else:
             other_value = other
-        data = self._data  # type: ignore[has-type]
-        # To remove the ignore[has-type] we must bound EOV_TYPE to a type defining _data (or move _data to this class)
+        if hasattr(other, "shape") and other.shape != self.shape:
+            raise ValueError(f"Shape mismatch: {self.shape} != {other.shape}")
+        data = self._data
 
         return self._init_similar(ops(data, other_value) if not reflexive else ops(other_value, data))
 
@@ -116,12 +118,11 @@ class EOVariableOperatorsMixin(Generic[EOV_TYPE]):
 
     def __apply_inplace_ops__(self: EOV_TYPE, other: Any, ops: Callable[[Any, Any], Any]) -> EOV_TYPE:
         if isinstance(other, EOVariableOperatorsMixin):
-            other_value = other._data  # type: ignore[has-type]
+            other_value = other._data
         else:
             other_value = other
 
-        data = self._data  # type: ignore[has-type]
-        # To remove the ignore[has-type] we must bound EOV_TYPE to a type defining _data (or move _data to this class)
+        data = self._data
 
         self._data = ops(data, other_value)
         return self
