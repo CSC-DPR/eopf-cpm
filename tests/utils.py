@@ -109,4 +109,4 @@ def couple_combinaison_from(elements: list[Any]) -> list[tuple[Any, Any]]:
     )
 
 
-PARENT_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..")
+PARENT_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..")

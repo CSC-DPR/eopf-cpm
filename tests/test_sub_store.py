@@ -1,16 +1,12 @@
-import datetime
-import json
 import os
-from glob import glob
-from typing import Optional
+from typing import Any
 
-import numpy
 import pytest
-import xarray
 from numpy import testing
-from pyfakefs.fake_filesystem import FakeFilesystem
-
-from eopf.exceptions import StoreNotOpenError
+import json
+import xarray
+import numpy
+from glob import glob
 from eopf.product.core import EOGroup, EOVariable
 from eopf.product.store.grib import EOGribAccessor
 from eopf.product.store.xml_accessors import (
@@ -18,7 +14,6 @@ from eopf.product.store.xml_accessors import (
     XMLManifestAccessor,
     XMLTPAccessor,
 )
-
 from .utils import PARENT_DATA_PATH, assert_issubdict
 
 EXPECTED_GRIB_MSL_ATTR = {
@@ -85,9 +80,49 @@ def test_grib_store_iter(EMBEDED_TEST_DATA_FOLDER: str, eo_path: str, expected_s
     # test attributes
 
     # test iterator
-    assert set(grib_store) == {"msl", "tco3", "tcwv", "coordinates"}
-    assert set(grib_store.iter("coordinates")) == {"tco3_lat", "msl_lon", "tcwv_lat", "tco3_lon", "tcwv_lon", "msl_lat"}
+    assert set(grib_store.iter(eo_path)) == expected_set
+    grib_store.close()
 
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "eo_path, shape, attrs, sampled_values",
+    [
+        ("msl", (9, 9), EXPECTED_GRIB_MSL_ATTR, {(4, 4): 100971.8125}),
+        ("coordinates/longitude", (9,), EXPECTED_GRIB_LON_ATTR, {(4,): 161.3225}),
+        ("coordinates/latitude", (9,), EXPECTED_GRIB_LAT_ATTR, {(4,): -9.534}),
+    ],
+)
+def test_grib_store_get_item(
+    EMBEDED_TEST_DATA_FOLDER: str,
+    eo_path: str,
+    shape: set[int, ...],
+    attrs: dict[str, Any],
+    sampled_values: dict[set[int, ...], float],
+):
+    grib_store = EOGribAccessor(os.path.join(EMBEDED_TEST_DATA_FOLDER, "AUX_ECMWFT.grib"))
+    grib_store.open()
+
+    assert grib_store[eo_path].shape == shape
+    assert grib_store[eo_path].attrs == attrs
+    for key, value in sampled_values.items():
+        testing.assert_allclose(grib_store[eo_path]._data.to_numpy()[key], value)
+    grib_store.close()
+
+
+@pytest.mark.unit
+def test_grib_exceptions(EMBEDED_TEST_DATA_FOLDER: str):
+    grib_store = EOGribAccessor(os.path.join(EMBEDED_TEST_DATA_FOLDER, "AUX_ECMWFT.grib"))
+    grib_store.open()
+    with pytest.raises(KeyError):
+        set(grib_store.iter("test"))
+    with pytest.raises(KeyError):
+        set(grib_store.iter("coordinates/test"))
+    with pytest.raises(KeyError):
+        grib_store["test"]
+    with pytest.raises(KeyError):
+        grib_store["coordinates/test"]
+    grib_store.close()
 
 EXPECTED_XML_ATTR = {
     "array_size": (23, 23),
@@ -277,45 +312,3 @@ def test_xml_manifest_accessor():
     assert re.match(r"\d{1,2}\.\d{2}", processing_map["processorVersion"])
     assert datetime.strptime(processing_map["processingDate"], "%Y-%m-%dT%H:%M:%S.%f")
 
-
-_FILES = {
-    "netcdf": "test_ncdf_file_.nc",
-    "netcdf0": "test_ncdf_read_file_.nc",
-    "netcdf1": "test_ncdf_write_file_.nc",
-    "json": "test_metadata_file_.json",
-    "zarr": "test_zarr_files_.zarr",
-    "zarr0": "test_zarr_read_files_.zarr",
-    "zarr1": "test_zarr_write_files_.zarr",
-}
-
-
-@pytest.mark.unit
-@pytest.mark.parametrize(
-    "config, exception_type",
-    [
-        ({"metadata_mapping": {}}, TypeError),
-        ({"namespaces": {}}, TypeError),
-        ({"namespaces": {}, "metadata_mapping": {}}, FileNotFoundError),
-    ],
-)
-def test_open_manifest_accessor(config: Optional[dict], exception_type: Exception):
-    """Given a manifest store, without passing configuration parameters
-    the function must raise a MissingConfigurationParameter error.
-    """
-    store = XMLManifestAccessor(_FILES["json"])
-    with pytest.raises(exception_type):
-        store.open(**config)
-
-
-@pytest.mark.unit
-def test_mtd_store_must_be_open(fs: FakeFilesystem):
-    """Given a manifest store, when accessing items inside it without previously opening it,
-    the function must raise a StoreNotOpenError error.
-    """
-    store = XMLManifestAccessor(_FILES["json"])
-    with pytest.raises(StoreNotOpenError):
-        store["a_group"]
-
-    with pytest.raises(StoreNotOpenError):
-        for _ in store:
-            continue
