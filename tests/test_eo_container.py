@@ -5,7 +5,6 @@ import numpy as np
 import pytest
 import xarray
 from lxml import etree
-from pyfakefs.fake_filesystem import FakeFilesystem
 
 from eopf.exceptions import (
     EOObjectExistError,
@@ -80,7 +79,7 @@ def product() -> EOProduct:
         product.measurements.add_variable("group3/variable_e", attrs={"HELLO": "WORLD"})
         product.measurements.add_variable("group3/sgroup3/variable_f")
 
-        product.add_variable("measurements/group1/group2/variable_d")
+        product.add_variable("measurements/group1/group2/variable_d", [[1, 2, 3, 4], [5, 7, 4, 8]])
 
         product["measurements"]["group1"].add_group("group2b")
         product.measurements["group1"].add_group("/measurements/group1/group2b/group3")
@@ -320,7 +319,7 @@ def test_invalid_dataset():
 
 
 @pytest.mark.unit
-def test_create_product_on_memory(fs: FakeFilesystem):
+def test_create_product_on_memory():
     product = init_product("product_name")
 
     with pytest.raises(StoreNotDefinedError):
@@ -333,7 +332,6 @@ def test_create_product_on_memory(fs: FakeFilesystem):
         product.write()
 
     assert product._store is None, "store must be None"
-    assert not (fs.isdir(product.name) or fs.isfile(product.name)), "Product must not create any thing on fs"
 
 
 @pytest.mark.unit
@@ -390,16 +388,30 @@ def test_product_must_have_mandatory_group():
 
 
 @pytest.mark.unit
-def test_product_tree(capsys):
-    product = init_product("product_name")
-    product.measurements.add_group("subgroup1")
-    product.measurements.subgroup1.add_variable("variable1", [1, 2, 3], attrs={"name": "some name"})
-    product.measurements.subgroup1.add_variable("variable2", [4, 5, 6], attrs={"name": "second variable"})
+def test_product_tree(product, capsys):
     product.tree()
     captured = capsys.readouterr()
-    assert (
-        captured.out
-        == "├── measurements\n|  ├── subgroup1\n|    └── variable1\n|    └── variable2\n├── coordinates\n"  # noqa
+    assert captured.out == (
+        "├── measurements\n"
+        "|  ├── group1\n"
+        "|    └── variable_a\n"
+        "|    ├── group2\n"
+        "|      └── variable_b\n"
+        "|      └── variable_c\n"
+        "|      └── variable_d\n"
+        "|    ├── group2b\n"
+        "|      ├── group3\n"
+        "|      ├── group3b\n"
+        "|  ├── group3\n"
+        "|    └── variable_e\n"
+        "|    ├── sgroup3\n"
+        "|      └── variable_f\n"
+        "├── coordinates\n"
+        "|  └── coord_a\n"
+        "|  └── coord_b\n"
+        "|  └── coord_d\n"
+        "|  ├── g1\n"
+        "|    └── coord_c\n├── group0\n"
     )
 
 
@@ -437,11 +449,15 @@ def test_hierarchy_html(product):
                     "group2": {
                         "variable_b": {"dims": (), "attrs": {}, "coords": []},
                         "variable_c": {
-                            "dims": ("c1", "'c2"),
+                            "dims": ("c1", "c2"),
                             "attrs": {dim_attr_key: ["c1", "c2"]},
                             "coords": ["/coordinates/g1/coord_c", "/coordinates/coord_a", "/coordinates/coord_d"],
                         },
-                        "variable_d": {"dims": (), "attrs": {}, "coords": []},
+                        "variable_d": {
+                            "dims": ("dim_0", "dim_1"),
+                            "attrs": {dim_attr_key: ["dim_0", "dim_1"]},
+                            "coords": [],
+                        },
                         "dims": (),
                         "attrs": {dim_attr_key: ["c1"]},
                         "coords": [],
@@ -483,16 +499,9 @@ def test_hierarchy_html(product):
 
 
 @pytest.mark.unit
-def test_eovariable_plot():
-    product = init_product("product_name")
-    product.measurements.add_group("subgroup")
-    product.measurements.subgroup.add_variable("my_variable", [[1, 2, 3, 4], [8, 9, 7, 5]])
-    product.measurements.add_variable("demo", data=[])
-    product.measurements.subgroup.add_group("another_group")
-    product.measurements.subgroup.another_group.add_variable("my_variable", [[1, 2, 3, 4], [8, 9, 7, 5]])
-
+def test_eovariable_plot(product):
     with patch.object(xarray.DataArray, "plot", return_value=None) as mock_method:
-        variable = product.measurements.demo
+        variable = product["measurements/group1/group2/variable_d"]
         variable.plot(yincrease=False)
 
     mock_method.assert_called_once_with(yincrease=False)

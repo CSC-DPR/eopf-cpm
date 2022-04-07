@@ -74,7 +74,7 @@ def _compute_rec(node):
     dims = []
     if node_dims:
         for d in node_dims[0].text.strip()[1:-1].split(","):
-            d = d[1:-1]
+            d = d.strip()[1:-1]
             if d:
                 dims.append(d)
     structure["dims"] = tuple(dims)
@@ -109,4 +109,4 @@ def couple_combinaison_from(elements: list[Any]) -> list[tuple[Any, Any]]:
     )
 
 
-PARENT_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..")
+PARENT_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..")

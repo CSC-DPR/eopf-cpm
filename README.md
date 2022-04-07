@@ -8,3 +8,7 @@
 The Earth Observation PlateForm - Core Python Modules is a framework for
 - create eopf processeur and algorithm
 - help you to access to eopf data and play with them.
+
+# Contributing and run test
+
+please refer to [Contributing file](CONTRIBUTING.md).

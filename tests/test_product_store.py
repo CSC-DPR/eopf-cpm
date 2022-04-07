@@ -1,16 +1,17 @@
 import os
 import os.path
+import pathlib
 import shutil
 from typing import Any, Optional
 from unittest.mock import patch
 
+import fsspec
 import hypothesis.strategies as st
 import numpy as np
 import pytest
 import xarray
 import zarr
 from hypothesis import given
-from pyfakefs.fake_filesystem import FakeFilesystem
 
 from eopf.exceptions import StoreNotOpenError
 from eopf.exceptions.warnings import AlreadyClose, AlreadyOpen
@@ -23,7 +24,6 @@ from eopf.product.store.rasterio import EORasterIOAccessor
 
 from .decoder import Netcdfdecoder
 from .utils import (
-    PARENT_DATA_PATH,
     assert_contain,
     assert_has_coords,
     assert_issubdict,
@@ -41,8 +41,19 @@ _FILES = {
 }
 
 
+# needed because Netcdf4 have no convenience way to test without create a file ...
+@pytest.fixture(autouse=True)
+def cleanup_files():
+    yield
+    for file in _FILES.values():
+        if os.path.isfile(file):
+            os.remove(file)
+        if os.path.isdir(file):
+            shutil.rmtree(file)
+
+
 @pytest.fixture
-def zarr_file(fs: FakeFilesystem):
+def zarr_file():
     file_name = f"file://{_FILES['zarr']}"
     dims = "_ARRAY_DIMENSIONS"
 
@@ -95,7 +106,7 @@ def zarr_file(fs: FakeFilesystem):
 
 
 @pytest.mark.unit
-def test_load_product_from_zarr(zarr_file: str, fs: FakeFilesystem):
+def test_load_product_from_zarr(zarr_file: str):
     product = EOProduct("a_product", store_or_path_url=zarr_file)
     with product.open(mode="r"):
         product.load()
@@ -198,7 +209,7 @@ def test_check_capabilities(store, readable, writable, listable, erasable):
         (EONetCDFStore(_FILES["netcdf"]), Netcdfdecoder),
     ],
 )
-def test_write_stores(fs: FakeFilesystem, store: EOProductStore, decoder_type: Any):
+def test_write_stores(store: EOProductStore, decoder_type: Any):
 
     store.open(mode="w")
     store["a_group"] = EOGroup()
@@ -222,7 +233,7 @@ def test_write_stores(fs: FakeFilesystem, store: EOProductStore, decoder_type: A
         EONetCDFStore(_FILES["netcdf"]),
     ],
 )
-def test_read_stores(fs: FakeFilesystem, store: EOProductStore):
+def test_read_stores(store: EOProductStore):
     store.open(mode="w")
     store["a_group"] = EOGroup()
     store["a_group/a_variable"] = EOVariable(data=[])
@@ -255,7 +266,7 @@ def test_abstract_store_cant_be_instantiate():
         EORasterIOAccessor("a.jp2"),
     ],
 )
-def test_store_must_be_open(fs: FakeFilesystem, store: EOProductStore):
+def test_store_must_be_open(store: EOProductStore):
 
     with pytest.raises(StoreNotOpenError):
         store["a_group"]
@@ -291,7 +302,7 @@ def test_store_must_be_open(fs: FakeFilesystem, store: EOProductStore):
         EONetCDFStore(_FILES["netcdf"]),
     ],
 )
-def test_store_structure(fs: FakeFilesystem, store: EOProductStore):
+def test_store_structure(store: EOProductStore):
     store.open(mode="w")
     store["a_group"] = EOGroup()
     store["another_one"] = EOGroup()
@@ -305,17 +316,6 @@ def test_store_structure(fs: FakeFilesystem, store: EOProductStore):
     assert not store.is_variable("another_one")
 
     store.close()
-
-
-# needed because Netcdf4 have no convenience way to test without create a file ...
-@pytest.fixture(autouse=True)
-def cleanup_files():
-    yield
-    for file in _FILES.values():
-        if os.path.isfile(file):
-            os.remove(file)
-        if os.path.isdir(file):
-            shutil.rmtree(file)
 
 
 @pytest.mark.unit
@@ -352,7 +352,7 @@ def test_guess_read_format(store, formats, results):
 
 
 @pytest.mark.unit
-def test_mtd_store_must_be_open(fs: FakeFilesystem):
+def test_mtd_store_must_be_open():
     """Given a manifest store, when accessing items inside it without previously opening it,
     the function must raise a StoreNotOpenError error.
     """
@@ -403,8 +403,9 @@ def test_close_manifest_store():
         store.close()
 
 
-@pytest.mark.usecase
-def test_retrieve_from_manifest_store():
+@pytest.mark.need_files
+@pytest.mark.integration
+def test_retrieve_from_manifest_store(S3_OLCI_L1_EFR: str, S3_OLCI_L1_MAPPING: str, tmp_path: pathlib.Path):
     """Tested on 24th of February on data coming from
     S3A_OL_1_EFR____20220116T092821_20220116T093121_20220117T134858_0179_081_036_2160_LN1_O_NT_002.SEN3
     Given a manifest XML file from a Legacy product and a mapping file,
@@ -412,14 +413,17 @@ def test_retrieve_from_manifest_store():
     must match the ones expected.
     """
     import json
-    from glob import glob
 
-    olci_path = glob(f"{PARENT_DATA_PATH}/data/S3A_OL_1*.SEN3")[0]
-    manifest_path = os.path.join(olci_path, "xfdumanifest.xml")
+    fsmap = fsspec.get_mapper(S3_OLCI_L1_EFR)
+    manifest_name = "xfdumanifest.xml"
+    manifest_path = tmp_path / manifest_name
+    for key in fsmap:
+        if key.endswith(manifest_name):
+            manifest_path.write_bytes(fsmap[key])
+
     manifest = ManifestStore(manifest_path)
 
-    mapping_file_path = glob("eopf/product/store/mapping/S3_OL_1_EFR_mapping.json")[0]
-    mapping_file = open(mapping_file_path)
+    mapping_file = open(S3_OLCI_L1_MAPPING)
     map_olci = json.load(mapping_file)
     config = {"namespaces": map_olci["namespaces"], "metadata_mapping": map_olci["metadata_mapping"]}
     manifest.open(**config)
@@ -431,7 +435,7 @@ def test_retrieve_from_manifest_store():
     assert_issubdict(
         returned_cf,
         {
-            "title": olci_path.replace(f"{PARENT_DATA_PATH}/data/", ""),
+            "title": S3_OLCI_L1_EFR.split("/")[-1].replace(".zip", ".SEN3"),
             "institution": "European Space Agency, Land OLCI Processing and Archiving Centre [LN1]",
             "source": "Sentinel-3A OLCI Ocean Land Colour Instrument",
             "comment": "Operational",
@@ -482,7 +486,7 @@ def test_retrieve_from_manifest_store():
     assert_issubdict(
         metadata_property,
         {
-            "identifier": olci_path.replace(f"{PARENT_DATA_PATH}/data/", ""),  # noqa
+            "identifier": S3_OLCI_L1_EFR.split("/")[-1].replace(".zip", ".SEN3"),
             "acquisitionType": "Operational",
             "productType": "OL_1_EFR___",
             "status": "ARCHIVED",
