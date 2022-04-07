@@ -539,7 +539,7 @@ class SafeMappingManager:
             config_declarations = dict()
         # The reduce allow us to do a get item on a nested directory using a split path.
         accessor_config = {
-            config_key: reduce(dict.get, partition_eo_path(config_path), config_definitions)
+            config_key: reduce(dict.get, partition_eo_path(config_path), config_definitions)  # type: ignore[arg-type]
             for config_key, config_path in config_declarations.items()
         }
         config[self.CONFIG_ACCESSOR_ID] = frozenset(config_declarations.items())
