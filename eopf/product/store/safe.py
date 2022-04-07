@@ -88,19 +88,19 @@ class SafeHierarchy(EOProductStore):
 # Safe store parameters transformations:
 
 
-def _transformation_dimensions(eo_obj: "EOObject", parameter: Any):
+def _transformation_dimensions(eo_obj: "EOObject", parameter: Any) -> "EOObject":
     """Replace the object dimension with the list of dimensions parameter"""
     eo_obj.assign_dims(parameter)
     return eo_obj
 
 
-def _transformation_attributes(eo_obj: "EOObject", parameter: Any):
+def _transformation_attributes(eo_obj: "EOObject", parameter: Any) -> "EOObject":
     """Update the object attributes with the dictionary of attribute parameter"""
     eo_obj.attrs.update(parameter)
     return eo_obj
 
 
-def _transformation_sub_array(eo_obj: "EOObject", parameter: Any):
+def _transformation_sub_array(eo_obj: "EOObject", parameter: Any) -> "EOObject":
     """Index the array according to the parameter. If the parameter is a single index, the dimension is removed."""
     from ..core import EOVariable
 
@@ -109,7 +109,7 @@ def _transformation_sub_array(eo_obj: "EOObject", parameter: Any):
     return eo_obj.isel(parameter)
 
 
-def _transformation_pack_bits(eo_obj: "EOObject", parameter: Any):
+def _transformation_pack_bits(eo_obj: "EOObject", parameter: Any) -> "EOObject":
     """Pack bit the parmater dimension of eo_obj."""
     from ..core import EOVariable
 
@@ -143,7 +143,7 @@ class EOSafeStore(EOProductStore):
     """
 
     sep = "/"
-    DEFAULT_PARAMETERS_TRANSFORMATIONS_LIST = [
+    DEFAULT_PARAMETERS_TRANSFORMATIONS_LIST: list[tuple[str, Callable[[EOObject, Any], EOObject]]] = [
         ("attributes", _transformation_attributes),
         ("sub_array", _transformation_sub_array),
         ("pack_bits", _transformation_pack_bits),
@@ -156,7 +156,7 @@ class EOSafeStore(EOProductStore):
         url: str,
         store_factory: Optional[EOStoreFactory] = None,
         mapping_factory: Optional[EOMappingFactory] = None,
-        parameters_transformations: Optional[list[set[str, Callable[["EOObject", Any], "EOObject"]]]] = None,
+        parameters_transformations: Optional[list[tuple[str, Callable[["EOObject", Any], "EOObject"]]]] = None,
     ) -> None:
         if store_factory is None:
             store_factory = EOStoreFactory(default_stores=True)
