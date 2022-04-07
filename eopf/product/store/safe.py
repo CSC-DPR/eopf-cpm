@@ -3,12 +3,16 @@ import warnings
 from typing import (
     TYPE_CHECKING,
     Any,
+    Callable,
     Iterator,
     MutableMapping,
     Optional,
     Sequence,
     Tuple,
 )
+
+import dask.array as da
+import numpy as np
 
 from eopf.exceptions import StoreNotOpenError
 
@@ -81,6 +85,43 @@ class SafeHierarchy(EOProductStore):
         self._child_list.append(child_name)
 
 
+# Safe store parameters transformations:
+
+
+def _transformation_dimensions(eo_obj: "EOObject", parameter: Any):
+    """Replace the object dimension with the list of dimensions parameter"""
+    eo_obj.assign_dims(parameter)
+    return eo_obj
+
+
+def _transformation_attributes(eo_obj: "EOObject", parameter: Any):
+    """Update the object attributes with the dictionary of attribute parameter"""
+    eo_obj.attrs.update(parameter)
+    return eo_obj
+
+
+def _transformation_sub_array(eo_obj: "EOObject", parameter: Any):
+    """Index the array according to the parameter. If the parameter is a single index, the dimension is removed."""
+    from ..core import EOVariable
+
+    if not isinstance(eo_obj, EOVariable):
+        raise TypeError()
+    return eo_obj.isel(parameter)
+
+
+def _transformation_pack_bits(eo_obj: "EOObject", parameter: Any):
+    """Pack bit the parmater dimension of eo_obj."""
+    from ..core import EOVariable
+
+    if not isinstance(eo_obj, EOVariable):
+        raise TypeError()
+    attrs = eo_obj.attrs
+    dims = list(eo_obj.dims)
+    data = da.map_blocks(np.packbits, eo_obj._data, axis=dims.index(parameter), bitorder="little")
+    dims.remove(parameter)
+    return EOVariable(data=data, dims=tuple(dims), attrs=attrs)
+
+
 class EOSafeStore(EOProductStore):
     """Store representation to access to a Safe file on the given URL
 
@@ -102,6 +143,12 @@ class EOSafeStore(EOProductStore):
     """
 
     sep = "/"
+    DEFAULT_PARAMETERS_TRANSFORMATIONS_LIST = [
+        ("attributes", _transformation_attributes),
+        ("sub_array", _transformation_sub_array),
+        ("pack_bits", _transformation_pack_bits),
+        ("dimensions", _transformation_dimensions),  # dimensions should be after dimension dependant tranfo
+    ]
 
     # docstr-coverage: inherited
     def __init__(
@@ -109,11 +156,16 @@ class EOSafeStore(EOProductStore):
         url: str,
         store_factory: Optional[EOStoreFactory] = None,
         mapping_factory: Optional[EOMappingFactory] = None,
+        parameters_transformations: Optional[list[set[str, Callable[["EOObject", Any], "EOObject"]]]] = None,
     ) -> None:
         if store_factory is None:
             store_factory = EOStoreFactory(default_stores=True)
         if mapping_factory is None:
             mapping_factory = EOMappingFactory(default_mappings=True)
+        if parameters_transformations is None:
+            self._parameters_transformations = self.DEFAULT_PARAMETERS_TRANSFORMATIONS_LIST
+        else:
+            self._parameters_transformations = parameters_transformations
         if url[-1] != "/":
             url = url + "/"
         # FIXME Need to think of a way to manage urlak ospath on windows. Especially with the path in the json.
@@ -255,16 +307,24 @@ class EOSafeStore(EOProductStore):
         if "parameters" not in config:
             return eo_obj
         parameters = config["parameters"]
+        for parameter_name, parameter_transformation in self._parameters_transformations:
+            if parameter_name in parameters:
+                eo_obj = parameter_transformation(eo_obj, parameters["parameter_name"])
+        # add a warning if a parameter is missing from _parameters_transformations ?
+        return eo_obj
+
         from ..core import EOGroup, EOVariable
+
+        data = eo_obj._data if isinstance(eo_obj, EOVariable) else None
+        attrs = eo_obj.attrs
+        dims = eo_obj.dims
 
         if "dimensions" in parameters:
             dims = parameters["dimensions"]
         else:
             dims = eo_obj.dims
 
-        attrs = eo_obj.attrs
         if isinstance(eo_obj, EOVariable):
-            data = eo_obj._data
             return EOVariable(data=data, dims=dims, attrs=attrs)
         return EOGroup(dims=dims, attrs=attrs)
 

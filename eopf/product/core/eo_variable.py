@@ -256,6 +256,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
                 missing_dims=missing_dims,
                 **indexers_kwargs,
             ),
+            attrs=self.attrs,
         )
 
     def sel(
