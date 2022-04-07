@@ -181,28 +181,16 @@ class EOProduct(EOContainer):
             print("|" + " " * level + "├──", g[0])
             self._create_structure(g, level + 2)
 
-    def tree(self) -> Optional["EOProduct"]:
+    def tree(self) -> None:
         """Display the hierarchy of the product.
 
         Returns
         ------
-        Union[EOProduct, None]
-            Instance of EOProduct if the environment is interactive (e.g. Jupyter Notebook)
-            Oterwise, returns None.
+        None
         """
-        try:  # pragma: no cover
-            from IPython import get_ipython
-
-            if get_ipython():
-                return self
-        except ModuleNotFoundError:  # pragma: no cover
-            import warnings
-
-            warnings.warn("IPython not found")
         for name, group in self._groups.items():
             print(f"├── {name}")
             self._create_structure(group, level=2)
-        return None
 
     @property
     def coordinates(self) -> EOGroup:
