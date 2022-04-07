@@ -131,7 +131,8 @@ class XMLTPAccessor(EOProductStore):
         # Assure that given url is path to legacy product or path to MTD_TL.xml file
 
         try:
-            self._xmltp: Any = kwargs["xmltp"]  # replace Any with actual type (typing issue)
+            self._xmltp_step: Any = kwargs["xmltp_step"]  # replace Any with actual type (typing issue)
+            self._xmltp_value: Any = kwargs["xmltp_values"]
             self._namespaces: Any = kwargs["namespaces"]
         except KeyError as e:
             raise TypeError(f"Missing configuration parameter: {e}")
@@ -153,21 +154,16 @@ class XMLTPAccessor(EOProductStore):
         list_ = self._root.xpath(xpath, namespaces=self._namespaces)
         return [len(list_), len(list_[0].text.split())]
 
-    def tie_points_y(self, path: str) -> xr.DataArray:
+    def get_tie_points_data(self, path: str) -> xr.DataArray:
         dom = self._root
-        shape_y_x = self.get_shape(self._xmltp["values"])
-        ymax = float(dom.xpath(path, namespaces=self._namespaces)[0].text)
-        ystep = float(dom.xpath(self._xmltp["step_y"], namespaces=self._namespaces)[0].text)
-        y = [ymax - i * ystep - ystep / 2 for i in range(shape_y_x[0])]
-        return xr.DataArray(y)
-
-    def tie_points_x(self, path: str) -> xr.DataArray:
-        dom = self._root
-        shape_y_x = self.get_shape(self._xmltp["values"])
-        xmin = float(dom.xpath(path, namespaces=self._namespaces)[0].text)
-        xstep = float(dom.xpath(self._xmltp["step_x"], namespaces=self._namespaces)[0].text)
-        x = [xmin + i * xstep + xstep / 2 for i in range(shape_y_x[1])]
-        return xr.DataArray(x)
+        shape_y_x = self.get_shape(self._xmltp_value)
+        resolution = float(dom.xpath(path, namespaces=self._namespaces)[0].text)
+        step = float(dom.xpath(self._xmltp_step, namespaces=self._namespaces)[0].text)
+        if self._dim == "y":
+            data = [resolution - i * step - step / 2 for i in range(shape_y_x[0])]
+        else:
+            data = [resolution + i * step + step / 2 for i in range(shape_y_x[1])]
+        return xr.DataArray(data)
 
     def __getitem__(self, key: str) -> "EOObject":
         """
@@ -191,13 +187,7 @@ class XMLTPAccessor(EOProductStore):
         if not len(self._root.xpath(key, namespaces=self._namespaces)):
             raise TypeError(f"Incorrect xpath {key}")
 
-        if self._dim == "y" and key[-1] == "Y":
-            eo_variable_data = self.tie_points_y(key)
-        elif self._dim == "x" and key[-1] == "X":
-            eo_variable_data = self.tie_points_x(key)
-        else:
-            raise AttributeError("Invalid dimension")
-        return EOVariable(name=key, data=eo_variable_data)
+        return EOVariable(name=key, data=self.get_tie_points_data(key))
 
     def __iter__(self) -> Iterator[str]:
         yield from ()

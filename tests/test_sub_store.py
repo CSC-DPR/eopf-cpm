@@ -269,14 +269,23 @@ def test_xml_tiepoints_accessor():
     mapping_file = open(mapping_file_path)
     map = json.load(mapping_file)
 
-    config = {"namespaces": map["xml_mapping"]["namespace"], "xmltp": map["xml_mapping"]["xmltp"]}
+    config_x = {
+        "namespaces": map["xml_mapping"]["namespace"],
+        "xmltp_step": map["xml_mapping"]["xmltp"]["step_x"],
+        "xmltp_values": map["xml_mapping"]["xmltp"]["values"],
+    }
+    config_y = {
+        "namespaces": map["xml_mapping"]["namespace"],
+        "xmltp_step": map["xml_mapping"]["xmltp"]["step_y"],
+        "xmltp_values": map["xml_mapping"]["xmltp"]["values"],
+    }
     # Create XMLAccessors
     tp_y_accessor = XMLTPAccessor(f"{PARENT_DATA_PATH}/tests/data/MTD_TL.xml", "xmltpy")
-    tp_y_accessor.open(**config)
+    tp_y_accessor.open(**config_x)
     assert tp_y_accessor[EXPECTED_XML_ATTR["test_xmltpy_path"]]._data.shape == EXPECTED_XML_ATTR["tp_array_size"]
 
     tp_x_accessor = XMLTPAccessor(f"{PARENT_DATA_PATH}/tests/data/MTD_TL.xml", "xmltpx")
-    tp_x_accessor.open(**config)
+    tp_x_accessor.open(**config_y)
     assert tp_x_accessor[EXPECTED_XML_ATTR["test_xmltpx_path"]]._data.shape == EXPECTED_XML_ATTR["tp_array_size"]
 
     assert all(dummy_x_array == tp_x_accessor[EXPECTED_XML_ATTR["test_xmltpx_path"]]._data)
