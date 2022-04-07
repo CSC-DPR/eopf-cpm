@@ -414,6 +414,8 @@ class SafeMappingManager:
             accessor_local_path = None
             if len(accessor_source_split) == 2:
                 accessor_local_path = accessor_source_split[1]
+            elif "parameters" in conf and "xpath" in conf["parameters"]:
+                accessor_local_path = conf["parameters"]["xpath"]
             accessor = self._get_accessor(
                 accessor_file,
                 conf[self.CONFIG_FORMAT],
