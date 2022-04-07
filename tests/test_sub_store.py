@@ -269,7 +269,7 @@ def test_xml_tiepoints_accessor():
     mapping_file = open(mapping_file_path)
     map = json.load(mapping_file)
 
-    config = {"namespaces": map["xml_mapping"]["namespace"], "xmltp_step": map["xml_mapping"]["xmltp_step"]}
+    config = {"namespaces": map["xml_mapping"]["namespace"], "xmltp": map["xml_mapping"]["xmltp"]}
     # Create XMLAccessors
     tp_y_accessor = XMLTPAccessor(f"{PARENT_DATA_PATH}/tests/data/MTD_TL.xml", "xmltpy")
     tp_y_accessor.open(**config)

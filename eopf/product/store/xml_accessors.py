@@ -131,8 +131,8 @@ class XMLTPAccessor(EOProductStore):
         # Assure that given url is path to legacy product or path to MTD_TL.xml file
 
         try:
-            self._xmltp_step: str = kwargs["xmltp_step"]
-            self._namespaces: dict[str, str] = kwargs["namespaces"]
+            self._xmltp: Any = kwargs["xmltp"]  # replace Any with actual type (typing issue)
+            self._namespaces: Any = kwargs["namespaces"]
         except KeyError as e:
             raise TypeError(f"Missing configuration parameter: {e}")
         self._root = lxml.etree.parse(self._url)
@@ -155,17 +155,17 @@ class XMLTPAccessor(EOProductStore):
 
     def tie_points_y(self, path: str) -> xr.DataArray:
         dom = self._root
-        shape_y_x = self.get_shape("n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/Values_List/VALUES")
+        shape_y_x = self.get_shape(self._xmltp["values"])
         ymax = float(dom.xpath(path, namespaces=self._namespaces)[0].text)
-        ystep = float(dom.xpath(self._xmltp_step["y"], namespaces=self._namespaces)[0].text)
+        ystep = float(dom.xpath(self._xmltp["step_y"], namespaces=self._namespaces)[0].text)
         y = [ymax - i * ystep - ystep / 2 for i in range(shape_y_x[0])]
         return xr.DataArray(y)
 
     def tie_points_x(self, path: str) -> xr.DataArray:
         dom = self._root
-        shape_y_x = self.get_shape("n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/Values_List/VALUES")
+        shape_y_x = self.get_shape(self._xmltp["values"])
         xmin = float(dom.xpath(path, namespaces=self._namespaces)[0].text)
-        xstep = float(dom.xpath(self._xmltp_step["x"], namespaces=self._namespaces)[0].text)
+        xstep = float(dom.xpath(self._xmltp["step_x"], namespaces=self._namespaces)[0].text)
         x = [xmin + i * xstep + xstep / 2 for i in range(shape_y_x[1])]
         return xr.DataArray(x)
 
