@@ -43,8 +43,8 @@
                         {% for name, value in coordinates.items() %}
                             <dt>
                                 <span>{{name}}</span>
-                                <!-- <span>{{value}}</span> -->
                             </dt>
+                            <dd hidden>{{value}}</dd>
                         {% endfor %}
                     {% endwith %}
                 </dl>
