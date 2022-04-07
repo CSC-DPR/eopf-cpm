@@ -312,7 +312,7 @@ def test_xml_tiepoints_accessor():
         assert True
 
 
-@pytest.mark.unit
+@pytest.mark.usecase
 def test_xml_manifest_accessor():
     olci_path = glob(f"{PARENT_DATA_PATH}/data/S3A_OL_1*.SEN3")[0]
     manifest_path = os.path.join(olci_path, "xfdumanifest.xml")
