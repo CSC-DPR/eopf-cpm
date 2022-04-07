@@ -8,6 +8,7 @@ class EOStoreFactory:
         self.item_formats: dict[str, type[EOProductStore]] = dict()
         self.store_types: set[type[EOProductStore]] = set()
         if default_stores:
+            from eopf.product.store.grib import EOGribAccessor
             from eopf.product.store.manifest import ManifestStore
             from eopf.product.store.netcdf import (
                 EONetCDFStore,
@@ -19,6 +20,7 @@ class EOStoreFactory:
             self.register_store(EONetCDFStore, "netcdf")
             self.register_store(EONetcdfStringToTimeAccessor, "netcdf_string_to_time")
             self.register_store(ManifestStore, "xfdumetadata")
+            self.register_store(EOGribAccessor, "grib")
 
     def register_store(self, store_class: type[EOProductStore], *args: str) -> None:
         self.store_types.add(store_class)
