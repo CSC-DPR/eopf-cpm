@@ -1,5 +1,6 @@
 import os
 import warnings
+from functools import reduce
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -16,7 +17,7 @@ import numpy as np
 
 from eopf.exceptions import StoreNotOpenError
 
-from ..utils import join_eo_path_optional, upsplit_eo_path
+from ..utils import join_eo_path_optional, partition_eo_path, upsplit_eo_path
 from .abstract import EOProductStore, StorageStatus
 from .mapping_factory import EOMappingFactory
 from .store_factory import EOStoreFactory
@@ -143,7 +144,7 @@ class EOSafeStore(EOProductStore):
     """
 
     sep = "/"
-    DEFAULT_PARAMETERS_TRANSFORMATIONS_LIST: list[tuple[str, Callable[[EOObject, Any], EOObject]]] = [
+    DEFAULT_PARAMETERS_TRANSFORMATIONS_LIST: list[tuple[str, Callable[["EOObject", Any], "EOObject"]]] = [
         ("attributes", _transformation_attributes),
         ("sub_array", _transformation_sub_array),
         ("pack_bits", _transformation_pack_bits),
@@ -536,8 +537,10 @@ class SafeMappingManager:
             config_declarations = config[self.CONFIG_ACCESSOR_CONF_DEC]
         else:
             config_declarations = dict()
+        # The reduce allow us to do a get item on a nested directory using a split path.
         accessor_config = {
-            config_key: config_definitions[config_path] for config_key, config_path in config_declarations.items()
+            config_key: reduce(dict.get, partition_eo_path(config_path), config_definitions)
+            for config_key, config_path in config_declarations.items()
         }
         config[self.CONFIG_ACCESSOR_ID] = frozenset(config_declarations.items())
         config[self.CONFIG_ACCESSOR_CONFIG] = accessor_config
