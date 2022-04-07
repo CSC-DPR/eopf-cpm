@@ -1,16 +1,22 @@
+import datetime
 import os
 
 import pytest
 
-from eopf.product.utils import apply_xpath, parse_xml, translate_structure
+from eopf.product.utils import (
+    apply_xpath,
+    convert_to_unix_time,
+    is_date,
+    parse_xml,
+    translate_structure,
+)
 
 
 @pytest.fixture
-def tree():
-    snippet_path = "tests/data/snippet_xfdumanifest.xml"
-    snippet_file = open(snippet_path)
-    tree = parse_xml(snippet_file)
-    return tree
+def tree(EMBEDED_TEST_DATA_FOLDER: str):
+    snippet_path = os.path.join(EMBEDED_TEST_DATA_FOLDER, "snippet_xfdumanifest.xml")
+    with open(snippet_path) as f:
+        return parse_xml(f)
 
 
 @pytest.mark.unit
@@ -43,7 +49,8 @@ def test_translate_structure(tree):
     """Given an input xml,
     the output of the function must match the expected output"""
     MAP = {
-        "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName/text())",  # noqa
+        "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/"
+        "sentinel3:generalProductInformation/sentinel3:productName/text())",
         "Conventions": "'CF-1.9'",
     }
     NAMESPACES = {
@@ -65,7 +72,8 @@ def test_apply_xpath(tree):
     """Given an input xml,
     the output of the function must match the expected output"""
     MAP = {
-        "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName/text())",  # noqa
+        "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/"
+        "sentinel3:generalProductInformation/sentinel3:productName/text())",
         "Conventions": "'CF-1.9'",
     }
     NAMESPACES = {
@@ -80,3 +88,39 @@ def test_apply_xpath(tree):
         "title": "S3A_OL_1_EFR____20220116T092821_20220116T093121_20220117T134858_0179_081_036_2160_LN1_O_NT_002.SEN3",
         "Conventions": "CF-1.9",
     }
+
+
+@pytest.mark.unit
+def test_is_date():
+    string_date_1 = "2020-03-31T17:19:29.230522Z"  # Zulu time
+    string_date_2 = "2020-03-31T17:19:29.230522GMT+3"  # GMT+3 Time
+    string_date_3 = "some_random_string"
+    dt_date = datetime.datetime(2020, 3, 31, 17, 19, 29, 230522)
+    assert is_date(string_date_1)
+    assert is_date(string_date_2)
+    assert is_date(str(dt_date))
+    assert not is_date(string_date_3)
+
+
+@pytest.mark.unit
+def test_convert_unix_time():
+    import pytz
+
+    # Define datetime-like string and verify if conversion match with datetime object and expected unix time. (MS)
+    string_date = "2020-03-31T17:19:29.230522Z"
+    dt_date = datetime.datetime(2020, 3, 31, 17, 19, 29, 230522, pytz.UTC)
+    expected_unix_time = 1585675169230522
+
+    assert convert_to_unix_time(string_date) == convert_to_unix_time(dt_date) == expected_unix_time
+
+    # Define datetime-like string in Zulu Time Zone, and verify that it doesnt match with expected unix time
+    string_date = "2020-03-31T17:19:29.230522GMT-3"
+    assert convert_to_unix_time(string_date) != convert_to_unix_time(dt_date)
+    assert convert_to_unix_time(string_date) != expected_unix_time
+
+    #
+    try:
+        string_date = "a string that is not a valid date"
+        convert_to_unix_time(string_date)
+    except ValueError:
+        assert True

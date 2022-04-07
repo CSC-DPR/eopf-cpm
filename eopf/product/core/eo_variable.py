@@ -18,8 +18,6 @@ from dask import array as da
 from eopf.product.core.eo_mixins import EOVariableOperatorsMixin
 from eopf.product.core.eo_object import EOObject
 
-from ..formatting import renderer
-
 if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_container import EOContainer
 
@@ -84,7 +82,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         dims = tuple(dims)
         if len(dims) != len(self._data.dims):
             raise ValueError("Invalid number of dimensions.")
-        self._data.rename(zip(self._data.dims, dims))
+        self._data = self._data.swap_dims(dict(zip(self._data.dims, dims)))
         super().assign_dims(dims)
 
     # docstr-coverage: inherited
@@ -389,4 +387,6 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return self.__str__()
 
     def _repr_html_(self) -> str:
+        from ..formatting import renderer
+
         return renderer("variable.html", variable=self)

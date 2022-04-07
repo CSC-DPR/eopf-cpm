@@ -5,7 +5,6 @@ from eopf.exceptions import StoreNotDefinedError
 from eopf.product.core.eo_container import EOContainer
 from eopf.product.core.eo_object import EOObject
 
-from ..formatting import renderer
 from .eo_variable import EOVariable
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -93,6 +92,8 @@ class EOGroup(EOContainer, EOObject):
         return f"[EOGroup]{hex(id(self))}"
 
     def _repr_html_(self) -> str:  # pragma: no cover
+        from ..formatting import renderer
+
         return renderer("group.html", group=self)
 
     def to_product(self) -> "EOProduct":

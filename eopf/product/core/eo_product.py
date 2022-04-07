@@ -3,7 +3,6 @@ from typing import Any, Iterable, MutableMapping, Optional, Type, Union
 
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError, StoreNotOpenError
 
-from ..formatting import renderer
 from ..store.abstract import EOProductStore, StorageStatus
 from .eo_container import EOContainer
 from .eo_group import EOGroup
@@ -11,11 +10,11 @@ from .eo_variable import EOVariable
 
 
 class EOProduct(EOContainer):
-    """A EOProduct containing EOGroups (and throught them their EOVariable), linked to it's EOProductStore (if existing).
+    """A EOProduct contains EOGroups (and throught them their EOVariables), linked to its EOProductStore (if existing).
 
-    Read and write both dynamically, or on demand to the EOProductStore.
-    Can be used in a dictionary like manner with relatives and absolutes paths.
-    Has personal attributes and both personal and inherited coordinates.
+    Read and write both dynamically or on demand to the EOProductStore.
+    It can be used in a dictionary like manner with relative and absolute paths.
+    It has personal attributes and both personal and inherited coordinates.
 
     Parameters
     ----------
@@ -100,6 +99,8 @@ class EOProduct(EOContainer):
         return f"[EOProduct]{hex(id(self))}"
 
     def _repr_html_(self) -> str:
+        from ..formatting import renderer
+
         return renderer("product.html", product=self)
 
     def _add_local_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> EOVariable:
