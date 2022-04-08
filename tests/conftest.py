@@ -4,7 +4,7 @@ import shutil
 
 import pytest
 
-from .utils import PARENT_PATH
+from .utils import PARENT_DATA_PATH
 
 
 # ----------------------------------#
@@ -13,7 +13,7 @@ from .utils import PARENT_PATH
 @pytest.fixture
 def INPUT_DIR():
     """Path to te folder where the data should be readed"""
-    return os.environ.get("TEST_DATA_FOLDER", os.path.join(PARENT_PATH, "data"))
+    return os.environ.get("TEST_DATA_FOLDER", os.path.join(PARENT_DATA_PATH, "data"))
 
 
 @pytest.fixture
@@ -29,13 +29,13 @@ def OUTPUT_DIR(tmp_path):
 @pytest.fixture
 def MAPPING_FOLDER():
     """Path to the folder that contain all the mappings"""
-    return os.path.join(PARENT_PATH, "eopf", "product", "store", "mapping")
+    return os.path.join(PARENT_DATA_PATH, "eopf", "product", "store", "mapping")
 
 
 @pytest.fixture
 def EMBEDED_TEST_DATA_FOLDER():
     """Path to test data folder"""
-    return os.path.join(PARENT_PATH, "tests", "data")
+    return os.path.join(PARENT_DATA_PATH, "tests", "data")
 
 
 # ----------------------------------#
