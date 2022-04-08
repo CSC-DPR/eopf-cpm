@@ -107,8 +107,10 @@ class EORasterIOAccessor(EOProductStore):
         node = self._select_node(path)
         if path in ["", "/"]:
             return iter(["value", "coordinates"])
-        if path in ["/coordinates", "coordinates"]:
-            return iter(node)
+
+        if isinstance(node, xarray.core.coordinates.Coordinates):
+            return iter(node.keys())
+
         return iter([])
 
     # docstr-coverage: inherited
