@@ -624,4 +624,5 @@ class SafeMappingManager:
         json_data = self._mapping_factory.get_mapping(top_level)
         json_config_list = json_data["data_mapping"]
         for config in json_config_list:
-            self._add_data_mapping(config[self.CONFIG_TARGET], config, json_data)
+            if config["item_format"] != "misc":
+                self._add_data_mapping(config[self.CONFIG_TARGET], config, json_data)
