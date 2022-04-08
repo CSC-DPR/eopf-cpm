@@ -30,6 +30,7 @@ def eovariable_strategie(draw, name="", data=None, dims=tuple(), with_input=True
     return variable, var_data, var_dims
 
 
+@pytest.mark.unit
 @pytest.mark.parametrize(
     "data, dims",
     [
@@ -47,6 +48,7 @@ def test_set_dimensions(data, dims):
         EOVariable("var", data=data, dims=dims)
 
 
+@pytest.mark.unit
 @pytest.mark.parametrize("new_dims", [("21", "34"), (22, 33)])
 @given(
     variable=st.one_of(
@@ -67,6 +69,7 @@ def test_multiple_dims(variable, new_dims):
     assert var.dims == new_dims
 
 
+@pytest.mark.unit
 @given(
     variable=st.one_of(
         eovariable_strategie(data=xps.arrays(dtype="float64", shape=tuple())),
@@ -84,6 +87,7 @@ def test_without_dims(variable):
     assert var_empty._data.dims == tuple()
 
 
+@pytest.mark.unit
 @pytest.mark.parametrize(
     "ops_name",
     [
@@ -122,6 +126,7 @@ def test_binary_ops_eovar_mixin(a, b, ops_name):
     assert np.array_equal(ops_eo, ops_xr, equal_nan=True)
 
 
+@pytest.mark.unit
 @pytest.mark.parametrize(
     "ops_name",
     [
@@ -156,6 +161,7 @@ def test_eovar_shape_mismatch(a, b, ops_name):
         getattr(a, ops_name)(b).compute()
 
 
+@pytest.mark.unit
 @pytest.mark.parametrize(
     "ops_name",
     [
@@ -199,6 +205,7 @@ def test_binary_ops_scalar_mixin(a, b, ops_name):
     assert np.array_equal(ops_eo, ops_xr, equal_nan=True)
 
 
+@pytest.mark.unit
 @pytest.mark.parametrize("ops_name", ["__and__", "__or__", "__xor__", "__rand__", "__ror__", "__rxor__"])
 @given(
     a=eovariable_strategie(data=xps.arrays(dtype="bool8", shape=(3, 3, 3), elements=st.booleans()), with_input=False),
@@ -211,6 +218,7 @@ def test_boolean_ops_mixin(a, b, ops_name):
     assert np.array_equal(ops_eo, ops_xr)
 
 
+@pytest.mark.unit
 @pytest.mark.parametrize(
     "ops_name",
     [
@@ -236,6 +244,7 @@ def test_inplace(a, b, ops_name):
     assert new_a is not a._data
 
 
+@pytest.mark.unit
 @pytest.mark.parametrize(
     "ops_name",
     [
@@ -262,6 +271,7 @@ def test_ops_inplace(a, b, ops_name):
     assert new_a is not a._data
 
 
+@pytest.mark.unit
 @pytest.mark.parametrize(
     "ops_name",
     [
@@ -283,6 +293,7 @@ def test_bool_ops_inplace(a, b, ops_name):
     assert new_a is not a._data
 
 
+@pytest.mark.unit
 @pytest.mark.parametrize(
     "func",
     [
@@ -308,6 +319,7 @@ def test_unary_ops(a, func):
     assert np.array_equal(ops_eo, ops_xr, equal_nan=True)
 
 
+@pytest.mark.unit
 @pytest.mark.parametrize(
     "func",
     [
@@ -327,6 +339,7 @@ def test_unary_ops_failed(a, func):
         func(a._data).compute()
 
 
+@pytest.mark.unit
 @pytest.mark.parametrize(
     "conv",
     [
@@ -348,6 +361,7 @@ def test_conversion_1d(a, conv):
     assert np.array_equal(conv_a, conv(a._data))
 
 
+@pytest.mark.unit
 @pytest.mark.parametrize(
     "conv, exc",
     [
