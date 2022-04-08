@@ -1,6 +1,7 @@
 import operator
-from typing import Any, Callable, Generic, Optional, TypeVar
+from typing import Any, Callable, Generic, Optional, TypeVar, Union
 
+import numpy as np
 import xarray as xr
 
 EOV_TYPE = TypeVar("EOV_TYPE", bound="EOVariableOperatorsMixin[Any]")
@@ -17,10 +18,33 @@ class EOVariableOperatorsMixin(Generic[EOV_TYPE]):
     """
 
     __slots__ = ()
+    __array_priority__ = 60
+
     _data: xr.DataArray
 
     def _init_similar(self: EOV_TYPE, data: xr.DataArray) -> EOV_TYPE:  # pragma: no cover
         raise NotImplementedError
+
+    def __bool__(self: Any) -> bool:
+        return bool(self._data)
+
+    def __float__(self: Any) -> float:
+        return float(self._data)
+
+    def __int__(self: Any) -> int:
+        return int(self._data)
+
+    def __complex__(self: Any) -> complex:
+        return complex(self._data)
+
+    def __array__(self: Any, dtype: Union[np.dtype[Any], str] = None) -> np.ndarray[Any, Any]:
+        return np.asarray(self._data, dtype=dtype)
+
+    def __array_ufunc__(self, ufunc: Any, method: str, *inputs: Any, **kwargs: Any) -> EOV_TYPE:
+        return self._init_similar(self._data.__array_ufunc__(ufunc, method, *[i._data for i in inputs], **kwargs))
+
+    def __array_wrap__(self, obj: Any, context: Any = None) -> EOV_TYPE:
+        return self._init_similar(self._data.__array_wrap__(obj, context=context))
 
     def __apply_binary_ops__(
         self: EOV_TYPE,
@@ -32,8 +56,8 @@ class EOVariableOperatorsMixin(Generic[EOV_TYPE]):
             other_value = other._data
         else:
             other_value = other
-        if hasattr(other, "shape") and other.shape != self.shape:
-            raise ValueError(f"Shape mismatch: {self.shape} != {other.shape}")
+        if hasattr(other, "shape") and other.shape != self.shape:  # type: ignore[attr-defined] # shape in EOVariable
+            raise ValueError(f"Shape mismatch: {self.shape} != {other.shape}")  # type: ignore[attr-defined]
         data = self._data
 
         return self._init_similar(ops(data, other_value) if not reflexive else ops(other_value, data))
@@ -173,16 +197,16 @@ class EOVariableOperatorsMixin(Generic[EOV_TYPE]):
         return self.__apply_unary_ops__(operator.invert)
 
     def round(self: EOV_TYPE, *args: Any, **kwargs: Any) -> EOV_TYPE:
-        return self.__apply_unary_ops__(self._data.round_, *args, **kwargs)
+        return self.__apply_unary_ops__(xr.DataArray.round, *args, **kwargs)
 
     def argsort(self: EOV_TYPE, *args: Any, **kwargs: Any) -> EOV_TYPE:
-        return self.__apply_unary_ops__(self._data.argsort, *args, **kwargs)
+        return self.__apply_unary_ops__(xr.DataArray.argsort, *args, **kwargs)
 
     def conj(self: EOV_TYPE, *args: Any, **kwargs: Any) -> EOV_TYPE:
-        return self.__apply_unary_ops__(self._data.conj, *args, **kwargs)
+        return self.__apply_unary_ops__(xr.DataArray.conj, *args, **kwargs)
 
     def conjugate(self: EOV_TYPE, *args: Any, **kwargs: Any) -> EOV_TYPE:
-        return self.__apply_unary_ops__(self._data.conjugate, *args, **kwargs)
+        return self.__apply_unary_ops__(xr.DataArray.conjugate, *args, **kwargs)
 
     __add__.__doc__ = operator.add.__doc__
     __sub__.__doc__ = operator.sub.__doc__

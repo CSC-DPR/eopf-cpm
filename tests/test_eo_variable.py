@@ -1,3 +1,5 @@
+import operator
+
 import numpy as np
 import pytest
 from hypothesis import given
@@ -112,7 +114,9 @@ def test_without_dims(variable):
     b=eovariable_strategie(data=xps.arrays(dtype="float64", shape=(3, 3, 3)), with_input=False),
 )
 def test_binary_ops_eovar_mixin(a, b, ops_name):
-    ops_eo = getattr(a, ops_name)(b).compute()._data
+    ops_eo = getattr(a, ops_name)(b).compute()
+    assert isinstance(ops_eo, EOVariable)
+
     ops_xr = getattr(a._data, ops_name)(b._data).compute()
 
     assert np.array_equal(ops_eo, ops_xr, equal_nan=True)
@@ -149,7 +153,7 @@ def test_binary_ops_eovar_mixin(a, b, ops_name):
 )
 def test_eovar_shape_mismatch(a, b, ops_name):
     with pytest.raises(ValueError, match=r"Shape mismatch: \([0-9, ]+\) != \([0-9, ]+\)"):
-        getattr(a, ops_name)(b).compute()._data
+        getattr(a, ops_name)(b).compute()
 
 
 @pytest.mark.parametrize(
@@ -189,7 +193,8 @@ def test_eovar_shape_mismatch(a, b, ops_name):
     b=st.one_of(st.integers(min_value=-10, max_value=10)),
 )
 def test_binary_ops_scalar_mixin(a, b, ops_name):
-    ops_eo = getattr(a, ops_name)(b).compute()._data
+    ops_eo = getattr(a, ops_name)(b).compute()
+    assert isinstance(ops_eo, EOVariable)
     ops_xr = getattr(a._data, ops_name)(b).compute()
     assert np.array_equal(ops_eo, ops_xr, equal_nan=True)
 
@@ -200,7 +205,8 @@ def test_binary_ops_scalar_mixin(a, b, ops_name):
     b=eovariable_strategie(data=xps.arrays(dtype="bool8", shape=(3, 3, 3), elements=st.booleans()), with_input=False),
 )
 def test_boolean_ops_mixin(a, b, ops_name):
-    ops_eo = getattr(a, ops_name)(b).compute()._data
+    ops_eo = getattr(a, ops_name)(b).compute()
+    assert isinstance(ops_eo, EOVariable)
     ops_xr = getattr(a._data, ops_name)(b._data).compute()
     assert np.array_equal(ops_eo, ops_xr)
 
@@ -224,8 +230,9 @@ def test_boolean_ops_mixin(a, b, ops_name):
 def test_inplace(a, b, ops_name):
     new_a = a._data.copy()
     getattr(a, ops_name)(b).compute()
+    assert isinstance(a, EOVariable)
     getattr(new_a, ops_name)(b._data).compute()
-    assert np.array_equal(a._data, new_a, equal_nan=True)
+    assert np.array_equal(a, new_a, equal_nan=True)
     assert new_a is not a._data
 
 
@@ -248,8 +255,10 @@ def test_inplace(a, b, ops_name):
 def test_ops_inplace(a, b, ops_name):
     new_a = a._data.copy()
     getattr(a, ops_name)(b).compute()
+
+    assert isinstance(a, EOVariable)
     getattr(new_a, ops_name)(b._data).compute()
-    assert np.array_equal(a._data, new_a, equal_nan=True)
+    assert np.array_equal(a, new_a, equal_nan=True)
     assert new_a is not a._data
 
 
@@ -268,30 +277,94 @@ def test_ops_inplace(a, b, ops_name):
 def test_bool_ops_inplace(a, b, ops_name):
     new_a = a._data.copy()
     getattr(a, ops_name)(b).compute()
+    assert isinstance(a, EOVariable)
     getattr(new_a, ops_name)(b._data).compute()
-    assert np.array_equal(a._data, new_a, equal_nan=True)
+    assert np.array_equal(a, new_a, equal_nan=True)
     assert new_a is not a._data
 
 
-# @pytest.mark.parametrize(
-#     "ops_name",
-#     [
-#         "__neg__",
-#         "__pos__",
-#         "__abs__",
-#         "__invert__",
-#         "round",
-#         "argsort",
-#         "conj",
-#         "conjugate",
-#     ],
-# )
-# @given(
-#     a=eovariable_strategie(
-#         data=xps.arrays(dtype="float64", shape=(3, 3), elements={"allow_nan": False}), with_input=False,
-#     ),
-# )
-# def test_unary_ops(a, ops_name):
-#     ops_eo = getattr(a, ops_name)().compute()
-#     ops_xr = getattr(a._data, ops_name)().compute()
-#     assert np.array_equal(ops_eo, ops_xr, equal_nan=True)
+@pytest.mark.parametrize(
+    "func",
+    [
+        pytest.param(operator.neg, id="negate"),
+        pytest.param(operator.pos, id="pos"),
+        pytest.param(operator.abs, id="abs"),
+        pytest.param(operator.invert, id="invert"),
+        pytest.param(np.round, id="round"),
+        pytest.param(np.conj, id="conj"),
+        pytest.param(np.conjugate, id="conjugate"),
+    ],
+)
+@given(
+    a=eovariable_strategie(
+        data=xps.arrays(dtype="int64", shape=(3, 3), elements={"allow_nan": False}),
+        with_input=False,
+    ),
+)
+def test_unary_ops(a, func):
+    ops_eo = func(a).compute()
+    assert isinstance(ops_eo, EOVariable)
+    ops_xr = func(a._data).compute()
+    assert np.array_equal(ops_eo, ops_xr, equal_nan=True)
+
+
+@pytest.mark.parametrize(
+    "func",
+    [
+        pytest.param(np.argsort, id="argsort"),
+    ],
+)
+@given(
+    a=eovariable_strategie(
+        data=xps.arrays(dtype="int64", shape=(3, 3), elements={"allow_nan": False}),
+        with_input=False,
+    ),
+)
+def test_unary_ops_failed(a, func):
+    with pytest.raises(NotImplementedError, match="'argsort' is not yet a valid method on dask arrays"):
+        func(a).compute()
+    with pytest.raises(NotImplementedError, match="'argsort' is not yet a valid method on dask arrays"):
+        func(a._data).compute()
+
+
+@pytest.mark.parametrize(
+    "conv",
+    [
+        float,
+        complex,
+        int,
+        bool,
+    ],
+)
+@given(
+    a=eovariable_strategie(
+        data=xps.arrays(dtype="int64", shape=(1,), elements={"allow_nan": False}),
+        with_input=False,
+    ),
+)
+def test_conversion_1d(a, conv):
+    conv_a = conv(a)
+    assert isinstance(conv_a, conv)
+    assert np.array_equal(conv_a, conv(a._data))
+
+
+@pytest.mark.parametrize(
+    "conv, exc",
+    [
+        (float, TypeError),
+        (complex, TypeError),
+        (int, TypeError),
+        (bool, ValueError),
+    ],
+)
+@given(
+    a=eovariable_strategie(
+        data=xps.arrays(dtype="int64", shape=(3, 3), elements={"allow_nan": False}),
+        with_input=False,
+    ),
+)
+def test_conversion_failed(a, conv, exc):
+    with pytest.raises(exc):
+        conv(a)
+    with pytest.raises(exc):
+        conv(a._data)
