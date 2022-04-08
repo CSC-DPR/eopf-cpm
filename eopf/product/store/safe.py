@@ -73,7 +73,7 @@ class SafeHierarchy(EOProductStore):
 
         if key in ["", "/"]:
             return EOGroup()
-        raise NotImplementedError()
+        raise KeyError("Invalid store group name")
 
     def __len__(self) -> int:
         return len(self._child_list)

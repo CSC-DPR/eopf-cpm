@@ -248,7 +248,7 @@
   .eopf-preview,
   .eopf-attrs dt {
     white-space: nowrap;
-    overflow: hidden;
+    overflow: visible;
     text-overflow: ellipsis;
     padding-right: 10px;
   }

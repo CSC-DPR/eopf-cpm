@@ -1,6 +1,8 @@
 from types import TracebackType
 from typing import Any, Iterable, MutableMapping, Optional, Type, Union
 
+import IPython.terminal.interactiveshell
+
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError, StoreNotOpenError
 
 from ..store.abstract import EOProductStore, StorageStatus
@@ -193,12 +195,15 @@ class EOProduct(EOContainer):
         try:  # pragma: no cover
             from IPython import get_ipython
 
-            if get_ipython():
+            py_type = get_ipython()  # Recover python environment from which this is used
+            if py_type and not isinstance(py_type, IPython.terminal.interactiveshell.TerminalInteractiveShell):
+                # Return EOProduct if environment is interactive
                 return self
         except ModuleNotFoundError:  # pragma: no cover
             import warnings
 
             warnings.warn("IPython not found")
+        # Iterate and print EOProduct structure otherwise (CLI)
         for name, group in self._groups.items():
             print(f"├── {name}")
             self._create_structure(group, level=2)
