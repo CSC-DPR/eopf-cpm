@@ -266,13 +266,10 @@ def test_abstract_store_cant_be_instantiate():
         EORasterIOAccessor("a.jp2"),
     ],
 )
-def test_store_must_be_open(store: EOProductStore):
+def test_store_must_be_open_read_method(store: EOProductStore):
 
     with pytest.raises(StoreNotOpenError):
         store["a_group"]
-
-    with pytest.raises(StoreNotOpenError):
-        store["a_group"] = EOGroup(variables={})
 
     with pytest.raises(StoreNotOpenError):
         store.is_group("a_group")
@@ -287,11 +284,24 @@ def test_store_must_be_open(store: EOProductStore):
         store.iter("a_group")
 
     with pytest.raises(StoreNotOpenError):
-        store.write_attrs("a_group", attrs={})
-
-    with pytest.raises(StoreNotOpenError):
         for _ in store:
             continue
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "store",
+    [
+        EOZarrStore("a_product"),
+        EONetCDFStore(_FILES["netcdf"]),
+    ],
+)
+def test_store_must_be_open_write_method(store):
+    with pytest.raises(StoreNotOpenError):
+        store["a_group"] = EOGroup(variables={})
+
+    with pytest.raises(StoreNotOpenError):
+        store.write_attrs("a_group", attrs={})
 
 
 @pytest.mark.unit
@@ -547,7 +557,6 @@ def test_rasters(store_cls: type[EORasterIOAccessor], format_file: str, params: 
     assert not store_cls.guess_can_read("false_format.false")
     raster = store_cls(file_name)
 
-    attrs = {"new_key": "new_value"}
     with patch("rioxarray.open_rasterio") as mock_function:
         data_val = [[1, 2, 3], [3, 4, 5], [6, 7, 8]]
         coord_a = [1, 2, 4]
@@ -562,15 +571,34 @@ def test_rasters(store_cls: type[EORasterIOAccessor], format_file: str, params: 
         raster.open(mode="r", **params)
         value = raster[""]
         assert isinstance(value, EOGroup)
-        assert isinstance(value["data"], EOVariable)
-        assert np.array_equal(value["data"]._data, data_val)
+        assert sum([1 for _ in raster]) == len(raster)
 
-        assert isinstance(value["coordinates"], EOGroup)
-        assert isinstance(value["coordinates"]["a"], EOVariable)
-        assert np.array_equal(value["coordinates"]["a"]._data, coord_a)
-        assert np.array_equal(value["coordinates"]["b"]._data, coord_b)
-        assert len([i for i in raster.iter("")]) == 2
-        raster.write_attrs("", attrs)
+        assert isinstance(value["value"], EOVariable)
+        assert np.array_equal(value["value"]._data, data_val)
+
+        assert isinstance(raster["value"], EOVariable)
+        assert np.array_equal(value["value"]._data, data_val)
+        assert raster.is_variable("value")
+        assert not raster.is_group("value")
+
+        assert isinstance(raster["coordinates"], EOGroup)
+        assert raster.is_group("coordinates")
+        assert not raster.is_variable("coordinates")
+
+        assert isinstance(raster["coordinates"]["a"], EOVariable)
+        assert np.array_equal(raster["coordinates"]["a"]._data, coord_a)
+        assert np.array_equal(raster["coordinates/a"]._data, coord_a)
+
+        assert isinstance(raster["coordinates"]["b"], EOVariable)
+        assert np.array_equal(raster["coordinates"]["b"]._data, coord_b)
+        assert np.array_equal(raster["coordinates/b"]._data, coord_b)
+
+        assert len([i for i in raster.iter("coordinates")]) == 2
+        assert len([i for i in raster.iter("value")]) == 0
+
+        with pytest.raises(KeyError):
+            raster["not_existing_key"]
+
         raster.close()
 
         for return_val in [xarray.Dataset(data_vars={"a": xarray.DataArray()}), [xarray.Dataset()]]:
@@ -582,7 +610,6 @@ def test_rasters(store_cls: type[EORasterIOAccessor], format_file: str, params: 
                 [i for i in raster.iter("")]
             with pytest.raises(NotImplementedError):
                 [i for i in raster.iter("not_implemeted")]
-            with pytest.raises(NotImplementedError):
-                raster.write_attrs("", {"new_key": "new_value"})
-
-        raster.close()
+            raster.close()
+            with pytest.raises(StoreNotOpenError):
+                raster.close()

@@ -1,6 +1,6 @@
 import pathlib
 from collections.abc import MutableMapping
-from typing import TYPE_CHECKING, Any, Iterator, Optional
+from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
 
 import rioxarray
 import xarray
@@ -9,7 +9,6 @@ from eopf.exceptions import StoreNotOpenError
 from eopf.product.store.abstract import EOProductStore
 
 if TYPE_CHECKING:  # pragma: no cover
-    from distributed import Lock
 
     from eopf.product.core.eo_object import EOObject
 
@@ -33,7 +32,6 @@ class EORasterIOAccessor(EOProductStore):
         super().__init__(url)
         self._ref: Optional[Any] = None
         self._mode: Optional[str] = None
-        self._lock: Optional[Lock] = None
 
     def __getitem__(self, key: str) -> "EOObject":
         from eopf.product.core.eo_group import EOGroup
@@ -42,8 +40,16 @@ class EORasterIOAccessor(EOProductStore):
         if self._ref is None:
             raise StoreNotOpenError("Store must be open before access to it")
         node = self._select_node(key)
+        if isinstance(node, xarray.Variable):
+            return EOVariable(data=node)
+
+        if isinstance(node, xarray.core.coordinates.Coordinates):
+            return EOGroup(
+                variables={key: EOVariable(data=value.variable.to_base_variable()) for key, value in node.items()},
+            )
+
         group = EOGroup()
-        group["data"] = EOVariable(data=node.data)
+        group["value"] = EOVariable(data=node.data)
         group["coordinates"] = EOGroup(
             variables={key: EOVariable(data=value.variable.to_base_variable()) for key, value in node.coords.items()},
         )
@@ -52,35 +58,22 @@ class EORasterIOAccessor(EOProductStore):
     def __iter__(self) -> Iterator[str]:
         if self._ref is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        return iter([""])
+        return self.iter("")
 
     def __len__(self) -> int:
         if self._ref is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        return 1
+        return 2
 
-    def __setitem__(self, key: str, value: "EOObject") -> None:
-        from eopf.product.core.eo_variable import EOVariable
-
-        if self._ref is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        if not isinstance(value, EOVariable):
-            raise NotImplementedError()
-        self._ref[key] = value
+    def __setitem__(self, key: str, value: "EOObject") -> None:  # pragma: no cover
+        raise NotImplementedError
 
     # docstr-coverage: inherited
     def close(self) -> None:
         if self._ref is None:
             raise StoreNotOpenError("Store must be open before access to it")
         super().close()
-        if self._mode == "w":
-            self._ref.rio.to_raster(
-                self.url,
-                tiled=True,
-                lock=self._lock,
-            )
         self._mode = None
-        self._lock = None
         self._ref = None
 
     # docstr-coverage: inherited
@@ -95,7 +88,7 @@ class EORasterIOAccessor(EOProductStore):
     # docstr-coverage: inherited
     def is_variable(self, path: str) -> bool:
         node = self._select_node(path)
-        return isinstance(node, (xarray.DataArray, xarray.Variable))
+        return isinstance(node, xarray.Variable)
 
     # docstr-coverage: inherited
     @property
@@ -104,29 +97,29 @@ class EORasterIOAccessor(EOProductStore):
 
     # docstr-coverage: inherited
     def iter(self, path: str) -> Iterator[str]:
-        self._select_node(path)
-        return iter(["data", "coordinates"])
+        node = self._select_node(path)
+        if path in ["", "/"]:
+            return iter(["value", "coordinates"])
+        if path in ["/coordinates", "coordinates"]:
+            return iter(node)
+        return iter([])
 
     # docstr-coverage: inherited
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         super().open(mode=mode)
         self._ref = rioxarray.open_rasterio(self.url, **kwargs)
         self._mode = mode
-        self._lock = kwargs.get("lock")
 
     # docstr-coverage: inherited
-    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
-        if not self.is_variable(group_path):
-            raise NotImplementedError()
-        node = self._select_node(group_path)
-        node.attrs.update(attrs)
+    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:  # pragma: no cover
+        raise NotImplementedError
 
     # docstr-coverage: inherited
     @staticmethod
     def guess_can_read(file_path: str) -> bool:
         return pathlib.Path(file_path).suffix in [".tiff", ".tif", ".jp2"]
 
-    def _select_node(self, path: str) -> xarray.DataArray:
+    def _select_node(self, path: str) -> Union[xarray.DataArray, xarray.Variable, xarray.core.coordinates.Coordinates]:
         if self._ref is None:
             raise StoreNotOpenError("Store must be open before access to it")
 
@@ -135,4 +128,16 @@ class EORasterIOAccessor(EOProductStore):
 
         if path in ["", "/"]:
             return self._ref
+
+        if path in ["value", "/value"]:
+            return self._ref.variable
+
+        if any(path.startswith(key) for key in ["coordinates", "/coordinates"]):
+            path = path.partition("coordinates")[-1]
+            if not path:
+                return self._ref.coords
+            if path.startswith("/"):
+                path = path[1:]
+            if path in self._ref.coords:
+                return self._ref.coords[path].variable.to_base_variable()
         raise KeyError()
