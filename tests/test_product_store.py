@@ -266,13 +266,10 @@ def test_abstract_store_cant_be_instantiate():
         EORasterIOAccessor("a.jp2"),
     ],
 )
-def test_store_must_be_open(store: EOProductStore):
+def test_store_must_be_open_read_method(store: EOProductStore):
 
     with pytest.raises(StoreNotOpenError):
         store["a_group"]
-
-    with pytest.raises(StoreNotOpenError):
-        store["a_group"] = EOGroup(variables={})
 
     with pytest.raises(StoreNotOpenError):
         store.is_group("a_group")
@@ -287,11 +284,24 @@ def test_store_must_be_open(store: EOProductStore):
         store.iter("a_group")
 
     with pytest.raises(StoreNotOpenError):
-        store.write_attrs("a_group", attrs={})
-
-    with pytest.raises(StoreNotOpenError):
         for _ in store:
             continue
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "store",
+    [
+        EOZarrStore("a_product"),
+        EONetCDFStore(_FILES["netcdf"]),
+    ],
+)
+def test_store_must_be_open_write_method(store):
+    with pytest.raises(StoreNotOpenError):
+        store["a_group"] = EOGroup(variables={})
+
+    with pytest.raises(StoreNotOpenError):
+        store.write_attrs("a_group", attrs={})
 
 
 @pytest.mark.unit
@@ -547,34 +557,62 @@ def test_rasters(store_cls: type[EORasterIOAccessor], format_file: str, params: 
     assert not store_cls.guess_can_read("false_format.false")
     raster = store_cls(file_name)
 
-    attrs = {"new_key": "new_value"}
     with patch("rioxarray.open_rasterio") as mock_function:
-        mock_function.return_value = xarray.DataArray()
-
+        data_val = [[1, 2, 3], [3, 4, 5], [6, 7, 8]]
+        coord_a = [1, 2, 4]
+        coord_b = [14, 5, 7]
+        mock_function.return_value = xarray.DataArray(
+            data_val,
+            coords={
+                "a": coord_a,
+                "b": coord_b,
+            },
+        )
         raster.open(mode="r", **params)
-        assert isinstance(raster[""], EOVariable)
-        assert len([i for i in raster.iter("")]) == 0
-        raster.write_attrs("", attrs)
+        value = raster[""]
+        assert isinstance(value, EOGroup)
+        assert sum([1 for _ in raster]) == len(raster)
+
+        assert isinstance(value["value"], EOVariable)
+        assert np.array_equal(value["value"]._data, data_val)
+
+        assert isinstance(raster["value"], EOVariable)
+        assert np.array_equal(value["value"]._data, data_val)
+        assert raster.is_variable("value")
+        assert not raster.is_group("value")
+
+        assert isinstance(raster["coordinates"], EOGroup)
+        assert raster.is_group("coordinates")
+        assert not raster.is_variable("coordinates")
+
+        assert isinstance(raster["coordinates"]["a"], EOVariable)
+        assert np.array_equal(raster["coordinates"]["a"]._data, coord_a)
+        assert np.array_equal(raster["coordinates/a"]._data, coord_a)
+
+        assert isinstance(raster["coordinates"]["b"], EOVariable)
+        assert np.array_equal(raster["coordinates"]["b"]._data, coord_b)
+        assert np.array_equal(raster["coordinates/b"]._data, coord_b)
+
+        assert len([i for i in raster.iter("coordinates")]) == 2
+        assert len([i for i in raster.iter("value")]) == 0
+
+        not_existing_key = "not_existing_key"
+        with pytest.raises(KeyError):
+            raster[not_existing_key]
+        assert not raster.is_group(not_existing_key)
+        assert not raster.is_variable(not_existing_key)
+
         raster.close()
 
-        mock_function.return_value = xarray.Dataset(data_vars={"a": xarray.DataArray()})
-        raster.open(mode="r", **params)
-        assert isinstance(raster[""], EOGroup)
-        assert len([i for i in raster.iter("")]) == 1
-        assert len([i for i in raster.iter("a")]) == 0
-        assert len(raster) == 1
-        raster.write_attrs("", attrs)
-        raster.close()
-
-        mock_function.return_value = [xarray.Dataset()]
-        raster.open(mode="r", **params)
-        with pytest.raises(NotImplementedError):
-            raster[""]
-        with pytest.raises(NotImplementedError):
-            [i for i in raster.iter("")]
-        with pytest.raises(NotImplementedError):
-            [i for i in raster.iter("not_implemeted")]
-        with pytest.raises(NotImplementedError):
-            raster.write_attrs("", {"new_key": "new_value"})
-
-        raster.close()
+        for return_val in [xarray.Dataset(data_vars={"a": xarray.DataArray()}), [xarray.Dataset()]]:
+            mock_function.return_value = return_val
+            raster.open(mode="r", **params)
+            with pytest.raises(NotImplementedError):
+                raster[""]
+            with pytest.raises(NotImplementedError):
+                [i for i in raster.iter("")]
+            with pytest.raises(NotImplementedError):
+                [i for i in raster.iter("not_implemeted")]
+            raster.close()
+            with pytest.raises(StoreNotOpenError):
+                raster.close()

@@ -140,7 +140,7 @@ class EOObject(EOAbstract):
     # docstr-coverage: inherited
     @property
     def store(self) -> Optional[EOProductStore]:
-        return self.product.store
+        return None if self.parent is None else self.product.store
 
     def _find_by_dim(self, dims: Iterable[str], shape: Optional[tuple[int, ...]] = None) -> list["EOObject"]:
         for dim_index, dim_name in enumerate(dims):
