@@ -3081,7 +3081,7 @@
 
         {
             "short_name": "metadata",
-            "source_path": "manifest.xml",
+            "source_path": "manifest.safe",
             "target_path": "/",
             "item_format": "xmlmetadata",
             "parameters": {
