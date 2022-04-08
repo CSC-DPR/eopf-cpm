@@ -596,8 +596,11 @@ def test_rasters(store_cls: type[EORasterIOAccessor], format_file: str, params: 
         assert len([i for i in raster.iter("coordinates")]) == 2
         assert len([i for i in raster.iter("value")]) == 0
 
+        not_existing_key = "not_existing_key"
         with pytest.raises(KeyError):
-            raster["not_existing_key"]
+            raster[not_existing_key]
+        assert not raster.is_group(not_existing_key)
+        assert not raster.is_variable(not_existing_key)
 
         raster.close()
 

@@ -83,12 +83,19 @@ class EORasterIOAccessor(EOProductStore):
 
     # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
-        return not self.is_variable(path)
+        try:
+            node = self._select_node(path)
+            return isinstance(node, (xarray.core.coordinates.Coordinates, xarray.DataArray))
+        except KeyError:
+            return False
 
     # docstr-coverage: inherited
     def is_variable(self, path: str) -> bool:
-        node = self._select_node(path)
-        return isinstance(node, xarray.Variable)
+        try:
+            node = self._select_node(path)
+            return isinstance(node, xarray.Variable)
+        except KeyError:
+            return False
 
     # docstr-coverage: inherited
     @property
