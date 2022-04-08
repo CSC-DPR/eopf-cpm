@@ -195,16 +195,21 @@ class EOProduct(EOContainer):
         try:  # pragma: no cover
             from IPython import get_ipython
 
-            if not isinstance(get_ipython(), IPython.terminal.interactiveshell.TerminalInteractiveShell):
-                return self
+            py_type = get_ipython()  # Recover python environment from which this is used
+            if py_type:
+                if not isinstance(get_ipython(), IPython.terminal.interactiveshell.TerminalInteractiveShell):
+                    # Return EOProduct if environment is interactive
+                    return self
+            # Iterate and print EOProduct structure otherwise (CLI)
+            for name, group in self._groups.items():
+                print(f"├── {name}")
+                self._create_structure(group, level=2)
+            return None
         except ModuleNotFoundError:  # pragma: no cover
             import warnings
 
             warnings.warn("IPython not found")
-        for name, group in self._groups.items():
-            print(f"├── {name}")
-            self._create_structure(group, level=2)
-        return None
+            return None
 
     @property
     def coordinates(self) -> EOGroup:
