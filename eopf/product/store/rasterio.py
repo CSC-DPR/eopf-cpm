@@ -42,20 +42,22 @@ class EORasterIOAccessor(EOProductStore):
         if self._ref is None:
             raise StoreNotOpenError("Store must be open before access to it")
         node = self._select_node(key)
-        if isinstance(node, list):
-            raise NotImplementedError()
-
-        elif isinstance(node, xarray.Dataset):
-            return EOGroup(key, attrs=node.attrs)  # type: ignore[arg-type]
-        return EOVariable(key, node)
+        group = EOGroup()
+        group["data"] = EOVariable(data=node.data)
+        group["coordinates"] = EOGroup(
+            variables={key: EOVariable(data=value.variable.to_base_variable()) for key, value in node.coords.items()},
+        )
+        return group
 
     def __iter__(self) -> Iterator[str]:
-        return self.iter("")
+        if self._ref is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        return iter([""])
 
     def __len__(self) -> int:
         if self._ref is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        return len(self._ref)
+        return 1
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
         from eopf.product.core.eo_variable import EOVariable
@@ -88,13 +90,12 @@ class EORasterIOAccessor(EOProductStore):
 
     # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
-        node = self._select_node(path)
-        return isinstance(node, (xarray.Dataset, list))
+        return not self.is_variable(path)
 
     # docstr-coverage: inherited
     def is_variable(self, path: str) -> bool:
         node = self._select_node(path)
-        return isinstance(node, xarray.DataArray)
+        return isinstance(node, (xarray.DataArray, xarray.Variable))
 
     # docstr-coverage: inherited
     @property
@@ -103,12 +104,8 @@ class EORasterIOAccessor(EOProductStore):
 
     # docstr-coverage: inherited
     def iter(self, path: str) -> Iterator[str]:
-        node = self._select_node(path)
-        if isinstance(node, list):
-            raise NotImplementedError()
-        if isinstance(node, xarray.Dataset):
-            return iter(str(i) for i in iter(node))
-        return iter([])
+        self._select_node(path)
+        return iter(["data", "coordinates"])
 
     # docstr-coverage: inherited
     def open(self, mode: str = "r", **kwargs: Any) -> None:
@@ -119,9 +116,9 @@ class EORasterIOAccessor(EOProductStore):
 
     # docstr-coverage: inherited
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
-        node = self._select_node(group_path)
-        if isinstance(node, list):
+        if not self.is_variable(group_path):
             raise NotImplementedError()
+        node = self._select_node(group_path)
         node.attrs.update(attrs)  # type: ignore[arg-type]
 
     # docstr-coverage: inherited
@@ -129,22 +126,13 @@ class EORasterIOAccessor(EOProductStore):
     def guess_can_read(file_path: str) -> bool:
         return pathlib.Path(file_path).suffix in [".tiff", ".tif", ".jp2"]
 
-    def _select_node(self, path: str) -> Union[xarray.DataArray, xarray.Dataset]:
+    def _select_node(self, path: str) -> Union[xarray.DataArray, xarray.Variable, dict[str, xarray.Variable]]:
         if self._ref is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        current, _, sub_path = path.partition(self.sep)
+
+        if isinstance(self._ref, (list, xarray.Dataset)):
+            raise NotImplementedError
+
         if path in ["", "/"]:
             return self._ref
-
-        if isinstance(self._ref, list):
-            raise NotImplementedError()
-
-        if isinstance(self._ref, xarray.Dataset):
-            if path in self._ref:
-                return self._ref[path]
-            raise KeyError()
-
-        if path == self._ref.name:
-            return self._ref
-
         raise KeyError()
