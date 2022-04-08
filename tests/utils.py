@@ -110,6 +110,7 @@ def couple_combinaison_from(elements: list[Any]) -> list[tuple[Any, Any]]:
         [],
     )
 
+
 @st.composite
 def realize_strategy(draw, to_realize: Union[Any, st.SearchStrategy]):
     if isinstance(to_realize, st.SearchStrategy):
