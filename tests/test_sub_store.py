@@ -1,12 +1,13 @@
+import json
 import os
+from glob import glob
 from typing import Any
 
-import pytest
-from numpy import testing
-import json
-import xarray
 import numpy
-from glob import glob
+import pytest
+import xarray
+from numpy import testing
+
 from eopf.product.core import EOGroup, EOVariable
 from eopf.product.store.grib import EOGribAccessor
 from eopf.product.store.xml_accessors import (
@@ -14,6 +15,7 @@ from eopf.product.store.xml_accessors import (
     XMLManifestAccessor,
     XMLTPAccessor,
 )
+
 from .utils import PARENT_DATA_PATH, assert_issubdict
 
 EXPECTED_GRIB_MSL_ATTR = {
@@ -123,6 +125,7 @@ def test_grib_exceptions(EMBEDED_TEST_DATA_FOLDER: str):
     with pytest.raises(KeyError):
         grib_store["coordinates/test"]
     grib_store.close()
+
 
 EXPECTED_XML_ATTR = {
     "array_size": (23, 23),
@@ -311,4 +314,3 @@ def test_xml_manifest_accessor():
     assert processing_map["processingCenter"] == "Land OLCI Processing and Archiving Centre [LN1]"
     assert re.match(r"\d{1,2}\.\d{2}", processing_map["processorVersion"])
     assert datetime.strptime(processing_map["processingDate"], "%Y-%m-%dT%H:%M:%S.%f")
-
