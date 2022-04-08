@@ -25,9 +25,9 @@
         },
         {
             "short_name": "spatialref_10m",
-            "source_path": "GRANULE/[^/]*/IMG_DATA/.*B02.jp2",
-            "target_path": "/coordinates/image_grid_10m/x_10m",
-            "item_format": "jp2spatialref"
+            "source_path": "GRANULE/[^/]*/IMG_DATA/.*B02.jp2:coordinates/spatial_ref",
+            "target_path": "/coordinates/image_grid_10m/spatialref_10m",
+            "item_format": "jp2"
         },
         {
             "short_name": "y_20m",
@@ -49,9 +49,9 @@
         },
         {
             "short_name": "spatialref_20m",
-            "source_path": "GRANULE/[^/]*/IMG_DATA/.*B05.jp2",
-            "target_path": "/coordinates/image_grid_20m/x_20m",
-            "item_format": "jp2spatialref"
+            "source_path": "GRANULE/[^/]*/IMG_DATA/.*B05.jp2:coordinates/spatial_ref",
+            "target_path": "/coordinates/image_grid_20m/spatialref_20m",
+            "item_format": "jp2"
         },
         {
             "short_name": "y_60m",
@@ -73,9 +73,9 @@
         },
         {
             "short_name": "spatialref_60m",
-            "source_path": "GRANULE/[^/]*/IMG_DATA/.*B09.jp2",
-            "target_path": "/coordinates/image_grid_60m/x_60m",
-            "item_format": "jp2spatialref"
+            "source_path": "GRANULE/[^/]*/IMG_DATA/.*B09.jp2:coordinates/spatial_ref",
+            "target_path": "/coordinates/image_grid_60m/spatialref_60m",
+            "item_format": "jp2"
         },
 
         {
