@@ -196,10 +196,9 @@ class EOProduct(EOContainer):
             from IPython import get_ipython
 
             py_type = get_ipython()  # Recover python environment from which this is used
-            if py_type:
-                if not isinstance(get_ipython(), IPython.terminal.interactiveshell.TerminalInteractiveShell):
-                    # Return EOProduct if environment is interactive
-                    return self
+            if py_type and not isinstance(py_type, IPython.terminal.interactiveshell.TerminalInteractiveShell):
+                # Return EOProduct if environment is interactive
+                return self
         except ModuleNotFoundError:  # pragma: no cover
             import warnings
 
