@@ -1,6 +1,6 @@
 import pathlib
 from collections.abc import MutableMapping
-from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
+from typing import TYPE_CHECKING, Any, Iterator, Optional
 
 import rioxarray
 import xarray
@@ -119,14 +119,14 @@ class EORasterIOAccessor(EOProductStore):
         if not self.is_variable(group_path):
             raise NotImplementedError()
         node = self._select_node(group_path)
-        node.attrs.update(attrs)  # type: ignore[arg-type]
+        node.attrs.update(attrs)
 
     # docstr-coverage: inherited
     @staticmethod
     def guess_can_read(file_path: str) -> bool:
         return pathlib.Path(file_path).suffix in [".tiff", ".tif", ".jp2"]
 
-    def _select_node(self, path: str) -> Union[xarray.DataArray, xarray.Variable, dict[str, xarray.Variable]]:
+    def _select_node(self, path: str) -> xarray.DataArray:
         if self._ref is None:
             raise StoreNotOpenError("Store must be open before access to it")
 
