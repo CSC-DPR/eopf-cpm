@@ -113,7 +113,7 @@ class EOObject(EOAbstract):
         -------
 
         """
-        return self._parentf
+        return self._parent
 
     # docstr-coverage: inherited
     @property
