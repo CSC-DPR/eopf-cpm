@@ -7,7 +7,6 @@ import rioxarray
 import xarray
 
 from eopf.exceptions import StoreNotOpenError
-from eopf.product.core.eo_group import EOGroup
 from eopf.product.store.abstract import EOProductStore
 from eopf.product.store.netcdf import EONetCDFStore
 
@@ -66,20 +65,13 @@ class EOCogStore(EOProductStore):
         return len(self._ref)
 
     def _write_cog(self, value: "EOObject", file_path: str) -> None:
-        # add .cog extension to the name of the file
         # write the COG file
-        if file_path.startswith("/"):
-            file_path = file_path[1:]
-
-        value._data.rio.to_raster(os.path.join(self.url, f"{file_path}.cog"), tiled=True, lock=self._lock, driver="COG")
+        value._data.rio.to_raster(f"{file_path}.cog", tiled=True, lock=self._lock, driver="COG")
 
     def _write_netCDF4(self, value: "EOObject", file_path: str, var_name: str) -> None:
-        # add .nc extension to the name of the file
 
-        if file_path.startswith("/"):
-            file_path = file_path[1:]
         # write the netCDF4 file
-        nc = EONetCDFStore(os.path.join(self.url, f"{file_path}.nc"))
+        nc = EONetCDFStore(f"{file_path}.nc")
         nc.open(mode="w")
         nc[var_name] = value
         nc.close()
@@ -98,9 +90,9 @@ class EOCogStore(EOProductStore):
         return False
 
     def _write_eov(self, value: "EOObject", output_dir: str, var_name: str):
-        from os.path import join
 
-        file_path = join(output_dir, var_name)
+        var_name = var_name.removeprefix("/")
+        file_path = os.path.join(output_dir, var_name)
         # determine if variable is a raster, i.e. can be written as cog
         if self._is_raster(value):
             self._write_cog(value, file_path)
@@ -110,7 +102,7 @@ class EOCogStore(EOProductStore):
     def __setitem__(self, key: str, value: "EOObject") -> None:
         import os
 
-        from eopf.product.core.eo_variable import EOVariable
+        from eopf.product.core import EOGroup, EOVariable
 
         if self._ref is None:
             raise StoreNotOpenError("Store must be open before access to it")
