@@ -416,7 +416,7 @@ def test_product_tree(product, capsys):
 
 
 @pytest.mark.unit
-def test_hierarchy_html(product):
+def test_hierarchy_html(product: EOProduct):
     tree = etree.HTML(product._repr_html_())
     tree_structure = compute_tree_structure(tree)
     dim_attr_key = _DIMENSIONS_NAME

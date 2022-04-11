@@ -465,5 +465,5 @@ class _LocIndexer:
     def __getitem__(self, key: Any) -> EOVariable:
         return EOVariable(self.variable.name, self.variable._data.loc[key])
 
-    def __setitem__(self, key: Any, value: Any):
+    def __setitem__(self, key: Any, value: Any) -> None:
         self.variable._data[key] = value
