@@ -192,8 +192,8 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return self
 
     @property
-    def loc(self) -> xarray.core.dataarray._LocIndexer:
-        return self._data.loc
+    def loc(self) -> "_LocIndexer":
+        return _LocIndexer(self)
 
     def map_chunk(
         self,
@@ -454,3 +454,16 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         from ..formatting import renderer
 
         return renderer("variable.html", variable=self)
+
+
+class _LocIndexer:
+    __slots__ = ("variable",)
+
+    def __init__(self, variable: EOVariable):
+        self.variable = variable
+
+    def __getitem__(self, key: Any) -> EOVariable:
+        return EOVariable(self.variable.name, self.variable._data.loc[key])
+
+    def __setitem__(self, key: Any, value: Any):
+        self.variable._data[key] = value

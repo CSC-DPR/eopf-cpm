@@ -2,6 +2,7 @@ import operator
 
 import numpy as np
 import pytest
+import xarray
 from hypothesis import given
 from hypothesis import strategies as st
 from hypothesis.extra import numpy as xps
@@ -30,6 +31,7 @@ def eovariable_strategie(draw, name="", data=None, dims=tuple(), with_input=True
     return variable, var_data, var_dims
 
 
+@pytest.mark.unit
 @given(
     variable=st.one_of(
         eovariable_strategie(data=xps.arrays(dtype="float64", shape=(2, 2))),
@@ -37,7 +39,26 @@ def eovariable_strategie(draw, name="", data=None, dims=tuple(), with_input=True
     ),
 )
 def test_indexing(variable):
-    assert False
+    variable, data, dims = variable
+    data = xarray.DataArray(data=data, dims=dims)
+
+    assert np.array_equal(variable[dims[0]], data[dims[0]])
+    assert np.array_equal(variable.loc[:], data.loc[:], equal_nan=True)
+    assert np.array_equal(variable.loc[:, 1], data.loc[:, 1], equal_nan=True)
+
+
+@pytest.mark.unit
+@given(
+    variable=st.one_of(
+        eovariable_strategie(data=xps.arrays(dtype="float64", shape=(2, 2))),
+        eovariable_strategie(data=xps.arrays(dtype="float64", shape=(2, 2)), dims=("a", "b")),
+    ),
+)
+def test_selection(variable):
+    variable, data, dims = variable
+    data = xarray.DataArray(data=data, dims=dims)
+    assert np.array_equal(variable.sel(**{dims[0]: [0, 1]}), data.sel(**{dims[0]: [0, 1]}), equal_nan=True)
+    assert np.array_equal(variable.isel(**{dims[0]: [0, 1]}), data.isel(**{dims[0]: [0, 1]}), equal_nan=True)
 
 
 @pytest.mark.unit
