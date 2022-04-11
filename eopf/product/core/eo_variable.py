@@ -191,6 +191,10 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         self._data = self._data.chunk(chunks, name_prefix=name_prefix, token=token, lock=lock)
         return self
 
+    @property
+    def loc(self) -> xarray.core.dataarray._LocIndexer:
+        return self._data.loc
+
     def map_chunk(
         self,
         func: Callable[..., xarray.DataArray],
@@ -406,7 +410,8 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return self._data.shape
 
     def __getitem__(self, key: Any) -> "EOVariable":
-        return EOVariable(key, self._data[key])
+        data = self._data[key]
+        return EOVariable(self.name, data)
 
     def __setitem__(self, key: Any, value: Any) -> None:
         self._data[key] = value
@@ -422,10 +427,28 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return len(self._data)
 
     def __str__(self) -> str:
-        return self.path
+        from .eo_object import _DIMENSIONS_NAME
+
+        if self.coordinates:
+            coordinates = "\n".join(["Coordinates:", *map(lambda x: f"    {x}", self.coordinates.keys())])
+        else:
+            coordinates = ""
+        attrs = [f"    {key}: {value}" for key, value in self.attrs.items() if key != _DIMENSIONS_NAME]
+        if attrs:
+            attributes = "\n".join(["Attributes:", *attrs])
+        else:
+            attributes = ""
+        return "\n".join(
+            [
+                f"<eopf.product.EOVariable {self.path}>",
+                "Data:",
+                f"    {self._data.data}",
+                *filter(lambda x: x != "", [coordinates, attributes]),
+            ],
+        )
 
     def __repr__(self) -> str:
-        return repr(self._data)
+        return str(self)
 
     def _repr_html_(self) -> str:
         from ..formatting import renderer

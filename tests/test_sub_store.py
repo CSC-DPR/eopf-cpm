@@ -98,9 +98,9 @@ def test_grib_store_iter(EMBEDED_TEST_DATA_FOLDER: str, eo_path: str, expected_s
 def test_grib_store_get_item(
     EMBEDED_TEST_DATA_FOLDER: str,
     eo_path: str,
-    shape: set[int, ...],
+    shape: tuple[int, ...],
     attrs: dict[str, Any],
-    sampled_values: dict[set[int, ...], float],
+    sampled_values: dict[tuple[int, ...], float],
 ):
     grib_store = EOGribAccessor(os.path.join(EMBEDED_TEST_DATA_FOLDER, "AUX_ECMWFT.grib"))
     grib_store.open()
