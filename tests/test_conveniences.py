@@ -2,7 +2,6 @@ import datetime
 import os
 import sys
 from cmath import inf, nan
-from datetime import datetime
 from typing import Any
 
 import hypothesis.extra.numpy as xps
@@ -13,15 +12,13 @@ from hypothesis import assume, given
 
 from eopf.product.utils import (
     apply_xpath,
+    conv,
     convert_to_unix_time,
     is_date,
-    conv,
     parse_xml,
     reverse_conv,
     translate_structure,
 )
-
-from .utils import PARENT_DATA_PATH
 
 
 @pytest.fixture
@@ -224,7 +221,7 @@ def test_epsilon_on_fp_conv(value, EPSILON):
         ),
         value_with_type(
             elements=numpy_value(xps.datetime64_dtypes(), allow_infinity=False, allow_nan=False),
-            expected_type=datetime,
+            expected_type=datetime.datetime,
         ),
     ),
 )
