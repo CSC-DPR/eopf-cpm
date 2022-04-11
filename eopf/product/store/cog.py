@@ -1,17 +1,15 @@
-from email.mime import base
-from genericpath import exists
-from lib2to3.pgen2 import driver
+import os
 import pathlib
 from collections.abc import MutableMapping
 from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
-from eopf.product.core.eo_group import EOGroup
-from eopf.product.store.netcdf import EONetCDFStore
 
 import rioxarray
 import xarray
 
 from eopf.exceptions import StoreNotOpenError
+from eopf.product.core.eo_group import EOGroup
 from eopf.product.store.abstract import EOProductStore
+from eopf.product.store.netcdf import EONetCDFStore
 
 if TYPE_CHECKING:  # pragma: no cover
     from distributed import Lock
@@ -67,23 +65,21 @@ class EOCogStore(EOProductStore):
             raise NotImplementedError("Only available in reading mode")
         return len(self._ref)
 
-
     def _write_cog(self, value: "EOObject", file_path: str) -> None:
         # add .cog extension to the name of the file
-        file_path += ".cog"
         # write the COG file
-        value._data.rio.to_raster(
-            file_path,
-            tiled=True,
-            lock=self._lock,
-            driver="COG"
-        )
+        if file_path.startswith("/"):
+            file_path = file_path[1:]
+
+        value._data.rio.to_raster(os.path.join(self.url, f"{file_path}.cog"), tiled=True, lock=self._lock, driver="COG")
 
     def _write_netCDF4(self, value: "EOObject", file_path: str, var_name: str) -> None:
         # add .nc extension to the name of the file
-        file_path += ".nc"
+
+        if file_path.startswith("/"):
+            file_path = file_path[1:]
         # write the netCDF4 file
-        nc = EONetCDFStore(file_path)
+        nc = EONetCDFStore(os.path.join(self.url, f"{file_path}.nc"))
         nc.open(mode="w")
         nc[var_name] = value
         nc.close()
@@ -94,14 +90,10 @@ class EOCogStore(EOProductStore):
             # if the dimension names are not x,y we need to let
             # rioxarray know which dimension is x and y
             if value.dims[0] != "y" or value.dims[1] != "x":
-                value._data.rio.set_spatial_dims(
-                    x_dim=value.dims[1], 
-                    y_dim=value.dims[0], 
-                    inplace=True
-                )
+                value._data.rio.set_spatial_dims(x_dim=value.dims[1], y_dim=value.dims[0], inplace=True)
             return True
         # with S2 L1C image variables have 3 dimesions (band, x, y)
-        if len(value.dims) == 3 and (value.dims[0]=='band'):
+        if len(value.dims) == 3 and (value.dims[0] == "band"):
             return True
         return False
 
@@ -113,17 +105,18 @@ class EOCogStore(EOProductStore):
         if self._is_raster(value):
             self._write_cog(value, file_path)
         else:
-            self._write_netCDF4(value, file_path, var_name)  
+            self._write_netCDF4(value, file_path, var_name)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
-        from eopf.product.core.eo_variable import EOVariable
         import os
+
+        from eopf.product.core.eo_variable import EOVariable
 
         if self._ref is None:
             raise StoreNotOpenError("Store must be open before access to it")
         if self._mode != "w":
             raise NotImplementedError("Only available in writing mode")
-            
+
         if isinstance(value, EOVariable):
             self._write_eov(value, self.url, key)
         elif isinstance(value, EOGroup):
@@ -134,7 +127,7 @@ class EOCogStore(EOProductStore):
             # create the output dir if it does not exist
             if not os.path.isdir(output_dir):
                 os.makedirs(output_dir)
-            # iterate trough all variables of the EOGroup 
+            # iterate trough all variables of the EOGroup
             # and write each in one file, cog or netCDF4
             for var_name, var_val in value.variables:
                 self._write_eov(var_val, output_dir, var_name)
@@ -188,7 +181,7 @@ class EOCogStore(EOProductStore):
     # docstr-coverage: inherited
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         super().open(mode=mode)
-        
+
         self._mode = mode
         self._lock = kwargs.get("lock")
         if mode == "r":
