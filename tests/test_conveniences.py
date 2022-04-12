@@ -1,7 +1,7 @@
 import datetime
 import os
 import sys
-from cmath import inf, nan
+from cmath import inf
 from typing import Any
 
 import hypothesis.extra.numpy as xps
@@ -153,6 +153,7 @@ def test_convert_unix_time():
         assert True
 
 
+@pytest.mark.unit
 @given(
     value_and_types=st.one_of(
         value_with_type(
@@ -160,11 +161,11 @@ def test_convert_unix_time():
             float,
             list,
         ),
-        value_with_type(st.lists(elements=st.booleans(), min_size=10), int, list),
         value_with_type(st.lists(elements=st.integers(), unique=True, min_size=10), int, list),
+        value_with_type(st.lists(elements=st.booleans(), unique=True, min_size=2), int, list),
         value_with_type(st.sets(elements=st.floats(allow_infinity=False, allow_nan=False), min_size=10), float, set),
-        value_with_type(st.sets(elements=st.booleans(), min_size=2), int, set),
         value_with_type(st.sets(elements=st.integers(), min_size=10), int, set),
+        value_with_type(st.sets(elements=st.booleans(), min_size=2), int, set),
         value_with_type(st.dictionaries(st.text(), st.integers(), min_size=10), int, dict),
         value_with_type(st.dictionaries(st.text(), st.booleans(), min_size=10), int, dict),
         value_with_type(
@@ -179,20 +180,23 @@ def test_convert_unix_time():
 )
 def test_conv_sequences(value_and_types: tuple[Any, type, type]):
     values, type_, container_type = value_and_types
-    assume(nan not in values)
     assume(inf not in values)
     converted_list = conv(values)
     assert isinstance(converted_list, container_type)
     # Check if size of converted value doesn't change
     assert len(converted_list) == len(values)
-    assert numpy.all(converted_list == values)
     # Check if type of each item from converted value is correct
     if isinstance(converted_list, dict):
         iterator = converted_list.values()
+        original = values.values()
     else:
         iterator = converted_list
-    for value in iterator:
-        assert isinstance(value, type_)
+        original = values
+    for converted_value, value in zip(sorted(iterator), sorted(original)):
+        assert isinstance(converted_value, type_)
+        conv_value = conv(value)
+        # check if converted values are the same or both are nan
+        assert converted_value == conv_value or (converted_value != converted_value and conv_value != conv_value)
 
 
 @pytest.mark.unit
