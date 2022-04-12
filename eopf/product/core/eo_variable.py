@@ -16,7 +16,7 @@ import xarray
 from dask import array as da
 
 from eopf.product.core.eo_mixins import EOVariableOperatorsMixin
-from eopf.product.core.eo_object import EOObject
+from eopf.product.core.eo_object import _DIMENSIONS_NAME, EOObject
 
 if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_container import EOContainer
@@ -256,7 +256,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
                 missing_dims=missing_dims,
                 **indexers_kwargs,
             ),
-            attrs=self.attrs,
+            attrs={k: self.attrs[k] for k in self.attrs if k != _DIMENSIONS_NAME},
         )
 
     def sel(
@@ -341,6 +341,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
                 drop=drop,
                 **indexers_kwargs,
             ),
+            attrs={k: self.attrs[k] for k in self.attrs if k != _DIMENSIONS_NAME},
         )
 
     def plot(self, **kwargs: dict[Any, Any]) -> None:
