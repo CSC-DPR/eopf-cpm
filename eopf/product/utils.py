@@ -151,7 +151,16 @@ def convert_to_unix_time(date: Any) -> Any:
             end = pd.to_datetime(date)
             # Normalize data, if date is incomplete (missing timezone)
             if end.tzinfo is None:
-                proxy_date = datetime(end.year, end.month, end.day, end.hour, end.minute, end.second, 000000, pytz.UTC)
+                proxy_date = datetime.datetime(
+                    end.year,
+                    end.month,
+                    end.day,
+                    end.hour,
+                    end.minute,
+                    end.second,
+                    000000,
+                    pytz.UTC,
+                )
                 end = pd.to_datetime(str(proxy_date))
         except pd.errors.OutOfBoundsDatetime:
             # Just return string if something went wrong.
@@ -177,7 +186,6 @@ def reverse_conv(data_type: Any, obj: Any) -> Any:
     """
 
     for dtype in [
-        np.int8,
         np.int16,
         np.int32,
         np.int64,
