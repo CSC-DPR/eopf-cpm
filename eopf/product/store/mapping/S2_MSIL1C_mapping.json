@@ -2872,8 +2872,8 @@
         },
         {
             "short_name": "aod550",
-            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_CAMSFO:ssaod550",
-            "target_path": "/conditions/meteo/ssaod550",
+            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_CAMSFO:aod550",
+            "target_path": "/conditions/meteo/aod550",
             "item_format": "grib",
             "parameters": {
                 "attributes": {

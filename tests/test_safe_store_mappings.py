@@ -5,7 +5,7 @@ from unittest.mock import patch
 import pytest
 from pytest_lazyfixture import lazy_fixture
 
-from eopf.product.core import EOGroup, EOProduct, EOVariable
+from eopf.product.core import EOGroup, EOProduct
 from eopf.product.store.conveniences import convert
 from eopf.product.store.manifest import ManifestStore
 from eopf.product.store.safe import EOSafeStore
@@ -51,8 +51,7 @@ def test_load_product(store_type):
     with patch.object(ManifestStore, "__getitem__", return_value=EOGroup()) as mock_method:
         product.attrs
     mock_method.call_count == 1
-    with (patch.object(EOVariable, "assign_dims", return_value=None),):
-        product.load()
+    product.load()
     assert len(product._groups) > 0
     with patch.object(ManifestStore, "__getitem__", return_value=EOGroup()) as mock_method:
         product.attrs
