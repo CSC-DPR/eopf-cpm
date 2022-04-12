@@ -126,11 +126,18 @@ def _transformation_pack_bits(eo_obj: "EOObject", parameter: Any) -> "EOObject":
         raise TypeError()
     attrs = eo_obj.attrs
     dims = list(eo_obj.dims)
-    kwargs = {"axis": dims.index(parameter), "drop_axis": dims.index(parameter), "bitorder": "little"}
+    if isinstance(parameter, str):
+        dim_key = parameter
+        dim_index = dims.index(parameter)
+    else:
+        dim_key = dims[parameter]
+        dim_index = parameter
+
+    kwargs = {"axis": dim_index, "drop_axis": dim_index, "bitorder": "little"}
     # drop_axis is used by dask to estimate the new shape.
     # axis and bitorder are packbits parameters.
     data = xarray_to_data_map_block(np.packbits, eo_obj._data, **kwargs)
-    dims.remove(parameter)
+    dims.remove(dim_key)
     return EOVariable(data=data, dims=tuple(dims), attrs=attrs)
 
 

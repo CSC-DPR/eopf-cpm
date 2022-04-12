@@ -63,8 +63,10 @@ class XMLAnglesAccessor(EOProductStore):
         <<VALUES>> tag.
 
         """
-        item = self._root.xpath(xpath, namespaces=self._namespaces)[0]
-        eo_variable_data = self.get_values(f"{self._root.getpath(item)}/VALUES")
+        xpath_result = self._root.xpath(xpath, namespaces=self._namespaces)
+        if len(xpath_result) == 0:
+            raise KeyError(f"invalid xml xpath : {xpath}")
+        eo_variable_data = self.get_values(f"{self._root.getpath(xpath_result[0])}/VALUES")
         return eo_variable_data
 
     def get_values(self, path: str) -> xr.DataArray:
