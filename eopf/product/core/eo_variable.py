@@ -152,7 +152,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return self._init_similar(self._data.compute())
 
     @property
-    def data(self):
+    def data(self) -> Any:
         return self._data.data
 
     @property
