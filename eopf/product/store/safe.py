@@ -457,11 +457,10 @@ class SafeMappingManager:
             if len(accessor_source_split) > 2:
                 raise ValueError(f"Invalid {self.CONFIG_SOURCE_FILE} : {conf[self.CONFIG_SOURCE_FILE]}")
             accessor_file_regex = accessor_source_split[0]
-            accessor_local_path = None
             if len(accessor_source_split) == 2:
                 accessor_local_path = accessor_source_split[1]
-            elif "parameters" in conf and "xpath" in conf["parameters"]:
-                accessor_local_path = conf["parameters"]["xpath"]
+            else:
+                accessor_local_path = conf.get("parameters", {}).get("xpath")
             accessor = self._get_accessor(
                 accessor_file_regex,
                 conf[self.CONFIG_FORMAT],
