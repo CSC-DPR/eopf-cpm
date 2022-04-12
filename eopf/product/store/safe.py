@@ -219,9 +219,14 @@ class EOSafeStore(EOProductStore):
             for accessor, config_accessor_path, config in mapping_match_list:
                 config_accessor_path = join_eo_path_optional(config_accessor_path, accessor_path)
                 # We should catch Key Error, and throw if the object isn't found in any of the accessors
-                accessed_object = accessor[config_accessor_path]
-                processed_object = self._apply_mapping_properties(accessed_object, config)
-                eo_obj_list.append(processed_object)
+                try:
+                    accessed_object = accessor[config_accessor_path]
+                    processed_object = self._apply_mapping_properties(accessed_object, config)
+                    eo_obj_list.append(processed_object)
+                except KeyError:
+                    warnings.warn("Safe Accessor KeyError : " + key)
+                except NotImplementedError:
+                    warnings.warn("Safe Accessor NotImplementedError : " + key)
         return self._eo_object_merge(*eo_obj_list)
 
     def __iter__(self) -> Iterator[str]:
@@ -372,7 +377,8 @@ class EOSafeStore(EOProductStore):
         from ..core import EOGroup, EOVariable
 
         if not eo_obj_list:
-            raise KeyError("Empty object match.")
+            warnings.warn("Missing variable.")
+            return EOVariable()
         if len(eo_obj_list) == 1:
             return eo_obj_list[0]
         dims: set[str] = set()
