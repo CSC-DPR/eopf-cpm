@@ -42,7 +42,7 @@ def test_read_product(store_type, get_key):
 @pytest.mark.integration
 @pytest.mark.parametrize(
     "store_type",
-    [lazy_fixture("S3_OLCI_L1_EFR"), lazy_fixture("S2A_MSIL1C")],
+    [lazy_fixture("S2A_MSIL1C"), lazy_fixture("S3_OLCI_L1_EFR"), lazy_fixture("S2A_MSIL1C_ZIP")],
 )
 def test_load_product(store_type):
     store = EOSafeStore(store_type)
