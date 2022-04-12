@@ -342,21 +342,15 @@ def regex_path_append(path1: str, path2: str):
     """Append two regex path.
     Can use os/eo path append as regex path syntax is different.
     """
-    if path1 is None:
-        return path2
+    if path1 is not None and path1[-1] != "/":
+        path1 += "/"
     if path2 is None:
         return path1
-    trailling_slash = path1[-1] == "/"
-    predecing_slash = path2[0] == "/"
-    # Good junction slash count
-    if trailling_slash != predecing_slash:
-        return path1 + path2
-    # Too many junction slash
-    if trailling_slash:
-        return path1[:-1] + path2
-    # Not enough junction slash
-    if trailling_slash:
-        return f"{path1}/{path2}"
+    if path2[0] == "/":
+        path2 = path2[1:]
+    if path1 is None:
+        return path2
+    return path1 + path2
 
 
 def parse_xml(path: Any) -> Any:
