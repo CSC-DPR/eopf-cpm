@@ -455,10 +455,8 @@ class SafeMappingManager:
                 accessor_local_path = accessor_source_split[1]
             elif "parameters" in conf and "xpath" in conf["parameters"]:
                 accessor_local_path = conf["parameters"]["xpath"]
-            accessor_file_regex = regex_path_append(self._top_level, accessor_file_regex)
-            accessor_file = fs_match_path(accessor_file_regex, self._fs_map_access)
             accessor = self._get_accessor(
-                accessor_file,
+                accessor_file_regex,
                 conf[self.CONFIG_FORMAT],
                 conf[self.CONFIG_ACCESSOR_ID],
                 conf[self.CONFIG_ACCESSOR_CONFIG],
@@ -609,11 +607,16 @@ class SafeMappingManager:
         accessor_config: dict[str, Any],
     ) -> Optional[EOProductStore]:
         """Get an accessor from the opened accessors dictionary. If it's not present a new one is added."""
-        accessor_id = f"{item_format}:{file_path}"
+        if item_format == self.SAFE_HIERARCHY_FORMAT:
+            accessor_file = file_path  # hierarchy safe store don't use regex.
+        else:
+            accessor_file_regex = regex_path_append(self._top_level, file_path)
+            accessor_file = fs_match_path(accessor_file_regex, self._fs_map_access)
+        accessor_id = f"{item_format}:{accessor_file}"
         if accessor_id in self._accessor_map and accessor_config_id in self._accessor_map[accessor_id]:
             return self._accessor_map[accessor_id][accessor_config_id][0]
         else:
-            return self._add_accessor(file_path, item_format, accessor_config_id, accessor_config)
+            return self._add_accessor(accessor_file, item_format, accessor_config_id, accessor_config)
 
     def _read_product_mapping(self) -> None:
         """Read mapping from the mapping factory and fill _config_mapping from it."""
