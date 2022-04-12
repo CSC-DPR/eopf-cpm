@@ -242,8 +242,29 @@ def test_maxint_conv(sysmax, maxint):
 @pytest.mark.unit
 @given(
     value_and_types=st.one_of(
-        value_with_type(st.integers(), int, xps.integer_dtypes(endianness="=")),
-        value_with_type(st.floats(width=16), float, xps.floating_dtypes(endianness="=")),
+        value_with_type(
+            st.integers(min_value=numpy.iinfo("int64").min, max_value=numpy.iinfo("int64").max),
+            int,
+            xps.integer_dtypes(endianness="=", sizes=(64,)),
+        ),
+        value_with_type(
+            st.integers(min_value=numpy.iinfo("int32").min, max_value=numpy.iinfo("int32").max),
+            int,
+            xps.integer_dtypes(endianness="=", sizes=(32,)),
+        ),
+        value_with_type(
+            st.integers(min_value=numpy.iinfo("int16").min, max_value=numpy.iinfo("int16").max),
+            int,
+            xps.integer_dtypes(endianness="=", sizes=(16,)),
+        ),
+        value_with_type(
+            st.integers(min_value=numpy.iinfo("int8").min, max_value=numpy.iinfo("int8").max),
+            int,
+            xps.integer_dtypes(endianness="=", sizes=(8,)),
+        ),
+        value_with_type(st.floats(width=16), float, xps.floating_dtypes(endianness="=", sizes=(16,))),
+        value_with_type(st.floats(width=32), float, xps.floating_dtypes(endianness="=", sizes=(32,))),
+        value_with_type(st.floats(width=64), float, xps.floating_dtypes(endianness="=", sizes=(64,))),
     ),
 )
 def test_reverse_conv(value_and_types):

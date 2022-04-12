@@ -186,6 +186,7 @@ def reverse_conv(data_type: Any, obj: Any) -> Any:
     """
 
     for dtype in [
+        np.int8,
         np.int16,
         np.int32,
         np.int64,
