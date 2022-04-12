@@ -13,7 +13,6 @@ from typing import (
     Tuple,
 )
 
-import dask.array as da
 import fsspec
 import numpy as np
 
@@ -23,7 +22,9 @@ from ..utils import (
     fs_match_path,
     join_eo_path_optional,
     partition_eo_path,
+    regex_path_append,
     upsplit_eo_path,
+    xarray_to_data_map_block,
 )
 from .abstract import EOProductStore, StorageStatus
 from .mapping_factory import EOMappingFactory
@@ -125,7 +126,10 @@ def _transformation_pack_bits(eo_obj: "EOObject", parameter: Any) -> "EOObject":
         raise TypeError()
     attrs = eo_obj.attrs
     dims = list(eo_obj.dims)
-    data = da.map_blocks(np.packbits, eo_obj._data, axis=dims.index(parameter), bitorder="little")
+    kwargs = {"axis": dims.index(parameter), "drop_axis": dims.index(parameter), "bitorder": "little"}
+    # drop_axis is used by dask to estimate the new shape.
+    # axis and bitorder are packbits parameters.
+    data = xarray_to_data_map_block(np.packbits, eo_obj._data, **kwargs)
     dims.remove(parameter)
     return EOVariable(data=data, dims=tuple(dims), attrs=attrs)
 
@@ -321,7 +325,7 @@ class EOSafeStore(EOProductStore):
         parameters = config["parameters"]
         for parameter_name, parameter_transformation in self._parameters_transformations:
             if parameter_name in parameters:
-                eo_obj = parameter_transformation(eo_obj, parameters["parameter_name"])
+                eo_obj = parameter_transformation(eo_obj, parameters[parameter_name])
         # add a warning if a parameter is missing from _parameters_transformations ?
         return eo_obj
 
@@ -445,14 +449,14 @@ class SafeMappingManager:
             accessor_source_split = conf[self.CONFIG_SOURCE_FILE].split(":")
             if len(accessor_source_split) > 2:
                 raise ValueError(f"Invalid {self.CONFIG_SOURCE_FILE} : {conf[self.CONFIG_SOURCE_FILE]}")
-            accessor_file = accessor_source_split[0]
+            accessor_file_regex = accessor_source_split[0]
             accessor_local_path = None
             if len(accessor_source_split) == 2:
                 accessor_local_path = accessor_source_split[1]
             elif "parameters" in conf and "xpath" in conf["parameters"]:
                 accessor_local_path = conf["parameters"]["xpath"]
-
-            accessor_file = fs_match_path(accessor_file, self._fs_map_access)
+            accessor_file_regex = regex_path_append(self._top_level, accessor_file_regex)
+            accessor_file = fs_match_path(accessor_file_regex, self._fs_map_access)
             accessor = self._get_accessor(
                 accessor_file,
                 conf[self.CONFIG_FORMAT],
@@ -525,8 +529,11 @@ class SafeMappingManager:
                     self._temp_dir = tempfile.TemporaryDirectory()
                 accessor_file = os.path.join(self._temp_dir.name, file_path)
                 if not os.path.exists(accessor_file):
+                    # create parent directory (needed if the file is in a subfolder of the zip)
+                    print(accessor_file)
+                    os.makedirs(os.path.split(accessor_file)[0], exist_ok=True)
                     with open(accessor_file, mode="wb") as file_:
-                        file_.write(self._fs_map_access[f"{self._top_level}{file_path}"])
+                        file_.write(self._fs_map_access[file_path])
             else:
                 accessor_file = self._fs_map_access.fs.sep.join([self._fs_map_access.root, file_path])
             mapped_store = self._store_factory.get_store(

@@ -1,6 +1,6 @@
 from typing import Any, Optional
 
-from eopf.product.store import EOProductStore, XMLAnglesAccessor, XMLTPAccessor
+from eopf.product.store import EOProductStore
 from eopf.product.store.rasterio import EORasterIOAccessor
 
 
@@ -15,12 +15,16 @@ class EOStoreFactory:
                 EONetCDFStore,
                 EONetcdfStringToTimeAccessor,
             )
+            from eopf.product.store.xml_accessors import (
+                XMLAnglesAccessor,
+                XMLTPAccessor,
+            )
             from eopf.product.store.zarr import EOZarrStore
 
             self.register_store(EOZarrStore)
             self.register_store(EONetCDFStore, "netcdf")
             self.register_store(EONetcdfStringToTimeAccessor, "netcdf_string_to_time")
-            self.register_store(ManifestStore, "xfdumetadata")
+            self.register_store(ManifestStore, "xmlmetadata")
             self.register_store(EOGribAccessor, "grib")
             self.register_store(EORasterIOAccessor, "jp2")
             self.register_store(XMLAnglesAccessor, "xmlangles")

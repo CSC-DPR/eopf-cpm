@@ -6,7 +6,9 @@ from datetime import datetime
 from pathlib import PurePosixPath
 from typing import Any, Optional, Union
 
+import dask.array as da
 import fsspec
+import xarray
 from lxml import etree
 
 
@@ -29,12 +31,15 @@ def apply_xpath(dom: Any, xpath: str, namespaces: dict[str, str]) -> str:
     """
     target = dom.xpath(xpath, namespaces=namespaces)
     if isinstance(target, list):
-        if len(target) == 1 and isinstance(target[0], etree._Element):
-            if target[0].tag.endswith("posList"):
-                values = target[0].text.split(" ")
-                merged_values = ",".join(" ".join([n, i]) for i, n in zip(values, values[1:]))
-                return f"POLYGON(({merged_values}))"
-            return target[0].text
+        # Check if it's a list of Element and not text.
+        if len(target) >= 1 and isinstance(target[0], etree._Element):
+            if len(target) == 1:
+                if target[0].tag.endswith("posList"):
+                    values = target[0].text.split(" ")
+                    merged_values = ",".join(" ".join([n, i]) for i, n in zip(values, values[1:]))
+                    return f"POLYGON(({merged_values}))"
+                return target[0].text
+            target = [elt.text for elt in target]
         return ",".join(target)
     return target
 
@@ -244,9 +249,9 @@ def fs_match_path(pattern: str, filesystem: fsspec.FSMap) -> str:
     str
         matching path if find, else `pattern`
     """
-
+    filepath_regex = re.compile(pattern)
     for file_path in filesystem:
-        if re.match(pattern, file_path):
+        if filepath_regex.fullmatch(file_path):
             return file_path
     return pattern
 
@@ -331,6 +336,27 @@ def norm_eo_path(eo_path: str) -> str:
     if eo_path.startswith("//"):  # text is a special path so it's not normalised by normpath
         eo_path = eo_path[1:]
     return eo_path
+
+
+def regex_path_append(path1: str, path2: str):
+    """Append two regex path.
+    Can use os/eo path append as regex path syntax is different.
+    """
+    if path1 is None:
+        return path2
+    if path2 is None:
+        return path1
+    trailling_slash = path1[-1] == "/"
+    predecing_slash = path2[0] == "/"
+    # Good junction slash count
+    if trailling_slash != predecing_slash:
+        return path1 + path2
+    # Too many junction slash
+    if trailling_slash:
+        return path1[:-1] + path2
+    # Not enough junction slash
+    if trailling_slash:
+        return f"{path1}/{path2}"
 
 
 def parse_xml(path: Any) -> Any:
@@ -424,3 +450,10 @@ def upsplit_eo_path(eo_path: str) -> tuple[str, ...]:
     tuple[str, ...]
     """
     return posixpath.split(eo_path)
+
+
+def xarray_to_data_map_block(func, data_array: xarray.DataArray, *args, **kwargs):
+    array = data_array.data
+    if isinstance(array, da.Array):
+        return da.map_blocks(func, array, *args, **kwargs)
+    return func(array, *args, **kwargs)
