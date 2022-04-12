@@ -618,6 +618,8 @@ class SafeMappingManager:
             accessor_file = file_path  # hierarchy safe store don't use regex.
         else:
             accessor_file_regex = regex_path_append(self._top_level, file_path)
+            if accessor_file_regex is None:
+                raise ValueError("Invalid regex path.")
             accessor_file = fs_match_path(accessor_file_regex, self._fs_map_access)
         accessor_id = f"{item_format}:{accessor_file}"
         if accessor_id in self._accessor_map and accessor_config_id in self._accessor_map[accessor_id]:
