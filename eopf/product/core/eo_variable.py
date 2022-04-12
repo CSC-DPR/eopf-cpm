@@ -67,6 +67,12 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
             else:
                 input_dtype = data.dtype
                 data = xarray.DataArray(data=lazy_data, name=name, attrs=attrs, **kwargs).astype(input_dtype)
+        elif isinstance(data, EOVariable):
+            data = xarray.DataArray(data=data._data, attrs=data.attrs | attrs, dims=data.dims)
+        elif isinstance(data, xarray.DataArray):
+            data = data.copy()
+            data.attrs.update(attrs)
+
         if data is None:
             data = xarray.DataArray(name=name, attrs=attrs, **kwargs)
 
@@ -144,6 +150,10 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         dask.compute
         """
         return self._init_similar(self._data.compute())
+
+    @property
+    def data(self):
+        return self._data.data
 
     @property
     def sizes(self) -> Mapping[Hashable, int]:

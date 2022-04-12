@@ -38,6 +38,18 @@ def eovariable_strategie(draw, name="", data=None, dims=tuple(), with_input=True
         eovariable_strategie(data=xps.arrays(dtype="float64", shape=(2, 2)), dims=("a", "b")),
     ),
 )
+def test_data_access(variable):
+    variable, data, _ = variable
+    assert np.array_equal(variable.data, data, equal_nan=True)
+
+
+@pytest.mark.unit
+@given(
+    variable=st.one_of(
+        eovariable_strategie(data=xps.arrays(dtype="float64", shape=(2, 2))),
+        eovariable_strategie(data=xps.arrays(dtype="float64", shape=(2, 2)), dims=("a", "b")),
+    ),
+)
 def test_indexing(variable):
     variable, data, dims = variable
     data = xarray.DataArray(data=data, dims=dims)
