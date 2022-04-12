@@ -15,6 +15,7 @@ class EOStoreFactory:
                 EONetCDFStore,
                 EONetcdfStringToTimeAccessor,
             )
+            from eopf.product.store.wrappers import FromAttributesToVariableAccessor
             from eopf.product.store.xml_accessors import (
                 XMLAnglesAccessor,
                 XMLTPAccessor,
@@ -29,6 +30,7 @@ class EOStoreFactory:
             self.register_store(EORasterIOAccessor, "jp2")
             self.register_store(XMLAnglesAccessor, "xmlangles")
             self.register_store(XMLTPAccessor, "xmltp")
+            self.register_store(FromAttributesToVariableAccessor, "attribute_element_to_float_variable")
 
     def register_store(self, store_class: type[EOProductStore], *args: str) -> None:
         self.store_types.add(store_class)

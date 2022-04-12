@@ -34,7 +34,7 @@
             "short_name": "time_start",
             "target_path": "/coordinates/owi/time_start",
             "source_path": "measurement/.*nc:@firstMeasurementTime",
-            "item_format": "netcdf_string_attribute_to_time_variable",
+            "item_format": "netcdf_string_to_time",
             "parameters": {
                 "dimensions": [ "sub_image" ]
             }
@@ -43,7 +43,7 @@
             "short_name": "time_stop",
             "target_path": "/coordinates/owi/time_stop",
             "source_path": "measurement/.*nc:@lastMeasurementTime",
-            "item_format": "netcdf_string_attribute_to_time_variable",
+            "item_format": "netcdf_string_to_time",
             "parameters": {
                 "dimensions": [ "sub_image" ]
             }
@@ -89,7 +89,7 @@
             "short_name": "time_start",
             "target_path": "/coordinates/osw/time_start",
             "source_path": "measurement/.*nc:@firstMeasurementTime",
-            "item_format": "netcdf_string_attribute_to_time_variable",
+            "item_format": "netcdf_string_to_time",
             "parameters": {
                 "dimensions": [ "sub_image" ]
             }
@@ -98,7 +98,7 @@
             "short_name": "time_stop",
             "target_path": "/coordinates/osw/time_stop",
             "source_path": "measurement/.*nc:@lastMeasurementTime",
-            "item_format": "netcdf_string_attribute_to_time_variable",
+            "item_format": "netcdf_string_to_time",
             "parameters": {
                 "dimensions": [ "sub_image" ]
             }
@@ -174,7 +174,7 @@
             "short_name": "time_start",
             "target_path": "/coordinates/rvl/time_start",
             "source_path": "measurement/.*nc:@firstMeasurementTime",
-            "item_format": "netcdf_string_attribute_to_time_variable",
+            "item_format": "netcdf_string_to_time",
             "parameters": {
                 "dimensions": [ "sub_image" ]
             }
@@ -183,7 +183,7 @@
             "short_name": "time_stop",
             "target_path": "/coordinates/rvl/time_stop",
             "source_path": "measurement/.*nc:@lastMeasurementTime",
-            "item_format": "netcdf_string_attribute_to_time_variable",
+            "item_format": "netcdf_string_to_time",
             "parameters": {
                 "dimensions": [ "sub_image" ]
             }
@@ -192,7 +192,7 @@
             "short_name": "sv_time",
             "target_path": "/coordinates/state_vector/sv_time",
             "source_path": "measurement/.*nc:@statevectorUtc",
-            "item_format": "netcdf_string_attribute_to_time_variable",
+            "item_format": "netcdf_string_to_time",
             "parameters": {
                 "dimensions": [ "sub_image" ]
             }
@@ -488,61 +488,85 @@
         {
             "short_name": "sv_x",
             "target_path": "/conditions/state_vector/sv_x",
-            "source_path": "measurement/.*nc:@statevectorPos",
-            "item_format": "netcdf_attribute_element_to_float_variable",
+            "source_path": "measurement/.*nc",
+            "item_format": "attribute_element_to_float_variable",
+            "accessor_config": {
+                "store_cls": "eopf.product.store.netcdf.EONetCDFStore",
+                "index": 0,
+                "attr_name": "statevectorPos"
+            },
             "parameters": {
-                "dimensions": [ "sub_image" ],
-                "index": 0
+                "dimensions": [ "sub_image" ]
             }
         },
         {
             "short_name": "sv_y",
             "target_path": "/conditions/state_vector/sv_y",
-            "source_path": "measurement/.*nc:@statevectorPos",
-            "item_format": "netcdf_attribute_element_to_float_variable",
+            "source_path": "measurement/.*nc",
+            "item_format": "attribute_element_to_float_variable",
+            "accessor_config": {
+                "store_cls": "eopf.product.store.netcdf.EONetCDFStore",
+                "index": 1,
+                "attr_name": "statevectorPos"
+            },
             "parameters": {
-                "dimensions": [ "sub_image" ],
-                "index": 1
+                "dimensions": [ "sub_image" ]
             }
         },
         {
             "short_name": "sv_z",
             "target_path": "/conditions/state_vector/sv_z",
-            "source_path": "measurement/.*nc:@statevectorPos",
-            "item_format": "netcdf_attribute_element_to_float_variable",
+            "source_path": "measurement/.*nc:",
+            "item_format": "attribute_element_to_float_variable",
+            "accessor_config": {
+                "store_cls": "eopf.product.store.netcdf.EONetCDFStore",
+                "index": 2,
+                "attr_name": "statevectorPos"
+            },
             "parameters": {
-                "dimensions": [ "sub_image" ],
-                "index": 2
+                "dimensions": [ "sub_image" ]
             }
         },
         {
             "short_name": "sv_vx",
             "target_path": "/conditions/state_vector/sv_vx",
-            "source_path": "measurement/.*nc:@statevectorVel",
-            "item_format": "netcdf_attribute_element_to_float_variable",
+            "source_path": "measurement/.*nc",
+            "item_format": "attribute_element_to_float_variable",
+            "accessor_config": {
+                "store_cls": "eopf.product.store.netcdf.EONetCDFStore",
+                "index": 0,
+                "attr_name": "statevectorVel"
+            },
             "parameters": {
-                "dimensions": [ "sub_image" ],
-                "index": 0
+                "dimensions": [ "sub_image" ]
             }
         },
         {
             "short_name": "sv_vy",
             "target_path": "/conditions/state_vector/sv_vy",
-            "source_path": "measurement/.*nc:@statevectorVel",
-            "item_format": "netcdf_attribute_element_to_float_variable",
+            "source_path": "measurement/.*nc",
+            "item_format": "attribute_element_to_float_variable",
+            "accessor_config": {
+                "store_cls": "eopf.product.store.netcdf.EONetCDFStore",
+                "index": 1,
+                "attr_name": "statevectorVel"
+            },
             "parameters": {
-                "dimensions": [ "sub_image" ],
-                "index": 1
+                "dimensions": [ "sub_image" ]
             }
         },
         {
             "short_name": "sv_vz",
             "target_path": "/conditions/state_vector/sv_vz",
-            "source_path": "measurement/.*nc:@statevectorVel",
-            "item_format": "netcdf_attribute_element_to_float_variable",
+            "source_path": "measurement/.*nc",
+            "item_format": "attribute_element_to_float_variable",
+            "accessor_config": {
+                "store_cls": "eopf.product.store.netcdf.EONetCDFStore",
+                "index": 2,
+                "attr_name": "statevectorVel"
+            },
             "parameters": {
-                "dimensions": [ "sub_image" ],
-                "index": 2
+                "dimensions": [ "sub_image" ]
             }
         },
         {
@@ -749,8 +773,8 @@
             "source_path": "measurement/.*nc:rvlAziSize",
             "item_format": "netcdf"
         },
-        
-        { 
+
+        {
             "short_name": "metadata",
             "source_path": "manifest.safe",
             "target_path": "/@CF",
@@ -760,7 +784,7 @@
                 "namespaces": "namespaces"
             }
         },
-        { 
+        {
             "short_name": "metadata",
             "source_path": "manifest.safe",
             "target_path": "/@OM_EOP",
@@ -770,7 +794,7 @@
                 "namespaces": "namespaces"
             }
         },
-        { 
+        {
             "short_name": "manifest",
             "target_path": "/misc/manifest.safe",
             "source_path": "manifest.safe",
@@ -789,7 +813,7 @@
             "references": "'https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-3, https://sentinels.copernicus.eu/web/sentinel/user-guides/sentinel-3-olci/processing-levels/level-1'",
             "Conventions": "'CF-1.9'"
         },
-        "xfdumanifest-OM_EOP": { 
+        "xfdumanifest-OM_EOP": {
             "phenomenonTime": {
                 "beginPosition": "metadataSection/metadataObject[@ID='acquisitionPeriod']//sentinel-safe:acquisitionPeriod/sentinel-safe:startTime",
                 "endPosition": "metadataSection/metadataObject[@ID='acquisitionPeriod']//sentinel-safe:acquisitionPeriod/sentinel-safe:stopTime"

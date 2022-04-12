@@ -2,6 +2,7 @@ import json
 import os
 from glob import glob
 from typing import Any
+from unittest import mock
 
 import numpy
 import pytest
@@ -10,11 +11,13 @@ from numpy import testing
 
 from eopf.product.core import EOGroup, EOVariable
 from eopf.product.store.grib import EOGribAccessor
+from eopf.product.store.wrappers import FromAttributesToVariableAccessor
 from eopf.product.store.xml_accessors import (
     XMLAnglesAccessor,
     XMLManifestAccessor,
     XMLTPAccessor,
 )
+from tests.test_eo_container import EmptyTestStore
 
 from .utils import PARENT_DATA_PATH, assert_issubdict
 
@@ -314,3 +317,12 @@ def test_xml_manifest_accessor():
     assert processing_map["processingCenter"] == "Land OLCI Processing and Archiving Centre [LN1]"
     assert re.match(r"\d{1,2}\.\d{2}", processing_map["processorVersion"])
     assert datetime.strptime(processing_map["processingDate"], "%Y-%m-%dT%H:%M:%S.%f")
+
+
+@pytest.mark.unit()
+@pytest.mark.parametrize("store", [FromAttributesToVariableAccessor("")])
+@pytest.mark.parametrize("attrs, attr_name, index", [({"a": [23]}, "a", 0), ({"a": [23], "B": [1, 5, 23]}, "B", 1)])
+def test_fromattributestovarstore(attrs, store, attr_name, index):
+    with mock.patch.object(EmptyTestStore, "__getitem__", return_value=EOGroup(attrs=attrs)):
+        store.open(store_cls="tests.test_eo_container.EmptyTestStore", attr_name=attr_name, index=index)
+        assert store["value"]._data == [attrs[attr_name][index]]

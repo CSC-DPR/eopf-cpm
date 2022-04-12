@@ -605,6 +605,7 @@ class SafeMappingManager:
         else:
             config_declarations = dict()
         # The reduce allow us to do a get item on a nested directory using a split path.
+        # FIXME: accessor_config not work for S1, but work if we replace by `accessor_config = config_declarations`
         accessor_config = {
             config_key: reduce(dict.get, partition_eo_path(config_path), config_definitions)  # type: ignore[arg-type]
             for config_key, config_path in config_declarations.items()
