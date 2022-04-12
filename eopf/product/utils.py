@@ -1,12 +1,13 @@
 # We need to use a mix of posixpath (normpath) and pathlib (partition) in the eo_path methods.
 # As we work with strings we use posixpath (the unix path specific implementation of os.path) as much as possible.
+import datetime
 import posixpath
 import re
-from datetime import datetime
 from pathlib import PurePosixPath
 from typing import Any, Optional, Union
 
 import fsspec
+import numpy as np
 import pytz
 from lxml import etree
 
@@ -59,6 +60,7 @@ def conv(obj: Any) -> Any:
         float16,
         float32,
         float64,
+        int8,
         int16,
         int32,
         int64,
@@ -82,7 +84,7 @@ def conv(obj: Any) -> Any:
         return conv(obj.tolist())
 
     # check np int
-    if isinstance(obj, (int64, int32, int16, uint64, uint32, uint16, uint8, int)):
+    if isinstance(obj, (int64, int32, int16, uint64, uint32, uint16, uint8, int8, int)):
         return int(obj)
 
     # check np float
@@ -96,7 +98,7 @@ def conv(obj: Any) -> Any:
         return str(obj)
 
     # check datetime
-    if isinstance(obj, datetime):
+    if isinstance(obj, datetime.datetime):
         return convert_to_unix_time(obj)
 
     # if no conversion can be done
@@ -137,9 +139,11 @@ def convert_to_unix_time(date: Any) -> Any:
     int
         unix time in microseconds
     """
-    if isinstance(date, datetime):
+
+    if isinstance(date, datetime.datetime):
         return int(date.timestamp() * 1000000)  # microseconds
-    elif isinstance(date, str):
+
+    if isinstance(date, str):
         import pandas as pd
 
         start = pd.to_datetime("1970-1-1T0:0:0.000000Z")
@@ -171,25 +175,22 @@ def reverse_conv(data_type: Any, obj: Any) -> Any:
     ----------
     Any
     """
-    from numpy import float32, float64, int16, int32, int64, uint8, uint16, uint32
 
-    if data_type == int16:
-        return int16(obj)
-    elif data_type == int32:
-        return int32(obj)
-    elif data_type == int64:
-        return int64(obj)
-    elif data_type == uint8:
-        return uint8(obj)
-    elif data_type == uint16:
-        return uint16(obj)
-    elif data_type == uint32:
-        return uint32(obj)
-    if data_type == float32:
-        return float32(obj)
-    elif data_type == float64:
-        return float64(obj)
-
+    for dtype in [
+        np.int8,
+        np.int16,
+        np.int32,
+        np.int64,
+        np.uint8,
+        np.uint16,
+        np.uint32,
+        np.float16,
+        np.float32,
+        np.float64,
+        np.float128,
+    ]:
+        if data_type == dtype:
+            return dtype(obj)
     return obj
 
 
