@@ -82,7 +82,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         EOObject.__init__(self, name, parent, dims=tuple(dims))
 
     def _init_similar(self, data: xarray.DataArray) -> "EOVariable":
-        return EOVariable(name="", data=data)
+        return EOVariable(data=data, attrs=self.attrs, dims=self.dims)
 
     def assign_dims(self, dims: Iterable[str]) -> None:
         dims = tuple(dims)
@@ -149,7 +149,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         xarray.DataArray.compute
         dask.compute
         """
-        return self._init_similar(self._data.compute())
+        return self._init_similar(self._data.compute(**kwargs))
 
     @property
     def data(self) -> Any:
@@ -285,8 +285,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         DataArray.isel
         EOVariable.sel
         """
-        return EOVariable(
-            self.name,
+        return self._init_similar(
             self._data.isel(
                 indexers=indexers,
                 drop=drop,
@@ -311,7 +310,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         xarray.Dataset.persist
         dask.persist
         """
-        return self._init_similar(self._data.persist())
+        return self._init_similar(self._data.persist(**kwargs))
 
     def sel(
         self,
@@ -386,8 +385,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         DataArray.sel
         EOVariable.isel
         """
-        return EOVariable(
-            self.name,
+        return self._init_similar(
             self._data.sel(
                 indexers=indexers,
                 method=method,
@@ -421,7 +419,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
 
     def __getitem__(self, key: Any) -> "EOVariable":
         data = self._data[key]
-        return EOVariable(self.name, data)
+        return self._init_similar(data)
 
     def __setitem__(self, key: Any, value: Any) -> None:
         self._data[key] = value

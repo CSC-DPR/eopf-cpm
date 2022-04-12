@@ -1,3 +1,4 @@
+import warnings
 from types import MappingProxyType
 from typing import TYPE_CHECKING, Iterable, Optional
 
@@ -87,6 +88,7 @@ class EOObject(EOAbstract):
     def coordinates(self) -> MappingProxyType[str, "EOObject"]:
         """MappingProxyType[str, "EOObject"]: Coordinates defined by this object"""
         if self.parent is None:
+            warnings.warn("Coordinates can't be retrieve from an EOObject outside an EOProduct")
             return MappingProxyType({})
         coords_group = self.product.coordinates
         coords_list = coords_group._find_by_dim(self.dims)

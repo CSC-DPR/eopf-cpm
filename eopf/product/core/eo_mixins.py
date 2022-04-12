@@ -56,8 +56,6 @@ class EOVariableOperatorsMixin(Generic[EOV_TYPE]):
             other_value = other._data
         else:
             other_value = other
-        if hasattr(other, "shape") and other.shape != self.shape:  # type: ignore[attr-defined] # shape in EOVariable
-            raise ValueError(f"Shape mismatch: {self.shape} != {other.shape}")  # type: ignore[attr-defined]
         data = self._data
 
         return self._init_similar(ops(data, other_value) if not reflexive else ops(other_value, data))
