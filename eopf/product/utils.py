@@ -4,7 +4,7 @@ import posixpath
 import re
 from datetime import datetime
 from pathlib import PurePosixPath
-from typing import Any, Optional, Union
+from typing import Any, Callable, Optional, Union
 
 import dask.array as da
 import fsspec
@@ -338,7 +338,7 @@ def norm_eo_path(eo_path: str) -> str:
     return eo_path
 
 
-def regex_path_append(path1: str, path2: str):
+def regex_path_append(path1: Optional[str], path2: Optional[str]) -> Optional[str]:
     """Append two regex path.
     Can use os/eo path append as regex path syntax is different.
     """
@@ -446,7 +446,9 @@ def upsplit_eo_path(eo_path: str) -> tuple[str, ...]:
     return posixpath.split(eo_path)
 
 
-def xarray_to_data_map_block(func, data_array: xarray.DataArray, *args, **kwargs):
+def xarray_to_data_map_block(
+    func: Callable[[Any], Any], data_array: xarray.DataArray, *args: Any, **kwargs: Any
+) -> da.Array:
     array = data_array.data
     if isinstance(array, da.Array):
         return da.map_blocks(func, array, *args, **kwargs)
