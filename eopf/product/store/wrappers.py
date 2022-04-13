@@ -21,7 +21,7 @@ class FromAttributesToVariableAccessor(EOProductStore):
         module, _, klass = store_cls.rpartition(".")
         self.store = getattr(importlib.import_module(module), klass)(self.url)
         self.attr_name = attr_name
-        self.index = int(index)
+        self.index = index
         self.store.open(mode, **kwargs)
 
     def close(self):

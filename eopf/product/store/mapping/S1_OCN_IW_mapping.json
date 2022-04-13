@@ -492,7 +492,7 @@
             "item_format": "attribute_element_to_float_variable",
             "accessor_config": {
                 "store_cls": "eopf.product.store.netcdf.EONetCDFStore",
-                "index": "0",
+                "index": 0,
                 "attr_name": "statevectorPos"
             },
             "parameters": {
@@ -506,7 +506,7 @@
             "item_format": "attribute_element_to_float_variable",
             "accessor_config": {
                 "store_cls": "eopf.product.store.netcdf.EONetCDFStore",
-                "index": "1",
+                "index": 1,
                 "attr_name": "statevectorPos"
             },
             "parameters": {
@@ -520,7 +520,7 @@
             "item_format": "attribute_element_to_float_variable",
             "accessor_config": {
                 "store_cls": "eopf.product.store.netcdf.EONetCDFStore",
-                "index": "2",
+                "index": 2,
                 "attr_name": "statevectorPos"
             },
             "parameters": {
@@ -534,7 +534,7 @@
             "item_format": "attribute_element_to_float_variable",
             "accessor_config": {
                 "store_cls": "eopf.product.store.netcdf.EONetCDFStore",
-                "index": "0",
+                "index": 0,
                 "attr_name": "statevectorVel"
             },
             "parameters": {
@@ -548,7 +548,7 @@
             "item_format": "attribute_element_to_float_variable",
             "accessor_config": {
                 "store_cls": "eopf.product.store.netcdf.EONetCDFStore",
-                "index": "1",
+                "index": 1,
                 "attr_name": "statevectorVel"
             },
             "parameters": {
@@ -562,7 +562,7 @@
             "item_format": "attribute_element_to_float_variable",
             "accessor_config": {
                 "store_cls": "eopf.product.store.netcdf.EONetCDFStore",
-                "index": "2",
+                "index": 2,
                 "attr_name": "statevectorVel"
             },
             "parameters": {
@@ -779,7 +779,7 @@
             "source_path": "manifest.safe",
             "target_path": "/@CF",
             "item_format": "xmlmetadata",
-            "parameters": {
+            "accessor_config": {
                 "mapping": "xfdumanifest-CF",
                 "namespaces": "namespaces"
             }
@@ -789,7 +789,7 @@
             "source_path": "manifest.safe",
             "target_path": "/@OM_EOP",
             "item_format": "xmlmetadata",
-            "parameters": {
+            "accessor_config": {
                 "mapping": "xfdumanifest-OM-EOP",
                 "namespaces": "namespaces"
             }
