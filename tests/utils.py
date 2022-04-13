@@ -110,3 +110,6 @@ def couple_combinaison_from(elements: list[Any]) -> list[tuple[Any, Any]]:
 
 
 PARENT_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..")
+
+
+S3_CONFIG = dict(key="aaaa", secret="bbbbb", client_kwargs=dict(endpoint_url="https://localhost", region_name="local"))

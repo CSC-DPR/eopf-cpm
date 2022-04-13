@@ -29,7 +29,7 @@ class EOGribAccessor(EOProductStore):
             raise NotImplementedError
         super().open()
         # open is a class (constructor).
-        self._ds = xr.open_dataset(self.url, engine="cfgrib")
+        self._ds = xr.open_dataset(self.url, engine="cfgrib", **kwargs)
 
     def close(self) -> None:
         if self._ds is None:

@@ -46,11 +46,19 @@ class EOZarrStore(EOProductStore):
     # docstr-coverage: inherited
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         super().open()
+        self._mode = mode
         self._root: Group = zarr.open(store=self.url, mode=mode, **kwargs)
         self._fs = self._root.store
 
     # docstr-coverage: inherited
     def close(self) -> None:
+        if self._root is None:
+            raise StoreNotOpenError("Store must be open before close it")
+
+        # only if we write
+        if any(self._mode.startswith(mode) for mode in ("w", "a")) or "+" in self._mode:
+            zarr.consolidate_metadata(self._root.store)
+
         super().close()
         self._root = None
         self._fs = None
@@ -103,8 +111,6 @@ class EOZarrStore(EOProductStore):
             # While it's possible to create the array with to_zarr,
             # it fail to create the array on some array shapes (ex : empty)
             da.to_zarr(dask_array, zarr_array)
-            if hasattr(self._root.store, "path"):
-                zarr.consolidate_metadata(self.sep.join([self._root.store.path, self._root[key].path]))
         else:
             raise TypeError("Only EOGroup and EOVariable can be set")
         self.write_attrs(key, value.attrs)
