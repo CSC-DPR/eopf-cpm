@@ -1,6 +1,8 @@
 import os
 from typing import TYPE_CHECKING, Any, Union
 
+from hypothesis import strategies as st
+
 from eopf.product.core.eo_container import EOContainer
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -107,6 +109,13 @@ def couple_combinaison_from(elements: list[Any]) -> list[tuple[Any, Any]]:
         (list(zip([element] * zip_size, elements)) for element in elements),
         [],
     )
+
+
+@st.composite
+def realize_strategy(draw, to_realize: Union[Any, st.SearchStrategy]):
+    if isinstance(to_realize, st.SearchStrategy):
+        return draw(to_realize)
+    return to_realize
 
 
 PARENT_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..")

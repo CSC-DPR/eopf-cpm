@@ -242,7 +242,7 @@ def test_setitem(product):
         assert product[path].name == upsplit_eo_path(path)[1]
     with pytest.raises(KeyError):
         product["measurements/group1/group2/variable_b/sub/values"] = [1, 2, 3]
-    np.testing.assert_equal(product["measurements/group1"]["variable_v5"], [1, 2])
+    assert np.array_equal(product["measurements/group1"]["variable_v5"], [1, 2])
 
 
 @pytest.mark.unit
@@ -416,7 +416,7 @@ def test_product_tree(product, capsys):
 
 
 @pytest.mark.unit
-def test_hierarchy_html(product):
+def test_hierarchy_html(product: EOProduct):
     tree = etree.HTML(product._repr_html_())
     tree_structure = compute_tree_structure(tree)
     dim_attr_key = _DIMENSIONS_NAME

@@ -1,4 +1,4 @@
 from .conveniences import open_store
-from .core import EOProduct
+from .core import EOGroup, EOProduct, EOVariable
 
-__all__ = ["EOProduct", "open_store"]
+__all__ = ["EOGroup", "EOProduct", "EOVariable", "open_store"]

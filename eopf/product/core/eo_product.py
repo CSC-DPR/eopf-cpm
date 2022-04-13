@@ -184,21 +184,14 @@ class EOProduct(EOContainer):
             self._create_structure(g, level + 2)
 
     def tree(self) -> Optional["EOProduct"]:
-        """Display the hierarchy of the product.
-
-        Returns
-        ------
-        Union[EOProduct, None]
-            Instance of EOProduct if the environment is interactive (e.g. Jupyter Notebook)
-            Oterwise, returns None.
-        """
+        """Display the hierarchy of the product."""
         try:  # pragma: no cover
-            from IPython import get_ipython
+            from IPython import display, get_ipython
 
             py_type = get_ipython()  # Recover python environment from which this is used
             if py_type and not isinstance(py_type, IPython.terminal.interactiveshell.TerminalInteractiveShell):
                 # Return EOProduct if environment is interactive
-                return self
+                display.display(display.HTML(self._repr_html_()))
         except ModuleNotFoundError:  # pragma: no cover
             import warnings
 
