@@ -64,7 +64,7 @@ class EOCogStore(EOProductStore):
             raise NotImplementedError("Only available in reading mode")
         return len(self._ref)
 
-    def _write_cog(self, value: "EOObject", file_path: str) -> None:
+    def _write_cog(self, value: Any, file_path: str) -> None:
         # write the COG file
         value._data.rio.to_raster(f"{file_path}.cog", tiled=True, lock=self._lock, driver="COG")
 
@@ -76,7 +76,7 @@ class EOCogStore(EOProductStore):
         nc[var_name] = value
         nc.close()
 
-    def _is_raster(self, value: "EOObject") -> bool:
+    def _is_raster(self, value: Any) -> bool:
         # if the variable has 2 dimensions, it is probably a raster
         if len(value.dims) == 2:
             # if the dimension names are not x,y we need to let
@@ -89,7 +89,7 @@ class EOCogStore(EOProductStore):
             return True
         return False
 
-    def _write_eov(self, value: "EOObject", output_dir: str, var_name: str):
+    def _write_eov(self, value: "EOObject", output_dir: str, var_name: str) -> None:
 
         var_name = var_name.removeprefix("/")
         file_path = os.path.join(output_dir, var_name)
