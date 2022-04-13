@@ -13,6 +13,7 @@ class EOStoreFactory:
                 FilenameToVariableAccessor,
             )
             from eopf.product.store.grib import EOGribAccessor
+            from eopf.product.store.cog import EOCogStore
             from eopf.product.store.manifest import ManifestStore
             from eopf.product.store.netcdf import (
                 EONetCDFStore,
@@ -27,7 +28,6 @@ class EOStoreFactory:
                 XMLTPAccessor,
             )
             from eopf.product.store.zarr import EOZarrStore
-            from eopf.product.store.cog import EOCogStore
 
             self.register_store(EOCogStore)
             self.register_store(EOZarrStore)
