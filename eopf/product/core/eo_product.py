@@ -192,6 +192,7 @@ class EOProduct(EOContainer):
             if py_type and not isinstance(py_type, IPython.terminal.interactiveshell.TerminalInteractiveShell):
                 # Return EOProduct if environment is interactive
                 display.display(display.HTML(self._repr_html_()))
+                return
         except ModuleNotFoundError:  # pragma: no cover
             import warnings
 
@@ -200,7 +201,7 @@ class EOProduct(EOContainer):
         for name, group in self._groups.items():
             print(f"├── {name}")
             self._create_structure(group, level=2)
-        return None
+        return
 
     @property
     def coordinates(self) -> EOGroup:
