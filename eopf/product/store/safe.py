@@ -534,7 +534,6 @@ class SafeMappingManager:
                 accessor_file = os.path.join(self._temp_dir.name, file_path)
                 if not os.path.exists(accessor_file):
                     # create parent directory (needed if the file is in a subfolder of the zip)
-                    print(accessor_file)
                     os.makedirs(os.path.split(accessor_file)[0], exist_ok=True)
                     with open(accessor_file, mode="wb") as file_:
                         file_.write(self._fs_map_access[file_path])

@@ -348,18 +348,17 @@ def norm_eo_path(eo_path: str) -> str:
 
 
 def regex_path_append(path1: Optional[str], path2: Optional[str]) -> Optional[str]:
-    """Append two regex path.
+    """Append two (valid) regex path.
     Can use os/eo path append as regex path syntax is different.
     """
-    if path1 is not None and path1[-1] != "/":
-        path1 += "/"
+    if path1 is not None:
+        path1 = path1.removesuffix("/")
     if path2 is None:
         return path1
-    if path2[0] == "/":
-        path2 = path2[1:]
+    path2 = path2.removeprefix("/")
     if path1 is None:
         return path2
-    return path1 + path2
+    return f"{path1}/{path2}"
 
 
 def parse_xml(path: Any) -> Any:
