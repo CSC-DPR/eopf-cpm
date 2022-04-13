@@ -1,4 +1,5 @@
 import importlib
+import numbers
 from collections.abc import MutableMapping
 from typing import Any, Iterator, Optional
 
@@ -33,7 +34,9 @@ class FromAttributesToVariableAccessor(EOProductStore):
         data = item.attrs[self.attr_name]
         if self.index is not None:
             data = data[self.index]
-        return EOVariable(data=[data])
+        if isinstance(data, (numbers.Number, str)):
+            data = [data]
+        return EOVariable(data=data)
 
     def __setitem__(self, key: str, value: EOVariable) -> None:
         if key in self.store:

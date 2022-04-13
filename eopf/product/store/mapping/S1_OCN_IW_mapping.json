@@ -20,32 +20,64 @@
         {
             "short_name": "owiPolarisationName",
             "target_path": "/coordinates/owi/owiPolarisationName",
-            "source_path": "measurement/.*nc:@polarisation",
-            "item_format": "netcdf",
+            "source_path": "measurement/.*nc",
+            "item_format": "attribute_element_to_float_variable",
             "parameters": {
                 "attributes": {
-                    "flag_values": [ 1,2,3,4,5,6 ],
-                    "flag_meanings": [ "HH+HV", "HH", "HV", "VV+VH", "VV", "VH" ]
+                    "flag_values": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6
+                    ],
+                    "flag_meanings": [
+                        "HH+HV",
+                        "HH",
+                        "HV",
+                        "VV+VH",
+                        "VV",
+                        "VH"
+                    ]
                 },
-                "dimensions": [ "sub_image" ]
+                "dimensions": [
+                    "sub_image"
+                ]
+            },
+            "accessor_config": {
+                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf",
+                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/polarisation"
             }
         },
         {
             "short_name": "time_start",
             "target_path": "/coordinates/owi/time_start",
-            "source_path": "measurement/.*nc:@firstMeasurementTime",
-            "item_format": "netcdf_string_to_time",
+            "source_path": "measurement/.*nc",
+            "item_format": "attribute_element_to_float_variable",
             "parameters": {
-                "dimensions": [ "sub_image" ]
+                "dimensions": [
+                    "sub_image"
+                ]
+            },
+            "accessor_config": {
+                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf_string_to_time",
+                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/firstMeasurementTime"
             }
         },
         {
             "short_name": "time_stop",
             "target_path": "/coordinates/owi/time_stop",
-            "source_path": "measurement/.*nc:@lastMeasurementTime",
-            "item_format": "netcdf_string_to_time",
+            "source_path": "measurement/.*nc",
+            "item_format": "attribute_element_to_float_variable",
             "parameters": {
-                "dimensions": [ "sub_image" ]
+                "dimensions": [
+                    "sub_image"
+                ]
+            },
+            "accessor_config": {
+                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf_string_to_time",
+                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/lastMeasurementTime"
             }
         },
         {
@@ -63,15 +95,34 @@
         {
             "short_name": "polarisation",
             "target_path": "/coordinates/osw/polarisation",
-            "source_path": "measurement/.*nc:@polarisation",
-            "item_format": "netcdf",
+            "source_path": "measurement/.*nc",
+            "item_format": "attribute_element_to_float_variable",
             "parameters": {
-                "attributes":
-                {
-                    "flag_values": [ 1,2,3,4,5,6 ],
-                    "flag_meanings": [ "HH+HV", "HH", "HV", "VV+VH", "VV", "VH" ]
+                "attributes": {
+                    "flag_values": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6
+                    ],
+                    "flag_meanings": [
+                        "HH+HV",
+                        "HH",
+                        "HV",
+                        "VV+VH",
+                        "VV",
+                        "VH"
+                    ]
                 },
-                "dimensions": [ "sub_image" ]
+                "dimensions": [
+                    "sub_image"
+                ]
+            },
+            "accessor_config": {
+                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf",
+                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/polarisation"
             }
         },
         {
@@ -80,27 +131,51 @@
             "source_path": "measurement/.*nc",
             "item_format": "filename_to_subswath",
             "parameters": {
-                "dimensions": [ "sub_image" ],
-                "flag_values": [ 0,0,1,2 ],
-                "flag_meanings": [ "iw", "ew", "wv1", "wv2" ]
+                "dimensions": [
+                    "sub_image"
+                ],
+                "flag_values": [
+                    0,
+                    0,
+                    1,
+                    2
+                ],
+                "flag_meanings": [
+                    "iw",
+                    "ew",
+                    "wv1",
+                    "wv2"
+                ]
             }
         },
         {
             "short_name": "time_start",
             "target_path": "/coordinates/osw/time_start",
-            "source_path": "measurement/.*nc:@firstMeasurementTime",
-            "item_format": "netcdf_string_to_time",
+            "source_path": "measurement/.*nc",
+            "item_format": "attribute_element_to_float_variable",
             "parameters": {
-                "dimensions": [ "sub_image" ]
+                "dimensions": [
+                    "sub_image"
+                ]
+            },
+            "accessor_config": {
+                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf_string_to_time",
+                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/firstMeasurementTime"
             }
         },
         {
             "short_name": "time_stop",
             "target_path": "/coordinates/osw/time_stop",
-            "source_path": "measurement/.*nc:@lastMeasurementTime",
-            "item_format": "netcdf_string_to_time",
+            "source_path": "measurement/.*nc",
+            "item_format": "attribute_element_to_float_variable",
             "parameters": {
-                "dimensions": [ "sub_image" ]
+                "dimensions": [
+                    "sub_image"
+                ]
+            },
+            "accessor_config": {
+                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf_string_to_time",
+                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/lastMeasurementTime"
             }
         },
         {
@@ -154,14 +229,34 @@
         {
             "short_name": "polarisation",
             "target_path": "/coordinates/rvl/polarisation",
-            "source_path": "measurement/.*nc:@polarisation",
-            "item_format": "netcdf",
+            "source_path": "measurement/.*nc",
+            "item_format": "attribute_element_to_float_variable",
             "parameters": {
                 "attributes": {
-                    "flag_values": [ 1,2,3,4,5,6 ],
-                    "flag_meanings": [ "HH+HV", "HH", "HV", "VV+VH", "VV", "VH" ]
+                    "flag_values": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6
+                    ],
+                    "flag_meanings": [
+                        "HH+HV",
+                        "HH",
+                        "HV",
+                        "VV+VH",
+                        "VV",
+                        "VH"
+                    ]
                 },
-                "dimensions": [ "sub_image" ]
+                "dimensions": [
+                    "sub_image"
+                ]
+            },
+            "accessor_config": {
+                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf",
+                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/polarisation"
             }
         },
         {
@@ -173,28 +268,46 @@
         {
             "short_name": "time_start",
             "target_path": "/coordinates/rvl/time_start",
-            "source_path": "measurement/.*nc:@firstMeasurementTime",
-            "item_format": "netcdf_string_to_time",
+            "source_path": "measurement/.*nc",
+            "item_format": "attribute_element_to_float_variable",
             "parameters": {
-                "dimensions": [ "sub_image" ]
+                "dimensions": [
+                    "sub_image"
+                ]
+            },
+            "accessor_config": {
+                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf_string_to_time",
+                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/firstMeasurementTime"
             }
         },
         {
             "short_name": "time_stop",
             "target_path": "/coordinates/rvl/time_stop",
-            "source_path": "measurement/.*nc:@lastMeasurementTime",
-            "item_format": "netcdf_string_to_time",
+            "source_path": "measurement/.*nc",
+            "item_format": "attribute_element_to_float_variable",
             "parameters": {
-                "dimensions": [ "sub_image" ]
+                "dimensions": [
+                    "sub_image"
+                ]
+            },
+            "accessor_config": {
+                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf_string_to_time",
+                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/lastMeasurementTime"
             }
         },
         {
             "short_name": "sv_time",
             "target_path": "/coordinates/state_vector/sv_time",
-            "source_path": "measurement/.*nc:@statevectorUtc",
-            "item_format": "netcdf_string_to_time",
+            "source_path": "measurement/.*nc",
+            "item_format": "attribute_element_to_float_variable",
             "parameters": {
-                "dimensions": [ "sub_image" ]
+                "dimensions": [
+                    "sub_image"
+                ]
+            },
+            "accessor_config": {
+                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf_string_to_time",
+                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/statevectorUtc"
             }
         },
         {
@@ -491,12 +604,14 @@
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",
             "accessor_config": {
-                "store_cls": "eopf.product.store.netcdf.EONetCDFStore",
-                "index": 0,
-                "attr_name": "statevectorPos"
+                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf",
+                "index": "attribute_element_to_float_variable_mapping/index/0",
+                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/pos"
             },
             "parameters": {
-                "dimensions": [ "sub_image" ]
+                "dimensions": [
+                    "sub_image"
+                ]
             }
         },
         {
@@ -505,12 +620,14 @@
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",
             "accessor_config": {
-                "store_cls": "eopf.product.store.netcdf.EONetCDFStore",
-                "index": 1,
-                "attr_name": "statevectorPos"
+                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf",
+                "index": "attribute_element_to_float_variable_mapping/index/1",
+                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/pos"
             },
             "parameters": {
-                "dimensions": [ "sub_image" ]
+                "dimensions": [
+                    "sub_image"
+                ]
             }
         },
         {
@@ -519,12 +636,14 @@
             "source_path": "measurement/.*nc:",
             "item_format": "attribute_element_to_float_variable",
             "accessor_config": {
-                "store_cls": "eopf.product.store.netcdf.EONetCDFStore",
-                "index": 2,
-                "attr_name": "statevectorPos"
+                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf",
+                "index": "attribute_element_to_float_variable_mapping/index/2",
+                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/pos"
             },
             "parameters": {
-                "dimensions": [ "sub_image" ]
+                "dimensions": [
+                    "sub_image"
+                ]
             }
         },
         {
@@ -533,12 +652,14 @@
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",
             "accessor_config": {
-                "store_cls": "eopf.product.store.netcdf.EONetCDFStore",
-                "index": 0,
-                "attr_name": "statevectorVel"
+                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf",
+                "index": "attribute_element_to_float_variable_mapping/index/0",
+                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/vel"
             },
             "parameters": {
-                "dimensions": [ "sub_image" ]
+                "dimensions": [
+                    "sub_image"
+                ]
             }
         },
         {
@@ -547,12 +668,14 @@
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",
             "accessor_config": {
-                "store_cls": "eopf.product.store.netcdf.EONetCDFStore",
-                "index": 1,
-                "attr_name": "statevectorVel"
+                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf",
+                "index": "attribute_element_to_float_variable_mapping/index/1",
+                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/vel"
             },
             "parameters": {
-                "dimensions": [ "sub_image" ]
+                "dimensions": [
+                    "sub_image"
+                ]
             }
         },
         {
@@ -561,12 +684,14 @@
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",
             "accessor_config": {
-                "store_cls": "eopf.product.store.netcdf.EONetCDFStore",
-                "index": 2,
-                "attr_name": "statevectorVel"
+                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf",
+                "index": "attribute_element_to_float_variable_mapping/index/2",
+                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/vel"
             },
             "parameters": {
-                "dimensions": [ "sub_image" ]
+                "dimensions": [
+                    "sub_image"
+                ]
             }
         },
         {
@@ -674,8 +799,12 @@
         {
             "short_name": "oswPrf",
             "target_path": "/conditions/osw/oswPrf",
-            "source_path": "measurement/.*nc:@prf",
-            "item_format": "netcdf"
+            "source_path": "measurement/.*nc",
+            "item_format": "attribute_element_to_float_variable",
+            "accessor_config": {
+                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf",
+                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/prf"
+            }
         },
         {
             "short_name": "rvlLandCoverage",
@@ -773,15 +902,14 @@
             "source_path": "measurement/.*nc:rvlAziSize",
             "item_format": "netcdf"
         },
-
         {
             "short_name": "metadata",
             "source_path": "manifest.safe",
             "target_path": "/@CF",
             "item_format": "xmlmetadata",
             "accessor_config": {
-                "mapping": "xfdumanifest-CF",
-                "namespaces": "namespaces"
+                "mapping": "metadata_mapping/xfdumanifest-CF",
+                "namespaces": "metadata_mapping/namespaces"
             }
         },
         {
@@ -790,8 +918,8 @@
             "target_path": "/@OM_EOP",
             "item_format": "xmlmetadata",
             "accessor_config": {
-                "mapping": "xfdumanifest-OM-EOP",
-                "namespaces": "namespaces"
+                "mapping": "metadata_mapping/xfdumanifest-OM-EOP",
+                "namespaces": "metadata_mapping/namespaces"
             }
         },
         {
@@ -801,8 +929,26 @@
             "item_format": "misc"
         }
     ],
-
-    "TODO": "metadata mapping is not yet updated",
+    "attribute_element_to_float_variable_mapping": {
+        "store_cls": {
+            "netcdf": "eopf.product.store.netcdf.EONetCDFStore",
+            "netcdf_string_to_time": "eopf.product.store.netcdf.EONetCDFStore"
+        },
+        "index": {
+            "0": 0,
+            "1": 1,
+            "2": 2
+        },
+        "attr_name": {
+            "pos": "statevectorPos",
+            "vel": "statevectorVel",
+            "polarisation": "polarisation",
+            "firstMeasurementTime": "firstMeasurementTime",
+            "lastMeasurementTime": "lastMeasurementTime",
+            "statevectorUtc": "statevectorUtc",
+            "prf": "prf"
+        }
+    },
     "metadata_mapping": {
         "xfdumanifest-CF": {
             "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName/text())",
@@ -813,7 +959,7 @@
             "references": "'https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-3, https://sentinels.copernicus.eu/web/sentinel/user-guides/sentinel-3-olci/processing-levels/level-1'",
             "Conventions": "'CF-1.9'"
         },
-        "xfdumanifest-OM_EOP": {
+        "xfdumanifest-OM-EOP": {
             "phenomenonTime": {
                 "beginPosition": "metadataSection/metadataObject[@ID='acquisitionPeriod']//sentinel-safe:acquisitionPeriod/sentinel-safe:startTime",
                 "endPosition": "metadataSection/metadataObject[@ID='acquisitionPeriod']//sentinel-safe:acquisitionPeriod/sentinel-safe:stopTime"

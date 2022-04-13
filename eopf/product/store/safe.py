@@ -176,11 +176,11 @@ class EOSafeStore(EOProductStore):
 
     # docstr-coverage: inherited
     def __init__(
-            self,
-            url: str,
-            store_factory: Optional[EOStoreFactory] = None,
-            mapping_factory: Optional[EOMappingFactory] = None,
-            parameters_transformations: Optional[list[tuple[str, Callable[["EOObject", Any], "EOObject"]]]] = None,
+        self,
+        url: str,
+        store_factory: Optional[EOStoreFactory] = None,
+        mapping_factory: Optional[EOMappingFactory] = None,
+        parameters_transformations: Optional[list[tuple[str, Callable[["EOObject", Any], "EOObject"]]]] = None,
     ) -> None:
         if store_factory is None:
             store_factory = EOStoreFactory(default_stores=True)
@@ -409,10 +409,10 @@ class SafeMappingManager:
     CONFIG_ACCESSOR_ID = "accessor_id"
 
     def __init__(
-            self,
-            url: str,
-            store_factory: EOStoreFactory,
-            mapping_factory: EOMappingFactory,
+        self,
+        url: str,
+        store_factory: EOStoreFactory,
+        mapping_factory: EOMappingFactory,
     ) -> None:
         # FIXME Need to think of a way to manage urlak ospath on windows. Especially with the path in the json.
         self._url = url
@@ -452,8 +452,8 @@ class SafeMappingManager:
             self._top_level = None
 
     def get_accessors_from_mapping(
-            self,
-            conf_path: str,
+        self,
+        conf_path: str,
     ) -> Sequence[Tuple[EOProductStore, Optional[Any], dict[str, Any]]]:
         """Get all accessor corresponding to the configs of conf_path.
         As multiple mapping car match a single conf_path, it can return multiple accessors.
@@ -516,11 +516,11 @@ class SafeMappingManager:
             local_path.insert(0, name)
 
     def _add_accessor(
-            self,
-            file_path: str,
-            item_format: str,
-            accessor_config_id: Any,
-            accessor_config: dict[str, Any],
+        self,
+        file_path: str,
+        item_format: str,
+        accessor_config_id: Any,
+        accessor_config: dict[str, Any],
     ) -> Optional[EOProductStore]:
         """Add an accessor (sub store) to the opened accessor dictionary.
         The accessor is created using the _store_factory (except for SafeHierarchy).
@@ -595,9 +595,9 @@ class SafeMappingManager:
         return False
 
     def _extract_accessor_config(
-            self,
-            config: dict[str, Any],
-            config_definitions: dict[str, Any],
+        self,
+        config: dict[str, Any],
+        config_definitions: dict[str, Any],
     ) -> None:
         """Extract in config the accessor config by matching it to config_definitions and build an hashable id of it."""
 
@@ -607,18 +607,20 @@ class SafeMappingManager:
             config_declarations = dict()
 
         # The reduce allow us to do a get item on a nested directory using a split path.
-        # FIXME: accessor_config not work for S1, but work if we replace by `accessor_config = config_declarations
-        accessor_config = config_declarations
+        accessor_config = {
+            config_key: reduce(dict.get, partition_eo_path(config_path), config_definitions)  # type: ignore[arg-type]
+            for config_key, config_path in config_declarations.items()
+        }
 
         config[self.CONFIG_ACCESSOR_ID] = frozenset(config_declarations.items())
         config[self.CONFIG_ACCESSOR_CONFIG] = accessor_config
 
     def _get_accessor(
-            self,
-            file_path: str,
-            item_format: str,
-            accessor_config_id: Any,
-            accessor_config: dict[str, Any],
+        self,
+        file_path: str,
+        item_format: str,
+        accessor_config_id: Any,
+        accessor_config: dict[str, Any],
     ) -> Optional[EOProductStore]:
         """Get an accessor from the opened accessors dictionary. If it's not present a new one is added."""
         if item_format == self.SAFE_HIERARCHY_FORMAT:
