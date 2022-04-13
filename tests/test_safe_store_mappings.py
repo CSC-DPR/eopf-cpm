@@ -6,6 +6,7 @@ import pytest
 from pytest_lazyfixture import lazy_fixture
 
 from eopf.product.core import EOGroup, EOProduct
+from eopf.product.store import EOProductStore, EOZarrStore
 from eopf.product.store.conveniences import convert
 from eopf.product.store.manifest import ManifestStore
 from eopf.product.store.safe import EOSafeStore
@@ -42,7 +43,7 @@ def test_read_product(store_type, get_key):
 @pytest.mark.integration
 @pytest.mark.parametrize(
     "store_type",
-    [lazy_fixture("S2A_MSIL1C"), lazy_fixture("S3_OLCI_L1_EFR"), lazy_fixture("S2A_MSIL1C_ZIP")],
+    [lazy_fixture("S3_OLCI_L1_EFR")],
 )
 def test_load_product(store_type):
     store = EOSafeStore(store_type)
@@ -62,20 +63,31 @@ def test_load_product(store_type):
 @pytest.mark.need_files
 @pytest.mark.integration
 @pytest.mark.parametrize(
-    "store_type, output_formatter",
-    [(lazy_fixture("S3_OLCI_L1_EFR"), lambda name: f"{name.replace('.zip', '.SEN3')}")],
+    "input_path, output_formatter, output_store",
+    [
+        (lazy_fixture("S3_OLCI_L1_EFR"), lambda name: f"{name.replace('.zip', '.SEN3')}", EOSafeStore),
+        (lazy_fixture("S3_OLCI_L1_EFR"), lambda name: f"{name.replace('.zip', '.zarr')}", EOZarrStore),
+        (lazy_fixture("S2A_MSIL1C"), lambda name: f"{name.replace('.zip', '.zarr')}", EOZarrStore),
+        (lazy_fixture("S2A_MSIL1C_ZIP"), lambda name: f"{name.replace('.zip', '.zarr')}", EOZarrStore),
+    ],
 )
-def test_load_write_product(store_type: str, output_formatter: Callable, OUTPUT_DIR: str):
-    """Test if a product can be read from one place and write to another
+def test_convert_safe_mapping(
+    input_path: str,
+    output_formatter: Callable,
+    output_store: type[EOProductStore],
+    OUTPUT_DIR: str,
+):
+    impl_test_convert_store(input_path, EOSafeStore, output_formatter, output_store, OUTPUT_DIR)
 
-    Parameters
-    ----------
-    store_type: str
-        absolute path to an existing input file
-    ouput_formatter: callable
-        callable that convert the input filename to the output filename
-    """
-    source_store = EOSafeStore(store_type)
-    name = os.path.basename(store_type)
-    target_store = EOSafeStore(os.path.join(OUTPUT_DIR, output_formatter(name)))
+
+def impl_test_convert_store(
+    input_path: str,
+    input_store_t: type[EOProductStore],
+    output_formatter: Callable,
+    output_store_t: type[EOProductStore],
+    output_dir: str,
+):
+    source_store = input_store_t(input_path)
+    name = os.path.basename(input_path)
+    target_store = output_store_t(os.path.join(output_dir, output_formatter(name)))
     convert(source_store, target_store)

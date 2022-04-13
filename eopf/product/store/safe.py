@@ -429,7 +429,7 @@ class SafeMappingManager:
     def __iter__(self) -> Iterator[tuple[EOProductStore, dict[str, Any]]]:
         for accessor_map_2 in self._accessor_map.values():
             for accessor, config in accessor_map_2.values():
-                if accessor:
+                if accessor is not None:
                     yield accessor, config
 
     def close_all(self) -> None:

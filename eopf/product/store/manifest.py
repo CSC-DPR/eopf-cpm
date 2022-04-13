@@ -74,6 +74,8 @@ class ManifestStore(EOProductStore):
 
     def is_variable(self, path: str) -> bool:
         """Has no functionality within this store"""
+        if path in ["", "/"]:
+            return False
         raise NotImplementedError()
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
