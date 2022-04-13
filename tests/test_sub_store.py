@@ -323,6 +323,16 @@ def test_xml_manifest_accessor():
 @pytest.mark.parametrize("store", [FromAttributesToVariableAccessor("")])
 @pytest.mark.parametrize("attrs, attr_name, index", [({"a": [23]}, "a", 0), ({"a": [23], "B": [1, 5, 23]}, "B", 1)])
 def test_fromattributestovarstore(attrs, store, attr_name, index):
-    with mock.patch.object(EmptyTestStore, "__getitem__", return_value=EOGroup(attrs=attrs)):
+    with (
+        mock.patch.object(EmptyTestStore, "__getitem__", return_value=EOGroup(attrs=attrs)),
+        mock.patch.object(EmptyTestStore, "__iter__", return_value=iter(["value", "other"])),
+        mock.patch.object(EmptyTestStore, "__len__", return_value=2),
+    ):
         store.open(store_cls="tests.test_eo_container.EmptyTestStore", attr_name=attr_name, index=index)
         assert store["value"]._data == [attrs[attr_name][index]]
+
+        assert len([i for i in store]) == len(store)
+        assert len([i for i in store]) == len([i for i in store.iter("")])
+
+    with pytest.raises(NotImplementedError):
+        store.write_attrs("", {})

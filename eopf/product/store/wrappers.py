@@ -56,7 +56,7 @@ class FromAttributesToVariableAccessor(EOProductStore):
         return False
 
     def is_variable(self, path: str) -> bool:
-        return True
+        return path in self.store
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = ...) -> None:
         raise NotImplementedError
