@@ -169,41 +169,6 @@ def test_binary_ops_eovar_mixin(a, b, ops_name):
     assert np.array_equal(ops_eo, ops_xr, equal_nan=True)
 
 
-# @pytest.mark.unit
-# @pytest.mark.parametrize(
-#     "ops_name",
-#     [
-#         "__radd__",
-#         "__rsub__",
-#         "__rmul__",
-#         "__add__",
-#         "__sub__",
-#         "__mul__",
-#         "__mod__",
-#         "__truediv__",
-#         "__floordiv__",
-#         "__rtruediv__",
-#         "__rfloordiv__",
-#         "__le__",
-#         "__lt__",
-#         "__ge__",
-#         "__gt__",
-#         "__eq__",
-#         "__ne__",
-#         "__pow__",
-#         "__rpow__",
-#         "__rmod__",
-#     ],
-# )
-# @given(
-#     a=eovariable_strategie(data=xps.arrays(dtype="float64", shape=(3, 3, 3)), with_input=False),
-#     b=eovariable_strategie(data=xps.arrays(dtype="float64", shape=(3, 3, 4)), with_input=False),
-# )
-# def test_eovar_shape_mismatch(a, b, ops_name):
-#     with pytest.raises(ValueError, match=r"Shape mismatch: \([0-9, ]+\) != \([0-9, ]+\)"):
-#         getattr(a, ops_name)(b).compute()
-
-
 @pytest.mark.unit
 @pytest.mark.parametrize(
     "ops_name",
