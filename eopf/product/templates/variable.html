@@ -10,6 +10,8 @@
 {% block sections %}
     <li class="eopf-section-item">
         <input type="checkbox" class="eopf-section-summary-in" id="{{ obj|string }}_{{ unique_id }}_attrs" hidden>
+
+
         <label for="{{ obj|string }}_{{ unique_id }}_attrs" class="eopf-section-summary eopf-header" >
             {% include "static/images/icons-svg-attributes.svg" %}
             Attributes
@@ -17,6 +19,18 @@
         <div class='eopf-section-details'>
             <dl class='eopf-attrs'>
                 <dd>{{obj.attrs|human_readable_attrs}}</dd>
+            </dl>
+        </div>
+    </li>
+    <li class="eopf-section-item">
+        <input type="checkbox" class="eopf-section-summary-in" id="{{ obj|string }}_{{ unique_id }}_data" hidden>
+        <label for="{{ obj|string }}_{{ unique_id }}_data" class="eopf-section-summary eopf-header" >
+            {% include "static/images/icons-svg-data.svg" %}
+            Data
+        </label>
+        <div class='eopf-section-details'>
+            <dl class='eopf-attrs'>
+                <dd>{{obj.data}}</dd>
             </dl>
         </div>
     </li>
