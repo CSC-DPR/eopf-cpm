@@ -1,9 +1,13 @@
 # We need to use a mix of posixpath (normpath) and pathlib (partition) in the eo_path methods.
 # As we work with strings we use posixpath (the unix path specific implementation of os.path) as much as possible.
 import posixpath
+import re
+from datetime import datetime
 from pathlib import PurePosixPath
 from typing import Any, Optional, Union
 
+import fsspec
+import pytz
 from lxml import etree
 
 
@@ -85,12 +89,72 @@ def conv(obj: Any) -> Any:
     if isinstance(obj, (float64, float32, float16, float)):
         return float(obj)
 
-    # check str
+    # check str or datetime-like string
     if isinstance(obj, str):
+        if is_date(obj):
+            return convert_to_unix_time(obj)
         return str(obj)
+
+    # check datetime
+    if isinstance(obj, datetime):
+        return convert_to_unix_time(obj)
 
     # if no conversion can be done
     return obj
+
+
+def is_date(string: str) -> bool:
+    """Return whether the string can be interpreted as a date.
+
+    Parameters
+    ----------
+    string: str
+        string to check for date
+
+    Returns
+    ----------
+    bool
+    """
+    from dateutil.parser import parse
+
+    try:
+        parse(string)
+        return True
+    except ValueError:
+        return False
+
+
+def convert_to_unix_time(date: Any) -> Any:
+    """Return whether the string can be interpreted as a date.
+
+    Parameters
+    ----------
+    date: Any
+        string or datetime to convert
+
+    Returns
+    ----------
+    int
+        unix time in microseconds
+    """
+    if isinstance(date, datetime):
+        return int(date.timestamp() * 1000000)  # microseconds
+    elif isinstance(date, str):
+        import pandas as pd
+
+        start = pd.to_datetime("1970-1-1T0:0:0.000000Z")
+        try:
+            end = pd.to_datetime(date)
+            # Normalize data, if date is incomplete (missing timezone)
+            if end.tzinfo is None:
+                proxy_date = datetime(end.year, end.month, end.day, end.hour, end.minute, end.second, 000000, pytz.UTC)
+                end = pd.to_datetime(str(proxy_date))
+        except pd.errors.OutOfBoundsDatetime:
+            # Just return string if something went wrong.
+            return str(date)
+        time_delta = (end - start) // pd.Timedelta("1microsecond")
+        return time_delta
+    raise ValueError(f"{date} cannot be converted to an accepted format!")
 
 
 def reverse_conv(data_type: Any, obj: Any) -> Any:
@@ -170,6 +234,30 @@ def downsplit_eo_path(eo_path: str) -> tuple[str, Optional[str]]:
     if sub_path == ".":
         sub_path = None
     return folder_name, sub_path
+
+
+def fs_match_path(pattern: str, filesystem: fsspec.FSMap) -> str:
+    """Find and return the first occurence of a path matchin
+    a given pattern.
+
+    If there is no match, pattern is return as it is.
+
+    Parameters
+    ----------
+    pattern: str
+        regex pattern to match
+    filesystem    filesystem representation
+
+    Returns
+    -------
+    str
+        matching path if find, else `pattern`
+    """
+
+    for file_path in filesystem:
+        if re.match(pattern, file_path):
+            return file_path
+    return pattern
 
 
 def is_absolute_eo_path(eo_path: str) -> bool:

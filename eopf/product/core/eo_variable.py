@@ -16,7 +16,7 @@ import xarray
 from dask import array as da
 
 from eopf.product.core.eo_mixins import EOVariableOperatorsMixin
-from eopf.product.core.eo_object import EOObject
+from eopf.product.core.eo_object import _DIMENSIONS_NAME, EOObject
 
 if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_container import EOContainer
@@ -67,6 +67,12 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
             else:
                 input_dtype = data.dtype
                 data = xarray.DataArray(data=lazy_data, name=name, attrs=attrs, **kwargs).astype(input_dtype)
+        elif isinstance(data, EOVariable):
+            data = xarray.DataArray(data=data._data, attrs=data.attrs | attrs, dims=data.dims)
+        elif isinstance(data, xarray.DataArray):
+            data = data.copy()
+            data.attrs.update(attrs)
+
         if data is None:
             data = xarray.DataArray(name=name, attrs=attrs, **kwargs)
 
@@ -76,7 +82,12 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         EOObject.__init__(self, name, parent, dims=tuple(dims))
 
     def _init_similar(self, data: xarray.DataArray) -> "EOVariable":
-        return EOVariable(name="", data=data)
+        import copy
+
+        # we let our current data to work with their dimensions
+        attrs = copy.deepcopy(self.attrs)
+        attrs.pop(_DIMENSIONS_NAME)
+        return EOVariable(data=data, attrs=attrs)
 
     def assign_dims(self, dims: Iterable[str]) -> None:
         dims = tuple(dims)
@@ -100,9 +111,11 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         """
         Mapping from dimension names to block lengths for this dataarray's data, or None if
         the underlying data is not a dask array.
+
         Cannot be modified directly, but can be modified by calling .chunk().
         Differs from EOVariable.chunks because it returns a mapping of dimensions to chunk shapes
         instead of a tuple of chunk shapes.
+
         See Also
         --------
         EOVariable.chunk
@@ -115,12 +128,39 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         """
         Tuple of block lengths for this dataarray's data, in order of dimensions, or None if
         the underlying data is not a dask array.
+
         See Also
         --------
         EOVariable.chunk
         EOVariable.chunksizes
         """
         return self._data.chunks
+
+    def compute(self, **kwargs: Any) -> "EOVariable":
+        """Manually trigger loading of this array's data from disk or a
+        remote source into memory and return a new array. The original is
+        left unaltered.
+
+        Normally, it should not be necessary to call this method in user code,
+        because all xarray functions should either work on deferred data or
+        load data automatically. However, this method can be necessary when
+        working with many file objects on disk.
+
+        Parameters
+        ----------
+        **kwargs : dict
+            Additional keyword arguments passed on to ``dask.compute``.
+
+        See Also
+        --------
+        xarray.DataArray.compute
+        dask.compute
+        """
+        return self._init_similar(self._data.compute(**kwargs))
+
+    @property
+    def data(self) -> Any:
+        return self._data.data
 
     @property
     def sizes(self) -> Mapping[Hashable, int]:
@@ -146,9 +186,11 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         If this variable is a non-dask array, it will be converted to dask
         array. If it's a dask array, it will be rechunked to the given chunk
         sizes.
+
         If neither chunks is not provided for one or more dimensions, chunk
         sizes along that dimension will not be updated; non-dask arrays will be
         converted into dask arrays with a single block.
+
         Parameters
         ----------
         chunks : int, tuple of int or mapping of hashable to int, optional
@@ -161,12 +203,17 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         lock : optional
             Passed on to :py:func:`dask.array.from_array`, if the array is not
             already as dask array.
+
         Returns
         -------
         chunked : eopf.product.EOVariable
         """
         self._data = self._data.chunk(chunks, name_prefix=name_prefix, token=token, lock=lock)
         return self
+
+    @property
+    def loc(self) -> "_LocIndexer":
+        return _LocIndexer(self)
 
     def map_chunk(
         self,
@@ -177,8 +224,10 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
     ) -> "EOVariable":
         """
         Apply a function to each chunk of this EOVariable.
+
         .. warning::
             This method is based on the experimental method ``DataArray.map_blocks`` and its signature may change.
+
         Parameters
         ----------
         func : callable
@@ -202,10 +251,12 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
             ``template`` must be provided if the function changes the size of existing dimensions.
             When provided, ``attrs`` on variables in `template` are copied over to the result. Any
             ``attrs`` set by ``func`` will be ignored.
+
         Returns
         -------
         A single DataArray or Dataset with dask backend, reassembled from the outputs of the
         function.
+
         See Also
         --------
         dask.array.map_blocks, xarray.apply_ufunc, xarray.Dataset.map_blocks, xarray.DataArray.map_blocks
@@ -222,6 +273,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
     ) -> "EOVariable":
         """Return a new EOVariable whose data is given by integer indexing
         along the specified dimension(s).
+
         Parameters
         ----------
         indexers : dict, optional
@@ -242,14 +294,14 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
             - "ignore": ignore the missing dimensions
         **indexers_kwargs : {dim: indexer, ...}, optional
             The keyword arguments form of ``indexers``.
+
         See Also
         --------
         DataArray.sel
         DataArray.isel
         EOVariable.sel
         """
-        return EOVariable(
-            self.name,
+        return self._init_similar(
             self._data.isel(
                 indexers=indexers,
                 drop=drop,
@@ -257,6 +309,24 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
                 **indexers_kwargs,
             ),
         )
+
+    def persist(self, **kwargs: Any) -> "EOVariable":
+        """Trigger computation in constituent dask arrays
+        This keeps them as dask arrays but encourages them to keep data in
+        memory.  This is particularly useful when on a distributed machine.
+        When on a single machine consider using ``.compute()`` instead.
+
+        Parameters
+        ----------
+        **kwargs : dict
+            Additional keyword arguments passed on to ``dask.persist``.
+
+        See Also
+        --------
+        xarray.Dataset.persist
+        dask.persist
+        """
+        return self._init_similar(self._data.persist(**kwargs))
 
     def sel(
         self,
@@ -270,6 +340,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         labels along the specified dimension(s).
         In contrast to `EOVariable.isel`, indexers for this method should use
         labels instead of integers.
+
         Under the hood, this method is powered by using pandas's powerful Index
         objects. This makes label based indexing essentially just as fast as
         using integer indexing.
@@ -278,6 +349,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         (e.g., '2000-01' to select all values in January 2000). It also means
         that slices are treated as inclusive of both the start and stop values,
         unlike normal Python indexing.
+
         .. warning::
           Do not try to assign values when using any of the indexing methods
           ``isel`` or ``sel``::
@@ -331,8 +403,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         DataArray.sel
         EOVariable.isel
         """
-        return EOVariable(
-            self.name,
+        return self._init_similar(
             self._data.sel(
                 indexers=indexers,
                 method=method,
@@ -365,7 +436,8 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return self._data.shape
 
     def __getitem__(self, key: Any) -> "EOVariable":
-        return EOVariable(key, self._data[key])
+        data = self._data[key]
+        return self._init_similar(data)
 
     def __setitem__(self, key: Any, value: Any) -> None:
         self._data[key] = value
@@ -381,12 +453,43 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return len(self._data)
 
     def __str__(self) -> str:
-        return self.path
+        from .eo_object import _DIMENSIONS_NAME
+
+        if self.coordinates:
+            coordinates = "\n".join(["Coordinates:", *map(lambda x: f"    {x}", self.coordinates.keys())])
+        else:
+            coordinates = ""
+        attrs = [f"    {key}: {value}" for key, value in self.attrs.items() if key != _DIMENSIONS_NAME]
+        if attrs:
+            attributes = "\n".join(["Attributes:", *attrs])
+        else:
+            attributes = ""
+        return "\n".join(
+            [
+                f"<eopf.product.EOVariable {self.path}>",
+                "Data:",
+                f"    {self._data.data}",
+                *filter(lambda x: x != "", [coordinates, attributes]),
+            ],
+        )
 
     def __repr__(self) -> str:
-        return self.__str__()
+        return str(self)
 
     def _repr_html_(self) -> str:
         from ..formatting import renderer
 
         return renderer("variable.html", variable=self)
+
+
+class _LocIndexer:
+    __slots__ = ("variable",)
+
+    def __init__(self, variable: EOVariable):
+        self.variable = variable
+
+    def __getitem__(self, key: Any) -> EOVariable:
+        return EOVariable(self.variable.name, self.variable._data.loc[key])
+
+    def __setitem__(self, key: Any, value: Any) -> None:
+        self.variable._data[key] = value

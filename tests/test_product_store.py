@@ -1,19 +1,22 @@
 import os
 import os.path
+import pathlib
 import shutil
 from typing import Any, Optional
 from unittest.mock import patch
 
+import fsspec
 import hypothesis.strategies as st
 import numpy as np
 import pytest
 import xarray
 import zarr
+from fsspec.implementations.local import LocalFileSystem
 from hypothesis import given
-from pyfakefs.fake_filesystem import FakeFilesystem
+from pytest_lazyfixture import lazy_fixture
 
 from eopf.exceptions import StoreNotOpenError
-from eopf.exceptions.warnings import AlreadyClose, AlreadyOpen
+from eopf.exceptions.warnings import AlreadyOpen
 from eopf.product.conveniences import init_product, open_store
 from eopf.product.core import EOGroup, EOProduct, EOVariable
 from eopf.product.store import EONetCDFStore, EOProductStore, EOZarrStore, convert
@@ -23,7 +26,7 @@ from eopf.product.store.rasterio import EORasterIOAccessor
 
 from .decoder import Netcdfdecoder
 from .utils import (
-    PARENT_DATA_PATH,
+    S3_CONFIG,
     assert_contain,
     assert_has_coords,
     assert_issubdict,
@@ -41,9 +44,20 @@ _FILES = {
 }
 
 
+# needed because Netcdf4 have no convenience way to test without create a file ...
+@pytest.fixture(autouse=True)
+def cleanup_files():
+    yield
+    for file in _FILES.values():
+        if os.path.isfile(file):
+            os.remove(file)
+        if os.path.isdir(file):
+            shutil.rmtree(file)
+
+
 @pytest.fixture
-def zarr_file(fs: FakeFilesystem):
-    file_name = f"file://{_FILES['zarr']}"
+def zarr_file(OUTPUT_DIR: str):
+    file_name = f"file://{os.path.join(OUTPUT_DIR, _FILES['zarr'])}"
     dims = "_ARRAY_DIMENSIONS"
 
     root = zarr.open(file_name, mode="w")
@@ -95,7 +109,7 @@ def zarr_file(fs: FakeFilesystem):
 
 
 @pytest.mark.unit
-def test_load_product_from_zarr(zarr_file: str, fs: FakeFilesystem):
+def test_load_product_from_zarr(zarr_file: str):
     product = EOProduct("a_product", store_or_path_url=zarr_file)
     with product.open(mode="r"):
         product.load()
@@ -198,7 +212,7 @@ def test_check_capabilities(store, readable, writable, listable, erasable):
         (EONetCDFStore(_FILES["netcdf"]), Netcdfdecoder),
     ],
 )
-def test_write_stores(fs: FakeFilesystem, store: EOProductStore, decoder_type: Any):
+def test_write_stores(store: EOProductStore, decoder_type: Any):
 
     store.open(mode="w")
     store["a_group"] = EOGroup()
@@ -222,7 +236,7 @@ def test_write_stores(fs: FakeFilesystem, store: EOProductStore, decoder_type: A
         EONetCDFStore(_FILES["netcdf"]),
     ],
 )
-def test_read_stores(fs: FakeFilesystem, store: EOProductStore):
+def test_read_stores(store: EOProductStore):
     store.open(mode="w")
     store["a_group"] = EOGroup()
     store["a_group/a_variable"] = EOVariable(data=[])
@@ -255,13 +269,10 @@ def test_abstract_store_cant_be_instantiate():
         EORasterIOAccessor("a.jp2"),
     ],
 )
-def test_store_must_be_open(fs: FakeFilesystem, store: EOProductStore):
+def test_store_must_be_open_read_method(store: EOProductStore):
 
     with pytest.raises(StoreNotOpenError):
         store["a_group"]
-
-    with pytest.raises(StoreNotOpenError):
-        store["a_group"] = EOGroup(variables={})
 
     with pytest.raises(StoreNotOpenError):
         store.is_group("a_group")
@@ -276,11 +287,24 @@ def test_store_must_be_open(fs: FakeFilesystem, store: EOProductStore):
         store.iter("a_group")
 
     with pytest.raises(StoreNotOpenError):
-        store.write_attrs("a_group", attrs={})
-
-    with pytest.raises(StoreNotOpenError):
         for _ in store:
             continue
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "store",
+    [
+        EOZarrStore("a_product"),
+        EONetCDFStore(_FILES["netcdf"]),
+    ],
+)
+def test_store_must_be_open_write_method(store):
+    with pytest.raises(StoreNotOpenError):
+        store["a_group"] = EOGroup(variables={})
+
+    with pytest.raises(StoreNotOpenError):
+        store.write_attrs("a_group", attrs={})
 
 
 @pytest.mark.unit
@@ -291,7 +315,7 @@ def test_store_must_be_open(fs: FakeFilesystem, store: EOProductStore):
         EONetCDFStore(_FILES["netcdf"]),
     ],
 )
-def test_store_structure(fs: FakeFilesystem, store: EOProductStore):
+def test_store_structure(store: EOProductStore):
     store.open(mode="w")
     store["a_group"] = EOGroup()
     store["another_one"] = EOGroup()
@@ -307,23 +331,12 @@ def test_store_structure(fs: FakeFilesystem, store: EOProductStore):
     store.close()
 
 
-# needed because Netcdf4 have no convenience way to test without create a file ...
-@pytest.fixture(autouse=True)
-def cleanup_files():
-    yield
-    for file in _FILES.values():
-        if os.path.isfile(file):
-            os.remove(file)
-        if os.path.isdir(file):
-            shutil.rmtree(file)
-
-
 @pytest.mark.unit
 @pytest.mark.filterwarnings("error")
 @pytest.mark.parametrize(
     "store, exceptions",
     [
-        (EOZarrStore(zarr.MemoryStore()), (AlreadyOpen, AlreadyClose)),
+        (EOZarrStore(zarr.MemoryStore()), (AlreadyOpen, StoreNotOpenError)),
         (EONetCDFStore(_FILES["netcdf"]), (AlreadyOpen, StoreNotOpenError)),
     ],
 )
@@ -352,7 +365,7 @@ def test_guess_read_format(store, formats, results):
 
 
 @pytest.mark.unit
-def test_mtd_store_must_be_open(fs: FakeFilesystem):
+def test_mtd_store_must_be_open():
     """Given a manifest store, when accessing items inside it without previously opening it,
     the function must raise a StoreNotOpenError error.
     """
@@ -403,8 +416,9 @@ def test_close_manifest_store():
         store.close()
 
 
-@pytest.mark.usecase
-def test_retrieve_from_manifest_store():
+@pytest.mark.need_files
+@pytest.mark.integration
+def test_retrieve_from_manifest_store(S3_OLCI_L1_EFR: str, S3_OLCI_L1_MAPPING: str, tmp_path: pathlib.Path):
     """Tested on 24th of February on data coming from
     S3A_OL_1_EFR____20220116T092821_20220116T093121_20220117T134858_0179_081_036_2160_LN1_O_NT_002.SEN3
     Given a manifest XML file from a Legacy product and a mapping file,
@@ -412,14 +426,17 @@ def test_retrieve_from_manifest_store():
     must match the ones expected.
     """
     import json
-    from glob import glob
 
-    olci_path = glob(f"{PARENT_DATA_PATH}/data/S3A_OL_1*.SEN3")[0]
-    manifest_path = os.path.join(olci_path, "xfdumanifest.xml")
+    fsmap = fsspec.get_mapper(S3_OLCI_L1_EFR)
+    manifest_name = "xfdumanifest.xml"
+    manifest_path = tmp_path / manifest_name
+    for key in fsmap:
+        if key.endswith(manifest_name):
+            manifest_path.write_bytes(fsmap[key])
+
     manifest = ManifestStore(manifest_path)
 
-    mapping_file_path = glob("eopf/product/store/mapping/S3_OL_1_EFR_mapping.json")[0]
-    mapping_file = open(mapping_file_path)
+    mapping_file = open(S3_OLCI_L1_MAPPING)
     map_olci = json.load(mapping_file)
     config = {"namespaces": map_olci["namespaces"], "metadata_mapping": map_olci["metadata_mapping"]}
     manifest.open(**config)
@@ -431,7 +448,7 @@ def test_retrieve_from_manifest_store():
     assert_issubdict(
         returned_cf,
         {
-            "title": olci_path.replace(f"{PARENT_DATA_PATH}/data/", ""),
+            "title": S3_OLCI_L1_EFR.split("/")[-1].replace(".zip", ".SEN3"),
             "institution": "European Space Agency, Land OLCI Processing and Archiving Centre [LN1]",
             "source": "Sentinel-3A OLCI Ocean Land Colour Instrument",
             "comment": "Operational",
@@ -482,7 +499,7 @@ def test_retrieve_from_manifest_store():
     assert_issubdict(
         metadata_property,
         {
-            "identifier": olci_path.replace(f"{PARENT_DATA_PATH}/data/", ""),  # noqa
+            "identifier": S3_OLCI_L1_EFR.split("/")[-1].replace(".zip", ".SEN3"),
             "acquisitionType": "Operational",
             "productType": "OL_1_EFR___",
             "status": "ARCHIVED",
@@ -543,34 +560,83 @@ def test_rasters(store_cls: type[EORasterIOAccessor], format_file: str, params: 
     assert not store_cls.guess_can_read("false_format.false")
     raster = store_cls(file_name)
 
-    attrs = {"new_key": "new_value"}
     with patch("rioxarray.open_rasterio") as mock_function:
-        mock_function.return_value = xarray.DataArray()
-
+        data_val = [[1, 2, 3], [3, 4, 5], [6, 7, 8]]
+        coord_a = [1, 2, 4]
+        coord_b = [14, 5, 7]
+        mock_function.return_value = xarray.DataArray(
+            data_val,
+            coords={
+                "a": coord_a,
+                "b": coord_b,
+            },
+        )
         raster.open(mode="r", **params)
-        assert isinstance(raster[""], EOVariable)
-        assert len([i for i in raster.iter("")]) == 0
-        raster.write_attrs("", attrs)
+        value = raster[""]
+        assert isinstance(value, EOGroup)
+        assert sum([1 for _ in raster]) == len(raster)
+
+        assert isinstance(value["value"], EOVariable)
+        assert np.array_equal(value["value"]._data, data_val)
+
+        assert isinstance(raster["value"], EOVariable)
+        assert np.array_equal(value["value"]._data, data_val)
+        assert raster.is_variable("value")
+        assert not raster.is_group("value")
+
+        assert isinstance(raster["coordinates"], EOGroup)
+        assert raster.is_group("coordinates")
+        assert not raster.is_variable("coordinates")
+
+        assert isinstance(raster["coordinates"]["a"], EOVariable)
+        assert np.array_equal(raster["coordinates"]["a"]._data, coord_a)
+        assert np.array_equal(raster["coordinates/a"]._data, coord_a)
+
+        assert isinstance(raster["coordinates"]["b"], EOVariable)
+        assert np.array_equal(raster["coordinates"]["b"]._data, coord_b)
+        assert np.array_equal(raster["coordinates/b"]._data, coord_b)
+
+        assert len([i for i in raster.iter("coordinates")]) == 2
+        assert len([i for i in raster.iter("value")]) == 0
+
+        not_existing_key = "not_existing_key"
+        with pytest.raises(KeyError):
+            raster[not_existing_key]
+        assert not raster.is_group(not_existing_key)
+        assert not raster.is_variable(not_existing_key)
+
         raster.close()
 
-        mock_function.return_value = xarray.Dataset(data_vars={"a": xarray.DataArray()})
-        raster.open(mode="r", **params)
-        assert isinstance(raster[""], EOGroup)
-        assert len([i for i in raster.iter("")]) == 1
-        assert len([i for i in raster.iter("a")]) == 0
-        assert len(raster) == 1
-        raster.write_attrs("", attrs)
-        raster.close()
+        for return_val in [xarray.Dataset(data_vars={"a": xarray.DataArray()}), [xarray.Dataset()]]:
+            mock_function.return_value = return_val
+            raster.open(mode="r", **params)
+            with pytest.raises(NotImplementedError):
+                raster[""]
+            with pytest.raises(NotImplementedError):
+                [i for i in raster.iter("")]
+            with pytest.raises(NotImplementedError):
+                [i for i in raster.iter("not_implemeted")]
+            raster.close()
+            with pytest.raises(StoreNotOpenError):
+                raster.close()
 
-        mock_function.return_value = [xarray.Dataset()]
-        raster.open(mode="r", **params)
-        with pytest.raises(NotImplementedError):
-            raster[""]
-        with pytest.raises(NotImplementedError):
-            [i for i in raster.iter("")]
-        with pytest.raises(NotImplementedError):
-            [i for i in raster.iter("not_implemeted")]
-        with pytest.raises(NotImplementedError):
-            raster.write_attrs("", {"new_key": "new_value"})
 
-        raster.close()
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "product, fakefilename, open_kwargs",
+    [
+        (EOProduct("", store_or_path_url="s3://a_simple_zarr.zarr"), lazy_fixture("zarr_file"), S3_CONFIG),
+        (
+            EOProduct("", store_or_path_url="zip::s3://a_simple_zarr.zarr"),
+            lazy_fixture("zarr_file"),
+            dict(s3=S3_CONFIG),
+        ),
+    ],
+)
+def test_zarr_open_on_different_fs(product: EOProduct, fakefilename: str, open_kwargs: dict[str, Any]):
+    with patch("fsspec.get_mapper") as mock:
+        mock.return_value = fsspec.FSMap(fakefilename, LocalFileSystem())
+        with product.open(storage_options=open_kwargs):
+            product.load()
+        assert mock.call_count == 1
+        mock.assert_called_with(product.store.url, **open_kwargs)

@@ -14,9 +14,8 @@ by providing high level object.
    :hidden:
    :caption: For users
 
-   Getting Started <getting-started-guide/index>
+   Installation <installation>
    User Guide <user-guide/index>
-   Tutorials <tutorials>
    API Reference <api/eopf>
 
 .. toctree::

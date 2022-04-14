@@ -1,6 +1,8 @@
 from types import TracebackType
 from typing import Any, Iterable, MutableMapping, Optional, Type, Union
 
+import IPython.terminal.interactiveshell
+
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError, StoreNotOpenError
 
 from ..store.abstract import EOProductStore, StorageStatus
@@ -181,28 +183,25 @@ class EOProduct(EOContainer):
             print("|" + " " * level + "├──", g[0])
             self._create_structure(g, level + 2)
 
-    def tree(self) -> Optional["EOProduct"]:
-        """Display the hierarchy of the product.
-
-        Returns
-        ------
-        Union[EOProduct, None]
-            Instance of EOProduct if the environment is interactive (e.g. Jupyter Notebook)
-            Oterwise, returns None.
-        """
+    def tree(self) -> None:
+        """Display the hierarchy of the product."""
         try:  # pragma: no cover
-            from IPython import get_ipython
+            from IPython import display, get_ipython
 
-            if get_ipython():
-                return self
+            py_type = get_ipython()  # Recover python environment from which this is used
+            if py_type and not isinstance(py_type, IPython.terminal.interactiveshell.TerminalInteractiveShell):
+                # Return EOProduct if environment is interactive
+                display.display(display.HTML(self._repr_html_()))
+                return
         except ModuleNotFoundError:  # pragma: no cover
             import warnings
 
             warnings.warn("IPython not found")
+        # Iterate and print EOProduct structure otherwise (CLI)
         for name, group in self._groups.items():
             print(f"├── {name}")
             self._create_structure(group, level=2)
-        return None
+        return
 
     @property
     def coordinates(self) -> EOGroup:

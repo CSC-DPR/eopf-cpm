@@ -1,6 +1,8 @@
 import os
 from typing import TYPE_CHECKING, Any, Union
 
+from hypothesis import strategies as st
+
 from eopf.product.core.eo_container import EOContainer
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -67,14 +69,14 @@ def _compute_rec(node):
     coords = []
     if node_attrs:
         attrs = json.loads(node_attrs[0].text)
-        if len(node_attrs) > 1:
-            coords = [i.text for i in node_attrs[1:]]
+        if len(node_attrs) > 2:
+            coords = [i.text for i in node_attrs[2:]]
 
     node_dims = node.xpath('div/ul/li/div/div[@class="eopf-section-inline-details"]')
     dims = []
     if node_dims:
         for d in node_dims[0].text.strip()[1:-1].split(","):
-            d = d[1:-1]
+            d = d.strip()[1:-1]
             if d:
                 dims.append(d)
     structure["dims"] = tuple(dims)
@@ -109,4 +111,14 @@ def couple_combinaison_from(elements: list[Any]) -> list[tuple[Any, Any]]:
     )
 
 
+@st.composite
+def realize_strategy(draw, to_realize: Union[Any, st.SearchStrategy]):
+    if isinstance(to_realize, st.SearchStrategy):
+        return draw(to_realize)
+    return to_realize
+
+
 PARENT_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..")
+
+
+S3_CONFIG = dict(key="aaaa", secret="bbbbb", client_kwargs=dict(endpoint_url="https://localhost", region_name="local"))

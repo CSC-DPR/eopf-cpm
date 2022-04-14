@@ -89,6 +89,14 @@ eopf.product.store.store\_factory module
    :undoc-members:
    :show-inheritance:
 
+eopf.product.store.xml\_accessors module
+----------------------------------------
+
+.. automodule:: eopf.product.store.xml_accessors
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 eopf.product.store.zarr module
 ------------------------------
 
