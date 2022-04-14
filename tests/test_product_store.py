@@ -26,6 +26,7 @@ from eopf.product.store import (
     EOZarrStore,
     convert,
 )
+from eopf.product.store.cog import EOCogStore
 from eopf.product.store.manifest import ManifestStore
 from eopf.product.store.rasterio import EORasterIOAccessor
 from eopf.product.store.wrappers import (
@@ -223,7 +224,6 @@ def test_check_capabilities(store, readable, writable, listable, erasable):
     ],
 )
 def test_write_stores(dask_client_all, store: EOProductStore, decoder_type: Any):
-
     store.open(mode="w")
     store["a_group"] = EOGroup()
     store.write_attrs("a_group", attrs={"description": "value"})
@@ -281,7 +281,6 @@ def test_abstract_store_cant_be_instantiate():
     ],
 )
 def test_store_must_be_open_read_method(store: EOProductStore):
-
     with pytest.raises(StoreNotOpenError):
         store["a_group"]
 
@@ -468,7 +467,8 @@ def test_retrieve_from_manifest_store(
             "institution": "European Space Agency, Land OLCI Processing and Archiving Centre [LN1]",
             "source": "Sentinel-3A OLCI Ocean Land Colour Instrument",
             "comment": "Operational",
-            "references": "https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-2, https://sentinels.copernicus.eu/web/sentinel/user-guides/sentinel-2-msi/processing-levels/level-1",  # noqa
+            "references": "https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-2, https://sentinels.copernicus.eu/web/sentinel/user-guides/sentinel-2-msi/processing-levels/level-1",
+            # noqa
             "Conventions": "CF-1.9",
         },
     ) and ("history" in returned_cf)
@@ -504,7 +504,8 @@ def test_retrieve_from_manifest_store(
         {
             "result": {
                 "product": {
-                    "fileName": "./Oa01_radiance.nc,./Oa02_radiance.nc,./Oa03_radiance.nc,./Oa04_radiance.nc,./Oa05_radiance.nc,./Oa06_radiance.nc,./Oa07_radiance.nc,./Oa08_radiance.nc,./Oa09_radiance.nc,./Oa10_radiance.nc,./Oa11_radiance.nc,./Oa12_radiance.nc,./Oa13_radiance.nc,./Oa14_radiance.nc,./Oa15_radiance.nc,./Oa16_radiance.nc,./Oa17_radiance.nc,./Oa18_radiance.nc,./Oa19_radiance.nc,./Oa20_radiance.nc,./Oa21_radiance.nc,./geo_coordinates.nc,./instrument_data.nc,./qualityFlags.nc,./removed_pixels.nc,./tie_geo_coordinates.nc,./tie_geometries.nc,./tie_meteo.nc,./time_coordinates.nc",  # noqa
+                    "fileName": "./Oa01_radiance.nc,./Oa02_radiance.nc,./Oa03_radiance.nc,./Oa04_radiance.nc,./Oa05_radiance.nc,./Oa06_radiance.nc,./Oa07_radiance.nc,./Oa08_radiance.nc,./Oa09_radiance.nc,./Oa10_radiance.nc,./Oa11_radiance.nc,./Oa12_radiance.nc,./Oa13_radiance.nc,./Oa14_radiance.nc,./Oa15_radiance.nc,./Oa16_radiance.nc,./Oa17_radiance.nc,./Oa18_radiance.nc,./Oa19_radiance.nc,./Oa20_radiance.nc,./Oa21_radiance.nc,./geo_coordinates.nc,./instrument_data.nc,./qualityFlags.nc,./removed_pixels.nc,./tie_geo_coordinates.nc,./tie_geometries.nc,./tie_meteo.nc,./time_coordinates.nc",
+                    # noqa
                     "timeliness": "NT",
                 },
             },
@@ -547,7 +548,6 @@ _FORMAT = {
     st.sampled_from(couple_combinaison_from(elements=[EOZarrStore, EONetCDFStore])),
 )
 def test_convert(dask_client_all, read_write_stores):
-
     cls_read_store, cls_write_store = read_write_stores
     read_store = cls_read_store(_FILES[f"{_FORMAT[cls_read_store]}0"])
     write_store = cls_write_store(_FILES[f"{_FORMAT[cls_write_store]}1"])
@@ -694,3 +694,33 @@ def test_write_real_s3(dask_client_all, w_store: type, w_path: str, w_kwargs: di
     in_store = EOZarrStore("zip::s3://eopf/cpm/test_data/olci_zarr_test.zip")
     out_store = w_store(w_path)
     convert(in_store, out_store, dict(storage_options=dict(s3=S3_CONFIG_REAL)), dict(storage_options=w_kwargs))
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "store_cls, format_file",
+    [
+        (EOCogStore, "jp2"),
+    ],
+)
+def test_cog_store(store_cls, format_file):
+    assert store_cls.guess_can_read("some_file.jp2")
+    assert not store_cls.guess_can_read("some_other_file.false")
+    cog = store_cls("some_file.jp2")
+    with patch("rioxarray.open_rasterio") as mock_function:
+        data_val = [[1, 2, 3], [3, 4, 5], [6, 7, 8]]
+        coord_a = [1, 2, 4]
+        coord_b = [5, 6, 7]
+        mock_function.return_value = xarray.DataArray(data_val, coords={"a": coord_a, "b": coord_b})
+        cog.open()
+        value = cog[""]
+        assert isinstance(value, EOVariable)
+        assert sum([1 for _ in value]) == len(value)
+        assert np.array_equal(value._data, data_val)
+        assert isinstance(value["a"], EOVariable)
+        assert np.array_equal(value["a"]._data, coord_a)
+        assert np.array_equal(value["b"]._data, coord_b)
+
+        not_existing_key = "not_existing_key"
+        with pytest.raises(KeyError):
+            value[not_existing_key]

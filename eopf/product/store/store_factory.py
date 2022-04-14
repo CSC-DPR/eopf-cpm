@@ -9,11 +9,11 @@ class EOStoreFactory:
         self.item_formats: dict[str, type[EOProductStore]] = dict()
         self.store_types: set[type[EOProductStore]] = set()
         if default_stores:
+            from eopf.product.store.cog import EOCogStore
             from eopf.product.store.filename_to_variable import (
                 FilenameToVariableAccessor,
             )
             from eopf.product.store.grib import EOGribAccessor
-            from eopf.product.store.cog import EOCogStore
             from eopf.product.store.manifest import ManifestStore
             from eopf.product.store.netcdf import (
                 EONetCDFStore,
