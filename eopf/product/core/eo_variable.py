@@ -111,6 +111,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         """
         Mapping from dimension names to block lengths for this dataarray's data, or None if
         the underlying data is not a dask array.
+
         Cannot be modified directly, but can be modified by calling .chunk().
         Differs from EOVariable.chunks because it returns a mapping of dimensions to chunk shapes
         instead of a tuple of chunk shapes.
@@ -139,6 +140,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         """Manually trigger loading of this array's data from disk or a
         remote source into memory and return a new array. The original is
         left unaltered.
+
         Normally, it should not be necessary to call this method in user code,
         because all xarray functions should either work on deferred data or
         load data automatically. However, this method can be necessary when
@@ -184,9 +186,11 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         If this variable is a non-dask array, it will be converted to dask
         array. If it's a dask array, it will be rechunked to the given chunk
         sizes.
+
         If neither chunks is not provided for one or more dimensions, chunk
         sizes along that dimension will not be updated; non-dask arrays will be
         converted into dask arrays with a single block.
+
         Parameters
         ----------
         chunks : int, tuple of int or mapping of hashable to int, optional
@@ -199,6 +203,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         lock : optional
             Passed on to :py:func:`dask.array.from_array`, if the array is not
             already as dask array.
+
         Returns
         -------
         chunked : eopf.product.EOVariable
@@ -219,8 +224,10 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
     ) -> "EOVariable":
         """
         Apply a function to each chunk of this EOVariable.
+
         .. warning::
             This method is based on the experimental method ``DataArray.map_blocks`` and its signature may change.
+
         Parameters
         ----------
         func : callable
@@ -244,10 +251,12 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
             ``template`` must be provided if the function changes the size of existing dimensions.
             When provided, ``attrs`` on variables in `template` are copied over to the result. Any
             ``attrs`` set by ``func`` will be ignored.
+
         Returns
         -------
         A single DataArray or Dataset with dask backend, reassembled from the outputs of the
         function.
+
         See Also
         --------
         dask.array.map_blocks, xarray.apply_ufunc, xarray.Dataset.map_blocks, xarray.DataArray.map_blocks
@@ -264,6 +273,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
     ) -> "EOVariable":
         """Return a new EOVariable whose data is given by integer indexing
         along the specified dimension(s).
+
         Parameters
         ----------
         indexers : dict, optional
@@ -284,6 +294,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
             - "ignore": ignore the missing dimensions
         **indexers_kwargs : {dim: indexer, ...}, optional
             The keyword arguments form of ``indexers``.
+
         See Also
         --------
         DataArray.sel
@@ -329,6 +340,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         labels along the specified dimension(s).
         In contrast to `EOVariable.isel`, indexers for this method should use
         labels instead of integers.
+
         Under the hood, this method is powered by using pandas's powerful Index
         objects. This makes label based indexing essentially just as fast as
         using integer indexing.
@@ -337,6 +349,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         (e.g., '2000-01' to select all values in January 2000). It also means
         that slices are treated as inclusive of both the start and stop values,
         unlike normal Python indexing.
+
         .. warning::
           Do not try to assign values when using any of the indexing methods
           ``isel`` or ``sel``::

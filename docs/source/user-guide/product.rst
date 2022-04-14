@@ -100,7 +100,6 @@ Using groups and variables
     the first one is to simply add them from the top level product, using :meth:`EOProduct.add_group` (resp. :meth:`EOProduct.add_variable`) method.
 
         .. warning::
-
             :obj:`eopf.product.EOProduct` does not support variable at top level.
 
             .. jupyter-execute::
@@ -239,22 +238,6 @@ Tree of the product
             print(f"├── {name}")
             product._create_structure(group, level=1)
 
-Plotting an EOVariable
------------------------
-
-    :obj:`eopf.product.core.EOVariable` provide a **plot** methode, to plot them, it use obj:`matplotlib.pyplot`:
-
-    .. jupyter-execute::
-
-        import matplotlib.pyplot as plt
-
-        product["/measurements/group1/group2/variable_c"].plot()
-        plt.ylabel("y")
-        plt.xlabel("x")
-        plt.xlim(1000, 2000)
-        plt.ylim(2150, 3150)
-        plt.draw()
-
 Reading a Product from a store
 ------------------------------
 
@@ -324,13 +307,11 @@ Reading a Product from a store
         product_read_from_store = EOProduct("product_read", store_or_path_url=EOZarrStore(file_name))
 
     .. note::
-
         The default type when you provide a :obj:`str` is a :obj:`eopf.product.store.EOZarrStore`
 
     So now if you access to an elements of your product, it come from the zarr file.
 
     .. warning::
-
         You have to **open** your store before, using :obj:`eopf.product.EOProduct.open` or :obj:`eopf.product.conveniences.open_store`
 
     .. jupyter-execute::
@@ -370,5 +351,4 @@ Writting Products
             product.write()
 
     .. warning::
-
         You have to **open** your store before, using :obj:`eopf.product.EOProduct.open` or :obj:`eopf.product.conveniences.open_store`

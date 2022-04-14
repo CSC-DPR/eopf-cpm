@@ -1,5 +1,5 @@
 ################
-Getting Started
+Installation
 ################
 
 The getting started guide aims to get you using eopf cpm productively as quickly as possible.

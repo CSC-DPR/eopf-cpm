@@ -12,6 +12,7 @@ class EOVariableOperatorsMixin(Generic[EOV_TYPE]):
     """
     Provide unary and binary operations on the _data of it's subtype EOV_TYPE.
     All inheriting class must define the following attributes:
+
     Attributes
     ----------
     _data : xarray.DataArray

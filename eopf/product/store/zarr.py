@@ -16,7 +16,12 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class EOZarrStore(EOProductStore):
-    """Store representation to access to a Zarr file on the given URL
+    """Store representation to access to a Zarr file on the given URL.
+
+    Url can be used to access to S3 and/or zip files.
+
+    .. warning::
+        zip file on S3 is not available in writing mode.
 
     Parameters
     ----------
@@ -29,6 +34,44 @@ class EOZarrStore(EOProductStore):
         url to the target store
     sep: str
         file separator
+
+    Examples
+    --------
+    >>> zarr_store = EOZarrStore("zip::s3://eopf_storage/S3A_OL_1_EFR___LN1_O_NT_002.zarr")
+    >>> product = EOProduct("OLCI Product", store_or_path_url=zarr_store)
+    >>> with open_store(product, storage_options=storage_options):
+    ...    measurements = product["/measurements"]
+
+    Notes
+    -----
+    URL can be one of the following format:
+
+        * zip::<path_to_my_file>
+        * zip::file://<path_to_my_file>
+        * s3://<path_to_my_file>
+            >>> zarr.open(mode=mode, storage_options=storage_options)
+        * zip::s3://<path_to_my_file>
+            >>> zarr.open(mode=mode, storage_options=storage_options)
+
+    Storage options is used to identify s3 storage:
+        >>> storage_options = dict(
+        ...     key="access_key",
+        ...     secret="secret_key",
+        ...     client_kwargs={
+        ...         "endpoint_url": "my_endpoint",
+        ...         "region_name": "region_name"
+        ...     }
+        ... )
+
+    if you read a zip on s3 storage:
+        >>> storage_options = dict(s3=dict(
+        ...     key="access_key",
+        ...     secret="secret_key",
+        ...     client_kwargs={
+        ...         "endpoint_url": "my_endpoint",
+        ...         "region_name": "region_name"
+        ...     }
+        ... ))
 
     See Also
     -------
