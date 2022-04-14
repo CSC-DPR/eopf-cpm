@@ -118,6 +118,11 @@ def _transformation_sub_array(eo_obj: "EOObject", parameter: Any) -> "EOObject":
     return eo_obj.isel(parameter)
 
 
+def _block_pack_bit(array: np.ndarray[Any, Any], *args: Any, **kwargs: Any) -> np.ndarray[Any, Any]:
+    result = np.packbits(array, *args, **kwargs)
+    return result.squeeze(axis=kwargs["axis"])
+
+
 def _transformation_pack_bits(eo_obj: "EOObject", parameter: Any) -> "EOObject":
     """Pack bit the parmater dimension of eo_obj."""
     from ..core import EOVariable
@@ -136,7 +141,7 @@ def _transformation_pack_bits(eo_obj: "EOObject", parameter: Any) -> "EOObject":
     kwargs = {"axis": dim_index, "drop_axis": dim_index, "bitorder": "little"}
     # drop_axis is used by dask to estimate the new shape.
     # axis and bitorder are packbits parameters.
-    data = xarray_to_data_map_block(np.packbits, eo_obj._data, **kwargs)
+    data = xarray_to_data_map_block(_block_pack_bit, eo_obj._data, **kwargs)
     dims.remove(dim_key)
     return EOVariable(data=data, dims=tuple(dims), attrs=attrs)
 
