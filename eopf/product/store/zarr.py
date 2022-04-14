@@ -46,8 +46,7 @@ class EOZarrStore(EOProductStore):
     -----
     URL can be one of the following format:
 
-        * zip::<path_to_my_file>
-        * zip::file://<path_to_my_file>
+        * <path_to_my_file>
         * s3://<path_to_my_file>
             >>> zarr.open(mode=mode, storage_options=storage_options)
         * zip::s3://<path_to_my_file>
