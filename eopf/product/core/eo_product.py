@@ -183,7 +183,7 @@ class EOProduct(EOContainer):
             print("|" + " " * level + "├──", g[0])
             self._create_structure(g, level + 2)
 
-    def tree(self) -> Optional["EOProduct"]:
+    def tree(self) -> None:
         """Display the hierarchy of the product."""
         try:  # pragma: no cover
             from IPython import display, get_ipython

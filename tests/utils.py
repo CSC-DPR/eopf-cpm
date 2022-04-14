@@ -69,8 +69,8 @@ def _compute_rec(node):
     coords = []
     if node_attrs:
         attrs = json.loads(node_attrs[0].text)
-        if len(node_attrs) > 1:
-            coords = [i.text for i in node_attrs[1:]]
+        if len(node_attrs) > 2:
+            coords = [i.text for i in node_attrs[2:]]
 
     node_dims = node.xpath('div/ul/li/div/div[@class="eopf-section-inline-details"]')
     dims = []
