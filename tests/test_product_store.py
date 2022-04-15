@@ -52,6 +52,7 @@ _FILES = {
     "zarr": "test_zarr_files_.zarr",
     "zarr0": "test_zarr_read_files_.zarr",
     "zarr1": "test_zarr_write_files_.zarr",
+    "cog": "test_cog.cog",
 }
 
 
@@ -224,12 +225,11 @@ def test_check_capabilities(store, readable, writable, listable, erasable):
     ],
 )
 def test_write_stores(dask_client_all, store: EOProductStore, decoder_type: Any):
-    store.open(mode="w")
-    store["a_group"] = EOGroup()
-    store.write_attrs("a_group", attrs={"description": "value"})
-    store["a_group/a_variable"] = EOVariable(data=[])
-    store["coordinates/a_coord"] = EOVariable(data=[1, 2, 3], dims=["a"])
-    store.close()
+    with open_store(store, mode="w"):
+        store["a_group"] = EOGroup()
+        store.write_attrs("a_group", attrs={"description": "value"})
+        store["a_group/a_variable"] = EOVariable(data=[])
+        store["coordinates/a_coord"] = EOVariable(data=[1, 2, 3], dims=["a"])
 
     decoder = decoder_type(store.url, mode="r")
     assert dict(decoder["a_group"].attrs) == {"description": "value"}
@@ -247,20 +247,17 @@ def test_write_stores(dask_client_all, store: EOProductStore, decoder_type: Any)
     ],
 )
 def test_read_stores(dask_client_all, store: EOProductStore):
-    store.open(mode="w")
-    store["a_group"] = EOGroup()
-    store["a_group/a_variable"] = EOVariable(data=[])
-    store.close()
+    with open_store(store, mode="w"):
+        store["a_group"] = EOGroup()
+        store["a_group/a_variable"] = EOVariable(data=[])
 
-    store.open(mode="r")
-    assert isinstance(store["a_group"], EOGroup)
-    assert isinstance(store["a_group/a_variable"], EOVariable)
-    assert len(store) == 1
-    assert "a_group" in [_ for _ in store]
-    with pytest.raises(KeyError):
-        store["invalid_key"]
-
-    store.close()
+    with open_store(store, mode="r"):
+        assert isinstance(store["a_group"], EOGroup)
+        assert isinstance(store["a_group/a_variable"], EOVariable)
+        assert len(store) == 1
+        assert "a_group" in [_ for _ in store]
+        with pytest.raises(KeyError):
+            store["invalid_key"]
 
 
 @pytest.mark.unit
@@ -326,19 +323,17 @@ def test_store_must_be_open_write_method(store):
     ],
 )
 def test_store_structure(dask_client_all, store: EOProductStore):
-    store.open(mode="w")
-    store["a_group"] = EOGroup()
-    store["another_one"] = EOGroup()
-    store["a_final_one"] = EOGroup()
+    with open_store(store, mode="w"):
+        store["a_group"] = EOGroup()
+        store["another_one"] = EOGroup()
+        store["a_final_one"] = EOGroup()
 
-    assert isinstance(store["a_group"], EOGroup)
-    assert isinstance(store["another_one"], EOGroup)
-    assert isinstance(store["a_final_one"], EOGroup)
+        assert isinstance(store["a_group"], EOGroup)
+        assert isinstance(store["another_one"], EOGroup)
+        assert isinstance(store["a_final_one"], EOGroup)
 
-    assert store.is_group("another_one")
-    assert not store.is_variable("another_one")
-
-    store.close()
+        assert store.is_group("another_one")
+        assert not store.is_variable("another_one")
 
 
 @pytest.mark.unit
@@ -351,10 +346,9 @@ def test_store_structure(dask_client_all, store: EOProductStore):
     ],
 )
 def test_open_close_already(store, exceptions):
-    store.open(mode="w")
-    with pytest.raises(exceptions[0]):
-        store.open()
-    store.close()
+    with open_store(store, mode="w"):
+        with pytest.raises(exceptions[0]):
+            store.open()
     with pytest.raises(exceptions[1]):
         store.close()
 
@@ -454,8 +448,8 @@ def test_retrieve_from_manifest_store(
     mapping_file = open(S3_OLCI_L1_MAPPING)
     map_olci = json.load(mapping_file)
     config = {"namespaces": map_olci["namespaces"], "mapping": map_olci["metadata_mapping"]}
-    manifest.open(**config)
-    eog = manifest[""]
+    with open_store(manifest, **config):
+        eog = manifest[""]
     assert isinstance(eog, EOGroup)
     returned_cf = eog.attrs["CF"]
     returned_om_eop = eog.attrs["OM_EOP"]
@@ -621,52 +615,50 @@ def test_rasters(dask_client_all, store_cls: type[EORasterIOAccessor], format_fi
                 "b": coord_b,
             },
         )
-        raster.open(mode="r", **params)
-        value = raster[""]
-        assert isinstance(value, EOGroup)
-        assert sum([1 for _ in raster]) == len(raster)
+        with open_store(raster, mode="r", **params):
+            value = raster[""]
+            assert isinstance(value, EOGroup)
+            assert sum([1 for _ in raster]) == len(raster)
 
-        assert isinstance(value["value"], EOVariable)
-        assert np.array_equal(value["value"]._data, data_val)
+            assert isinstance(value["value"], EOVariable)
+            assert np.array_equal(value["value"]._data, data_val)
 
-        assert isinstance(raster["value"], EOVariable)
-        assert np.array_equal(value["value"]._data, data_val)
-        assert raster.is_variable("value")
-        assert not raster.is_group("value")
+            assert isinstance(raster["value"], EOVariable)
+            assert np.array_equal(value["value"]._data, data_val)
+            assert raster.is_variable("value")
+            assert not raster.is_group("value")
 
-        assert isinstance(raster["coordinates"], EOGroup)
-        assert raster.is_group("coordinates")
-        assert not raster.is_variable("coordinates")
+            assert isinstance(raster["coordinates"], EOGroup)
+            assert raster.is_group("coordinates")
+            assert not raster.is_variable("coordinates")
 
-        assert isinstance(raster["coordinates"]["a"], EOVariable)
-        assert np.array_equal(raster["coordinates"]["a"]._data, coord_a)
-        assert np.array_equal(raster["coordinates/a"]._data, coord_a)
+            assert isinstance(raster["coordinates"]["a"], EOVariable)
+            assert np.array_equal(raster["coordinates"]["a"]._data, coord_a)
+            assert np.array_equal(raster["coordinates/a"]._data, coord_a)
 
-        assert isinstance(raster["coordinates"]["b"], EOVariable)
-        assert np.array_equal(raster["coordinates"]["b"]._data, coord_b)
-        assert np.array_equal(raster["coordinates/b"]._data, coord_b)
+            assert isinstance(raster["coordinates"]["b"], EOVariable)
+            assert np.array_equal(raster["coordinates"]["b"]._data, coord_b)
+            assert np.array_equal(raster["coordinates/b"]._data, coord_b)
 
-        assert len([i for i in raster.iter("coordinates")]) == 2
-        assert len([i for i in raster.iter("value")]) == 0
+            assert len([i for i in raster.iter("coordinates")]) == 2
+            assert len([i for i in raster.iter("value")]) == 0
 
-        not_existing_key = "not_existing_key"
-        with pytest.raises(KeyError):
-            raster[not_existing_key]
-        assert not raster.is_group(not_existing_key)
-        assert not raster.is_variable(not_existing_key)
-
-        raster.close()
+            not_existing_key = "not_existing_key"
+            with pytest.raises(KeyError):
+                raster[not_existing_key]
+            assert not raster.is_group(not_existing_key)
+            assert not raster.is_variable(not_existing_key)
 
         for return_val in [xarray.Dataset(data_vars={"a": xarray.DataArray()}), [xarray.Dataset()]]:
             mock_function.return_value = return_val
-            raster.open(mode="r", **params)
-            with pytest.raises(NotImplementedError):
-                raster[""]
-            with pytest.raises(NotImplementedError):
-                [i for i in raster.iter("")]
-            with pytest.raises(NotImplementedError):
-                [i for i in raster.iter("not_implemeted")]
-            raster.close()
+            with open_store(raster, mode="r", **params):
+                with pytest.raises(NotImplementedError):
+                    raster[""]
+                with pytest.raises(NotImplementedError):
+                    [i for i in raster.iter("")]
+                with pytest.raises(NotImplementedError):
+                    [i for i in raster.iter("not_implemeted")]
+
             with pytest.raises(StoreNotOpenError):
                 raster.close()
 
@@ -738,24 +730,92 @@ def test_write_real_s3(dask_client_all, w_store: type, w_path: str, w_kwargs: di
         (EOCogStore, "jp2"),
     ],
 )
-def test_cog_store(store_cls, format_file):
+def test_cog_store(store_cls: type[EOCogStore], format_file: str):
     assert store_cls.guess_can_read("some_file.jp2")
     assert not store_cls.guess_can_read("some_other_file.false")
     cog = store_cls("some_file.jp2")
-    with patch("rioxarray.open_rasterio") as mock_function:
-        data_val = [[1, 2, 3], [3, 4, 5], [6, 7, 8]]
-        coord_a = [1, 2, 4]
-        coord_b = [5, 6, 7]
-        mock_function.return_value = xarray.DataArray(data_val, coords={"a": coord_a, "b": coord_b})
-        cog.open()
-        value = cog[""]
-        assert isinstance(value, EOVariable)
-        assert sum([1 for _ in value]) == len(value)
-        assert np.array_equal(value._data, data_val)
-        assert isinstance(value["a"], EOVariable)
-        assert np.array_equal(value["a"]._data, coord_a)
-        assert np.array_equal(value["b"]._data, coord_b)
 
-        not_existing_key = "not_existing_key"
-        with pytest.raises(KeyError):
-            value[not_existing_key]
+    with pytest.raises(ValueError):
+        cog.open(mode="r+")
+
+    data_val = [[1, 2, 3], [3, 4, 5], [6, 7, 8]]
+    complex_data_val = [[[1, 2, 3], [3, 4, 5], [6, 7, 8]], [[1, 2, 3], [3, 4, 5], [6, 7, 8]]]
+    coord_a = [1, 2, 4]
+    coord_b = [5, 6, 7]
+
+    with patch("rioxarray.open_rasterio") as mock_function:
+        mock_function.return_value = xarray.DataArray(data_val, coords={"a": coord_a, "b": coord_b})
+        with open_store(cog):
+            value = cog[""]
+            assert [i for i in cog] == [i for i in cog.iter("")]
+            assert len(cog) == len([i for i in cog])
+            assert isinstance(value, EOVariable)
+            assert cog.is_variable("")
+            assert sum([1 for _ in value]) == len(value)
+            assert np.array_equal(value._data, data_val)
+            assert isinstance(value["a"], EOVariable)
+            assert np.array_equal(value["a"]._data, coord_a)
+            assert np.array_equal(value["b"]._data, coord_b)
+            with pytest.raises(KeyError):
+                cog["invalid_key"]
+
+        mock_function.return_value = xarray.Dataset(data_vars={"var1": xarray.DataArray(data=data_val)})
+        with open_store(cog):
+            value = cog[""]
+            assert [i for i in cog] == [i for i in cog.iter("")]
+            assert len(cog) == len([i for i in cog])
+            assert isinstance(value, EOGroup)
+            assert cog.is_group("")
+            assert isinstance(value["var1"], EOVariable)
+            assert np.array_equal(value["var1"], data_val)
+            value = cog["var1"]
+            assert cog.is_variable("var1")
+            assert isinstance(value, EOVariable)
+            assert np.array_equal(value, data_val)
+
+            with pytest.raises(KeyError):
+                cog["invalid_key"]
+
+        mock_function.return_value = [xarray.Dataset(data_vars={"var1": xarray.DataArray(data=data_val)})]
+        with open_store(cog):
+            with pytest.raises(NotImplementedError):
+                cog[""]
+            with pytest.raises(NotImplementedError):
+                cog["var1"]
+            with pytest.raises(NotImplementedError):
+                [i for i in cog.iter("")]
+            with pytest.raises(NotImplementedError):
+                [i for i in cog]
+            not_existing_key = "not_existing_key"
+            with pytest.raises(KeyError):
+                value[not_existing_key]
+
+    with (
+        patch("xarray.DataArray.rio.to_raster") as mock_raster,
+        patch("eopf.product.store.EONetCDFStore.__setitem__") as mock_netcdf,
+    ):
+        cog = store_cls(_FILES["cog"])
+        with open_store(cog, mode="w"):
+            cog["var1"] = EOVariable(data=xarray.DataArray(data_val, coords={"a": coord_a, "b": coord_b}))
+            assert mock_raster.call_count == 1
+            cog["group0"] = EOGroup(
+                variables={"var2": EOVariable(data=xarray.DataArray(data_val, coords={"a": coord_a, "b": coord_b}))},
+            )
+            assert mock_raster.call_count == 2
+            assert mock_netcdf.call_count == 0
+            cog["var1"] = EOVariable(data=xarray.DataArray(complex_data_val))
+            assert mock_raster.call_count == 2
+            assert mock_netcdf.call_count == 1
+            with pytest.raises(NotImplementedError):
+                cog["anything"] = "something"
+            with pytest.raises(NotImplementedError):
+                cog.write_attrs("", {"a": "b"})
+
+    with pytest.raises(StoreNotOpenError):
+        cog[""]
+    with pytest.raises(StoreNotOpenError):
+        cog.close()
+    with pytest.raises(StoreNotOpenError):
+        len(cog)
+    with pytest.raises(StoreNotOpenError):
+        len(cog._select_node(""))

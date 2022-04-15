@@ -51,7 +51,11 @@ class EOCogStore(EOProductStore):
             raise NotImplementedError()
 
         elif isinstance(node, xarray.Dataset):
-            return EOGroup(key, attrs=node.attrs)  # type: ignore[arg-type]
+            return EOGroup(
+                key,
+                variables={var_name: EOVariable(data=var_value) for var_name, var_value in node.items()},
+                attrs=node.attrs,  # type: ignore[arg-type]
+            )
         return EOVariable(key, node)
 
     def __iter__(self) -> Iterator[str]:
@@ -62,7 +66,7 @@ class EOCogStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         if self._mode != "r":
             raise NotImplementedError("Only available in reading mode")
-        return len(self._ref)
+        return sum(1 for _ in self.iter(""))
 
     def _write_cog(self, value: Any, file_path: str) -> None:
         # write the COG file
@@ -85,9 +89,7 @@ class EOCogStore(EOProductStore):
                 value._data.rio.set_spatial_dims(x_dim=value.dims[1], y_dim=value.dims[0], inplace=True)
             return True
         # with S2 L1C image variables have 3 dimesions (band, x, y)
-        if len(value.dims) == 3 and (value.dims[0] == "band"):
-            return True
-        return False
+        return len(value.dims) == 3 and (value.dims[0] == "band")
 
     def _write_eov(self, value: "EOObject", output_dir: str, var_name: str) -> None:
 
@@ -113,8 +115,7 @@ class EOCogStore(EOProductStore):
             self._write_eov(value, self.url, key)
         elif isinstance(value, EOGroup):
             # if the key starts with / the join will not be carried
-            if key[0] == os.path.sep:
-                key = key[1:]
+            key = key.removeprefix(os.path.sep)
             output_dir = os.path.join(self.url, key)
             # create the output dir if it does not exist
             if not os.path.isdir(output_dir):
@@ -142,14 +143,14 @@ class EOCogStore(EOProductStore):
 
     # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
-        if self._mode != "w":
+        if self._mode == "w":
             raise NotImplementedError("Only available in reading mode")
         node = self._select_node(path)
         return isinstance(node, (xarray.Dataset, list))
 
     # docstr-coverage: inherited
     def is_variable(self, path: str) -> bool:
-        if self._mode != "w":
+        if self._mode == "w":
             raise NotImplementedError("Only available in reading mode")
         node = self._select_node(path)
         return isinstance(node, xarray.DataArray)
@@ -161,7 +162,7 @@ class EOCogStore(EOProductStore):
 
     # docstr-coverage: inherited
     def iter(self, path: str) -> Iterator[str]:
-        if self._mode != "w":
+        if self._mode == "w":
             raise NotImplementedError("Only available in reading mode")
         node = self._select_node(path)
         if isinstance(node, list):
@@ -181,25 +182,20 @@ class EOCogStore(EOProductStore):
         elif mode == "w":
             self._ref = True
         else:
-            raise KeyError("Unsuported mode, only (r)ead or (w)rite")
+            raise ValueError("Unsuported mode, only (r)ead or (w)rite")
 
     # docstr-coverage: inherited
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
-        if self._mode == "r":
-            node = self._select_node(group_path)
-            if isinstance(node, list):
-                raise NotImplementedError()
-            node.attrs.update(attrs)  # type: ignore[arg-type]
+        raise NotImplementedError()
 
     # docstr-coverage: inherited
     @staticmethod
     def guess_can_read(file_path: str) -> bool:
-        return pathlib.Path(file_path).suffix in [".tiff", ".tif", ".jp2"]
+        return pathlib.Path(file_path).suffix in [".cog", ".jp2", ".tiff", ".tif", ".nc"]
 
     def _select_node(self, path: str) -> Union[xarray.DataArray, xarray.Dataset]:
         if self._ref is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        current, _, sub_path = path.partition(self.sep)
         if path in ["", "/"]:
             return self._ref
 
