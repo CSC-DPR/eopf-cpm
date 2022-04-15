@@ -467,8 +467,12 @@ def test_retrieve_from_manifest_store(
             "institution": "European Space Agency, Land OLCI Processing and Archiving Centre [LN1]",
             "source": "Sentinel-3A OLCI Ocean Land Colour Instrument",
             "comment": "Operational",
-            "references": "https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-2, https://sentinels.copernicus.eu/web/sentinel/user-guides/sentinel-2-msi/processing-levels/level-1",
-            # noqa
+            "references": ",".join(
+                [
+                    "https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-2",
+                    " https://sentinels.copernicus.eu/web/sentinel/user-guides/sentinel-2-msi/processing-levels/level-1",  # noqa
+                ],
+            ),
             "Conventions": "CF-1.9",
         },
     ) and ("history" in returned_cf)
@@ -504,8 +508,39 @@ def test_retrieve_from_manifest_store(
         {
             "result": {
                 "product": {
-                    "fileName": "./Oa01_radiance.nc,./Oa02_radiance.nc,./Oa03_radiance.nc,./Oa04_radiance.nc,./Oa05_radiance.nc,./Oa06_radiance.nc,./Oa07_radiance.nc,./Oa08_radiance.nc,./Oa09_radiance.nc,./Oa10_radiance.nc,./Oa11_radiance.nc,./Oa12_radiance.nc,./Oa13_radiance.nc,./Oa14_radiance.nc,./Oa15_radiance.nc,./Oa16_radiance.nc,./Oa17_radiance.nc,./Oa18_radiance.nc,./Oa19_radiance.nc,./Oa20_radiance.nc,./Oa21_radiance.nc,./geo_coordinates.nc,./instrument_data.nc,./qualityFlags.nc,./removed_pixels.nc,./tie_geo_coordinates.nc,./tie_geometries.nc,./tie_meteo.nc,./time_coordinates.nc",
-                    # noqa
+                    "fileName": ",".join(
+                        [
+                            "./Oa01_radiance.nc",
+                            "./Oa02_radiance.nc",
+                            "./Oa03_radiance.nc",
+                            "./Oa04_radiance.nc",
+                            "./Oa05_radiance.nc",
+                            "./Oa06_radiance.nc",
+                            "./Oa07_radiance.nc",
+                            "./Oa08_radiance.nc",
+                            "./Oa09_radiance.nc",
+                            "./Oa10_radiance.nc",
+                            "./Oa11_radiance.nc",
+                            "./Oa12_radiance.nc",
+                            "./Oa13_radiance.nc",
+                            "./Oa14_radiance.nc",
+                            "./Oa15_radiance.nc",
+                            "./Oa16_radiance.nc",
+                            "./Oa17_radiance.nc",
+                            "./Oa18_radiance.nc",
+                            "./Oa19_radiance.nc",
+                            "./Oa20_radiance.nc",
+                            "./Oa21_radiance.nc",
+                            "./geo_coordinates.nc",
+                            "./instrument_data.nc",
+                            "./qualityFlags.nc",
+                            "./removed_pixels.nc",
+                            "./tie_geo_coordinates.nc",
+                            "./tie_geometries.nc",
+                            "./tie_meteo.nc",
+                            "./time_coordinates.nc",
+                        ],
+                    ),
                     "timeliness": "NT",
                 },
             },
