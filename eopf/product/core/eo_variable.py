@@ -308,7 +308,6 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
                 missing_dims=missing_dims,
                 **indexers_kwargs,
             ),
-            attrs={k: v for k, v in self.attrs.items() if k != _DIMENSIONS_NAME},
         )
 
     def persist(self, **kwargs: Any) -> "EOVariable":
@@ -412,7 +411,6 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
                 drop=drop,
                 **indexers_kwargs,
             ),
-            attrs={k: v for k, v in self.attrs.items() if k != _DIMENSIONS_NAME},
         )
 
     def plot(self, **kwargs: dict[Any, Any]) -> None:
