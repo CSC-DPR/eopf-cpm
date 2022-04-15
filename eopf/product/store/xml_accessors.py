@@ -31,7 +31,7 @@ class XMLAnglesAccessor(EOProductStore):
 
         self._root = lxml.etree.parse(self._url)
         try:
-            self._namespaces: dict[str, str] = kwargs["namespaces"]
+            self._namespaces: dict[str, str] = kwargs["namespace"]
         except KeyError as e:
             raise TypeError(f"Missing configuration parameter: {e}")
 
@@ -63,8 +63,10 @@ class XMLAnglesAccessor(EOProductStore):
         <<VALUES>> tag.
 
         """
-        item = self._root.xpath(xpath, namespaces=self._namespaces)[0]
-        eo_variable_data = self.get_values(f"{self._root.getpath(item)}/VALUES")
+        xpath_result = self._root.xpath(xpath, namespaces=self._namespaces)
+        if len(xpath_result) == 0:
+            raise KeyError(f"invalid xml xpath : {xpath}")
+        eo_variable_data = self.get_values(f"{self._root.getpath(xpath_result[0])}/VALUES")
         return eo_variable_data
 
     def get_values(self, path: str) -> xr.DataArray:
@@ -123,6 +125,7 @@ class XMLAnglesAccessor(EOProductStore):
 
 class XMLTPAccessor(EOProductStore):
     def __init__(self, url: str, **kwargs: Any) -> None:
+        super().__init__(url)
         self._root = lxml.etree._ElementTree
         self._url = url
 
@@ -130,12 +133,13 @@ class XMLTPAccessor(EOProductStore):
         # Assure that given url is path to legacy product or path to MTD_TL.xml file
 
         try:
-            self._xmltp_step: Any = kwargs["xmltp_step"]  # replace Any with actual type (typing issue)
-            self._xmltp_value: Any = kwargs["xmltp_values"]
-            self._namespaces: Any = kwargs["namespaces"]
+            self._xmltp_step: Any = kwargs["step_path"]  # replace Any with actual type (typing issue)
+            self._xmltp_value: Any = kwargs["values_path"]
+            self._namespaces: Any = kwargs["namespace"]
         except KeyError as e:
             raise TypeError(f"Missing configuration parameter: {e}")
         self._root = lxml.etree.parse(self._url)
+        super().open()
 
     def get_shape(self, xpath: str) -> list[int]:
         """
@@ -191,11 +195,11 @@ class XMLTPAccessor(EOProductStore):
         return EOVariable(name=key, data=self.get_tie_points_data(key))
 
     def __iter__(self) -> Iterator[str]:
-        yield from ()
+        raise NotImplementedError()
 
     def __len__(self) -> int:
         """Has no functionality within this store"""
-        raise NotImplementedError()
+        return 2
 
     def __setitem__(self, key: str, value: Any) -> None:
         """Has no functionality within this store"""
@@ -243,7 +247,7 @@ class XMLManifestAccessor(EOProductStore):
         # get configuration parameters
         try:
             self._metada_mapping: MutableMapping[str, Any] = kwargs["metadata_mapping"]
-            self._namespaces: dict[str, str] = kwargs["namespaces"]
+            self._namespaces: dict[str, str] = kwargs["namespace"]
         except KeyError as e:
             raise TypeError(f"Missing configuration parameter: {e}")
 
