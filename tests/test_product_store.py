@@ -392,9 +392,9 @@ def test_init_manifest_store():
 @pytest.mark.parametrize(
     "config, exception_type",
     [
-        ({"metadata_mapping": {}}, TypeError),
+        ({"mapping": {}}, TypeError),
         ({"namespaces": {}}, TypeError),
-        ({"namespaces": {}, "metadata_mapping": {}}, FileNotFoundError),
+        ({"namespaces": {}, "mapping": {}}, FileNotFoundError),
     ],
 )
 def test_open_manifest_store(config: Optional[dict], exception_type: Exception):
@@ -438,7 +438,7 @@ def test_retrieve_from_manifest_store(S3_OLCI_L1_EFR: str, S3_OLCI_L1_MAPPING: s
 
     mapping_file = open(S3_OLCI_L1_MAPPING)
     map_olci = json.load(mapping_file)
-    config = {"namespaces": map_olci["namespaces"], "metadata_mapping": map_olci["metadata_mapping"]}
+    config = {"namespaces": map_olci["namespaces"], "mapping": map_olci["metadata_mapping"]}
     manifest.open(**config)
     eog = manifest[""]
     assert isinstance(eog, EOGroup)

@@ -116,6 +116,8 @@ class EORasterIOAccessor(EOProductStore):
     # docstr-coverage: inherited
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         super().open(mode=mode)
+        if "chunks" not in kwargs:
+            kwargs["chunks"] = True
         self._ref = rioxarray.open_rasterio(self.url, **kwargs)
         self._mode = mode
 

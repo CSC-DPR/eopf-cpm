@@ -50,9 +50,27 @@ def S3_OLCI_L1_MAPPING(MAPPING_FOLDER: str):
 # ----------------------------------#
 # ------------ PRODUCT -------------#
 # ----------------------------------#
+
+
 @pytest.fixture
 def S3_OLCI_L1_EFR(INPUT_DIR: str):
     """Path to a S3 OLCI LEVEL 1 product"""
     file_name = "S3*_OL_1_E*R*.zip"
     glob_path = os.path.join(INPUT_DIR, file_name)
     return f"zip::file://{glob.glob(glob_path)[0]}"
+
+
+@pytest.fixture
+def S2A_MSIL1C_ZIP(INPUT_DIR: str):
+    """Path to a S3 OLCI LEVEL 1 mapping"""
+    file_name = "S2A_MSIL1C*.zip"
+    glob_path = os.path.join(INPUT_DIR, file_name)
+    return f"zip::file://{glob.glob(glob_path)[0]}"
+
+
+@pytest.fixture
+def S2A_MSIL1C(INPUT_DIR: str):
+    """Path to a S3 OLCI LEVEL 1 mapping"""
+    file_name = "S2A_MSIL1C*.SAFE"
+    glob_path = os.path.join(INPUT_DIR, file_name)
+    return f"file://{glob.glob(glob_path)[0]}"

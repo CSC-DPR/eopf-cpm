@@ -25,9 +25,9 @@
         },
         {
             "short_name": "spatialref_10m",
-            "source_path": "GRANULE/[^/]*/IMG_DATA/.*B02.jp2",
-            "target_path": "/coordinates/image_grid_10m/x_10m",
-            "item_format": "jp2spatialref"
+            "source_path": "GRANULE/[^/]*/IMG_DATA/.*B02.jp2:coordinates/spatial_ref",
+            "target_path": "/coordinates/image_grid_10m/spatialref_10m",
+            "item_format": "jp2"
         },
         {
             "short_name": "y_20m",
@@ -49,9 +49,9 @@
         },
         {
             "short_name": "spatialref_20m",
-            "source_path": "GRANULE/[^/]*/IMG_DATA/.*B05.jp2",
-            "target_path": "/coordinates/image_grid_20m/x_20m",
-            "item_format": "jp2spatialref"
+            "source_path": "GRANULE/[^/]*/IMG_DATA/.*B05.jp2:coordinates/spatial_ref",
+            "target_path": "/coordinates/image_grid_20m/spatialref_20m",
+            "item_format": "jp2"
         },
         {
             "short_name": "y_60m",
@@ -73,9 +73,9 @@
         },
         {
             "short_name": "spatialref_60m",
-            "source_path": "GRANULE/[^/]*/IMG_DATA/.*B09.jp2",
-            "target_path": "/coordinates/image_grid_60m/x_60m",
-            "item_format": "jp2spatialref"
+            "source_path": "GRANULE/[^/]*/IMG_DATA/.*B09.jp2:coordinates/spatial_ref",
+            "target_path": "/coordinates/image_grid_60m/spatialref_60m",
+            "item_format": "jp2"
         },
 
         {
@@ -142,7 +142,7 @@
             "item_format": "jp2",
             "parameters": {
                 "sub_array" : {
-                    "band": 0
+                    "dim_0": 0
                 },
                 "dimensions": [ "y_60m", "x_60m" ]
             }
@@ -154,7 +154,7 @@
             "item_format": "jp2",
             "parameters": {
                 "sub_array" : {
-                    "band": 0
+                    "dim_0": 0
                 },
                 "dimensions": [ "y_10m", "x_10m" ]
             }
@@ -166,7 +166,7 @@
             "item_format": "jp2",
             "parameters": {
                 "sub_array" : {
-                    "band": 0
+                    "dim_0": 0
                 },
                 "dimensions": [ "y_10m", "x_10m" ]
             }
@@ -178,7 +178,7 @@
             "item_format": "jp2",
             "parameters": {
                 "sub_array" : {
-                    "band": 0
+                    "dim_0": 0
                 },
                 "dimensions": [ "y_10m", "x_10m" ]
             }
@@ -190,7 +190,7 @@
             "item_format": "jp2",
             "parameters": {
                 "sub_array" : {
-                    "band": 0
+                    "dim_0": 0
                 },
                 "dimensions": [ "y_20m", "x_20m" ]
             }
@@ -202,7 +202,7 @@
             "item_format": "jp2",
             "parameters": {
                 "sub_array" : {
-                    "band": 0
+                    "dim_0": 0
                 },
                 "dimensions": [ "y_20m", "x_20m" ]
             }
@@ -214,7 +214,7 @@
             "item_format": "jp2",
             "parameters": {
                 "sub_array" : {
-                    "band": 0
+                    "dim_0": 0
                 },
                 "dimensions": [ "y_20m", "x_20m" ]
             }
@@ -226,7 +226,7 @@
             "item_format": "jp2",
             "parameters": {
                 "sub_array" : {
-                    "band": 0
+                    "dim_0": 0
                 },
                 "dimensions": [ "y_10m", "x_10m" ]
             }
@@ -238,7 +238,7 @@
             "item_format": "jp2",
             "parameters": {
                 "sub_array" : {
-                    "band": 0
+                    "dim_0": 0
                 },
                 "dimensions": [ "y_20m", "x_20m" ]
             }
@@ -250,7 +250,7 @@
             "item_format": "jp2",
             "parameters": {
                 "sub_array" : {
-                    "band": 0
+                    "dim_0": 0
                 },
                 "dimensions": [ "y_60m", "x_60m" ]
             }
@@ -262,7 +262,7 @@
             "item_format": "jp2",
             "parameters": {
                 "sub_array" : {
-                    "band": 0
+                    "dim_0": 0
                 },
                 "dimensions": [ "y_60m", "x_60m" ]
             }
@@ -274,7 +274,7 @@
             "item_format": "jp2",
             "parameters": {
                 "sub_array" : {
-                    "band": 0
+                    "dim_0": 0
                 },
                 "dimensions": [ "y_20m", "x_20m" ]
             }
@@ -286,7 +286,7 @@
             "item_format": "jp2",
             "parameters": {
                 "sub_array" : {
-                    "band": 0
+                    "dim_0": 0
                 },
                 "dimensions": [ "y_20m", "x_20m" ]
             }
@@ -303,7 +303,8 @@
                     "flag_masks": [ 1, 2, 4 ],
                     "flag_meanings": "OPAQUE CIRRUS SNOW_ICE"
                 },
-                "dimensions": [ "y_60m", "x_60m" ]
+                "dimensions": [ "y_60m", "x_60m" ],
+                "pack_bits": 0
             }
         },
         {
@@ -317,7 +318,8 @@
                     "flag_masks": [ 1, 2, 4, 8, 16, 32, 64, 128 ],
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
-                "dimensions": [ "y_60m", "x_60m" ]
+                "dimensions": [ "y_60m", "x_60m" ],
+                "pack_bits": 0
             }
         },
         {
@@ -331,7 +333,8 @@
                     "flag_masks": [ 1, 2, 4, 8, 16, 32, 64, 128 ],
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
-                "dimensions": [ "y_10m", "x_10m" ]
+                "dimensions": [ "y_10m", "x_10m" ],
+                "pack_bits": 0
             }
         },
         {
@@ -345,7 +348,8 @@
                     "flag_masks": [ 1, 2, 4, 8, 16, 32, 64, 128 ],
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
-                "dimensions": [ "y_10m", "x_10m" ]
+                "dimensions": [ "y_10m", "x_10m" ],
+                "pack_bits": 0
             }
         },
         {
@@ -359,7 +363,8 @@
                     "flag_masks": [ 1, 2, 4, 8, 16, 32, 64, 128 ],
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
-                "dimensions": [ "y_10m", "x_10m" ]
+                "dimensions": [ "y_10m", "x_10m" ],
+                "pack_bits": 0
             }
         },
         {
@@ -373,7 +378,8 @@
                     "flag_masks": [ 1, 2, 4, 8, 16, 32, 64, 128 ],
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
-                "dimensions": [ "y_20m", "x_20m" ]
+                "dimensions": [ "y_20m", "x_20m" ],
+                "pack_bits": 0
             }
         },
         {
@@ -387,7 +393,8 @@
                     "flag_masks": [ 1, 2, 4, 8, 16, 32, 64, 128 ],
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
-                "dimensions": [ "y_20m", "x_20m" ]
+                "dimensions": [ "y_20m", "x_20m" ],
+                "pack_bits": 0
             }
         },
         {
@@ -401,7 +408,8 @@
                     "flag_masks": [ 1, 2, 4, 8, 16, 32, 64, 128 ],
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
-                "dimensions": [ "y_20m", "x_20m" ]
+                "dimensions": [ "y_20m", "x_20m" ],
+                "pack_bits": 0
             }
         },
         {
@@ -415,7 +423,8 @@
                     "flag_masks": [ 1, 2, 4, 8, 16, 32, 64, 128 ],
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
-                "dimensions": [ "y_20m", "x_20m" ]
+                "dimensions": [ "y_20m", "x_20m" ],
+                "pack_bits": 0
             }
         },
         {
@@ -429,7 +438,8 @@
                     "flag_masks": [ 1, 2, 4, 8, 16, 32, 64, 128 ],
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
-                "dimensions": [ "y_20m", "x_20m" ]
+                "dimensions": [ "y_20m", "x_20m" ],
+                "pack_bits": 0
             }
         },
         {
@@ -443,7 +453,8 @@
                     "flag_masks": [ 1, 2, 4, 8, 16, 32, 64, 128 ],
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
-                "dimensions": [ "y_60m", "x_60m" ]
+                "dimensions": [ "y_60m", "x_60m" ],
+                "pack_bits": 0
             }
         },
         {
@@ -457,7 +468,8 @@
                     "flag_masks": [ 1, 2, 4, 8, 16, 32, 64, 128 ],
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
-                "dimensions": [ "y_60m", "x_60m" ]
+                "dimensions": [ "y_60m", "x_60m" ],
+                "pack_bits": 0
             }
         },
         {
@@ -471,7 +483,8 @@
                     "flag_masks": [ 1, 2, 4, 8, 16, 32, 64, 128 ],
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
-                "dimensions": [ "y_20m", "x_20m" ]
+                "dimensions": [ "y_20m", "x_20m" ],
+                "pack_bits": 0
             }
         },
         {
@@ -485,7 +498,8 @@
                     "flag_masks": [ 1, 2, 4, 8, 16, 32, 64, 128 ],
                     "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG QT_DEFECTIVE_PIXELS QT_NODATA_PIXELS QT_PARTIALLY_CORRECTED_PIXELS QT_SATURATED_PIXELS_L1A"
                 },
-                "dimensions": [ "y_20m", "x_20m" ]
+                "dimensions": [ "y_20m", "x_20m" ],
+                "pack_bits": 0
             }
         },
 
@@ -499,7 +513,10 @@
                     "flag_values": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
                     "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
                 },
-                "dimensions": [ "y_60m", "x_60m" ]
+                "dimensions": [ "y_60m", "x_60m" ],
+                "sub_array" : {
+                    "dim_0": 0
+                }
             }
         },
         {
@@ -512,7 +529,10 @@
                     "flag_values": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
                     "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
                 },
-                "dimensions": [ "y_10m", "x_10m" ]
+                "dimensions": [ "y_10m", "x_10m" ],
+                "sub_array" : {
+                    "dim_0": 0
+                }
             }
         },
         {
@@ -525,7 +545,10 @@
                     "flag_values": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
                     "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
                 },
-                "dimensions": [ "y_10m", "x_10m" ]
+                "dimensions": [ "y_10m", "x_10m" ],
+                "sub_array" : {
+                    "dim_0": 0
+                }
             }
         },
         {
@@ -538,7 +561,10 @@
                     "flag_values": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
                     "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
                 },
-                "dimensions": [ "y_10m", "x_10m" ]
+                "dimensions": [ "y_10m", "x_10m" ],
+                "sub_array" : {
+                    "dim_0": 0
+                }
             }
         },
         {
@@ -551,7 +577,10 @@
                     "flag_values": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
                     "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
                 },
-                "dimensions": [ "y_20m", "x_20m" ]
+                "dimensions": [ "y_20m", "x_20m" ],
+                "sub_array" : {
+                    "dim_0": 0
+                }
             }
         },
         {
@@ -564,7 +593,10 @@
                     "flag_values": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
                     "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
                 },
-                "dimensions": [ "y_20m", "x_20m" ]
+                "dimensions": [ "y_20m", "x_20m" ],
+                "sub_array" : {
+                    "dim_0": 0
+                }
             }
         },
         {
@@ -577,7 +609,10 @@
                     "flag_values": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
                     "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
                 },
-                "dimensions": [ "y_20m", "x_20m" ]
+                "dimensions": [ "y_20m", "x_20m" ],
+                "sub_array" : {
+                    "dim_0": 0
+                }
             }
         },
         {
@@ -590,7 +625,10 @@
                     "flag_values": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
                     "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
                 },
-                "dimensions": [ "y_20m", "x_20m" ]
+                "dimensions": [ "y_20m", "x_20m" ],
+                "sub_array" : {
+                    "dim_0": 0
+                }
             }
         },
         {
@@ -603,7 +641,10 @@
                     "flag_values": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
                     "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
                 },
-                "dimensions": [ "y_20m", "x_20m" ]
+                "dimensions": [ "y_20m", "x_20m" ],
+                "sub_array" : {
+                    "dim_0": 0
+                }
             }
         },
         {
@@ -616,7 +657,10 @@
                     "flag_values": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
                     "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
                 },
-                "dimensions": [ "y_60m", "x_60m" ]
+                "dimensions": [ "y_60m", "x_60m" ],
+                "sub_array" : {
+                    "dim_0": 0
+                }
             }
         },
         {
@@ -629,7 +673,10 @@
                     "flag_values": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
                     "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
                 },
-                "dimensions": [ "y_60m", "x_60m" ]
+                "dimensions": [ "y_60m", "x_60m" ],
+                "sub_array" : {
+                    "dim_0": 0
+                }
             }
         },
         {
@@ -642,7 +689,10 @@
                     "flag_values": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
                     "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
                 },
-                "dimensions": [ "y_20m", "x_20m" ]
+                "dimensions": [ "y_20m", "x_20m" ],
+                "sub_array" : {
+                    "dim_0": 0
+                }
             }
         },
         {
@@ -655,7 +705,10 @@
                     "flag_values": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
                     "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
                 },
-                "dimensions": [ "y_20m", "x_20m" ]
+                "dimensions": [ "y_20m", "x_20m" ],
+                "sub_array" : {
+                    "dim_0": 0
+                }
             }
         },
 
@@ -2819,8 +2872,8 @@
         },
         {
             "short_name": "aod550",
-            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_CAMSFO:ssaod550",
-            "target_path": "/conditions/meteo/ssaod550",
+            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_CAMSFO:aod550",
+            "target_path": "/conditions/meteo/aod550",
             "item_format": "grib",
             "parameters": {
                 "attributes": {
@@ -3067,10 +3120,10 @@
 
         {
             "short_name": "metadata",
-            "source_path": "manifest.xml",
+            "source_path": "manifest.safe",
             "target_path": "/",
             "item_format": "xmlmetadata",
-            "parameters": {
+            "accessor_config": {
                 "mapping": "metadata_mapping/manifest",
                 "namespaces": "metadata_mapping/namespaces"
             }
@@ -3080,7 +3133,7 @@
             "source_path": "MTD_MSIL1C.xml",
             "target_path": "/",
             "item_format": "xmlmetadata",
-            "parameters": {
+            "accessor_config": {
                 "mapping": "metadata_mapping/MTD_MSIL1C",
                 "namespaces": "metadata_mapping/namespaces"
             }
@@ -3090,7 +3143,7 @@
             "source_path": "/GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/",
             "item_format": "xmlmetadata",
-            "parameters": {
+            "accessor_config": {
                 "mapping": "metadata_mapping/MTD_TL",
                 "namespaces": "metadata_mapping/namespaces"
             }

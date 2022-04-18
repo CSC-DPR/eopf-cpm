@@ -35,20 +35,20 @@ Optional dependencies
 Extra dependencies can be specified from different key
 
 Some keys to work with specific environment:
-- notebook: install extra dependencies to use jupyter notebook
+    * **notebook**: install extra dependencies to use jupyter notebook
 
 Others are used for developpement environment:
-- tests: install test dependencies to run pytest test
-- linter: install linter to check code style
-- typing: install typing tool and library to check code typing
-- formatter: install formatter tool to be check code formatting
-- security: install tool to analyse security issue
-- doc: install library to build the documentation
-- complexity: install tool to analyse cyclomatic complexity
-- doc-cov: install tool to analyse documentation coverage
+    * **tests**: install test dependencies to run pytest test
+    * **linter**: install linter to check code style
+    * **typing**: install typing tool and library to check code typing
+    * **formatter**: install formatter tool to be check code formatting
+    * **security**: install tool to analyse security issue
+    * **doc**: install library to build the documentation
+    * **complexity**: install tool to analyse cyclomatic complexity
+    * **doc-cov**: install tool to analyse documentation coverage
 
 for developpers:
-- dev: install all optional dependencies and pre-commit
+    * **dev**: install all optional dependencies and pre-commit
 
 Using pip and git
 ~~~~~~~~~~~~~~~~~

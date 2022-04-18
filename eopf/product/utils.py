@@ -1,13 +1,16 @@
 # We need to use a mix of posixpath (normpath) and pathlib (partition) in the eo_path methods.
 # As we work with strings we use posixpath (the unix path specific implementation of os.path) as much as possible.
+import datetime
 import posixpath
 import re
-from datetime import datetime
 from pathlib import PurePosixPath
-from typing import Any, Optional, Union
+from typing import Any, Callable, Optional, Union
 
+import dask.array as da
 import fsspec
+import numpy as np
 import pytz
+import xarray
 from lxml import etree
 
 
@@ -30,12 +33,15 @@ def apply_xpath(dom: Any, xpath: str, namespaces: dict[str, str]) -> str:
     """
     target = dom.xpath(xpath, namespaces=namespaces)
     if isinstance(target, list):
-        if len(target) == 1 and isinstance(target[0], etree._Element):
-            if target[0].tag.endswith("posList"):
-                values = target[0].text.split(" ")
-                merged_values = ",".join(" ".join([n, i]) for i, n in zip(values, values[1:]))
-                return f"POLYGON(({merged_values}))"
-            return target[0].text
+        # Check if it's a list of Element and not text.
+        if len(target) >= 1 and isinstance(target[0], etree._Element):
+            if len(target) == 1:
+                if target[0].tag.endswith("posList"):
+                    values = target[0].text.split(" ")
+                    merged_values = ",".join(" ".join([n, i]) for i, n in zip(values, values[1:]))
+                    return f"POLYGON(({merged_values}))"
+                return target[0].text
+            target = [elt.text for elt in target]
         return ",".join(target)
     return target
 
@@ -59,6 +65,7 @@ def conv(obj: Any) -> Any:
         float16,
         float32,
         float64,
+        int8,
         int16,
         int32,
         int64,
@@ -82,7 +89,7 @@ def conv(obj: Any) -> Any:
         return conv(obj.tolist())
 
     # check np int
-    if isinstance(obj, (int64, int32, int16, uint64, uint32, uint16, uint8, int)):
+    if isinstance(obj, (int64, int32, int16, uint64, uint32, uint16, uint8, int8, int)):
         return int(obj)
 
     # check np float
@@ -96,7 +103,7 @@ def conv(obj: Any) -> Any:
         return str(obj)
 
     # check datetime
-    if isinstance(obj, datetime):
+    if isinstance(obj, datetime.datetime):
         return convert_to_unix_time(obj)
 
     # if no conversion can be done
@@ -137,9 +144,11 @@ def convert_to_unix_time(date: Any) -> Any:
     int
         unix time in microseconds
     """
-    if isinstance(date, datetime):
+
+    if isinstance(date, datetime.datetime):
         return int(date.timestamp() * 1000000)  # microseconds
-    elif isinstance(date, str):
+
+    if isinstance(date, str):
         import pandas as pd
 
         start = pd.to_datetime("1970-1-1T0:0:0.000000Z")
@@ -147,7 +156,16 @@ def convert_to_unix_time(date: Any) -> Any:
             end = pd.to_datetime(date)
             # Normalize data, if date is incomplete (missing timezone)
             if end.tzinfo is None:
-                proxy_date = datetime(end.year, end.month, end.day, end.hour, end.minute, end.second, 000000, pytz.UTC)
+                proxy_date = datetime.datetime(
+                    end.year,
+                    end.month,
+                    end.day,
+                    end.hour,
+                    end.minute,
+                    end.second,
+                    000000,
+                    pytz.UTC,
+                )
                 end = pd.to_datetime(str(proxy_date))
         except pd.errors.OutOfBoundsDatetime:
             # Just return string if something went wrong.
@@ -171,25 +189,22 @@ def reverse_conv(data_type: Any, obj: Any) -> Any:
     ----------
     Any
     """
-    from numpy import float32, float64, int16, int32, int64, uint8, uint16, uint32
 
-    if data_type == int16:
-        return int16(obj)
-    elif data_type == int32:
-        return int32(obj)
-    elif data_type == int64:
-        return int64(obj)
-    elif data_type == uint8:
-        return uint8(obj)
-    elif data_type == uint16:
-        return uint16(obj)
-    elif data_type == uint32:
-        return uint32(obj)
-    if data_type == float32:
-        return float32(obj)
-    elif data_type == float64:
-        return float64(obj)
-
+    for dtype in [
+        np.int8,
+        np.int16,
+        np.int32,
+        np.int64,
+        np.uint8,
+        np.uint16,
+        np.uint32,
+        np.float16,
+        np.float32,
+        np.float64,
+        np.float128,
+    ]:
+        if data_type == dtype:
+            return dtype(obj)
     return obj
 
 
@@ -253,9 +268,9 @@ def fs_match_path(pattern: str, filesystem: fsspec.FSMap) -> str:
     str
         matching path if find, else `pattern`
     """
-
+    filepath_regex = re.compile(pattern)
     for file_path in filesystem:
-        if re.match(pattern, file_path):
+        if filepath_regex.fullmatch(file_path):
             return file_path
     return pattern
 
@@ -340,6 +355,20 @@ def norm_eo_path(eo_path: str) -> str:
     if eo_path.startswith("//"):  # text is a special path so it's not normalised by normpath
         eo_path = eo_path[1:]
     return eo_path
+
+
+def regex_path_append(path1: Optional[str], path2: Optional[str]) -> Optional[str]:
+    """Append two (valid) regex path.
+    Can use os/eo path append as regex path syntax is different.
+    """
+    if path1 is not None:
+        path1 = path1.removesuffix("/")
+    if path2 is None:
+        return path1
+    path2 = path2.removeprefix("/")
+    if path1 is None:
+        return path2
+    return f"{path1}/{path2}"
 
 
 def parse_xml(path: Any) -> Any:
@@ -433,3 +462,12 @@ def upsplit_eo_path(eo_path: str) -> tuple[str, ...]:
     tuple[str, ...]
     """
     return posixpath.split(eo_path)
+
+
+def xarray_to_data_map_block(
+    func: Callable[[Any], Any], data_array: xarray.DataArray, *args: Any, **kwargs: Any
+) -> da.Array:
+    array = data_array.data
+    if isinstance(array, da.Array):
+        return da.map_blocks(func, array, *args, **kwargs)
+    return func(array, *args, **kwargs)

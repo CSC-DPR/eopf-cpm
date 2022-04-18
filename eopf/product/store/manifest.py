@@ -3,7 +3,7 @@ from typing import Any, Iterator, MutableMapping, Optional, TextIO
 from eopf.exceptions import StoreNotOpenError, XmlParsingError
 from eopf.product.core import EOGroup
 from eopf.product.store import EOProductStore
-from eopf.product.utils import apply_xpath, parse_xml, translate_structure
+from eopf.product.utils import parse_xml, translate_structure
 
 
 class ManifestStore(EOProductStore):
@@ -21,13 +21,9 @@ class ManifestStore(EOProductStore):
         the keys defining the types of EOProduct attributes
     """
 
-    KEYS = ["CF", "OM_EOP"]
-
     def __init__(self, url: str) -> None:
         super().__init__(url)
         self._attrs: MutableMapping[str, Any] = {}
-        for key in self.KEYS:
-            self._attrs[key] = {}
         self._parsed_xml = None
         self._xml_fobj: Optional[TextIO] = None
 
@@ -46,16 +42,22 @@ class ManifestStore(EOProductStore):
 
         # get configuration parameters
         try:
-            self._metada_mapping: MutableMapping[str, Any] = kwargs["metadata_mapping"]
+            self._metada_mapping: MutableMapping[str, Any] = kwargs["mapping"]
             self._namespaces: dict[str, str] = kwargs["namespaces"]
         except KeyError as e:
             raise TypeError(f"Missing configuration pameter: {e}")
 
         # open the manifest xml
         self._xml_fobj = open(self.url, mode="r")
-
         # open the store
         super().open(mode, **kwargs)
+
+        # computes CF and OM_EOP
+        if self._parsed_xml is None:
+            self._parse_xml()
+
+        for attr_mapping in self._metada_mapping:
+            self._compute_attr(attr_mapping)
 
     def close(self) -> None:
         """Closes the store and the xml file object"""
@@ -72,6 +74,8 @@ class ManifestStore(EOProductStore):
 
     def is_variable(self, path: str) -> bool:
         """Has no functionality within this store"""
+        if path in ["", "/"]:
+            return False
         raise NotImplementedError()
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
@@ -103,12 +107,6 @@ class ManifestStore(EOProductStore):
         if self._xml_fobj is None:
             raise StoreNotOpenError("Store must be open before access to it")
 
-        # computes CF and OM_EOP
-        if self._parsed_xml is None:
-            self._parse_xml()
-        self._compute_om_eop()
-        self._compute_cf()
-
         # create an EOGroup and set its attributes with a dictionary containing CF and OM_EOP
         eog: EOGroup = EOGroup("product_metadata", attrs=self._attrs)
         return eog
@@ -132,7 +130,7 @@ class ManifestStore(EOProductStore):
         if self._xml_fobj is None:
             raise StoreNotOpenError("Store must be open before access to it")
 
-        yield from self.KEYS
+        return iter([])
 
     def _parse_xml(self) -> None:
         """Parses the manifest xml and saves it in _parsed_xml
@@ -152,30 +150,8 @@ class ManifestStore(EOProductStore):
         except Exception as e:
             raise XmlParsingError(f"Exception while computing xfdu dom: {e}")
 
-    def _compute_cf(self) -> None:
-        """Computes the CF dictionary of attributes and saves it in _metada_mapping
-
-        Raises
-        ----------
-        StoreNotOpenError
-            Trying to compute CF from an opened that was not opened
-        XmlParsingError
-            Any error while applying xpath
-        """
-        if self._xml_fobj is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-
-        try:
-            cf = {
-                attr: apply_xpath(self._parsed_xml, self._metada_mapping["CF"][attr], self._namespaces)
-                for attr in self._metada_mapping["CF"]
-            }
-            self._attrs["CF"] = cf
-        except Exception as e:
-            raise XmlParsingError(f"Exception while computing CF: {e}")
-
-    def _compute_om_eop(self) -> None:
-        """Computes the OM_EOP dictionary of attributes and saves it in _metada_mapping
+    def _compute_attr(self, key: str) -> None:
+        """Computes the key dictionary of attributes and saves it in _attrs
 
         Raises
         ----------
@@ -186,12 +162,7 @@ class ManifestStore(EOProductStore):
         """
         if self._xml_fobj is None:
             raise StoreNotOpenError("Store must be open before access to it")
-
-        try:
-            eop = {
-                attr: translate_structure(self._metada_mapping["OM_EOP"][attr], self._parsed_xml, self._namespaces)
-                for attr in self._metada_mapping["OM_EOP"]
-            }
-            self._attrs["OM_EOP"] = eop
-        except Exception as e:
-            raise XmlParsingError(f"Exception while computing OM_EOP: {e}")
+        # try:
+        self._attrs[key] = translate_structure(self._metada_mapping[key], self._parsed_xml, self._namespaces)
+        # except Exception as e:
+        #    raise XmlParsingError(f"Exception while computing {key}: {e}")

@@ -143,7 +143,7 @@ def test_xml_angles_accessor():
     mapping_file_path = glob("eopf/product/store/mapping/S2_MSIL1C_mapping.json")[0]
     mapping_file = open(mapping_file_path)
     map = json.load(mapping_file)
-    config = {"namespaces": map["xml_mapping"]["namespace"]}
+    config = {"namespace": map["xml_mapping"]["namespace"]}
     xml_accessor = XMLAnglesAccessor(f"{PARENT_DATA_PATH}/tests/data/MTD_TL.xml")
     xml_accessor.open(**config)
 
@@ -175,14 +175,14 @@ def test_xml_tiepoints_accessor():
     map = json.load(mapping_file)
 
     config_x = {
-        "namespaces": map["xml_mapping"]["namespace"],
-        "xmltp_step": map["xml_mapping"]["xmltp"]["step_x"],
-        "xmltp_values": map["xml_mapping"]["xmltp"]["values"],
+        "namespace": map["xml_mapping"]["namespace"],
+        "step_path": map["xml_mapping"]["xmltp"]["step_x"],
+        "values_path": map["xml_mapping"]["xmltp"]["values"],
     }
     config_y = {
-        "namespaces": map["xml_mapping"]["namespace"],
-        "xmltp_step": map["xml_mapping"]["xmltp"]["step_y"],
-        "xmltp_values": map["xml_mapping"]["xmltp"]["values"],
+        "namespace": map["xml_mapping"]["namespace"],
+        "step_path": map["xml_mapping"]["xmltp"]["step_y"],
+        "values_path": map["xml_mapping"]["xmltp"]["values"],
     }
     # Create XMLAccessors
     tp_y_accessor = XMLTPAccessor(f"{PARENT_DATA_PATH}/tests/data/MTD_TL.xml")
@@ -225,7 +225,7 @@ def test_xml_manifest_accessor():
     mapping_file_path = glob("eopf/product/store/mapping/S3_OL_1_EFR_mapping.json")[0]
     mapping_file = open(mapping_file_path)
     map_olci = json.load(mapping_file)
-    config = {"namespaces": map_olci["namespaces"], "metadata_mapping": map_olci["metadata_mapping"]}
+    config = {"namespace": map_olci["namespaces"], "metadata_mapping": map_olci["metadata_mapping"]}
     manifest_accessor.open(**config)
     eog = manifest_accessor[""]
     assert isinstance(eog, EOGroup)

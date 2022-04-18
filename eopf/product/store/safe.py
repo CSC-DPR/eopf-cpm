@@ -1,9 +1,11 @@
 import os
 import tempfile
 import warnings
+from functools import reduce
 from typing import (
     TYPE_CHECKING,
     Any,
+    Callable,
     Iterator,
     MutableMapping,
     Optional,
@@ -12,10 +14,18 @@ from typing import (
 )
 
 import fsspec
+import numpy as np
 
 from eopf.exceptions import StoreNotOpenError
 
-from ..utils import fs_match_path, join_eo_path_optional, upsplit_eo_path
+from ..utils import (
+    fs_match_path,
+    join_eo_path_optional,
+    partition_eo_path,
+    regex_path_append,
+    upsplit_eo_path,
+    xarray_to_data_map_block,
+)
 from .abstract import EOProductStore, StorageStatus
 from .mapping_factory import EOMappingFactory
 from .store_factory import EOStoreFactory
@@ -84,6 +94,58 @@ class SafeHierarchy(EOProductStore):
         self._child_list.append(child_name)
 
 
+# Safe store parameters transformations:
+
+
+def _transformation_dimensions(eo_obj: "EOObject", parameter: Any) -> "EOObject":
+    """Replace the object dimension with the list of dimensions parameter"""
+    eo_obj.assign_dims(parameter)
+    return eo_obj
+
+
+def _transformation_attributes(eo_obj: "EOObject", parameter: Any) -> "EOObject":
+    """Update the object attributes with the dictionary of attribute parameter"""
+    eo_obj.attrs.update(parameter)
+    return eo_obj
+
+
+def _transformation_sub_array(eo_obj: "EOObject", parameter: Any) -> "EOObject":
+    """Index the array according to the parameter. If the parameter is a single index, the dimension is removed."""
+    from ..core import EOVariable
+
+    if not isinstance(eo_obj, EOVariable):
+        raise TypeError()
+    return eo_obj.isel(parameter)
+
+
+def _block_pack_bit(array: np.ndarray[Any, Any], *args: Any, **kwargs: Any) -> np.ndarray[Any, Any]:
+    result = np.packbits(array, *args, **kwargs)
+    return result.squeeze(axis=kwargs["axis"])
+
+
+def _transformation_pack_bits(eo_obj: "EOObject", parameter: Any) -> "EOObject":
+    """Pack bit the parmater dimension of eo_obj."""
+    from ..core import EOVariable
+
+    if not isinstance(eo_obj, EOVariable):
+        raise TypeError()
+    attrs = eo_obj.attrs
+    dims = list(eo_obj.dims)
+    if isinstance(parameter, str):
+        dim_key = parameter
+        dim_index = dims.index(parameter)
+    else:
+        dim_key = dims[parameter]
+        dim_index = parameter
+
+    kwargs = {"axis": dim_index, "drop_axis": dim_index, "bitorder": "little"}
+    # drop_axis is used by dask to estimate the new shape.
+    # axis and bitorder are packbits parameters.
+    data = xarray_to_data_map_block(_block_pack_bit, eo_obj._data, **kwargs)
+    dims.remove(dim_key)
+    return EOVariable(data=data, dims=tuple(dims), attrs=attrs)
+
+
 class EOSafeStore(EOProductStore):
     """Store representation to access to a Safe file on the given URL
 
@@ -105,6 +167,12 @@ class EOSafeStore(EOProductStore):
     """
 
     sep = "/"
+    DEFAULT_PARAMETERS_TRANSFORMATIONS_LIST: list[tuple[str, Callable[["EOObject", Any], "EOObject"]]] = [
+        ("attributes", _transformation_attributes),
+        ("sub_array", _transformation_sub_array),
+        ("pack_bits", _transformation_pack_bits),
+        ("dimensions", _transformation_dimensions),  # dimensions should be after dimension dependant tranfo
+    ]
 
     # docstr-coverage: inherited
     def __init__(
@@ -112,11 +180,16 @@ class EOSafeStore(EOProductStore):
         url: str,
         store_factory: Optional[EOStoreFactory] = None,
         mapping_factory: Optional[EOMappingFactory] = None,
+        parameters_transformations: Optional[list[tuple[str, Callable[["EOObject", Any], "EOObject"]]]] = None,
     ) -> None:
         if store_factory is None:
             store_factory = EOStoreFactory(default_stores=True)
         if mapping_factory is None:
             mapping_factory = EOMappingFactory(default_mappings=True)
+        if parameters_transformations is None:
+            self._parameters_transformations = self.DEFAULT_PARAMETERS_TRANSFORMATIONS_LIST
+        else:
+            self._parameters_transformations = parameters_transformations
         # FIXME Need to think of a way to manage urlak ospath on windows. Especially with the path in the json.
         super().__init__(url)
         self._accessor_manager = SafeMappingManager(url, store_factory, mapping_factory)
@@ -146,9 +219,14 @@ class EOSafeStore(EOProductStore):
             for accessor, config_accessor_path, config in mapping_match_list:
                 config_accessor_path = join_eo_path_optional(config_accessor_path, accessor_path)
                 # We should catch Key Error, and throw if the object isn't found in any of the accessors
-                accessed_object = accessor[config_accessor_path]
-                processed_object = self._apply_mapping_properties(accessed_object, config)
-                eo_obj_list.append(processed_object)
+                try:
+                    accessed_object = accessor[config_accessor_path]
+                    processed_object = self._apply_mapping_properties(accessed_object, config)
+                    eo_obj_list.append(processed_object)
+                except KeyError:
+                    warnings.warn("Safe Accessor KeyError : " + key)
+                except NotImplementedError:
+                    warnings.warn("Safe Accessor NotImplementedError : " + key)
         return self._eo_object_merge(*eo_obj_list)
 
     def __iter__(self) -> Iterator[str]:
@@ -262,16 +340,24 @@ class EOSafeStore(EOProductStore):
         if "parameters" not in config:
             return eo_obj
         parameters = config["parameters"]
+        for parameter_name, parameter_transformation in self._parameters_transformations:
+            if parameter_name in parameters:
+                eo_obj = parameter_transformation(eo_obj, parameters[parameter_name])
+        # add a warning if a parameter is missing from _parameters_transformations ?
+        return eo_obj
+
         from ..core import EOGroup, EOVariable
+
+        data = eo_obj._data if isinstance(eo_obj, EOVariable) else None
+        attrs = eo_obj.attrs
+        dims = eo_obj.dims
 
         if "dimensions" in parameters:
             dims = parameters["dimensions"]
         else:
             dims = eo_obj.dims
 
-        attrs = eo_obj.attrs
         if isinstance(eo_obj, EOVariable):
-            data = eo_obj._data
             return EOVariable(data=data, dims=dims, attrs=attrs)
         return EOGroup(dims=dims, attrs=attrs)
 
@@ -291,7 +377,8 @@ class EOSafeStore(EOProductStore):
         from ..core import EOGroup, EOVariable
 
         if not eo_obj_list:
-            raise KeyError("Empty object match.")
+            warnings.warn("Missing variable.")
+            return EOVariable()
         if len(eo_obj_list) == 1:
             return eo_obj_list[0]
         dims: set[str] = set()
@@ -353,7 +440,7 @@ class SafeMappingManager:
     def __iter__(self) -> Iterator[tuple[EOProductStore, dict[str, Any]]]:
         for accessor_map_2 in self._accessor_map.values():
             for accessor, config in accessor_map_2.values():
-                if accessor:
+                if accessor is not None:
                     yield accessor, config
 
     def close_all(self) -> None:
@@ -380,14 +467,13 @@ class SafeMappingManager:
             accessor_source_split = conf[self.CONFIG_SOURCE_FILE].split(":")
             if len(accessor_source_split) > 2:
                 raise ValueError(f"Invalid {self.CONFIG_SOURCE_FILE} : {conf[self.CONFIG_SOURCE_FILE]}")
-            accessor_file = accessor_source_split[0]
-            accessor_local_path = None
+            accessor_file_regex = accessor_source_split[0]
             if len(accessor_source_split) == 2:
                 accessor_local_path = accessor_source_split[1]
-
-            accessor_file = fs_match_path(accessor_file, self._fs_map_access)
+            else:
+                accessor_local_path = conf.get("parameters", {}).get("xpath")
             accessor = self._get_accessor(
-                accessor_file,
+                accessor_file_regex,
                 conf[self.CONFIG_FORMAT],
                 conf[self.CONFIG_ACCESSOR_ID],
                 conf[self.CONFIG_ACCESSOR_CONFIG],
@@ -458,8 +544,10 @@ class SafeMappingManager:
                     self._temp_dir = tempfile.TemporaryDirectory()
                 accessor_file = os.path.join(self._temp_dir.name, file_path)
                 if not os.path.exists(accessor_file):
+                    # create parent directory (needed if the file is in a subfolder of the zip)
+                    os.makedirs(os.path.split(accessor_file)[0], exist_ok=True)
                     with open(accessor_file, mode="wb") as file_:
-                        file_.write(self._fs_map_access[f"{self._top_level}{file_path}"])
+                        file_.write(self._fs_map_access[file_path])
             else:
                 accessor_file = self._fs_map_access.fs.sep.join([self._fs_map_access.root, file_path])
             mapped_store = self._store_factory.get_store(
@@ -519,8 +607,10 @@ class SafeMappingManager:
             config_declarations = config[self.CONFIG_ACCESSOR_CONF_DEC]
         else:
             config_declarations = dict()
+        # The reduce allow us to do a get item on a nested directory using a split path.
         accessor_config = {
-            config_key: config_definitions[config_path] for config_key, config_path in config_declarations.items()
+            config_key: reduce(dict.get, partition_eo_path(config_path), config_definitions)  # type: ignore[arg-type]
+            for config_key, config_path in config_declarations.items()
         }
         config[self.CONFIG_ACCESSOR_ID] = frozenset(config_declarations.items())
         config[self.CONFIG_ACCESSOR_CONFIG] = accessor_config
@@ -533,11 +623,18 @@ class SafeMappingManager:
         accessor_config: dict[str, Any],
     ) -> Optional[EOProductStore]:
         """Get an accessor from the opened accessors dictionary. If it's not present a new one is added."""
-        accessor_id = f"{item_format}:{file_path}"
+        if item_format == self.SAFE_HIERARCHY_FORMAT:
+            accessor_file = file_path  # hierarchy safe store don't use regex.
+        else:
+            accessor_file_regex = regex_path_append(self._top_level, file_path)
+            if accessor_file_regex is None:
+                raise ValueError("Invalid regex path.")
+            accessor_file = fs_match_path(accessor_file_regex, self._fs_map_access)
+        accessor_id = f"{item_format}:{accessor_file}"
         if accessor_id in self._accessor_map and accessor_config_id in self._accessor_map[accessor_id]:
             return self._accessor_map[accessor_id][accessor_config_id][0]
         else:
-            return self._add_accessor(file_path, item_format, accessor_config_id, accessor_config)
+            return self._add_accessor(accessor_file, item_format, accessor_config_id, accessor_config)
 
     def _read_product_mapping(self) -> None:
         """Read mapping from the mapping factory and fill _config_mapping from it."""
@@ -555,4 +652,5 @@ class SafeMappingManager:
         json_data = self._mapping_factory.get_mapping(top_level)
         json_config_list = json_data["data_mapping"]
         for config in json_config_list:
-            self._add_data_mapping(config[self.CONFIG_TARGET], config, json_data)
+            if config["item_format"] != "misc":
+                self._add_data_mapping(config[self.CONFIG_TARGET], config, json_data)
