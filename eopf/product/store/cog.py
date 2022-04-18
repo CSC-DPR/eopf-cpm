@@ -25,6 +25,7 @@ class EOCogStore(EOProductStore):
     url: str
         path or url to access
     """
+
     expected_raster_dims = [
         ("band", "x", "y"),
         ("band", "y", "x"),
