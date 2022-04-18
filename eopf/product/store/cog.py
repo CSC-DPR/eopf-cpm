@@ -24,12 +24,13 @@ class EOCogStore(EOProductStore):
     ----------
     url: str
         path or url to access
-
-    Attributes
-    ----------
-    url: str
-        path or url to access
     """
+    expected_raster_dims = [
+        ("band", "x", "y"),
+        ("band", "y", "x"),
+        ("x", "y"),
+        ("y", "x"),
+    ]
 
     def __init__(self, url: str) -> None:
         super().__init__(url)
@@ -38,6 +39,23 @@ class EOCogStore(EOProductStore):
         self._lock: Optional[Lock] = None
 
     def __getitem__(self, key: str) -> "EOObject":
+        """
+        This method is used to read EOVariable or EOGroup from Store
+
+        Parameters
+        ----------
+        key: str
+            path
+
+        Raise
+        ----------
+        StoreNotOpenError, when store is not open
+        NotImplementedError, when open mode is not r(ead)
+
+        Return
+        ----------
+        EOVariable / EOGroup
+        """
         from eopf.product.core.eo_group import EOGroup
         from eopf.product.core.eo_variable import EOVariable
 
@@ -59,9 +77,11 @@ class EOCogStore(EOProductStore):
         return EOVariable(key, node)
 
     def __iter__(self) -> Iterator[str]:
+        """Has no functionality within this store"""
         return self.iter("")
 
     def __len__(self) -> int:
+        """Has no functionality within this store"""
         if self._ref is None:
             raise StoreNotOpenError("Store must be open before access to it")
         if self._mode != "r":
@@ -69,11 +89,30 @@ class EOCogStore(EOProductStore):
         return sum(1 for _ in self.iter(""))
 
     def _write_cog(self, value: Any, file_path: str) -> None:
+        """
+        This method is used to write rasters to .cog files
+
+        Parameters
+        ----------
+        value: Any
+            rasterIO dataset
+        """
+        # if the dimension names are not x,y we need to let
+        # rioxarray know which dimension is x and y
+        if len(value.dims) == 2 and (value.dims[0] != "y" or value.dims[1] != "x"):
+            value._data.rio.set_spatial_dims(x_dim=value.dims[1], y_dim=value.dims[0], inplace=True)
         # write the COG file
         value._data.rio.to_raster(f"{file_path}.cog", tiled=True, lock=self._lock, driver="COG")
 
     def _write_netCDF4(self, value: "EOObject", file_path: str, var_name: str) -> None:
+        """
+        This method is used to write rasters to .nc (netcdf) files
 
+        Parameters
+        ----------
+        value: Any
+            rasterIO dataset
+        """
         # write the netCDF4 file
         nc = EONetCDFStore(f"{file_path}.nc")
         nc.open(mode="w")
@@ -81,18 +120,27 @@ class EOCogStore(EOProductStore):
         nc.close()
 
     def _is_raster(self, value: Any) -> bool:
-        # if the variable has 2 dimensions, it is probably a raster
-        if len(value.dims) == 2:
-            # if the dimension names are not x,y we need to let
-            # rioxarray know which dimension is x and y
-            if value.dims[0] != "y" or value.dims[1] != "x":
-                value._data.rio.set_spatial_dims(x_dim=value.dims[1], y_dim=value.dims[0], inplace=True)
-            return True
-        # with S2 L1C image variables have 3 dimesions (band, x, y)
-        return len(value.dims) == 3 and (value.dims[0] == "band")
+        """
+        This metod is used if dataset dimensions match with a standard format.
+        Parameters
+        ----------
+        value: Any
+            rasterIO dataset
+        """
+        return value.dims in self.expected_raster_dims
 
     def _write_eov(self, value: "EOObject", output_dir: str, var_name: str) -> None:
-
+        """
+        This metod is used to write an EOVariable to cog or netcdf format.
+        Parameters
+        ----------
+        value: EOVariable
+            Variable to be written
+        outputdir: str
+            path to output folder
+        var_name: str
+            name of EOVariable
+        """
         var_name = var_name.removeprefix("/")
         file_path = os.path.join(output_dir, var_name)
         # determine if variable is a raster, i.e. can be written as cog
@@ -102,6 +150,20 @@ class EOCogStore(EOProductStore):
             self._write_netCDF4(value, file_path, var_name)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
+        """
+        This metod is used to write an EOObject
+        Parameters
+        ----------
+        key: str
+            Path of variable to be written
+        value: EOObject
+            EOObject data to be written
+
+        Raise
+        ----------
+        StoreNotOpenError, if store is not open
+        NotImplementedError, if mode is not w(rite) / value is not EOGroup or EOVariable
+        """
         import os
 
         from eopf.product.core import EOGroup, EOVariable
