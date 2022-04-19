@@ -229,9 +229,6 @@ class EOSafeStore(EOProductStore):
                     warnings.warn("Safe Accessor NotImplementedError : " + key)
         return self._eo_object_merge(*eo_obj_list)
 
-    def __iter__(self) -> Iterator[str]:
-        return self.iter("")
-
     def __len__(self) -> int:
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")

@@ -1,9 +1,12 @@
-from typing import Any, Iterator, MutableMapping, Optional, TextIO
+from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional, TextIO
 
 from eopf.exceptions import StoreNotOpenError, XmlParsingError
 from eopf.product.core import EOGroup
 from eopf.product.store import EOProductStore
 from eopf.product.utils import parse_xml, translate_structure
+
+if TYPE_CHECKING:  # pragma: no cover
+    from eopf.product.core.eo_object import EOObject
 
 
 class ManifestStore(EOProductStore):
@@ -92,7 +95,7 @@ class ManifestStore(EOProductStore):
 
         yield from ()
 
-    def __getitem__(self, key: str) -> MutableMapping[str, Any]:
+    def __getitem__(self, key: str) -> "EOObject":
         """Getter for CF and OM_EOP attributes of the EOProduct
 
         Parameters

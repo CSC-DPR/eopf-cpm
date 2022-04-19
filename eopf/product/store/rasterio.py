@@ -55,11 +55,6 @@ class EORasterIOAccessor(EOProductStore):
         )
         return group
 
-    def __iter__(self) -> Iterator[str]:
-        if self._ref is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        return self.iter("")
-
     def __len__(self) -> int:
         if self._ref is None:
             raise StoreNotOpenError("Store must be open before access to it")

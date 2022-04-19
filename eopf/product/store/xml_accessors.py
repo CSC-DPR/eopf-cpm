@@ -254,7 +254,7 @@ class XMLManifestAccessor(EOProductStore):
         # open the manifest xml
         self._xml_fobj = open(self._url, mode="r")
 
-    def __getitem__(self, key: str) -> MutableMapping[str, Any]:
+    def __getitem__(self, key: str) -> "EOObject":
         """Getter for CF and OM_EOP attributes of the EOProduct
 
         Parameters

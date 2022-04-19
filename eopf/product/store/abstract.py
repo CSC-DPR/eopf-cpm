@@ -2,9 +2,12 @@ import enum
 import warnings
 from abc import abstractmethod
 from collections.abc import MutableMapping
-from typing import Any, Iterator
+from typing import TYPE_CHECKING, Any, Iterator
 
 from eopf.exceptions.warnings import AlreadyClose, AlreadyOpen
+
+if TYPE_CHECKING:  # pragma: no cover
+    from eopf.product.core.eo_object import EOObject
 
 
 class StorageStatus(enum.Enum):
@@ -14,7 +17,7 @@ class StorageStatus(enum.Enum):
     CLOSE = "close"
 
 
-class EOProductStore(MutableMapping[str, Any]):
+class EOProductStore(MutableMapping[str, "EOObject"]):
     """Abstract store representation to access to a files on the given URL
 
     Inherite from MutableMapping to indexes objects with there correponding
@@ -39,50 +42,22 @@ class EOProductStore(MutableMapping[str, Any]):
         self.url = url
         self._status = StorageStatus.CLOSE
 
-    @property
-    def is_readable(self) -> bool:
-        """bool: this store can be read or not"""
-        return True
+    def __delitem__(self, key: str) -> None:  # pragma: no cover
+        raise NotImplementedError()
 
-    @property
-    def is_writeable(self) -> bool:
-        """bool: this store can be write or not"""
-        return True
-
-    @property
-    def is_listable(self) -> bool:
-        """bool: this store can be list or not"""
-        return True
-
-    @property
-    def is_erasable(self) -> bool:
-        """bool: this store can be erase or not"""
-        return True
-
-    @property
-    def status(self) -> StorageStatus:
-        """StorageStatus: give the current status (open or close) of this store"""
-        return self._status
-
-    def open(self, mode: str = "r", **kwargs: Any) -> None:
-        """Open the store in the given mode
-
-        Parameters
-        ----------
-        mode: str, optional
-            mode to open the store
-        **kwargs: Any
-            extra kwargs of open on librairy used
-        """
-        if self._status == StorageStatus.OPEN:
-            warnings.warn(AlreadyOpen())
-        self._status = StorageStatus.OPEN
+    def __iter__(self) -> Iterator[str]:
+        return self.iter("")
 
     def close(self) -> None:
         """Close the store"""
         if self._status == StorageStatus.CLOSE:
             warnings.warn(AlreadyClose())
         self._status = StorageStatus.CLOSE
+
+    @property
+    def is_erasable(self) -> bool:
+        """bool: this store can be erase or not"""
+        return True
 
     @abstractmethod
     def is_group(self, path: str) -> bool:
@@ -104,6 +79,16 @@ class EOProductStore(MutableMapping[str, Any]):
             If the store is closed
         """
 
+    @property
+    def is_listable(self) -> bool:
+        """bool: this store can be list or not"""
+        return True
+
+    @property
+    def is_readable(self) -> bool:
+        """bool: this store can be read or not"""
+        return True
+
     @abstractmethod
     def is_variable(self, path: str) -> bool:
         """Check if the given path under root corresponding to a variable representation
@@ -124,22 +109,10 @@ class EOProductStore(MutableMapping[str, Any]):
             If the store is closed
         """
 
-    @abstractmethod
-    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
-        """Update attrs in the store
-
-        Parameters
-        ----------
-        group_path: str
-            path of the object to write attributes
-        attrs: MutableMapping[str, Any], optional
-            dict like representation of attributes to write
-
-        Raises
-        ------
-        StoreNotOpenError
-            If the store is closed
-        """
+    @property
+    def is_writeable(self) -> bool:
+        """bool: this store can be write or not"""
+        return True
 
     @abstractmethod
     def iter(self, path: str) -> Iterator[str]:
@@ -161,8 +134,24 @@ class EOProductStore(MutableMapping[str, Any]):
             If the store is closed
         """
 
-    def __delitem__(self, key: str) -> None:  # pragma: no cover
-        raise NotImplementedError()
+    def open(self, mode: str = "r", **kwargs: Any) -> None:
+        """Open the store in the given mode
+
+        Parameters
+        ----------
+        mode: str, optional
+            mode to open the store
+        **kwargs: Any
+            extra kwargs of open on librairy used
+        """
+        if self._status == StorageStatus.OPEN:
+            warnings.warn(AlreadyOpen())
+        self._status = StorageStatus.OPEN
+
+    @property
+    def status(self) -> StorageStatus:
+        """StorageStatus: give the current status (open or close) of this store"""
+        return self._status
 
     @staticmethod
     def guess_can_read(file_path: str) -> bool:
@@ -178,3 +167,43 @@ class EOProductStore(MutableMapping[str, Any]):
         bool
         """
         return False
+
+    @abstractmethod
+    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
+        """Update attrs in the store
+
+        Parameters
+        ----------
+        group_path: str
+            path of the object to write attributes
+        attrs: MutableMapping[str, Any], optional
+            dict like representation of attributes to write
+
+        Raises
+        ------
+        StoreNotOpenError
+            If the store is closed
+        """
+
+
+class EOReadOnlyStore(EOProductStore):
+    def __setitem__(self, k: str, v: "EOObject") -> None:
+        raise NotImplementedError()
+
+    @property
+    def is_erasable(self) -> bool:
+        """bool: this store can be erase or not"""
+        return False
+
+    @property
+    def is_writeable(self) -> bool:
+        """bool: this store can be write or not"""
+        return False
+
+    def open(self, mode: str = "r", **kwargs: Any) -> None:
+        if mode != "r":
+            raise NotImplementedError
+        super().open(mode, **kwargs)
+
+    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
+        raise NotImplementedError()
