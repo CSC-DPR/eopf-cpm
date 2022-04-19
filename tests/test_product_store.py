@@ -731,7 +731,7 @@ def test_write_real_s3(dask_client_all, w_store: type, w_path: str, w_kwargs: di
     ],
 )
 def test_cog_store(store_cls: type[EOCogStore], format_file: str):
-    assert store_cls.guess_can_read("some_file.jp2")
+    assert store_cls.guess_can_read("some_file.cog")
     assert not store_cls.guess_can_read("some_other_file.false")
     cog = store_cls("some_file.jp2")
 
@@ -782,10 +782,6 @@ def test_cog_store(store_cls: type[EOCogStore], format_file: str):
                 cog[""]
             with pytest.raises(NotImplementedError):
                 cog["var1"]
-            with pytest.raises(NotImplementedError):
-                [i for i in cog.iter("")]
-            with pytest.raises(NotImplementedError):
-                [i for i in cog]
             not_existing_key = "not_existing_key"
             with pytest.raises(KeyError):
                 value[not_existing_key]
@@ -796,10 +792,10 @@ def test_cog_store(store_cls: type[EOCogStore], format_file: str):
     ):
         cog = store_cls(_FILES["cog"])
         with open_store(cog, mode="w"):
-            cog["var1"] = EOVariable(data=xarray.DataArray(data_val, coords={"a": coord_a, "b": coord_b}))
+            cog["var1"] = EOVariable(data=xarray.DataArray(data_val, coords={"x": coord_a, "y": coord_b}))
             assert mock_raster.call_count == 1
             cog["group0"] = EOGroup(
-                variables={"var2": EOVariable(data=xarray.DataArray(data_val, coords={"a": coord_a, "b": coord_b}))},
+                variables={"var2": EOVariable(data=xarray.DataArray(data_val, coords={"x": coord_a, "y": coord_b}))},
             )
             assert mock_raster.call_count == 2
             assert mock_netcdf.call_count == 0
