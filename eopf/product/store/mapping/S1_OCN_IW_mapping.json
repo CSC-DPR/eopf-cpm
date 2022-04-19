@@ -128,7 +128,7 @@
         {
             "short_name": "sub_swath",
             "target_path": "/coordinates/osw/sub_swath",
-            "source_path": "measurement/.*nc",
+            "source_path": "measurement",
             "item_format": "filename_to_subswath",
             "parameters": {
                 "dimensions": [

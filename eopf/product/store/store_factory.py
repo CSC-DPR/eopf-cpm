@@ -9,6 +9,9 @@ class EOStoreFactory:
         self.item_formats: dict[str, type[EOProductStore]] = dict()
         self.store_types: set[type[EOProductStore]] = set()
         if default_stores:
+            from eopf.product.store.filename_to_variable import (
+                FilenameToVariableAccessor,
+            )
             from eopf.product.store.grib import EOGribAccessor
             from eopf.product.store.manifest import ManifestStore
             from eopf.product.store.netcdf import (
@@ -23,6 +26,7 @@ class EOStoreFactory:
             from eopf.product.store.zarr import EOZarrStore
 
             self.register_store(EOZarrStore)
+            self.register_store(FilenameToVariableAccessor, "filename_to_subswath")
             self.register_store(EONetCDFStore, "netcdf")
             self.register_store(EONetcdfStringToTimeAccessor, "netcdf_string_to_time")
             self.register_store(ManifestStore, "xmlmetadata")
