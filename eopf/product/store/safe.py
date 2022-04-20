@@ -543,8 +543,11 @@ class SafeMappingManager:
                 if not os.path.exists(accessor_file):
                     # create parent directory (needed if the file is in a subfolder of the zip)
                     os.makedirs(os.path.split(accessor_file)[0], exist_ok=True)
-                    with open(accessor_file, mode="wb") as file_:
-                        file_.write(self._fs_map_access[file_path])
+                    if file_path in self._fs_map_access:  # For file
+                        with open(accessor_file, mode="wb") as file_:
+                            file_.write(self._fs_map_access[file_path])
+                    elif not any(path.startswith(file_path) for path in self._fs_map_access):  # check directory level
+                        raise FileNotFoundError()
             else:
                 accessor_file = self._fs_map_access.fs.sep.join([self._fs_map_access.root, file_path])
             mapped_store = self._store_factory.get_store(

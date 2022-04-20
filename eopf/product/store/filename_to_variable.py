@@ -1,12 +1,12 @@
 import datetime
 import re
-from collections.abc import MutableMapping
 from typing import TYPE_CHECKING, Any, Iterator, NamedTuple, Optional
 
 import fsspec
 
+from eopf.exceptions import StoreNotOpenError
 from eopf.product.core.eo_variable import EOVariable
-from eopf.product.store import EOProductStore
+from eopf.product.store.abstract import EOReadOnlyStore
 
 if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_object import EOObject
@@ -18,7 +18,7 @@ class FilePart(NamedTuple):
     end_time: datetime.datetime
 
     @classmethod
-    def from_string(cls, string):
+    def from_string(cls, string: str) -> "FilePart":
         time_format = "%Y%m%dt%H%M%S"
         file_type_str, start_time_str, end_time_str = re.findall(
             r".{3}-(.{2,3})-ocn-vv-(.*)-(.*)-\d{6}-\w{6}-\d{3}\.nc",
@@ -40,13 +40,12 @@ class FilePart(NamedTuple):
 # The accessor shall sort the files by time.
 
 
-class FilenameToVariableAccessor(EOProductStore):
+class FilenameToVariableAccessor(EOReadOnlyStore):
     """Convert Filename in measurement of legacy product to a specific variable"""
 
     _fsmap: Optional[fsspec.FSMap] = None
 
     def open(self, mode: str = "r", storage_options: dict[str, Any] = {}, **kwargs: Any) -> None:
-        print(self.url)
         super().open(mode, **kwargs)
         self._fsmap = fsspec.get_mapper(self.url, **storage_options)
 
@@ -56,14 +55,10 @@ class FilenameToVariableAccessor(EOProductStore):
 
     def __getitem__(self, key: str) -> "EOObject":
         self.check_node(key)
-        files = (f.rpartition("/")[-1] for f in self._fsmap.keys())
+        files = (f.rpartition("/")[-1] for f in self._fsmap.keys())  # type: ignore[union-attr]
         data = [d.value for d in sorted(map(FilePart.from_string, files), key=lambda x: x.start_time)]
         dim = len(data)
-
-        return EOVariable(data=data, dims=[dim])
-
-    def __setitem__(self, key: str, value: "EOObject") -> None:
-        raise NotImplementedError
+        return EOVariable(data=data, dims=(str(dim),))
 
     def __len__(self) -> int:
         return 1
@@ -81,9 +76,8 @@ class FilenameToVariableAccessor(EOProductStore):
     def is_variable(self, path: str) -> bool:
         return True
 
-    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
-        raise NotImplementedError
-
-    def check_node(self, path):
+    def check_node(self, path: str) -> None:
+        if self._fsmap is None:
+            raise StoreNotOpenError()
         if path not in ["", self._fsmap.fs.sep]:
             raise KeyError

@@ -18,6 +18,10 @@ from eopf.product.store.safe import EOSafeStore
     "store_type, get_key",
     [
         (lazy_fixture("S3_OLCI_L1_EFR"), "/coordinates/image_grid/longitude"),
+        (lazy_fixture("S1_IM_OCN"), "/coordinates/osw/sub_swath"),
+        (lazy_fixture("S1_IM_OCN"), "/coordinates/owi/owiLon"),
+        (lazy_fixture("S1_IM_OCN"), "/coordinates/owi/owiPolarisationName"),
+        (lazy_fixture("S1_IM_OCN"), "/conditions/state_vector/sv_x"),
         (lazy_fixture("S2A_MSIL1C"), "/conditions/geometry/saa"),
         (lazy_fixture("S2A_MSIL1C"), "/quality/msk_detfoo_b11"),
         (lazy_fixture("S2A_MSIL1C"), "/quality/msk_qualit_b11"),
@@ -43,7 +47,7 @@ def test_read_product(store_type, get_key):
 @pytest.mark.integration
 @pytest.mark.parametrize(
     "store_type",
-    [lazy_fixture("S3_OLCI_L1_EFR")],
+    [lazy_fixture("S3_OLCI_L1_EFR"), lazy_fixture("S1_IM_OCN")],
 )
 def test_load_product(store_type):
     store = EOSafeStore(store_type)
@@ -69,6 +73,8 @@ def test_load_product(store_type):
         (lazy_fixture("S3_OLCI_L1_EFR"), lambda name: f"{name.replace('.zip', '.zarr')}", EOZarrStore),
         (lazy_fixture("S2A_MSIL1C"), lambda name: f"{name.replace('.zip', '.zarr')}", EOZarrStore),
         (lazy_fixture("S2A_MSIL1C_ZIP"), lambda name: f"{name.replace('.zip', '.zarr')}", EOZarrStore),
+        (lazy_fixture("S1_IM_OCN"), lambda name: f"{name.replace('.zip', '.zarr')}", EOZarrStore),
+        (lazy_fixture("S1_IM_OCN"), lambda name: f"{name.replace('.zip', '.SEN3')}", EOSafeStore),
     ],
 )
 def test_convert_safe_mapping(
