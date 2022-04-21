@@ -21,33 +21,17 @@
             "short_name": "owiPolarisationName",
             "target_path": "/coordinates/owi/owiPolarisationName",
             "source_path": "measurement/.*nc",
-            "item_format": "attribute_element_to_float_variable",
+            "item_format": "attribute_element_to_flag_variable",
             "parameters": {
-                "attributes": {
-                    "flag_values": [
-                        1,
-                        2,
-                        3,
-                        4,
-                        5,
-                        6
-                    ],
-                    "flag_meanings": [
-                        "HH+HV",
-                        "HH",
-                        "HV",
-                        "VV+VH",
-                        "VV",
-                        "VH"
-                    ]
-                },
                 "dimensions": [
                     "sub_image"
                 ]
             },
             "accessor_config": {
-                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf",
-                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/polarisation"
+                "flag_values": "flags/flag_values",
+                "flag_meanings": "flags/flag_meanings",
+                "store_cls": "store_cls/netcdf",
+                "attr_name": "attr_name/polarisation"
             }
         },
         {
@@ -61,8 +45,8 @@
                 ]
             },
             "accessor_config": {
-                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf_string_to_time",
-                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/firstMeasurementTime"
+                "store_cls": "store_cls/netcdf_string_to_time",
+                "attr_name": "attr_name/firstMeasurementTime"
             }
         },
         {
@@ -76,8 +60,8 @@
                 ]
             },
             "accessor_config": {
-                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf_string_to_time",
-                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/lastMeasurementTime"
+                "store_cls": "store_cls/netcdf_string_to_time",
+                "attr_name": "attr_name/lastMeasurementTime"
             }
         },
         {
@@ -96,33 +80,17 @@
             "short_name": "polarisation",
             "target_path": "/coordinates/osw/polarisation",
             "source_path": "measurement/.*nc",
-            "item_format": "attribute_element_to_float_variable",
+            "item_format": "attribute_element_to_flag_variable",
             "parameters": {
-                "attributes": {
-                    "flag_values": [
-                        1,
-                        2,
-                        3,
-                        4,
-                        5,
-                        6
-                    ],
-                    "flag_meanings": [
-                        "HH+HV",
-                        "HH",
-                        "HV",
-                        "VV+VH",
-                        "VV",
-                        "VH"
-                    ]
-                },
                 "dimensions": [
                     "sub_image"
                 ]
             },
             "accessor_config": {
-                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf",
-                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/polarisation"
+                "flag_values": "flags/flag_values",
+                "flag_meanings": "flags/flag_meanings",
+                "store_cls": "store_cls/netcdf",
+                "attr_name": "attr_name/polarisation"
             }
         },
         {
@@ -134,18 +102,15 @@
                 "dimensions": [
                     "sub_image"
                 ],
-                "flag_values": [
-                    0,
-                    0,
-                    1,
-                    2
-                ],
-                "flag_meanings": [
-                    "iw",
-                    "ew",
-                    "wv1",
-                    "wv2"
-                ]
+                "attributes": {
+                    "flag_values": [
+                        0,
+                        0,
+                        1,
+                        2
+                    ],
+                    "flag_meanings": "iw ew wv1 wv2"
+                }
             }
         },
         {
@@ -159,8 +124,8 @@
                 ]
             },
             "accessor_config": {
-                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf_string_to_time",
-                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/firstMeasurementTime"
+                "store_cls": "store_cls/netcdf_string_to_time",
+                "attr_name": "attr_name/firstMeasurementTime"
             }
         },
         {
@@ -174,8 +139,8 @@
                 ]
             },
             "accessor_config": {
-                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf_string_to_time",
-                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/lastMeasurementTime"
+                "store_cls": "store_cls/netcdf_string_to_time",
+                "attr_name": "attr_name/lastMeasurementTime"
             }
         },
         {
@@ -230,33 +195,17 @@
             "short_name": "polarisation",
             "target_path": "/coordinates/rvl/polarisation",
             "source_path": "measurement/.*nc",
-            "item_format": "attribute_element_to_float_variable",
+            "item_format": "attribute_element_to_flag_variable",
             "parameters": {
-                "attributes": {
-                    "flag_values": [
-                        1,
-                        2,
-                        3,
-                        4,
-                        5,
-                        6
-                    ],
-                    "flag_meanings": [
-                        "HH+HV",
-                        "HH",
-                        "HV",
-                        "VV+VH",
-                        "VV",
-                        "VH"
-                    ]
-                },
                 "dimensions": [
                     "sub_image"
                 ]
             },
             "accessor_config": {
-                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf",
-                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/polarisation"
+                "flag_values": "flags/flag_values",
+                "flag_meanings": "flags/flag_meanings",
+                "store_cls": "store_cls/netcdf",
+                "attr_name": "attr_name/polarisation"
             }
         },
         {
@@ -276,8 +225,8 @@
                 ]
             },
             "accessor_config": {
-                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf_string_to_time",
-                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/firstMeasurementTime"
+                "store_cls": "store_cls/netcdf_string_to_time",
+                "attr_name": "attr_name/firstMeasurementTime"
             }
         },
         {
@@ -291,8 +240,8 @@
                 ]
             },
             "accessor_config": {
-                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf_string_to_time",
-                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/lastMeasurementTime"
+                "store_cls": "store_cls/netcdf_string_to_time",
+                "attr_name": "attr_name/lastMeasurementTime"
             }
         },
         {
@@ -306,8 +255,8 @@
                 ]
             },
             "accessor_config": {
-                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf_string_to_time",
-                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/statevectorUtc"
+                "store_cls": "store_cls/netcdf_string_to_time",
+                "attr_name": "attr_name/statevectorUtc"
             }
         },
         {
@@ -604,9 +553,9 @@
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",
             "accessor_config": {
-                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf",
-                "index": "attribute_element_to_float_variable_mapping/index/0",
-                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/pos"
+                "store_cls": "store_cls/netcdf",
+                "index": "index/0",
+                "attr_name": "attr_name/pos"
             },
             "parameters": {
                 "dimensions": [
@@ -620,9 +569,9 @@
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",
             "accessor_config": {
-                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf",
-                "index": "attribute_element_to_float_variable_mapping/index/1",
-                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/pos"
+                "store_cls": "store_cls/netcdf",
+                "index": "index/1",
+                "attr_name": "attr_name/pos"
             },
             "parameters": {
                 "dimensions": [
@@ -636,9 +585,9 @@
             "source_path": "measurement/.*nc:",
             "item_format": "attribute_element_to_float_variable",
             "accessor_config": {
-                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf",
-                "index": "attribute_element_to_float_variable_mapping/index/2",
-                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/pos"
+                "store_cls": "store_cls/netcdf",
+                "index": "index/2",
+                "attr_name": "attr_name/pos"
             },
             "parameters": {
                 "dimensions": [
@@ -652,9 +601,9 @@
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",
             "accessor_config": {
-                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf",
-                "index": "attribute_element_to_float_variable_mapping/index/0",
-                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/vel"
+                "store_cls": "store_cls/netcdf",
+                "index": "index/0",
+                "attr_name": "attr_name/vel"
             },
             "parameters": {
                 "dimensions": [
@@ -668,9 +617,9 @@
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",
             "accessor_config": {
-                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf",
-                "index": "attribute_element_to_float_variable_mapping/index/1",
-                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/vel"
+                "store_cls": "store_cls/netcdf",
+                "index": "index/1",
+                "attr_name": "attr_name/vel"
             },
             "parameters": {
                 "dimensions": [
@@ -684,9 +633,9 @@
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",
             "accessor_config": {
-                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf",
-                "index": "attribute_element_to_float_variable_mapping/index/2",
-                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/vel"
+                "store_cls": "store_cls/netcdf",
+                "index": "index/2",
+                "attr_name": "attr_name/vel"
             },
             "parameters": {
                 "dimensions": [
@@ -802,8 +751,8 @@
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",
             "accessor_config": {
-                "store_cls": "attribute_element_to_float_variable_mapping/store_cls/netcdf",
-                "attr_name": "attribute_element_to_float_variable_mapping/attr_name/prf"
+                "store_cls": "store_cls/netcdf",
+                "attr_name": "attr_name/prf"
             }
         },
         {
@@ -905,7 +854,7 @@
         {
             "short_name": "metadata",
             "source_path": "manifest.safe",
-            "target_path": "/@CF",
+            "target_path": "/",
             "item_format": "xmlmetadata",
             "accessor_config": {
                 "mapping": "metadata_mapping/xfdumanifest-CF",
@@ -915,7 +864,7 @@
         {
             "short_name": "metadata",
             "source_path": "manifest.safe",
-            "target_path": "/@OM_EOP",
+            "target_path": "/",
             "item_format": "xmlmetadata",
             "accessor_config": {
                 "mapping": "metadata_mapping/xfdumanifest-OM-EOP",
@@ -929,25 +878,34 @@
             "item_format": "misc"
         }
     ],
-    "attribute_element_to_float_variable_mapping": {
-        "store_cls": {
-            "netcdf": "eopf.product.store.netcdf.EONetCDFStore",
-            "netcdf_string_to_time": "eopf.product.store.netcdf.EONetCDFStore"
-        },
-        "index": {
-            "0": 0,
-            "1": 1,
-            "2": 2
-        },
-        "attr_name": {
-            "pos": "statevectorPos",
-            "vel": "statevectorVel",
-            "polarisation": "polarisation",
-            "firstMeasurementTime": "firstMeasurementTime",
-            "lastMeasurementTime": "lastMeasurementTime",
-            "statevectorUtc": "statevectorUtc",
-            "prf": "prf"
-        }
+    "flags": {
+        "flag_values": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+        ],
+        "flag_meanings": "HH+HV HH HV VV+VH VV VH"
+    },
+    "store_cls": {
+        "netcdf": "eopf.product.store.netcdf.EONetCDFStore",
+        "netcdf_string_to_time": "eopf.product.store.netcdf.EONetcdfStringToTimeAccessor"
+    },
+    "attr_name": {
+        "pos": "statevectorPos",
+        "vel": "statevectorVel",
+        "polarisation": "polarisation",
+        "firstMeasurementTime": "firstMeasurementTime",
+        "lastMeasurementTime": "lastMeasurementTime",
+        "statevectorUtc": "statevectorUtc",
+        "prf": "prf"
+    },
+    "index": {
+        "0": 0,
+        "1": 1,
+        "2": 2
     },
     "metadata_mapping": {
         "xfdumanifest-CF": {

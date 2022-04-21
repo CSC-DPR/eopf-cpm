@@ -74,7 +74,6 @@ def test_load_product(store_type):
         (lazy_fixture("S2A_MSIL1C"), lambda name: f"{name.replace('.zip', '.zarr')}", EOZarrStore),
         (lazy_fixture("S2A_MSIL1C_ZIP"), lambda name: f"{name.replace('.zip', '.zarr')}", EOZarrStore),
         (lazy_fixture("S1_IM_OCN"), lambda name: f"{name.replace('.zip', '.zarr')}", EOZarrStore),
-        (lazy_fixture("S1_IM_OCN"), lambda name: f"{name.replace('.zip', '.SEN3')}", EOSafeStore),
     ],
 )
 def test_convert_safe_mapping(

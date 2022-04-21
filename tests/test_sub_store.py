@@ -11,7 +11,10 @@ from numpy import testing
 
 from eopf.product.core import EOGroup, EOVariable
 from eopf.product.store.grib import EOGribAccessor
-from eopf.product.store.wrappers import FromAttributesToVariableAccessor
+from eopf.product.store.wrappers import (
+    FromAttributesToFlagValueAccessor,
+    FromAttributesToVariableAccessor,
+)
 from eopf.product.store.xml_accessors import (
     XMLAnglesAccessor,
     XMLManifestAccessor,
@@ -220,7 +223,8 @@ def test_xml_tiepoints_accessor():
         assert True
 
 
-@pytest.mark.usecase
+@pytest.mark.integration
+@pytest.mark.need_files
 def test_xml_manifest_accessor():
     olci_path = glob(f"{PARENT_DATA_PATH}/data/S3A_OL_1*.SEN3")[0]
     manifest_path = os.path.join(olci_path, "xfdumanifest.xml")
@@ -319,17 +323,29 @@ def test_xml_manifest_accessor():
     assert datetime.strptime(processing_map["processingDate"], "%Y-%m-%dT%H:%M:%S.%f")
 
 
-@pytest.mark.unit()
-@pytest.mark.parametrize("store", [FromAttributesToVariableAccessor("")])
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "store, kwargs",
+    [
+        (FromAttributesToVariableAccessor(""), {}),
+        (FromAttributesToFlagValueAccessor(""), {"flag_values": [1, 2, 3], "flag_meanings": "23 1 5"}),
+    ],
+)
 @pytest.mark.parametrize("attrs, attr_name, index", [({"a": [23]}, "a", 0), ({"a": [23], "B": [1, 5, 23]}, "B", 1)])
-def test_fromattributestovarstore(attrs, store, attr_name, index):
+def test_fromattributestovarstore(
+    attrs: dict,
+    store: FromAttributesToVariableAccessor,
+    attr_name: str,
+    index: Any,
+    kwargs: dict,
+):
     with (
         mock.patch.object(EmptyTestStore, "__getitem__", return_value=EOGroup(attrs=attrs)),
         mock.patch.object(EmptyTestStore, "__iter__", return_value=iter(["value", "other"])),
         mock.patch.object(EmptyTestStore, "__len__", return_value=2),
     ):
-        store.open(store_cls="tests.test_eo_container.EmptyTestStore", attr_name=attr_name, index=index)
-        assert store["value"]._data == [attrs[attr_name][index]]
+        store.open(store_cls="tests.test_eo_container.EmptyTestStore", attr_name=attr_name, index=index, **kwargs)
+        assert store._extract_data("value"), [attrs[attr_name][index]]
 
         assert len([i for i in store]) == len(store)
         assert len([i for i in store]) == len([i for i in store.iter("")])

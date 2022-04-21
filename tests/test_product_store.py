@@ -20,9 +20,12 @@ from eopf.exceptions.warnings import AlreadyOpen
 from eopf.product.conveniences import init_product, open_store
 from eopf.product.core import EOGroup, EOProduct, EOVariable
 from eopf.product.store import EONetCDFStore, EOProductStore, EOZarrStore, convert
-from eopf.product.store.flags import EOFlagAccessor
 from eopf.product.store.manifest import ManifestStore
 from eopf.product.store.rasterio import EORasterIOAccessor
+from eopf.product.store.wrappers import (
+    FromAttributesToFlagValueAccessor,
+    FromAttributesToVariableAccessor,
+)
 
 from .decoder import Netcdfdecoder
 from .utils import (
@@ -265,8 +268,9 @@ def test_abstract_store_cant_be_instantiate():
     [
         EOZarrStore("a_product"),
         EONetCDFStore(_FILES["netcdf"]),
-        EOFlagAccessor("a.jp2"),
         EORasterIOAccessor("a.jp2"),
+        FromAttributesToVariableAccessor(""),
+        FromAttributesToFlagValueAccessor(""),
     ],
 )
 def test_store_must_be_open_read_method(store: EOProductStore):
@@ -551,7 +555,6 @@ def test_convert(read_write_stores):
     [
         (EORasterIOAccessor, "tiff", {}),
         (EORasterIOAccessor, "jp2", {}),
-        (EOFlagAccessor, "jp2", {"flag_meanings": "a,b,c", "flag_values": "1,2,3"}),
     ],
 )
 def test_rasters(store_cls: type[EORasterIOAccessor], format_file: str, params: dict[str, Any]):
