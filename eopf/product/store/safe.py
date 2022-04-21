@@ -435,8 +435,8 @@ class SafeMappingManager:
         self._fs_map_access: Optional[fsspec.FSMap] = None
 
     def __iter__(self) -> Iterator[tuple[EOProductStore, dict[str, Any]]]:
-        for accessor_map_2 in sorted(self._accessor_map.values(), key=lambda x: x.keys()):
-            for accessor, config in sorted(accessor_map_2.values(), key=lambda x: x[0].__class__.__name__):
+        for accessor_map_2 in self._accessor_map.values():
+            for accessor, config in accessor_map_2.values():
                 if accessor is not None:
                     yield accessor, config
 
