@@ -149,10 +149,12 @@ class EOZarrStore(EOProductStore):
             self._root.create_group(key, overwrite=True)
         elif isinstance(value, EOVariable):
             dask_array = da.asarray(value._data.data)  # .data is generally already a dask array.
-            zarr_array = self._root.create(key, shape=dask_array.shape)
-            # While it's possible to create the array with to_zarr,
-            # it fail to create the array on some array shapes (ex : empty)
-            da.to_zarr(dask_array, zarr_array)
+            if dask_array.size > 0:
+                # We must use to_zarr for writing on a distributed cluster,
+                # but to_zarr fail to write array with a 0 dim (divide by zero Exception)
+                dask_array.to_zarr(self.url, component=key)
+            else:
+                self._root.create(key, shape=dask_array.shape)
         else:
             raise TypeError("Only EOGroup and EOVariable can be set")
         self.write_attrs(key, value.attrs)
