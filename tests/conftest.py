@@ -83,24 +83,8 @@ def S3_OLCI_L1_EFR(INPUT_DIR: str):
 
 
 @pytest.fixture
-def S3_SL_1_RBT(MAPPING_FOLDER: str):
-    """Path to a S3 SL 1 RBT product"""
-    file_name = "S3*_SL_1_RBT*.zip"
-    glob_path = os.path.join(INPUT_DIR, file_name)
-    return f"zip::file://{glob.glob(glob_path)[0]}"
-
-
-@pytest.fixture
-def S3_SY_2_SYN(MAPPING_FOLDER: str):
-    """Path to a S3 SY 2 SYN product"""
-    file_name = "S3*_SY_2_SYN*.zip"
-    glob_path = os.path.join(INPUT_DIR, file_name)
-    return f"zip::file://{glob.glob(glob_path)[0]}"
-
-
-@pytest.fixture
 def S2A_MSIL1C_ZIP(INPUT_DIR: str):
-    """Path to a S2 MSIL1C LEVEL 1 product in zip format"""
+    """Path to a S3 OLCI LEVEL 1 mapping"""
     file_name = "S2A_MSIL1C*.zip"
     glob_path = os.path.join(INPUT_DIR, file_name)
     return f"zip::file://{glob.glob(glob_path)[0]}"
@@ -108,7 +92,7 @@ def S2A_MSIL1C_ZIP(INPUT_DIR: str):
 
 @pytest.fixture
 def S2A_MSIL1C(INPUT_DIR: str):
-    """Path to a S2 MSIL1C LEVEL 1 product"""
+    """Path to a S3 OLCI LEVEL 1 mapping"""
     file_name = "S2A_MSIL1C*.SAFE"
     glob_path = os.path.join(INPUT_DIR, file_name)
     return f"file://{glob.glob(glob_path)[0]}"
@@ -120,3 +104,25 @@ def S1_IM_OCN(INPUT_DIR: str):
     file_name = "S1A_IW_OCN*.zip"
     glob_path = os.path.join(INPUT_DIR, file_name)
     return f"zip::file://{glob.glob(glob_path)[0]}"
+
+
+# ----------------------------------#
+# --------- Dask Cluster  ----------#
+# ----------------------------------#
+
+# import required dask fixtures :
+# dask_solomulti require client.
+# client require loop and cluster_fixture.
+from distributed.utils_test import (  # noqa # pylint: disable=unused-import
+    client,
+    cluster_fixture,
+    loop,
+)
+
+
+@pytest.fixture(params=[True, False])
+def dask_client_all(request):
+    """Run the test once with and without dask distributed."""
+    if request.param:
+        return request.getfixturevalue("client")
+    return None
