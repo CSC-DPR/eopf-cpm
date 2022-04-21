@@ -13,12 +13,15 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class FilePart(NamedTuple):
+    """Data class to aggregate file information for :obj:`FilenameToVariableAccessor`"""
+
     value: int
     start_time: datetime.datetime
     end_time: datetime.datetime
 
     @classmethod
     def from_string(cls, string: str) -> "FilePart":
+        """Create instance of FilePart from the filename as a string"""
         time_format = "%Y%m%dt%H%M%S"
         file_type_str, start_time_str, end_time_str = re.findall(
             r".{3}-(.{2,3})-ocn-vv-(.*)-(.*)-\d{6}-\w{6}-\d{3}\.nc",
@@ -61,19 +64,18 @@ class FilenameToVariableAccessor(EOReadOnlyStore):
         return EOVariable(data=data, dims=(str(dim),))
 
     def __len__(self) -> int:
-        return 1
-
-    def __iter__(self) -> Iterator[str]:
-        return self.iter("")
+        return 0
 
     def iter(self, path: str) -> Iterator[str]:
         self.check_node(path)
-        return iter([""])
+        return iter([])
 
     def is_group(self, path: str) -> bool:
+        self.check_node(path)
         return False
 
     def is_variable(self, path: str) -> bool:
+        self.check_node(path)
         return True
 
     def check_node(self, path: str) -> None:

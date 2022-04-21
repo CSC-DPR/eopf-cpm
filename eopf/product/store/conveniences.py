@@ -32,6 +32,7 @@ def convert(
     EOProductStore
     """
     from eopf.product import open_store
+    from eopf.product.core import EOGroup
 
     def _convert(level: list[str]) -> None:
         if len(level) == 1:
@@ -46,6 +47,7 @@ def convert(
                     _convert([*level, sublevel])
                 except IndexError:
                     warnings.warn("Itering over missing files can cause inconsistency")
+                    target[join_path(*level, sublevel, sep=target.sep)] = EOGroup()
 
     source_kwargs.setdefault("mode", "r")
     target_kwargs.setdefault("mode", "w")
