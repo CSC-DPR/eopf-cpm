@@ -148,7 +148,11 @@ class EOZarrStore(EOProductStore):
         if isinstance(value, EOGroup):
             self._root.create_group(key, overwrite=True)
         elif isinstance(value, EOVariable):
-            dask_array = da.asarray(value._data.data)  # .data is generally already a dask array.
+            # masked array should be processed to be writted correctly
+            if value.is_masked:
+                dask_array = da.ma.masked_array(value.data.compute(), fill_value=value.attrs.get("_FillValue"))
+            else:
+                dask_array = da.asarray(value.data, dtype=value.data.dtype)  # .data is generally already a dask array.
             if dask_array.size > 0:
                 # We must use to_zarr for writing on a distributed cluster,
                 # but to_zarr fail to write array with a 0 dim (divide by zero Exception)

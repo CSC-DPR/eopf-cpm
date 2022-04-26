@@ -12,6 +12,7 @@ from typing import (
     ValuesView,
 )
 
+import numpy as np
 import xarray
 from dask import array as da
 
@@ -210,6 +211,20 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         """
         self._data = self._data.chunk(chunks, name_prefix=name_prefix, token=token, lock=lock)
         return self
+
+    @property
+    def dtype(self):
+        return self.data.dtype
+
+    @property
+    def is_masked(self):
+        return isinstance(self.data, np.ma.MaskedArray) or (
+            isinstance(self.data, da.Array) and isinstance(self.data._meta, np.ma.MaskedArray)
+        )
+
+    @property
+    def ndim(self):
+        return self.data.ndim
 
     @property
     def loc(self) -> "_LocIndexer":

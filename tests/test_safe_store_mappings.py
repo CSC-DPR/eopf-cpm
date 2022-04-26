@@ -113,15 +113,30 @@ def test_convert_safe_mapping(
 
     with (open_store(source_product), open_store(target_product)):
         for item in mappin_data["data_mapping"]:
+            # TODO: should be removed after that misc was removed from mappings
+            if item["item_format"] == "misc":
+                continue
             data_path = item["target_path"]
             if data_path:
-                source_data = source_product[data_path]
-                target_data = target_product[data_path]
+                source_object = source_product[data_path]
+                target_object = target_product[data_path]
             else:
-                source_data = source_product
-                target_data = target_product
-            assert type(source_data) == type(target_data)
-            np.testing.assert_equal(source_data.attrs, target_data.attrs)
-            if isinstance(source_data, EOVariable):
-                # assert np.ma.allequal(source_data.data, target_data.data)
-                assert np.array_equal(source_data.data, target_data.data, equal_nan=True)
+                source_object = source_product
+                target_object = target_product
+            assert type(source_object) == type(target_object)
+            np.testing.assert_equal(source_object.attrs, target_object.attrs)
+            if isinstance(source_object, EOVariable):
+                if source_object.is_masked:
+                    source_data = np.ma.getdata(source_object.data)
+                else:
+                    source_data = source_object.data
+
+                if target_object.is_masked:
+                    target_data = np.ma.getdata(target_object.data)
+                else:
+                    target_data = target_object.data
+
+                if source_object.is_masked and target_object.is_masked:
+                    assert np.ma.allequal(source_data, target_data)
+                else:
+                    assert np.array_equal(source_data, target_data, equal_nan=True)

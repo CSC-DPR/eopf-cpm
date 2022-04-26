@@ -3121,7 +3121,7 @@
         {
             "short_name": "metadata",
             "source_path": "manifest.safe",
-            "target_path": "/",
+            "target_path": "",
             "item_format": "xmlmetadata",
             "accessor_config": {
                 "mapping": "metadata_mapping/manifest",
@@ -3131,7 +3131,7 @@
         {
             "short_name": "metadata",
             "source_path": "MTD_MSIL1C.xml",
-            "target_path": "/",
+            "target_path": "",
             "item_format": "xmlmetadata",
             "accessor_config": {
                 "mapping": "metadata_mapping/MTD_MSIL1C",
@@ -3141,7 +3141,7 @@
         {
             "short_name": "metadata",
             "source_path": "/GRANULE/[^/]*/MTD_TL.xml",
-            "target_path": "/",
+            "target_path": "",
             "item_format": "xmlmetadata",
             "accessor_config": {
                 "mapping": "metadata_mapping/MTD_TL",

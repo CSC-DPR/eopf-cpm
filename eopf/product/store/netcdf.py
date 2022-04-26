@@ -61,7 +61,7 @@ class EONetCDFStore(EOProductStore):
         attrs = {key: decode_attrs(value) for key, value in obj.__dict__.items()}
         if self.is_group(key):
             return EOGroup(attrs=attrs)
-        return EOVariable(data=obj, attrs=attrs, dims=obj.dimensions)
+        return EOVariable(data=obj[:], attrs=attrs, dims=obj.dimensions)
 
     def __iter__(self) -> Iterator[str]:
 

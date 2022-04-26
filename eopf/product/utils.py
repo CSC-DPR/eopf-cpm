@@ -86,7 +86,7 @@ def conv(obj: Any) -> Any:
 
     # check numpy
     if isinstance(obj, ndarray):
-        return conv(obj.tolist())
+        return [conv(i) for i in obj.tolist()]
 
     # check np int
     if isinstance(obj, (int64, int32, int16, uint64, uint32, uint16, uint8, int8, int)):
@@ -352,9 +352,9 @@ def norm_eo_path(eo_path: str) -> str:
     """
     if eo_path == "":
         raise KeyError("Invalid empty eo_path")
-    eo_path = posixpath.normpath(eo_path)  # Do not use pathlib (does not remove ..)
-    if eo_path.startswith("//"):  # text is a special path so it's not normalised by normpath
-        eo_path = eo_path[1:]
+    # Do not use pathlib (does not remove ..)
+    # text is a special path so it's not normalised by normpath
+    eo_path = posixpath.normpath(eo_path).removeprefix("//")
     return eo_path
 
 
