@@ -36,7 +36,7 @@ from eopf.product.utils import conv
         (lazy_fixture("S2A_MSIL1C"), "/conditions/meteo/omaod550"),
     ],
 )
-def test_read_product(store_type, get_key):
+def test_read_product(dask_client_all, store_type, get_key):
     store = EOSafeStore(store_type)
     product = EOProduct("my_product", store_or_path_url=store)
     product.open()
@@ -53,7 +53,7 @@ def test_read_product(store_type, get_key):
     "store_type",
     [lazy_fixture("S3_OLCI_L1_EFR"), lazy_fixture("S1_IM_OCN")],
 )
-def test_load_product(store_type):
+def test_load_product(dask_client_all, store_type):
     store = EOSafeStore(store_type)
     product = EOProduct("my_product", store_or_path_url=store)
     product.open()
@@ -106,6 +106,7 @@ def test_load_product(store_type):
     ],
 )
 def test_convert_safe_mapping(
+    dask_client_all,
     input_path: str,
     mapping_filename: str,
     output_formatter: Callable,

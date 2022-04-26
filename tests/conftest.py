@@ -1,8 +1,10 @@
 import glob
 import os
 import shutil
+from datetime import timedelta
 
 import pytest
+from hypothesis import HealthCheck, settings
 
 from .utils import PARENT_DATA_PATH
 
@@ -124,5 +126,28 @@ from distributed.utils_test import (  # noqa # pylint: disable=unused-import
 def dask_client_all(request):
     """Run the test once with and without dask distributed."""
     if request.param:
+        # The small hypothesis tests are far slower with dask distributed.
+        # We use a lower hypothesis max_examples with them
+        settings.load_profile("function_fixture_fast")
         return request.getfixturevalue("client")
+    settings.load_profile("function_fixture_slow")
     return None
+
+
+# Compatibility between function level fixture (like dask_client_all) and hypothesis.
+# Note that function level fixture are estimated one for all hypothesis.
+# If the function level fixture is parametized, it loop over the fixture, each sub fixture being estimated once
+# for all the hypothesis. The sub_fixture get deleted before the next sub fixture is estimated.
+# TLDR : it work and is necessary for my dask client. There is a test in convenience that check it.
+settings.register_profile(
+    "function_fixture_fast",
+    deadline=timedelta(milliseconds=20000),
+    max_examples=10,
+    suppress_health_check=(HealthCheck.function_scoped_fixture,),
+)
+settings.register_profile(
+    "function_fixture_slow",
+    deadline=timedelta(milliseconds=5000),
+    suppress_health_check=(HealthCheck.function_scoped_fixture,),
+)
+settings.load_profile("function_fixture_fast")

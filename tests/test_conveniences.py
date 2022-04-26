@@ -4,11 +4,12 @@ import sys
 from cmath import inf
 from typing import Any
 
+import dask
 import hypothesis.extra.numpy as xps
 import hypothesis.strategies as st
 import numpy
 import pytest
-from hypothesis import assume, given
+from hypothesis import HealthCheck, assume, given, settings
 
 from eopf.product.utils import (
     apply_xpath,
@@ -281,3 +282,32 @@ def test_reverse_conv(value_and_types):
     assert numpy.issubdtype(type(converted_value), data_type)
     # check if converted data type is changed and not match with old one
     assert type(converted_value) != current_type
+
+
+@pytest.mark.unit
+@given(
+    value_and_type=st.one_of(
+        value_with_type(
+            elements=numpy_value(xps.floating_dtypes(), allow_infinity=False, allow_nan=False),
+            expected_type=float,
+        ),
+        value_with_type(
+            elements=numpy_value(xps.integer_dtypes(), allow_infinity=False, allow_nan=False),
+            expected_type=int,
+        ),
+        value_with_type(
+            elements=st.datetimes(),
+            expected_type=int,
+        ),
+    ),
+)
+@settings(suppress_health_check=(HealthCheck.function_scoped_fixture,))
+def test_hypotesis_with_dask(dask_client_all, value_and_type):
+    """Cf conftest comment. Function level fixture and hypothesis interaction is non trival."""
+    # The scheduler coonfig is assigned when the distributed client is created
+    try:
+        assert dask.config.get("scheduler") == "dask.distributed"
+        dask_distributed = True
+    except KeyError:
+        dask_distributed = False
+    assert dask_distributed == (dask_client_all is not None)

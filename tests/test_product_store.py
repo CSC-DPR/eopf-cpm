@@ -112,7 +112,7 @@ def zarr_file(OUTPUT_DIR: str):
 
 
 @pytest.mark.unit
-def test_load_product_from_zarr(zarr_file: str):
+def test_load_product_from_zarr(dask_client_all, zarr_file: str):
     product = EOProduct("a_product", store_or_path_url=zarr_file)
     with product.open(mode="r"):
         product.load()
@@ -215,7 +215,7 @@ def test_check_capabilities(store, readable, writable, listable, erasable):
         (EONetCDFStore(_FILES["netcdf"]), Netcdfdecoder),
     ],
 )
-def test_write_stores(store: EOProductStore, decoder_type: Any):
+def test_write_stores(dask_client_all, store: EOProductStore, decoder_type: Any):
 
     store.open(mode="w")
     store["a_group"] = EOGroup()
@@ -239,7 +239,7 @@ def test_write_stores(store: EOProductStore, decoder_type: Any):
         EONetCDFStore(_FILES["netcdf"]),
     ],
 )
-def test_read_stores(store: EOProductStore):
+def test_read_stores(dask_client_all, store: EOProductStore):
     store.open(mode="w")
     store["a_group"] = EOGroup()
     store["a_group/a_variable"] = EOVariable(data=[])
@@ -319,7 +319,7 @@ def test_store_must_be_open_write_method(store):
         EONetCDFStore(_FILES["netcdf"]),
     ],
 )
-def test_store_structure(store: EOProductStore):
+def test_store_structure(dask_client_all, store: EOProductStore):
     store.open(mode="w")
     store["a_group"] = EOGroup()
     store["another_one"] = EOGroup()
@@ -422,7 +422,12 @@ def test_close_manifest_store():
 
 @pytest.mark.need_files
 @pytest.mark.integration
-def test_retrieve_from_manifest_store(S3_OLCI_L1_EFR: str, S3_OLCI_L1_MAPPING: str, tmp_path: pathlib.Path):
+def test_retrieve_from_manifest_store(
+    dask_client_all,
+    S3_OLCI_L1_EFR: str,
+    S3_OLCI_L1_MAPPING: str,
+    tmp_path: pathlib.Path,
+):
     """Tested on 24th of February on data coming from
     S3A_OL_1_EFR____20220116T092821_20220116T093121_20220117T134858_0179_081_036_2160_LN1_O_NT_002.SEN3
     Given a manifest XML file from a Legacy product and a mapping file,
@@ -534,7 +539,7 @@ _FORMAT = {
 @given(
     st.sampled_from(couple_combinaison_from(elements=[EOZarrStore, EONetCDFStore])),
 )
-def test_convert(read_write_stores):
+def test_convert(dask_client_all, read_write_stores):
 
     cls_read_store, cls_write_store = read_write_stores
     read_store = cls_read_store(_FILES[f"{_FORMAT[cls_read_store]}0"])
@@ -557,7 +562,7 @@ def test_convert(read_write_stores):
         (EORasterIOAccessor, "jp2", {}),
     ],
 )
-def test_rasters(store_cls: type[EORasterIOAccessor], format_file: str, params: dict[str, Any]):
+def test_rasters(dask_client_all, store_cls: type[EORasterIOAccessor], format_file: str, params: dict[str, Any]):
     file_name = f"a_file.{format_file}"
     assert store_cls.guess_can_read(file_name)
     assert not store_cls.guess_can_read("false_format.false")
@@ -636,7 +641,7 @@ def test_rasters(store_cls: type[EORasterIOAccessor], format_file: str, params: 
         ),
     ],
 )
-def test_zarr_open_on_different_fs(product: EOProduct, fakefilename: str, open_kwargs: dict[str, Any]):
+def test_zarr_open_on_different_fs(dask_client_all, product: EOProduct, fakefilename: str, open_kwargs: dict[str, Any]):
     with patch("fsspec.get_mapper") as mock:
         mock.return_value = fsspec.FSMap(fakefilename, LocalFileSystem())
         with product.open(storage_options=open_kwargs):

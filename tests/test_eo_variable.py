@@ -38,7 +38,7 @@ def eovariable_strategie(draw, name="", data=None, dims=tuple(), with_input=True
         eovariable_strategie(data=xps.arrays(dtype="float64", shape=(2, 2)), dims=("a", "b")),
     ),
 )
-def test_data_access(variable):
+def test_data_access(dask_client_all, variable):
     variable, data, _ = variable
     assert np.array_equal(variable.data, data, equal_nan=True)
 
@@ -50,7 +50,7 @@ def test_data_access(variable):
         eovariable_strategie(data=xps.arrays(dtype="float64", shape=(2, 2)), dims=("a", "b")),
     ),
 )
-def test_indexing(variable):
+def test_indexing(dask_client_all, variable):
     variable, data, dims = variable
     data = xarray.DataArray(data=data, dims=dims)
 
@@ -66,7 +66,7 @@ def test_indexing(variable):
         eovariable_strategie(data=xps.arrays(dtype="float64", shape=(2, 2)), dims=("a", "b")),
     ),
 )
-def test_selection(variable):
+def test_selection(dask_client_all, variable):
     variable, data, dims = variable
     data = xarray.DataArray(data=data, dims=dims)
     assert np.array_equal(variable.sel(**{dims[0]: [0, 1]}), data.sel(**{dims[0]: [0, 1]}), equal_nan=True)
@@ -86,7 +86,7 @@ def test_selection(variable):
         (None, ("a", "b", "c")),
     ],
 )
-def test_set_dimensions(data, dims):
+def test_set_dimensions(dask_client_all, data, dims):
     with pytest.raises(ValueError):
         EOVariable("var", data=data, dims=dims)
 
@@ -99,7 +99,7 @@ def test_set_dimensions(data, dims):
         eovariable_strategie(data=xps.arrays(dtype="float64", shape=(2, 2)), dims=("a", "b")),
     ),
 )
-def test_multiple_dims(variable, new_dims):
+def test_multiple_dims(dask_client_all, variable, new_dims):
     var, _, dims = variable
     assert var.dims == dims
     assert var.dims == var._data.dims
@@ -119,7 +119,7 @@ def test_multiple_dims(variable, new_dims):
         eovariable_strategie(data=xps.arrays(dtype="float64", shape=tuple()), dims=tuple()),
     ),
 )
-def test_without_dims(variable):
+def test_without_dims(dask_client_all, variable):
     var_empty, _, dims = variable
     assert var_empty.dims == dims
     assert var_empty.dims == var_empty._data.dims
@@ -160,7 +160,7 @@ def test_without_dims(variable):
     a=eovariable_strategie(data=xps.arrays(dtype="float64", shape=(3, 3, 3)), with_input=False),
     b=eovariable_strategie(data=xps.arrays(dtype="float64", shape=(3, 3, 3)), with_input=False),
 )
-def test_binary_ops_eovar_mixin(a, b, ops_name):
+def test_binary_ops_eovar_mixin(dask_client_all, a, b, ops_name):
     ops_eo = getattr(a, ops_name)(b).compute()
     assert isinstance(ops_eo, EOVariable)
 
@@ -206,7 +206,7 @@ def test_binary_ops_eovar_mixin(a, b, ops_name):
     ),
     b=st.one_of(st.integers(min_value=-10, max_value=10)),
 )
-def test_binary_ops_scalar_mixin(a, b, ops_name):
+def test_binary_ops_scalar_mixin(dask_client_all, a, b, ops_name):
     ops_eo = getattr(a, ops_name)(b).compute()
     assert isinstance(ops_eo, EOVariable)
     ops_xr = getattr(a._data, ops_name)(b).compute()
@@ -219,7 +219,7 @@ def test_binary_ops_scalar_mixin(a, b, ops_name):
     a=eovariable_strategie(data=xps.arrays(dtype="bool8", shape=(3, 3, 3), elements=st.booleans()), with_input=False),
     b=eovariable_strategie(data=xps.arrays(dtype="bool8", shape=(3, 3, 3), elements=st.booleans()), with_input=False),
 )
-def test_boolean_ops_mixin(a, b, ops_name):
+def test_boolean_ops_mixin(dask_client_all, a, b, ops_name):
     ops_eo = getattr(a, ops_name)(b).compute()
     assert isinstance(ops_eo, EOVariable)
     ops_xr = getattr(a._data, ops_name)(b._data).compute()
@@ -243,7 +243,7 @@ def test_boolean_ops_mixin(a, b, ops_name):
     a=eovariable_strategie(data=xps.arrays(dtype="float64", shape=(3, 3, 3)), with_input=False),
     b=eovariable_strategie(data=xps.arrays(dtype="float64", shape=(3, 3, 3)), with_input=False),
 )
-def test_inplace(a, b, ops_name):
+def test_inplace(dask_client_all, a, b, ops_name):
     new_a = a._data.copy()
     getattr(a, ops_name)(b).compute()
     assert isinstance(a, EOVariable)
@@ -269,7 +269,7 @@ def test_inplace(a, b, ops_name):
     a=eovariable_strategie(data=xps.arrays(dtype="float64", shape=(3, 3, 3)), with_input=False),
     b=eovariable_strategie(data=xps.arrays(dtype="float64", shape=(3, 3, 3)), with_input=False),
 )
-def test_ops_inplace(a, b, ops_name):
+def test_ops_inplace(dask_client_all, a, b, ops_name):
     new_a = a._data.copy()
     getattr(a, ops_name)(b).compute()
 
@@ -292,7 +292,7 @@ def test_ops_inplace(a, b, ops_name):
     a=eovariable_strategie(data=xps.arrays(dtype="bool8", shape=(3, 3, 3)), with_input=False),
     b=eovariable_strategie(data=xps.arrays(dtype="bool8", shape=(3, 3, 3)), with_input=False),
 )
-def test_bool_ops_inplace(a, b, ops_name):
+def test_bool_ops_inplace(dask_client_all, a, b, ops_name):
     new_a = a._data.copy()
     getattr(a, ops_name)(b).compute()
     assert isinstance(a, EOVariable)
@@ -320,7 +320,7 @@ def test_bool_ops_inplace(a, b, ops_name):
         with_input=False,
     ),
 )
-def test_unary_ops(a, func):
+def test_unary_ops(dask_client_all, a, func):
     ops_eo = func(a).compute()
     assert isinstance(ops_eo, EOVariable)
     ops_xr = func(a._data).compute()
@@ -340,7 +340,7 @@ def test_unary_ops(a, func):
         with_input=False,
     ),
 )
-def test_unary_ops_failed(a, func):
+def test_unary_ops_failed(dask_client_all, a, func):
     with pytest.raises(NotImplementedError, match="'argsort' is not yet a valid method on dask arrays"):
         func(a).compute()
     with pytest.raises(NotImplementedError, match="'argsort' is not yet a valid method on dask arrays"):
@@ -363,7 +363,7 @@ def test_unary_ops_failed(a, func):
         with_input=False,
     ),
 )
-def test_conversion_1d(a, conv):
+def test_conversion_1d(dask_client_all, a, conv):
     conv_a = conv(a)
     assert isinstance(conv_a, conv)
     assert np.array_equal(conv_a, conv(a._data))
@@ -385,7 +385,7 @@ def test_conversion_1d(a, conv):
         with_input=False,
     ),
 )
-def test_conversion_failed(a, conv, exc):
+def test_conversion_failed(dask_client_all, a, conv, exc):
     with pytest.raises(exc):
         conv(a)
     with pytest.raises(exc):
