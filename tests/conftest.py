@@ -47,6 +47,12 @@ def S3_OLCI_L1_MAPPING(MAPPING_FOLDER: str):
     return os.path.join(MAPPING_FOLDER, "S3_OL_1_EFR_mapping.json")
 
 
+@pytest.fixture
+def S2A_MSIL1C_MAPPING(MAPPING_FOLDER: str):
+    """Path to a S2A MSIL1C mapping"""
+    return os.path.join(MAPPING_FOLDER, "S2_MSIL1C_mapping.json")
+
+
 # ----------------------------------#
 # ------------ PRODUCT -------------#
 # ----------------------------------#

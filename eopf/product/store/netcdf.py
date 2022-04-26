@@ -58,9 +58,10 @@ class EONetCDFStore(EOProductStore):
             obj = self._select_node(key)
         except IndexError as e:  # if key is invalid, netcdf4 raise IndexError ...
             raise KeyError(e)
+        attrs = {key: decode_attrs(value) for key, value in obj.__dict__.items()}
         if self.is_group(key):
-            return EOGroup(attrs=decode_attrs(obj.__dict__))
-        return EOVariable(data=obj, attrs=decode_attrs(obj.__dict__), dims=obj.dimensions)
+            return EOGroup(attrs=attrs)
+        return EOVariable(data=obj, attrs=attrs, dims=obj.dimensions)
 
     def __iter__(self) -> Iterator[str]:
 
@@ -95,20 +96,19 @@ class EONetCDFStore(EOProductStore):
             # Create and write EOVariable
             variable = self._root.createVariable(
                 key,
-                value._data.values[:].dtype,
+                value.data.dtype,
                 dimensions=value.dims,
                 zlib=self.zlib,
                 complevel=self.complevel,
                 shuffle=self.shuffle,
             )
-            self.write_attrs(key, value.attrs, value._data.values[:].dtype)
+            self.write_attrs(key, value.attrs, value.data.dtype)
             variable[:] = value._data.values
         else:
             raise TypeError("Only EOGroup and EOVariable can be set")
 
     # docstr-coverage: inherited
     def close(self) -> None:
-
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         super().close()
@@ -159,15 +159,9 @@ class EONetCDFStore(EOProductStore):
 
         super().open()
         # Overwrite compression / scale parameters if given by user
-        if "zlib" in kwargs:
-            self.zlib = bool(kwargs.get("zlib"))
-            kwargs.pop("zlib")
-        if "complevel" in kwargs:
-            self.complevel = int(str(kwargs.get("complevel")))
-            kwargs.pop("complevel")
-        if "shuffle" in kwargs:
-            self.shuffle = bool(kwargs.get("shuffle"))
-            kwargs.pop("shuffle")
+        self.zlib = bool(kwargs.pop("zlib", True))
+        self.complevel = int(kwargs.pop("complevel", 4))
+        self.shuffle = bool(kwargs.pop("shuffle", True))
         self._root = Dataset(self.url, mode, **kwargs)
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}, data_type: Any = int) -> None:
@@ -187,17 +181,13 @@ class EONetCDFStore(EOProductStore):
 
         conv_attr: MutableMapping[str, Any] = {}
         for attr, value in attrs.items():
+            attr_value = value
             if attr not in self.RESTRICTED_ATTR_KEY:
-                if isinstance(value, Number):
-                    conv_attr[attr] = value
-                else:
-                    conv_attr[attr] = dumps(conv(value))
-            else:
-                if type(value) is not data_type:
-                    conv_attr[attr] = reverse_conv(data_type, value)
-                else:
-                    conv_attr[attr] = value
-
+                if not isinstance(value, Number):
+                    attr_value = dumps(conv(attr_value))
+            elif type(attr_value) is not data_type:
+                attr_value = reverse_conv(data_type, attr_value)
+            conv_attr[attr] = attr_value
         current_node.setncatts(conv_attr)
 
     def _select_node(self, key: str) -> Union[Dataset, Group, Variable]:
@@ -244,7 +234,7 @@ class EONetcdfStringToTimeAccessor(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
 
         # convert unix start time to date time format
-        time_da = self._root.get(key)
+        time_da = self._root.get(key, "1970-1-1T0:0:0.000000Z")
         start = pd.to_datetime("1970-1-1T0:0:0.000000Z")
         end = pd.to_datetime(time_da)
         # compute and convert the time difference into microseconds

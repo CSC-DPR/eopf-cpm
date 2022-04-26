@@ -203,7 +203,7 @@ def reverse_conv(data_type: Any, obj: Any) -> Any:
         np.float64,
         np.float128,
     ]:
-        if data_type == dtype:
+        if np.dtype(data_type) == np.dtype(dtype):
             return dtype(obj)
     return obj
 
@@ -225,9 +225,10 @@ def decode_attrs(attrs: Any) -> Any:
     from json import JSONDecodeError, loads
 
     try:
-        attrs = loads(attrs)
+        new_attrs = loads(attrs)
     except (JSONDecodeError, TypeError):
         return attrs
+    return new_attrs
 
 
 def downsplit_eo_path(eo_path: str) -> tuple[str, Optional[str]]:

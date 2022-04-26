@@ -86,7 +86,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
 
         # we let our current data to work with their dimensions
         attrs = copy.deepcopy(self.attrs)
-        attrs.pop(_DIMENSIONS_NAME)
+        attrs.pop(_DIMENSIONS_NAME, None)
         return EOVariable(data=data, attrs=attrs)
 
     def assign_dims(self, dims: Iterable[str]) -> None:
