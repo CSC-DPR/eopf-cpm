@@ -4,6 +4,15 @@ import shutil
 from datetime import timedelta
 
 import pytest
+
+# import required dask fixtures :
+# dask_solomulti require client.
+# client require loop and cluster_fixture.
+from distributed.utils_test import (  # noqa # pylint: disable=unused-import
+    client,
+    cluster_fixture,
+    loop,
+)
 from hypothesis import HealthCheck, settings
 
 from .utils import PARENT_DATA_PATH
@@ -112,25 +121,12 @@ def S1_IM_OCN(INPUT_DIR: str):
 # --------- Dask Cluster  ----------#
 # ----------------------------------#
 
-# import required dask fixtures :
-# dask_solomulti require client.
-# client require loop and cluster_fixture.
-from distributed.utils_test import (  # noqa # pylint: disable=unused-import
-    client,
-    cluster_fixture,
-    loop,
-)
-
 
 @pytest.fixture(params=[True, False])
 def dask_client_all(request):
     """Run the test once with and without dask distributed."""
     if request.param:
-        # The small hypothesis tests are far slower with dask distributed.
-        # We use a lower hypothesis max_examples with them
-        settings.load_profile("function_fixture_fast")
         return request.getfixturevalue("client")
-    settings.load_profile("function_fixture_slow")
     return None
 
 
@@ -150,4 +146,5 @@ settings.register_profile(
     deadline=timedelta(milliseconds=5000),
     suppress_health_check=(HealthCheck.function_scoped_fixture,),
 )
+# The small hypothesis tests are far slower with dask distributed.
 settings.load_profile("function_fixture_fast")
