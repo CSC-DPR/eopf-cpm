@@ -4,6 +4,7 @@ import pathlib
 from collections.abc import MutableMapping
 from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
 
+import fsspec
 import xarray as xr
 from netCDF4 import Dataset, Group, Variable
 
@@ -46,6 +47,7 @@ class EONetCDFStore(EOProductStore):
         self.zlib: bool = True
         self.complevel: int = 4
         self.shuffle: bool = True
+        self._local_url: Optional[str] = None
 
     def __getitem__(self, key: str) -> "EOObject":
 
@@ -162,7 +164,23 @@ class EONetCDFStore(EOProductStore):
         self.zlib = bool(kwargs.pop("zlib", True))
         self.complevel = int(kwargs.pop("complevel", 4))
         self.shuffle = bool(kwargs.pop("shuffle", True))
-        self._root = Dataset(self.url, mode, **kwargs)
+
+        # We can't open a netcdf4 Dataset on a python File like cf :
+        # https://github.com/Unidata/netcdf4-python/issues/295
+        # This is a problem as fsspec, notably used to get data from a S3, return us a File like.
+        # Possible workaround :
+        # - initialising the dataset with memory = File bynary data, but it's neither lazy nor memory efficient
+        # - use filecache to make a temporary local copy
+        if self.url.startswith("s3:"):
+            # Make a temporary copy. According to the doc its supposed to get deleted at the end of the process.
+            # I have some serious doubt that it's working, we might want to manually delete it,
+            # but it's not safe if multiple store access the same file.
+            self._local_url = fsspec.open_local(
+                "filecache::" + self.url, mode, **kwargs["storage_options"], filecache={"cache_storage": "TMP"}
+            )
+        else:
+            self._local_url = self.url
+        self._root = Dataset(self._local_url, mode, **kwargs)
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}, data_type: Any = int) -> None:
         """
