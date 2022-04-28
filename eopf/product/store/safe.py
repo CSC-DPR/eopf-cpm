@@ -292,12 +292,12 @@ class EOSafeStore(EOProductStore):
         return iter(key_set)
 
     # docstr-coverage: inherited
-    def open(self, mode: str = "r", fsspec_kwargs: dict[str, Any] = {}, **kwargs: Any) -> None:
+    def open(self, mode: str = "r", storage_options: dict[str, Any] = {}, **kwargs: Any) -> None:
         # Must not read the product mapping between  super.open and accessor.open
         # Otherwise Hierachy accessor are opened twice.
         super().open()
-        self._accessor_manager.open_all(mode, fsspec_kwargs=fsspec_kwargs, **kwargs)
-        self._fs_map_access = fsspec.get_mapper(self.url, **fsspec_kwargs)
+        self._accessor_manager.open_all(mode, fsspec_kwargs=storage_options, **kwargs)
+        self._fs_map_access = fsspec.get_mapper(self.url, **storage_options)
 
         self._open_kwargs = kwargs
         if mode == "w":
