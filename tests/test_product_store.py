@@ -19,7 +19,13 @@ from eopf.exceptions import StoreNotOpenError
 from eopf.exceptions.warnings import AlreadyOpen
 from eopf.product.conveniences import init_product, open_store
 from eopf.product.core import EOGroup, EOProduct, EOVariable
-from eopf.product.store import EONetCDFStore, EOProductStore, EOZarrStore, convert
+from eopf.product.store import (
+    EONetCDFStore,
+    EOProductStore,
+    EOSafeStore,
+    EOZarrStore,
+    convert,
+)
 from eopf.product.store.manifest import ManifestStore
 from eopf.product.store.rasterio import EORasterIOAccessor
 from eopf.product.store.wrappers import (
@@ -29,7 +35,8 @@ from eopf.product.store.wrappers import (
 
 from .decoder import Netcdfdecoder
 from .utils import (
-    S3_CONFIG,
+    S3_CONFIG_FAKE,
+    S3_CONFIG_REAL,
     assert_contain,
     assert_has_coords,
     assert_issubdict,
@@ -633,11 +640,11 @@ def test_rasters(dask_client_all, store_cls: type[EORasterIOAccessor], format_fi
 @pytest.mark.parametrize(
     "product, fakefilename, open_kwargs",
     [
-        (EOProduct("", store_or_path_url="s3://a_simple_zarr.zarr"), lazy_fixture("zarr_file"), S3_CONFIG),
+        (EOProduct("", store_or_path_url="s3://a_simple_zarr.zarr"), lazy_fixture("zarr_file"), S3_CONFIG_FAKE),
         (
             EOProduct("", store_or_path_url="zip::s3://a_simple_zarr.zarr"),
             lazy_fixture("zarr_file"),
-            dict(s3=S3_CONFIG),
+            dict(s3=S3_CONFIG_FAKE),
         ),
     ],
 )
@@ -648,3 +655,39 @@ def test_zarr_open_on_different_fs(dask_client_all, product: EOProduct, fakefile
             product.load()
         assert mock.call_count == 1
         mock.assert_called_with(product.store.url, **open_kwargs)
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "store, path, open_kwargs",
+    [
+        (EOZarrStore, "zip::s3://eopf/cpm/test_data/olci_zarr_test.zip", dict(s3=S3_CONFIG_REAL)),
+        (EOZarrStore, "s3://eopf/cpm/test_data/olci_zarr_test.zarr/", S3_CONFIG_REAL),
+        (EONetCDFStore, "zip::s3://eopf/cpm/test_data/olci_netcdf_test.zip", dict(s3=S3_CONFIG_REAL)),
+        (EONetCDFStore, "s3://eopf/cpm/test_data/olci_netcdf_test.nc", S3_CONFIG_REAL),
+        (
+            EOSafeStore,
+            "zip::s3://eopf/cpm/test_data/s3/eopf/cpm/test_data/"
+            + "S3A_OL_1_EFR____20200101T101517_20200101T101817_20200102T141102_0179_053_179_2520_LN1_O_NT_002.zip",
+            S3_CONFIG_REAL,
+        ),
+    ],
+)
+def test_read_real_s3(dask_client_all, store: type, path: str, open_kwargs: dict[str, Any]):
+    product = EOProduct("s3_test_product", store_or_path_url=store(path))
+    with product.open(storage_options=open_kwargs):
+        product.load()
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "w_store, w_path, w_kwargs",
+    [
+        (EOZarrStore, "zip::s3://eopf/cpm/test_data/tmp/olci_zarr_test_cpy.zip", dict(s3=S3_CONFIG_REAL)),
+        (EOZarrStore, "s3://eopf/cpm/test_data/tmp/olci_zarr_test_cpy.zarr/", S3_CONFIG_REAL),
+    ],
+)
+def test_write_real_s3(dask_client_all, w_store: type, w_path: str, w_kwargs: dict[str, Any]):
+    in_store = EOZarrStore("zip::s3://eopf/cpm/test_data/olci_zarr_test.zip")
+    out_store = w_store(w_path)
+    convert(in_store, out_store, dict(storage_options=dict(s3=S3_CONFIG_REAL)), dict(storage_options=w_kwargs))

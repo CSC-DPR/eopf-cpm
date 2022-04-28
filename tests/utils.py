@@ -121,4 +121,8 @@ def realize_strategy(draw, to_realize: Union[Any, st.SearchStrategy]):
 PARENT_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..")
 
 
-S3_CONFIG = dict(key="aaaa", secret="bbbbb", client_kwargs=dict(endpoint_url="https://localhost", region_name="local"))
+S3_CONFIG_FAKE = dict(
+    key="aaaa",
+    secret="bbbbb",
+    client_kwargs=dict(endpoint_url="https://localhost", region_name="local"),
+)
