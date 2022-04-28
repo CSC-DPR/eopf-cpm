@@ -663,13 +663,12 @@ def test_zarr_open_on_different_fs(dask_client_all, product: EOProduct, fakefile
     [
         (EOZarrStore, "zip::s3://eopf/cpm/test_data/olci_zarr_test.zip", dict(s3=S3_CONFIG_REAL)),
         (EOZarrStore, "s3://eopf/cpm/test_data/olci_zarr_test.zarr/", S3_CONFIG_REAL),
-        (EONetCDFStore, "zip::s3://eopf/cpm/test_data/olci_netcdf_test.zip", dict(s3=S3_CONFIG_REAL)),
-        (EONetCDFStore, "s3://eopf/cpm/test_data/olci_netcdf_test.nc", S3_CONFIG_REAL),
+        (EONetCDFStore, "s3://eopf/cpm/test_data/olci_netcdf_test.nc", dict(s3=S3_CONFIG_REAL)),
         (
             EOSafeStore,
-            "zip::s3://eopf/cpm/test_data/s3/eopf/cpm/test_data/"
+            "zip::s3://eopf/cpm/test_data/"
             + "S3A_OL_1_EFR____20200101T101517_20200101T101817_20200102T141102_0179_053_179_2520_LN1_O_NT_002.zip",
-            S3_CONFIG_REAL,
+            dict(s3=S3_CONFIG_REAL),
         ),
     ],
 )
