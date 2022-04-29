@@ -353,8 +353,10 @@ def norm_eo_path(eo_path: str) -> str:
     if eo_path == "":
         raise KeyError("Invalid empty eo_path")
     # Do not use pathlib (does not remove ..)
+    eo_path = posixpath.normpath(eo_path)
     # text is a special path so it's not normalised by normpath
-    eo_path = posixpath.normpath(eo_path).removeprefix("//")
+    if eo_path.startswith("//"):
+        return eo_path[1:]
     return eo_path
 
 
