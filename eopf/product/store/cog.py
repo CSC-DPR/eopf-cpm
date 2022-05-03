@@ -1,9 +1,10 @@
 import os
 import pathlib
 from collections.abc import MutableMapping
+from json import loads
+from pathlib import Path
 from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
 
-import fsspec
 import rasterio
 import rioxarray
 import xarray
@@ -31,14 +32,13 @@ class EOCogStore(EOProductStore):
     sep = "/"
     expected_raster_dims = [("band", "x", "y"), ("band", "y", "x"), ("x", "y"), ("y", "x"), ("rows", "columns")]
     attributes_file_name = "attrs.json"
-    extensions = [".cog", ".nc"]
 
     def __init__(self, url: str) -> None:
         super().__init__(url)
-        self._ref: Optional[Any] = None
+        self._ref: Any = None
         self._mode: Optional[str] = None
         self._lock: Optional[Lock] = None
-        self._fs: Optional[Any] = None
+        self._opened: bool = False
 
     def __getitem__(self, key: str) -> "EOObject":
         """
@@ -58,21 +58,21 @@ class EOCogStore(EOProductStore):
         ----------
         EOVariable / EOGroup
         """
-        from eopf.product.core.eo_group import EOGroup
-        from eopf.product.core.eo_variable import EOVariable
+        from eopf.product.core import EOVariable
 
-        if self._ref is None:
+        if self._opened is False:
             raise StoreNotOpenError("Store must be open before access to it")
         if self._mode != "r":
             raise NotImplementedError("Only available in reading mode")
 
-        data, attrs = self._select_node(key)
-        print(os.listdir(os.path.join(self.url, key)))
-        return EOGroup(
-            key,
-            variables={var_name: EOVariable(name=var_name, data=var_value) for var_name, var_value in data.items()},
-            attrs=attrs,  # type: ignore[arg-type]
-        )
+        if isinstance(self._ref, EOVariable):
+            return self._ref
+        else:
+            # EOProduct and EOGroup case
+            if key in ["", "/"]:
+                return self._ref
+            else:
+                return self._ref[key]
 
     def __iter__(self) -> Iterator[str]:
         """Has no functionality within this store"""
@@ -80,7 +80,7 @@ class EOCogStore(EOProductStore):
 
     def __len__(self) -> int:
         """Has no functionality within this store"""
-        if self._ref is None:
+        if self._opened is False:
             raise StoreNotOpenError("Store must be open before access to it")
         if self._mode != "r":
             raise NotImplementedError("Only available in reading mode")
@@ -110,7 +110,7 @@ class EOCogStore(EOProductStore):
             # EOVariable
             value._data.rio.to_raster(abs_cog_path, tiled=True, lock=self._lock, driver="COG")
 
-    def _write_netCDF4(self, value: "EOObject", file_path: str, var_name: str) -> None:
+    def _write_netCDF4(self, value: "EOObject", file_path: pathlib.Path, var_name: str) -> None:
         """
         This method is used to write rasters to .nc (netcdf) files
 
@@ -119,9 +119,9 @@ class EOCogStore(EOProductStore):
         value: Any
             rasterIO dataset
         """
-        # set suffix .nc and transfrom to absolute path
+        # set suffix .nc and transfrom to absolute path (path-like string)
         nc_path = file_path.with_suffix(".nc")
-        abs_nc_path = nc_path.resolve()
+        abs_nc_path = str(nc_path.resolve())
 
         # write the netCDF4 file
         nc = EONetCDFStore(abs_nc_path)
@@ -139,7 +139,7 @@ class EOCogStore(EOProductStore):
         """
         return value.dims in self.expected_raster_dims
 
-    def _write_eov(self, value: "EOObject", output_dir: str, var_name: str) -> None:
+    def _write_eov(self, value: "EOObject", output_dir: pathlib.Path, var_name: str) -> None:
         """
         This metod is used to write an EOVariable to cog or netcdf format.
         Parameters
@@ -152,7 +152,7 @@ class EOCogStore(EOProductStore):
             name of EOVariable
         """
         var_name = var_name.removeprefix(self.sep)
-        file_path = output_dir / var_name
+        file_path: pathlib.Path = output_dir / var_name
 
         # determine if variable is a raster, i.e. can be written as cog
         if self._is_raster(value):
@@ -181,7 +181,7 @@ class EOCogStore(EOProductStore):
 
         init_path = Path(self.url)
 
-        if self._ref is None:
+        if self._opened is False:
             raise StoreNotOpenError("Store must be open before access to it")
         if self._mode != "w":
             raise NotImplementedError("Only available in writing mode")
@@ -204,12 +204,13 @@ class EOCogStore(EOProductStore):
 
     # docstr-coverage: inherited
     def close(self) -> None:
-        if self._ref is None:
+        if self._opened is False:
             raise StoreNotOpenError("Store must be open before access to it")
         super().close()
         self._mode = None
         self._lock = None
-        self._ref = None
+        # self._ref = None
+        self._opened = False
 
     # docstr-coverage: inherited
     @property
@@ -220,24 +221,24 @@ class EOCogStore(EOProductStore):
     def is_group(self, path: str) -> bool:
         if self._mode == "w":
             raise NotImplementedError("Only available in reading mode")
-        # Add path separator if missing
-        if not path.startswith(self.sep):
-            path = self.sep + path
-        # Check if path is a directory
-        return self._fs.fs.isdir(self.url + path)
+        if path.startswith("/"):
+            path = path.removeprefix("/")
+        url_path = Path(self.url).resolve()
+        sub_path = url_path / path
+        # check if sub_path is a directory
+        return sub_path.is_dir()
 
     # docstr-coverage: inherited
     def is_variable(self, path: str) -> bool:
         # check if it is a file or not
         if self._mode == "w":
             raise NotImplementedError("Only available in reading mode")
-        # Add path separator if missing
-        if not path.startswith(self.sep):
-            path = self.sep + path
-        # Add extension if missing (TBD: cog or nc)
-        if ".nc" not in path:
-            path = path + ".nc"
-        return self._fs.fs.isfile(self.url + path)
+        if path.startswith("/"):
+            path = path.removeprefix("/")
+        url_path = Path(self.url).resolve()
+        sub_path = url_path / path
+        # check if sub_path is a directory
+        return sub_path.is_file()
 
     # docstr-coverage: inherited
     @property
@@ -246,28 +247,24 @@ class EOCogStore(EOProductStore):
 
     # docstr-coverage: inherited
     def iter(self, path: str) -> Iterator[str]:
+
         if self._mode == "w":
             raise NotImplementedError("Only available in reading mode")
-        node = self._select_node(path)
         if path in ["", "/"]:
-            return os.listdir(self.url)
-        if isinstance(node, list):
-            raise NotImplementedError()
-        if isinstance(node, xarray.Dataset):
-            return iter(str(i) for i in iter(node))
-        return iter([])
+            return self._ref.__iter__()
+        return self._ref[path].__iter__()
 
     # docstr-coverage: inherited
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         super().open(mode=mode)
-        self._fs = fsspec.get_mapper(self.url)
         self._mode = mode
+
         self._lock = kwargs.get("lock")
         if mode == "r":
-            self._ref = {}
+            self._opened = True
             self._read_url()
         elif mode == "w":
-            self._ref = True
+            self._opened = True
         else:
             raise ValueError("Unsuported mode, only (r)ead or (w)rite")
 
@@ -293,94 +290,111 @@ class EOCogStore(EOProductStore):
     # docstr-coverage: inherited
     @staticmethod
     def guess_can_read(file_path: str) -> bool:
+        # return pathlib.Path(file_path).suffix in [".cog", ".nc"]
+        # TBD put the above line after correcting nc reading
         return pathlib.Path(file_path).suffix in [".cog", ".nc"]
 
     def _select_node(self, path: str) -> Union[xarray.DataArray, xarray.Dataset]:
-        if self._ref is None:
+        if self._opened is False:
             raise StoreNotOpenError("Store must be open before access to it")
+        raise NotImplementedError()
 
-        if path in ["", "/"]:
-            return os.listdir(self.url)
-            # return self._ref["/"]
+    def _read_eov(self, file: Path, eov_name: str) -> Any:
+        # TBD to add description
+        # TBD there is still an iessue with row_time.nc in coordinates/image_grid
 
-        if path in self._ref.keys():
-            return self._ref[path]
+        try:
+            return rioxarray.open_rasterio(file)
+        except rasterio.errors.RasterioIOError:
+            # try to reopen using netcdf scheme identifier
+            return rioxarray.open_rasterio(f"netcdf:{file}:{eov_name}")
+        except Exception as e:
+            # this should be another error type
+            raise TypeError(f"Can NOT read: {file}", e)
 
-        raise KeyError()
-
-    def _read_url(self):
+    def _read_url(self) -> None:
         """reading a cog format product"""
-        from json import loads
-        from pathlib import Path, PosixPath
-        from queue import Queue
+        # TBD to add description
+
+        from eopf.product.core import EOVariable
 
         # get the absolute path of the given url
-        init_path = Path(self.url).resolve()
-        if not init_path.exists():
-            raise OSError(f"The given path {init_path} does not exist")
+        url_path = Path(self.url).resolve()
+        if not url_path.exists():
+            raise OSError(f"The given path {url_path} does not exist")
 
         # if a cog or netCDF file is given
-        if init_path.is_file():
-            eov_name = init_path.stem
-            key = "/"
-            try:
-                var = rioxarray.open_rasterio(init_path)
-            except Exception:
-                raise TypeError("Can NOT read: {init_path}")
-            # ds = xarray.Dataset(data_vars={eov_name:var})
-            self._ref[key] = {eov_name: var}, None
-
-        elif init_path.is_dir():
+        if url_path.is_file():
+            eov_name = url_path.stem
+            eov = self._read_eov(url_path, eov_name)
+            self._ref = EOVariable(eov_name, eov)
+        elif url_path.is_dir():
             # if a dir is encoutered we parse through it for files(eov), dirs(eog) and attrs(json)
-            # add the url to the queue as init_path
-            dir_q: Queue[Path] = Queue()
-            dir_q.put(init_path)
-
-            # while there are files/dirs to read continue exploring
-            while not dir_q.empty():
-                # get an item from the q
-                cur_dir = dir_q.get()
-                # if a dir is encoutered we explore it for files(eov), dirs(groups) and attrs(json)
-                cur_dir_files = []
-                for a_path in cur_dir.iterdir():
-                    if a_path.is_file() and self.guess_can_read(a_path):
-                        # files represent variables and should be added to the current group
-                        cur_dir_files.append(a_path)
-                    if a_path.is_dir():
-                        # subdirs represent other groups which will be put in the q to be read later
-                        dir_q.put(a_path)
-
-                # get all variables from current dir
-                ds_vars = {}
-                for file_path in cur_dir_files:
-                    eov_name = file_path.stem
-                    try:
-                        ds_vars[eov_name] = rioxarray.open_rasterio(file_path)
-                    except rasterio.errors.RasterioIOError:
-                        # try to reopen using netcdf scheme identifier
-                        ds_vars[eov_name] = rioxarray.open_rasterio(f"netcdf:{file_path}:{eov_name}")
-                    except Exception as e:
-                        raise TypeError(f"Can NOT read: {file_path}", e)
-
-                # determine if the grop has attrs and read them
-                attrs_path = cur_dir / self.attributes_file_name
-                if attrs_path.is_file():
-                    with open(attrs_path, "r") as fp:
-                        ds_attrs = loads(fp.read())
-                else:
-                    ds_attrs = None
-
-                # add the group to the ref
-                if cur_dir == init_path:
-                    key = "/"
-                else:
-                    key = str(PosixPath(cur_dir.relative_to(init_path)))
-
-                self._ref[key] = ds_vars, ds_attrs
+            self._ref = self._read_dir(url_path)
         else:
             raise NotImplementedError("Only dirs and files can be read")
 
-    def readable(path: str) -> bool:
-        # MacOS specific, remove .DS_Store
-        path = path.split("/")[-1]
-        return not str(path).startswith(".")
+    def _read_attrs(self, dir_path: Path) -> Any:
+        # TBD to add description
+        # TBD add try except for reading
+        attrs_path = dir_path / self.attributes_file_name
+        if attrs_path.is_file():
+            with open(attrs_path, "r") as fp:
+                return loads(fp.read())
+        else:
+            return None
+
+    def _read_dir(self, dir_path: Path, parent: Any = None) -> Any:
+        # TBD to add description
+        from eopf.product.core import EOGroup, EOProduct
+
+        # list of files from which to extract EOV
+        dir_files: list[Path] = []
+        # list of subdirs from which to sub EOG
+        subdirs: list[Path] = []
+
+        # explore current dir and populate the list of files and subdirs
+        for a_path in dir_path.iterdir():
+            if a_path.is_file() and self.guess_can_read(str(a_path)):
+                # only files that cna be read by this store are added
+                dir_files.append(a_path)
+            if a_path.is_dir():
+                subdirs.append(a_path)
+
+        # get all variables from current dir
+        vars = {}
+        for file in dir_files:
+            eov_name = file.stem
+            vars[eov_name] = self._read_eov(file, eov_name)
+
+        # determine if the group/eop has attrs and read them
+        attrs = self._read_attrs(dir_path)
+
+        if parent is None:
+            # this the root eop/eog
+            measurements_path = dir_path / "measurements"
+            coordinates_path = dir_path / "coordinates"
+            # if measurements and coordinates are present, then an entire EOProduct
+            # is requested to be loaded
+            if measurements_path.exists() and coordinates_path.exists():
+                eop = EOProduct(name=dir_path.name, attrs=attrs)
+                for dir in subdirs:
+                    self._read_dir(dir, eop)
+                return eop
+            else:
+                # in case part of the products are loaded
+                # here eop is needed just to avoid missing EOProduct errors
+                eop = EOProduct(name=dir_path.name)
+                root_eog: EOGroup = eop.add_group(name=dir_path.name, attrs=attrs)
+                for name, value in vars.items():
+                    root_eog._add_local_variable(name, value)
+                for dir in subdirs:
+                    self._read_dir(dir, root_eog)
+                return root_eog
+        else:
+            # this is not the root eog/eop
+            cur_eog = parent.add_group(name=dir_path.name, attrs=attrs)
+            for name, value in vars.items():
+                cur_eog._add_local_variable(name, value)
+            for dir in subdirs:
+                self._read_dir(dir, cur_eog)
