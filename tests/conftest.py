@@ -17,6 +17,28 @@ from hypothesis import HealthCheck, settings
 
 from .utils import PARENT_DATA_PATH
 
+# ----------------------------------#
+# --- pytest command line options --#
+# ----------------------------------#
+
+
+def pytest_addoption(parser):
+    parser.addoption("--s3", action="store_true", default=False, help="run real s3 tests")
+
+
+def pytest_configure(config):
+    config.addinivalue_line("markers", "real_s3: mark test as requiring real s3")
+
+
+def pytest_collection_modifyitems(config, items):
+    if config.getoption("--s3"):
+        # option given: do not skip  tests
+        return
+    skip_s3 = pytest.mark.skip(reason="need --s3 option to run")
+    for item in items:
+        if "real_s3" in item.keywords:
+            item.add_marker(skip_s3)
+
 
 # ----------------------------------#
 # ---------- DATA FOLDER -----------#

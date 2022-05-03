@@ -649,21 +649,25 @@ def test_rasters(dask_client_all, store_cls: type[EORasterIOAccessor], format_fi
     ],
 )
 def test_zarr_open_on_different_fs(dask_client_all, product: EOProduct, fakefilename: str, open_kwargs: dict[str, Any]):
-    with patch("fsspec.get_mapper") as mock:
-        mock.return_value = fsspec.FSMap(fakefilename, LocalFileSystem())
-        with product.open(storage_options=open_kwargs):
-            product.load()
-        assert mock.call_count == 1
-        mock.assert_called_with(product.store.url, **open_kwargs)
+    with patch("dask.array.core.get_mapper") as mock_dask:
+        with patch("fsspec.get_mapper") as mock_zarr:
+            mock_dask.return_value = fsspec.FSMap(fakefilename, LocalFileSystem())
+            mock_zarr.return_value = fsspec.FSMap(fakefilename, LocalFileSystem())
+            with product.open(storage_options=open_kwargs):
+                product.load()
+            assert mock_zarr.call_count == 1
+            mock_zarr.assert_called_with(product.store.url, **open_kwargs)
+            assert mock_dask.call_count == 10
 
 
+@pytest.mark.real_s3
 @pytest.mark.unit
 @pytest.mark.parametrize(
     "store, path, open_kwargs",
     [
         (EOZarrStore, "zip::s3://eopf/cpm/test_data/olci_zarr_test.zip", dict(s3=S3_CONFIG_REAL)),
         (EOZarrStore, "s3://eopf/cpm/test_data/olci_zarr_test.zarr/", S3_CONFIG_REAL),
-        (EONetCDFStore, "s3://eopf/cpm/test_data/olci_netcdf_test.nc", dict(s3=S3_CONFIG_REAL)),
+        (EONetCDFStore, "s3://eopf/cpm/test_data/olci_netcdf_test.nc", S3_CONFIG_REAL),
         (
             EOSafeStore,
             "zip::s3://eopf/cpm/test_data/"
@@ -686,6 +690,7 @@ def test_read_real_s3(dask_client_all, store: type, path: str, open_kwargs: dict
         (EOZarrStore, "s3://eopf/cpm/test_data/tmp/olci_zarr_test_cpy.zarr/", S3_CONFIG_REAL),
     ],
 )
+@pytest.mark.real_s3
 def test_write_real_s3(dask_client_all, w_store: type, w_path: str, w_kwargs: dict[str, Any]):
     in_store = EOZarrStore("zip::s3://eopf/cpm/test_data/olci_zarr_test.zip")
     out_store = w_store(w_path)

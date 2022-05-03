@@ -126,3 +126,8 @@ S3_CONFIG_FAKE = dict(
     secret="bbbbb",
     client_kwargs=dict(endpoint_url="https://localhost", region_name="local"),
 )
+S3_CONFIG_REAL = dict(
+    key=os.environ.get("S3_KEY"),
+    secret=os.environ.get("S3_SECRET"),
+    client_kwargs=dict(endpoint_url=os.environ.get("S3_URL"), region_name=os.environ.get("S3_REGION")),
+)
