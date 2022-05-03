@@ -111,7 +111,7 @@ class EONetCDFStore(EOProductStore):
             storage_options = kwargs.pop("storage_options", dict())
             url = fsspec.open_local("filecache::" + url, mode, s3=storage_options, filecache={"cache_storage": "TMP"})
 
-        sub_store = EONetCDFStoreCDF4py(url)
+        sub_store = EONetCDFStoreNCpy(url)
         sub_store.open(mode, **kwargs)
         return sub_store
 
@@ -146,7 +146,7 @@ class EONetCDFStore(EOProductStore):
         return zarr_store_r
 
 
-class EONetCDFStoreCDF4py(EOProductStore):
+class EONetCDFStoreNCpy(EOProductStore):
     """
     Store representation to access NetCDF format of the given URL with netCDF4
 
