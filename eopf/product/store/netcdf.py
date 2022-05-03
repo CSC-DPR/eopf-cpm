@@ -5,11 +5,13 @@ from collections.abc import MutableMapping
 from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
 
 import fsspec
+import kerchunk.hdf
 import xarray as xr
 from netCDF4 import Dataset, Group, Variable
 
 from eopf.exceptions import StoreNotOpenError
 from eopf.product.store import EOProductStore
+from eopf.product.store.zarr import EOZarrStore
 from eopf.product.utils import conv, decode_attrs, reverse_conv
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -18,7 +20,135 @@ if TYPE_CHECKING:  # pragma: no cover
 
 class EONetCDFStore(EOProductStore):
     """
-    Store representation to access NetCDF format of the given URL
+    Store representation to access NetCDF format of the given URL.
+
+    Parameters
+    ----------
+    url: str
+        path url or the target store
+
+    Attributes
+    ----------
+    url: str
+        path url or the target store
+    zlib: bool
+        enable/disable compression
+    complevel: int [1-9]
+        level of the compression
+    shuffle: bool
+        enable/disable hdf5 shuffle
+    """
+
+    # docstr-coverage: inherited
+    def __init__(self, url: str) -> None:
+        self._sub_store: Optional[EOProductStore] = None
+        super().__init__(url)
+
+    # docstr-coverage: inherited
+    def __delitem__(self, key: str) -> None:
+        if self._sub_store is not None:
+            del self._sub_store
+
+    # docstr-coverage: inherited
+    def __getitem__(self, key: str) -> "EOObject":
+        return self.sub_store[key]
+
+    # docstr-coverage: inherited
+    def __setitem__(self, key: str, value: "EOObject") -> None:
+        self.sub_store[key] = value
+
+    # docstr-coverage: inherited
+    def __len__(self) -> int:
+        return len(self.sub_store)
+
+    # docstr-coverage: inherited
+    def close(self) -> None:
+        self.sub_store.close()
+        self._sub_store = None
+        super().close()
+
+    # docstr-coverage: inherited
+    def open(self, mode: str = "r", **kwargs: Any) -> None:
+        if mode == "r":
+            self._sub_store = self._open_with_zarr(mode, **kwargs)
+        else:
+            self._sub_store = self._open_with_netcdf4py(mode, **kwargs)
+        super().open(mode)
+
+    # docstr-coverage: inherited
+    def is_group(self, path: str) -> bool:
+        return self.sub_store.is_group(path)
+
+    # docstr-coverage: inherited
+    def is_variable(self, path: str) -> bool:
+        return self.sub_store.is_variable(path)
+
+    # docstr-coverage: inherited
+    def iter(self, path: str) -> Iterator[str]:
+        return self.sub_store.iter(path)
+
+    @property
+    def sub_store(self):
+        if self._sub_store is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        return self._sub_store
+
+    # docstr-coverage: inherited
+    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
+        return self.sub_store.write_attrs(group_path, attrs)
+
+    # docstr-coverage: inherited
+    @staticmethod
+    def guess_can_read(file_path: str) -> bool:
+        return pathlib.Path(file_path).suffix in [".nc"]
+
+    def _open_with_netcdf4py(self, mode: str = "r", **kwargs: Any) -> EOProductStore:
+        url = self.url
+        if url.startswith("s3:"):
+            # Get a local url to a read only local cache of the s3 file.
+            if mode != "r":
+                raise OSError("Netcdf Accessor can't write to S3.")
+            storage_options = kwargs.pop("storage_options", dict())
+            url = fsspec.open_local("filecache::" + url, mode, s3=storage_options, filecache={"cache_storage": "TMP"})
+
+        sub_store = EONetCDFStoreCDF4py(url)
+        sub_store.open(mode, **kwargs)
+        return sub_store
+
+    def _open_with_zarr(self, mode: str = "r", **kwargs: Any) -> EOProductStore:
+        """Use kerchunk library to generate a json like string that can be used to read the netcdf file like a zarr.
+        This allows parallel reading even with files on a S3.
+        Parameters
+        ----------
+        mode
+        kwargs
+
+        Returns
+        -------
+
+        """
+        storage_options = kwargs.pop("storage_options", dict())
+        # kerchunk
+        with fsspec.open(self.url, "rb", **storage_options) as open_file:
+            # kerchunk convert the netcdf metadata into a zarr compatible mapping.
+            # It's obviously read only.
+            try:
+                zarr_compatible_data = kerchunk.hdf.SingleHdf5ToZarr(open_file, self.url).translate()
+            except OSError:
+                # Kerchunk fail on small netcdf files (< 2Kio)
+                # Seems to be caused by it always requesting the first 2kio to parse the matadata.
+                # We fall back to netcdf4py store.
+                return self._open_with_netcdf4py(mode, storage_options=storage_options, **kwargs)
+            zarr_store_r = EOZarrStore("reference://")
+            storage_options_zopen = storage_options.copy()  # fsspec async problems without.
+            storage_options_zopen["fo"] = zarr_compatible_data
+            zarr_store_r.open(mode, storage_options=storage_options_zopen, **kwargs)
+        return zarr_store_r
+
+
+class EONetCDFStoreCDF4py(EOProductStore):
+    """
+    Store representation to access NetCDF format of the given URL with netCDF4
 
     Parameters
     ----------
@@ -47,7 +177,6 @@ class EONetCDFStore(EOProductStore):
         self.zlib: bool = True
         self.complevel: int = 4
         self.shuffle: bool = True
-        self._local_url: Optional[str] = None
 
     def __getitem__(self, key: str) -> "EOObject":
 
@@ -66,19 +195,16 @@ class EONetCDFStore(EOProductStore):
         return EOVariable(data=obj[:], attrs=attrs, dims=obj.dimensions)
 
     def __iter__(self) -> Iterator[str]:
-
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         return it.chain(iter(self._root.groups), iter(self._root.variables))
 
     def __len__(self) -> int:
-
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         return len(self._root.groups) + len(self._root.variables)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
-
         from eopf.product.core import EOGroup, EOVariable
 
         if self._root is None:
@@ -134,7 +260,6 @@ class EONetCDFStore(EOProductStore):
 
     # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
-
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         current_node = self._select_node(path)
@@ -142,7 +267,6 @@ class EONetCDFStore(EOProductStore):
 
     # docstr-coverage: inherited
     def is_variable(self, path: str) -> bool:
-
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         current_node = self._select_node(path)
@@ -150,7 +274,6 @@ class EONetCDFStore(EOProductStore):
 
     # docstr-coverage: inherited
     def iter(self, path: str) -> Iterator[str]:
-
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         current_node = self._select_node(path)
@@ -165,22 +288,7 @@ class EONetCDFStore(EOProductStore):
         self.complevel = int(kwargs.pop("complevel", 4))
         self.shuffle = bool(kwargs.pop("shuffle", True))
 
-        # We can't open a netcdf4 Dataset on a python File like cf :
-        # https://github.com/Unidata/netcdf4-python/issues/295
-        # This is a problem as fsspec, notably used to get data from a S3, return us a File like.
-        # Possible workaround :
-        # - initialising the dataset with memory = File bynary data, but it's neither lazy nor memory efficient
-        # - use filecache to make a temporary local copy
-        if self.url.startswith("s3:"):
-            # Make a temporary copy. According to the doc its supposed to get deleted at the end of the process.
-            # I have some serious doubt that it's working, we might want to manually delete it,
-            # but it's not safe if multiple store access the same file.
-            self._local_url = fsspec.open_local(
-                "filecache::" + self.url, mode, **kwargs["storage_options"], filecache={"cache_storage": "TMP"}
-            )
-        else:
-            self._local_url = self.url
-        self._root = Dataset(self._local_url, mode, **kwargs)
+        self._root = Dataset(self.url, mode, **kwargs)
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}, data_type: Any = int) -> None:
         """
