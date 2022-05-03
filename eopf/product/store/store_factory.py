@@ -32,7 +32,6 @@ class EOStoreFactory:
             self.register_store(FilenameToVariableAccessor, "filename_to_subswath")
             self.register_store(EONetCDFStore, "netcdf")
             self.register_store(EONetcdfStringToTimeAccessor, "netcdf_string_to_time")
-            self.register_store(EONetcdfStringToTimeAccessor, "netcdf_string_to_time")
             self.register_store(ManifestStore, "xmlmetadata")
             self.register_store(EOGribAccessor, "grib")
             self.register_store(EORasterIOAccessor, "jp2")
