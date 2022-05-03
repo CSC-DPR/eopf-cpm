@@ -686,7 +686,6 @@ def test_read_real_s3(dask_client_all, store: type, path: str, open_kwargs: dict
 @pytest.mark.parametrize(
     "w_store, w_path, w_kwargs",
     [
-        (EOZarrStore, "zip::s3://eopf/cpm/test_data/tmp/olci_zarr_test_cpy.zip", dict(s3=S3_CONFIG_REAL)),
         (EOZarrStore, "s3://eopf/cpm/test_data/tmp/olci_zarr_test_cpy.zarr/", S3_CONFIG_REAL),
     ],
 )
