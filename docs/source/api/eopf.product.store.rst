@@ -25,10 +25,10 @@ eopf.product.store.conveniences module
    :undoc-members:
    :show-inheritance:
 
-eopf.product.store.flags module
--------------------------------
+eopf.product.store.filename\_to\_variable module
+------------------------------------------------
 
-.. automodule:: eopf.product.store.flags
+.. automodule:: eopf.product.store.filename_to_variable
    :members:
    :undoc-members:
    :show-inheritance:
@@ -85,6 +85,14 @@ eopf.product.store.store\_factory module
 ----------------------------------------
 
 .. automodule:: eopf.product.store.store_factory
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+eopf.product.store.wrappers module
+----------------------------------
+
+.. automodule:: eopf.product.store.wrappers
    :members:
    :undoc-members:
    :show-inheritance:

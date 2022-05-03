@@ -7,6 +7,7 @@ from pathlib import PurePosixPath
 from typing import Any, Callable, Optional, Union
 
 import dask.array as da
+import dateutil.parser as date_parser
 import fsspec
 import numpy as np
 import pytz
@@ -106,6 +107,9 @@ def conv(obj: Any) -> Any:
     if isinstance(obj, datetime.datetime):
         return convert_to_unix_time(obj)
 
+    if isinstance(obj, bytes):
+        return obj.decode()
+
     # if no conversion can be done
     return obj
 
@@ -122,10 +126,11 @@ def is_date(string: str) -> bool:
     ----------
     bool
     """
-    from dateutil.parser import parse
-
+    # minimal size of valid date is year size (4 character)
+    if len(string) < 4:
+        return False
     try:
-        parse(string)
+        date_parser.parse(string)
         return True
     except ValueError:
         return False

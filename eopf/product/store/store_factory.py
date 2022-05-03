@@ -9,11 +9,18 @@ class EOStoreFactory:
         self.item_formats: dict[str, type[EOProductStore]] = dict()
         self.store_types: set[type[EOProductStore]] = set()
         if default_stores:
+            from eopf.product.store.filename_to_variable import (
+                FilenameToVariableAccessor,
+            )
             from eopf.product.store.grib import EOGribAccessor
             from eopf.product.store.manifest import ManifestStore
             from eopf.product.store.netcdf import (
                 EONetCDFStore,
                 EONetcdfStringToTimeAccessor,
+            )
+            from eopf.product.store.wrappers import (
+                FromAttributesToFlagValueAccessor,
+                FromAttributesToVariableAccessor,
             )
             from eopf.product.store.xml_accessors import (
                 XMLAnglesAccessor,
@@ -22,13 +29,17 @@ class EOStoreFactory:
             from eopf.product.store.zarr import EOZarrStore
 
             self.register_store(EOZarrStore)
+            self.register_store(FilenameToVariableAccessor, "filename_to_subswath")
             self.register_store(EONetCDFStore, "netcdf")
+            self.register_store(EONetcdfStringToTimeAccessor, "netcdf_string_to_time")
             self.register_store(EONetcdfStringToTimeAccessor, "netcdf_string_to_time")
             self.register_store(ManifestStore, "xmlmetadata")
             self.register_store(EOGribAccessor, "grib")
             self.register_store(EORasterIOAccessor, "jp2")
             self.register_store(XMLAnglesAccessor, "xmlangles")
             self.register_store(XMLTPAccessor, "xmltp")
+            self.register_store(FromAttributesToVariableAccessor, "attribute_element_to_float_variable")
+            self.register_store(FromAttributesToFlagValueAccessor, "attribute_element_to_flag_variable")
 
     def register_store(self, store_class: type[EOProductStore], *args: str) -> None:
         self.store_types.add(store_class)

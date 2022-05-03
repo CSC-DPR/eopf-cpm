@@ -543,8 +543,11 @@ class SafeMappingManager:
                 if not os.path.exists(accessor_file):
                     # create parent directory (needed if the file is in a subfolder of the zip)
                     os.makedirs(os.path.split(accessor_file)[0], exist_ok=True)
-                    with open(accessor_file, mode="wb") as file_:
-                        file_.write(self._fs_map_access[file_path])
+                    if file_path in self._fs_map_access:  # For file
+                        with open(accessor_file, mode="wb") as file_:
+                            file_.write(self._fs_map_access[file_path])
+                    elif not any(path.startswith(file_path) for path in self._fs_map_access):  # check directory level
+                        raise FileNotFoundError()
             else:
                 accessor_file = self._fs_map_access.fs.sep.join([self._fs_map_access.root, file_path])
             mapped_store = self._store_factory.get_store(
@@ -600,15 +603,18 @@ class SafeMappingManager:
         config_definitions: dict[str, Any],
     ) -> None:
         """Extract in config the accessor config by matching it to config_definitions and build an hashable id of it."""
+
         if self.CONFIG_ACCESSOR_CONF_DEC in config:
             config_declarations = config[self.CONFIG_ACCESSOR_CONF_DEC]
         else:
             config_declarations = dict()
+
         # The reduce allow us to do a get item on a nested directory using a split path.
         accessor_config = {
             config_key: reduce(dict.get, partition_eo_path(config_path), config_definitions)  # type: ignore[arg-type]
             for config_key, config_path in config_declarations.items()
         }
+
         config[self.CONFIG_ACCESSOR_ID] = frozenset(config_declarations.items())
         config[self.CONFIG_ACCESSOR_CONFIG] = accessor_config
 

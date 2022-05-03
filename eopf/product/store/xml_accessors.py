@@ -19,17 +19,15 @@ class XMLAnglesAccessor(EOProductStore):
     def __init__(self, url: str, **kwargs: Any) -> None:
         super().__init__(url)
         self._root = lxml.etree._ElementTree
-        self._url = url
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
-        super().open()
-
         if mode != "r":
             raise NotImplementedError()
 
-        # Recover configuration
+        super().open()
 
-        self._root = lxml.etree.parse(self._url)
+        # Recover configuration
+        self._root = lxml.etree.parse(self.url)
         try:
             self._namespaces: dict[str, str] = kwargs["namespace"]
         except KeyError as e:
@@ -105,15 +103,13 @@ class XMLAnglesAccessor(EOProductStore):
     def is_group(self, path: str) -> bool:
         if "Values_List" in path:
             return False
-        else:
-            return len(self._root.xpath(path, namespaces=self._namespaces)[0].getchildren()) > 0
+        return len(self._root.xpath(path, namespaces=self._namespaces)[0].getchildren()) > 0
 
     # docstr-coverage: inherited
     def is_variable(self, path: str) -> bool:
         if "Values_List" in path:
             return True
-        else:
-            return len(self._root.xpath(path, namespaces=self._namespaces)[0].getchildren()) == 0
+        return len(self._root.xpath(path, namespaces=self._namespaces)[0].getchildren()) == 0
 
     def iter(self, path: str) -> Iterator[str]:
         """Has no functionality within this store"""
@@ -127,7 +123,6 @@ class XMLTPAccessor(EOProductStore):
     def __init__(self, url: str, **kwargs: Any) -> None:
         super().__init__(url)
         self._root = lxml.etree._ElementTree
-        self._url = url
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         # Assure that given url is path to legacy product or path to MTD_TL.xml file
@@ -138,7 +133,7 @@ class XMLTPAccessor(EOProductStore):
             self._namespaces: Any = kwargs["namespace"]
         except KeyError as e:
             raise TypeError(f"Missing configuration parameter: {e}")
-        self._root = lxml.etree.parse(self._url)
+        self._root = lxml.etree.parse(self.url)
         super().open()
 
     def get_shape(self, xpath: str) -> list[int]:
@@ -224,11 +219,11 @@ class XMLManifestAccessor(EOProductStore):
     KEYS = ["CF", "OM_EOP"]
 
     def __init__(self, url: str, **kwargs: Any) -> None:
+        super().__init__(url)
         self._attrs: MutableMapping[str, Any] = {}
         for key in self.KEYS:
             self._attrs[key] = {}
         self._parsed_xml = None
-        self._url = url
         self._xml_fobj: Optional[TextIO] = None
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
@@ -252,7 +247,15 @@ class XMLManifestAccessor(EOProductStore):
             raise TypeError(f"Missing configuration parameter: {e}")
 
         # open the manifest xml
-        self._xml_fobj = open(self._url, mode="r")
+        super().open(mode=mode)
+        self._xml_fobj = open(self.url, mode="r")
+
+    def close(self) -> None:
+        if self._xml_fobj is None:
+            raise StoreNotOpenError()
+        super().close()
+        self._xml_fobj.close()
+        self._xml_fobj = None
 
     def __getitem__(self, key: str) -> "EOObject":
         """Getter for CF and OM_EOP attributes of the EOProduct

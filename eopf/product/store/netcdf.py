@@ -244,7 +244,7 @@ class EONetcdfStringToTimeAccessor(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
 
         # convert unix start time to date time format
-        time_da = self._root.get(key)
+        time_da = self._root.get(key, "1970-1-1T0:0:0.000000Z")
         start = pd.to_datetime("1970-1-1T0:0:0.000000Z")
         end = pd.to_datetime(time_da)
         # compute and convert the time difference into microseconds
