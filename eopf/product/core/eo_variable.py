@@ -15,6 +15,7 @@ from typing import (
 import numpy as np
 import xarray
 from dask import array as da
+from numpy.typing import DTypeLike
 
 from eopf.product.core.eo_mixins import EOVariableOperatorsMixin
 from eopf.product.core.eo_object import _DIMENSIONS_NAME, EOObject
@@ -213,17 +214,17 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         return self
 
     @property
-    def dtype(self):
+    def dtype(self) -> DTypeLike:
         return self.data.dtype
 
     @property
-    def is_masked(self):
+    def is_masked(self) -> bool:
         return isinstance(self.data, np.ma.MaskedArray) or (
             isinstance(self.data, da.Array) and isinstance(self.data._meta, np.ma.MaskedArray)
         )
 
     @property
-    def ndim(self):
+    def ndim(self) -> int:
         return self.data.ndim
 
     @property
