@@ -84,7 +84,7 @@ class EOZarrStore(EOProductStore):
     # docstr-coverage: inherited
     def __init__(self, url: str) -> None:
         super().__init__(url)
-        self._storage_options = dict()
+        self._storage_options: dict[str, Any] = dict()
 
     # docstr-coverage: inherited
     def open(self, mode: str = "r", **kwargs: Any) -> None:
@@ -92,7 +92,7 @@ class EOZarrStore(EOProductStore):
         self._mode = mode
         self._root: Group = zarr.open(store=self.url, mode=mode, **kwargs)
         self._fs = self._root.store
-        self._storage_options = kwargs.get("storage_options")
+        self._storage_options = kwargs.get("storage_options", dict())
 
     # docstr-coverage: inherited
     def close(self) -> None:

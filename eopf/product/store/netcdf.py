@@ -88,7 +88,7 @@ class EONetCDFStore(EOProductStore):
         return self.sub_store.iter(path)
 
     @property
-    def sub_store(self):
+    def sub_store(self) -> EOProductStore:
         if self._sub_store is None:
             raise StoreNotOpenError("Store must be open before access to it")
         return self._sub_store
