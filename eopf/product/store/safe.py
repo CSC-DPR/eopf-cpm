@@ -444,8 +444,11 @@ class SafeMappingManager:
         """Close all managed accessors and switch default mode to closed."""
         self._mode = "CLOSED"
         for accessor, _ in self:
-            accessor.close()
+            if accessor.status == StorageStatus.OPEN:
+                accessor.close()
         self._is_compressed = False
+
+    def __del__(self) -> None:
         if self._temp_dir:
             self._temp_dir.cleanup()
             self._temp_dir = None
@@ -492,7 +495,8 @@ class SafeMappingManager:
         for accessor, _accessor_config in self:
             # FIXME Should probably check if the accessor is open intead of seting it to None
             # FIXME when opeing fail, otherwise we can't reopen it later with another mode.
-            accessor.open(mode, **_accessor_config, **kwargs)
+            if accessor.status != StorageStatus.OPEN:
+                accessor.open(mode, **_accessor_config, **kwargs)
 
     def split_target_path(self, target_path: str) -> Sequence[tuple[str, Optional[str]]]:
         """Split target_path between a path where a mapping is registered, and a local path."""
@@ -636,8 +640,7 @@ class SafeMappingManager:
         accessor_id = f"{item_format}:{accessor_file}"
         if accessor_id in self._accessor_map and accessor_config_id in self._accessor_map[accessor_id]:
             return self._accessor_map[accessor_id][accessor_config_id][0]
-        else:
-            return self._add_accessor(accessor_file, item_format, accessor_config_id, accessor_config)
+        return self._add_accessor(accessor_file, item_format, accessor_config_id, accessor_config)
 
     def _read_product_mapping(self) -> None:
         """Read mapping from the mapping factory and fill _config_mapping from it."""

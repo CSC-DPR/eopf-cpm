@@ -1,11 +1,14 @@
+import json
 import os
 from typing import Callable
 from unittest.mock import patch
 
+import numpy as np
 import pytest
 from pytest_lazyfixture import lazy_fixture
 
-from eopf.product.core import EOGroup, EOProduct
+from eopf.product.conveniences import open_store
+from eopf.product.core import EOGroup, EOProduct, EOVariable
 from eopf.product.store import EOProductStore, EOZarrStore
 from eopf.product.store.conveniences import convert
 from eopf.product.store.manifest import ManifestStore
@@ -67,32 +70,83 @@ def test_load_product(store_type):
 @pytest.mark.need_files
 @pytest.mark.integration
 @pytest.mark.parametrize(
-    "input_path, output_formatter, output_store",
+    "input_path, mapping_filename, output_formatter, output_store",
     [
-        (lazy_fixture("S3_OLCI_L1_EFR"), lambda name: f"{name.replace('.zip', '.SEN3')}", EOSafeStore),
-        (lazy_fixture("S3_OLCI_L1_EFR"), lambda name: f"{name.replace('.zip', '.zarr')}", EOZarrStore),
-        (lazy_fixture("S2A_MSIL1C"), lambda name: f"{name.replace('.zip', '.zarr')}", EOZarrStore),
-        (lazy_fixture("S2A_MSIL1C_ZIP"), lambda name: f"{name.replace('.zip', '.zarr')}", EOZarrStore),
-        (lazy_fixture("S1_IM_OCN"), lambda name: f"{name.replace('.zip', '.zarr')}", EOZarrStore),
+        (
+            lazy_fixture("S3_OLCI_L1_EFR"),
+            lazy_fixture("S3_OLCI_L1_MAPPING"),
+            lambda name: f"{name.replace('.zip', '.SEN3')}",
+            EOSafeStore,
+        ),
+        (
+            lazy_fixture("S3_OLCI_L1_EFR"),
+            lazy_fixture("S3_OLCI_L1_MAPPING"),
+            lambda name: f"{name.replace('.zip', '.zarr')}",
+            EOZarrStore,
+        ),
+        (
+            lazy_fixture("S2A_MSIL1C"),
+            lazy_fixture("S2A_MSIL1C_MAPPING"),
+            lambda name: f"{name.replace('.zip', '.zarr')}",
+            EOZarrStore,
+        ),
+        (
+            lazy_fixture("S2A_MSIL1C_ZIP"),
+            lazy_fixture("S2A_MSIL1C_MAPPING"),
+            lambda name: f"{name.replace('.zip', '.zarr')}",
+            EOZarrStore,
+        ),
+        (
+            lazy_fixture("S1_IM_OCN"),
+            lazy_fixture("S1_IM_OCN_MAPPING"),
+            lambda name: f"{name.replace('.zip', '.zarr')}",
+            EOZarrStore,
+        ),
     ],
 )
 def test_convert_safe_mapping(
     input_path: str,
+    mapping_filename: str,
     output_formatter: Callable,
     output_store: type[EOProductStore],
     OUTPUT_DIR: str,
 ):
-    impl_test_convert_store(input_path, EOSafeStore, output_formatter, output_store, OUTPUT_DIR)
-
-
-def impl_test_convert_store(
-    input_path: str,
-    input_store_t: type[EOProductStore],
-    output_formatter: Callable,
-    output_store_t: type[EOProductStore],
-    output_dir: str,
-):
-    source_store = input_store_t(input_path)
+    source_store = EOSafeStore(input_path)
     name = os.path.basename(input_path)
-    target_store = output_store_t(os.path.join(output_dir, output_formatter(name)))
+    target_store = output_store(os.path.join(OUTPUT_DIR, output_formatter(name)))
     convert(source_store, target_store)
+    source_product = EOProduct("", store_or_path_url=source_store)
+    target_product = EOProduct("", store_or_path_url=target_store)
+
+    with open(mapping_filename) as f:
+        mappin_data = json.load(f)
+
+    with (open_store(source_product), open_store(target_product)):
+        for item in mappin_data["data_mapping"]:
+            # TODO: should be removed after that misc was removed from mappings
+            if item["item_format"] == "misc":
+                continue
+            data_path = item["target_path"]
+            if data_path:
+                source_object = source_product[data_path]
+                target_object = target_product[data_path]
+            else:
+                source_object = source_product
+                target_object = target_product
+            assert type(source_object) == type(target_object)
+            np.testing.assert_equal(source_object.attrs, target_object.attrs)
+            if isinstance(source_object, EOVariable):
+                if source_object.is_masked:
+                    source_data = np.ma.getdata(source_object.data)
+                else:
+                    source_data = source_object.data
+
+                if target_object.is_masked:
+                    target_data = np.ma.getdata(target_object.data)
+                else:
+                    target_data = target_object.data
+
+                if source_object.is_masked and target_object.is_masked:
+                    assert np.ma.allequal(source_data, target_data)
+                else:
+                    assert np.array_equal(source_data, target_data, equal_nan=True)

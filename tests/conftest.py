@@ -60,22 +60,19 @@ def S3_SY_2_SYN_MAPPING(MAPPING_FOLDER: str):
 
 
 @pytest.fixture
-def S2_MSIL1C_MAPPING(MAPPING_FOLDER: str):
-    """Path to a S1 OCN IW 1 mapping"""
-    return os.path.join(MAPPING_FOLDER, "S2_MSIL1C_mapping.json")
-
-
-@pytest.fixture
 def S1_IM_OCN_MAPPING(MAPPING_FOLDER: str):
     """Path to a S1 OCN IW 1 mapping"""
     return os.path.join(MAPPING_FOLDER, "S1_OCN_IW_mapping.json")
 
 
+def S2A_MSIL1C_MAPPING(MAPPING_FOLDER: str):
+    """Path to a S2A MSIL1C mapping"""
+    return os.path.join(MAPPING_FOLDER, "S2_MSIL1C_mapping.json")
+
+
 # ----------------------------------#
 # ------------ PRODUCT -------------#
 # ----------------------------------#
-
-
 @pytest.fixture
 def S3_OLCI_L1_EFR(INPUT_DIR: str):
     """Path to a S3 OLCI LEVEL 1 product"""
