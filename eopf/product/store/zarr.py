@@ -84,6 +84,7 @@ class EOZarrStore(EOProductStore):
     # docstr-coverage: inherited
     def __init__(self, url: str) -> None:
         super().__init__(url)
+        self._storage_options = dict()
 
     # docstr-coverage: inherited
     def open(self, mode: str = "r", **kwargs: Any) -> None:
@@ -91,6 +92,7 @@ class EOZarrStore(EOProductStore):
         self._mode = mode
         self._root: Group = zarr.open(store=self.url, mode=mode, **kwargs)
         self._fs = self._root.store
+        self._storage_options = kwargs.get("storage_options")
 
     # docstr-coverage: inherited
     def close(self) -> None:
@@ -104,6 +106,7 @@ class EOZarrStore(EOProductStore):
         super().close()
         self._root = None
         self._fs = None
+        self._storage_options = dict()
 
     # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
@@ -138,7 +141,11 @@ class EOZarrStore(EOProductStore):
         obj = self._root[key]
         if self.is_group(key):
             return EOGroup(attrs=obj.attrs)
-        return EOVariable(data=obj, attrs=obj.attrs)
+        # Use dask instead of zarr to read the object data to :
+        # - avoid memory leak/let dask manage lazily close the data file
+        # - read in parallel
+        var_data = da.from_zarr(self.url, component=key, storage_options=self._storage_options)
+        return EOVariable(data=var_data, attrs=obj.attrs)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
         from eopf.product.core import EOGroup, EOVariable
@@ -156,7 +163,7 @@ class EOZarrStore(EOProductStore):
             if dask_array.size > 0:
                 # We must use to_zarr for writing on a distributed cluster,
                 # but to_zarr fail to write array with a 0 dim (divide by zero Exception)
-                dask_array.to_zarr(self.url, component=key)
+                dask_array.to_zarr(self.url, component=key, storage_options=self._storage_options)
             else:
                 self._root.create(key, shape=dask_array.shape)
         else:
