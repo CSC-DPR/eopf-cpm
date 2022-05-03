@@ -3,6 +3,8 @@ from typing import Any, Iterator, Optional, Union
 
 from eopf.exceptions import StoreNotDefinedError
 from eopf.product.core import EOProduct
+from eopf.product.core.eo_container import EOContainer
+from eopf.product.core.eo_group import EOGroup
 from eopf.product.store.abstract import EOProductStore
 
 
@@ -35,6 +37,28 @@ def init_product(
     for group_name in product.MANDATORY_FIELD:
         product.add_group(group_name)
     return product
+
+
+def merge_product(*products: EOProduct, product_name: str = "") -> EOProduct:
+    def _merge(*containers: EOContainer, output: EOProduct = None, level=[]) -> EOProduct:
+        for container in containers:
+            for item in container:
+                set_ = False
+                item_path = container[item].path
+                for other in filter(lambda x: x is not container, containers):
+                    if item in other:
+                        break
+                else:
+                    output[item_path] = container[item]
+                    set_ = True
+                if item_path not in output:
+                    output[item_path] = EOGroup()
+                output[item_path].attrs |= container[item_path].attrs
+                if not set_:
+                    _merge(*(c[item] for c in containers if item in c), output=output)
+        return output
+
+    return _merge(*products, output=EOProduct(product_name))
 
 
 @contextlib.contextmanager

@@ -1,14 +1,17 @@
 from typing import Any
 
-import dask.array as da
-import numpy as np
-
 from eopf.computing.abstract import ProcessingUnit
+from eopf.computing.general import IdentityProcessingUnit, MergedProcessingStep
 from eopf.computing.steps import FlagEvaluationStep, InterpolateTpStep, RadToReflStep
 from eopf.product import EOProduct
 from eopf.product.conveniences import init_product, open_store
 from eopf.product.core.eo_group import EOGroup
 from eopf.product.core.eo_variable import EOVariable
+
+
+class OlciL2MergeUnit(MergedProcessingStep):
+
+    _PROCESSES = [IdentityProcessingUnit()]
 
 
 class OlciL2FinalisingUnit(ProcessingUnit):
@@ -27,13 +30,10 @@ class OlciL2FinalisingUnit(ProcessingUnit):
         return target_product
 
 
-class OlciL2LandUnit(ProcessingUnit):
+class OlciL2LandUnit(IdentityProcessingUnit):
     """
     Very prototypical land processing unit of the OLCI Level 2 processor.
     """
-
-    def run(self, refl: EOProduct, **kwargs: Any) -> EOProduct:  # type: ignore[override]
-        return refl
 
 
 class OlciL2PreProcessingUnit(ProcessingUnit):
@@ -69,10 +69,8 @@ class OlciL2PreProcessingUnit(ProcessingUnit):
             # Interpolate SZA from tie-point grid to image grid
             interpolate_tp_step = InterpolateTpStep()
             detector_index = l1b.coordinates.image_grid.detector_index  # type: ignore[attr-defined]
-            block_pattern = da.zeros(shape=detector_index.data.blocks.shape, chunks=(1, 1), dtype=np.byte)
             sza = interpolate_tp_step.apply(
-                block_pattern,
-                tp_data=sza_tp,
+                sza_tp,
                 tp_step=(1, 64),  # TBD calc from input
                 image_shape=detector_index.shape,
                 image_chunksize=detector_index.data.chunksize,

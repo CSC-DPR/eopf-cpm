@@ -13,7 +13,7 @@ class InterpolateTpStep(BlockProcessingStep):
 
     def func(  # type: ignore[override]
         self,
-        tp_data: np.ndarray[Any, np.dtype[Any]] = np.array([]),
+        tp_data: np.ndarray[Any, np.dtype[Any]],
         tp_step: Sequence[int] = tuple(),
         block_id: Sequence[int] = tuple(),
         shape: Sequence[int] = tuple(),
