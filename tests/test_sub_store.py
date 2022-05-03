@@ -135,7 +135,7 @@ def test_grib_exceptions(EMBEDED_TEST_DATA_FOLDER: str):
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize("mapping", [lazy_fixture("S2_MSIL1C_MAPPING")])
+@pytest.mark.parametrize("mapping", [lazy_fixture("S2A_MSIL1C_MAPPING")])
 @pytest.mark.parametrize(
     "array_size, expected_data, xpath",
     [
@@ -167,7 +167,7 @@ def test_xml_angles_accessor(EMBEDED_TEST_DATA_FOLDER, mapping, array_size, expe
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize("mapping", [lazy_fixture("S2_MSIL1C_MAPPING")])
+@pytest.mark.parametrize("mapping", [lazy_fixture("S2A_MSIL1C_MAPPING")])
 @pytest.mark.parametrize("array_size", [(23,)])
 @pytest.mark.parametrize("ul, dummy_array_factor, kind, reversed", [(300000, 1, "x", "y"), (4800000, -1, "y", "x")])
 def test_xml_tiepoints_accessor(EMBEDED_TEST_DATA_FOLDER, mapping, ul, dummy_array_factor, kind, reversed, array_size):

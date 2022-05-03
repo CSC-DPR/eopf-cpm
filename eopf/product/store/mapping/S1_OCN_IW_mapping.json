@@ -854,7 +854,7 @@
         {
             "short_name": "metadata",
             "source_path": "manifest.safe",
-            "target_path": "/",
+            "target_path": "",
             "item_format": "xmlmetadata",
             "accessor_config": {
                 "mapping": "metadata_mapping/xfdumanifest-CF",
@@ -864,7 +864,7 @@
         {
             "short_name": "metadata",
             "source_path": "manifest.safe",
-            "target_path": "/",
+            "target_path": "",
             "item_format": "xmlmetadata",
             "accessor_config": {
                 "mapping": "metadata_mapping/xfdumanifest-OM-EOP",

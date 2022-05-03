@@ -343,21 +343,6 @@ class EOSafeStore(EOProductStore):
         # add a warning if a parameter is missing from _parameters_transformations ?
         return eo_obj
 
-        from ..core import EOGroup, EOVariable
-
-        data = eo_obj._data if isinstance(eo_obj, EOVariable) else None
-        attrs = eo_obj.attrs
-        dims = eo_obj.dims
-
-        if "dimensions" in parameters:
-            dims = parameters["dimensions"]
-        else:
-            dims = eo_obj.dims
-
-        if isinstance(eo_obj, EOVariable):
-            return EOVariable(data=data, dims=dims, attrs=attrs)
-        return EOGroup(dims=dims, attrs=attrs)
-
     def _eo_object_merge(self, *eo_obj_list: "EOObject") -> "EOObject":
         """Merge all eo objectect passed to this function.
         We do an union on dims and attributes.

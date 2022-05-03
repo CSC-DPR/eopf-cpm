@@ -65,6 +65,7 @@ def S1_IM_OCN_MAPPING(MAPPING_FOLDER: str):
     return os.path.join(MAPPING_FOLDER, "S1_OCN_IW_mapping.json")
 
 
+@pytest.fixture
 def S2A_MSIL1C_MAPPING(MAPPING_FOLDER: str):
     """Path to a S2A MSIL1C mapping"""
     return os.path.join(MAPPING_FOLDER, "S2_MSIL1C_mapping.json")
