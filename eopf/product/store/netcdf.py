@@ -1,11 +1,14 @@
 import itertools as it
+import json
 import os
 import pathlib
-from collections.abc import MutableMapping
+from collections.abc import Mapping, MutableMapping
+from numbers import Number
 from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
 
 import fsspec
 import kerchunk.hdf
+import pandas as pd
 import xarray as xr
 from netCDF4 import Dataset, Group, Variable
 
@@ -16,6 +19,10 @@ from eopf.product.utils import conv, decode_attrs, reverse_conv
 
 if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_object import EOObject
+
+
+def decode_netcdf_attrs(ncattrs: Mapping[str, Any]) -> dict[str, Any]:
+    return {key: decode_attrs(value) for key, value in ncattrs.items()}
 
 
 class EONetCDFStore(EOProductStore):
@@ -51,7 +58,9 @@ class EONetCDFStore(EOProductStore):
 
     # docstr-coverage: inherited
     def __getitem__(self, key: str) -> "EOObject":
-        return self.sub_store[key]
+        item = self.sub_store[key]
+        item.attrs.update(decode_netcdf_attrs(item.attrs))
+        return item
 
     # docstr-coverage: inherited
     def __setitem__(self, key: str, value: "EOObject") -> None:
@@ -189,7 +198,7 @@ class EONetCDFStoreNCpy(EOProductStore):
             obj = self._select_node(key)
         except IndexError as e:  # if key is invalid, netcdf4 raise IndexError ...
             raise KeyError(e)
-        attrs = {key: decode_attrs(value) for key, value in obj.__dict__.items()}
+        attrs = decode_netcdf_attrs(obj.__dict__)
         if self.is_group(key):
             return EOGroup(attrs=attrs)
         return EOVariable(data=obj[:], attrs=attrs, dims=obj.dimensions)
@@ -231,7 +240,7 @@ class EONetCDFStoreNCpy(EOProductStore):
                 shuffle=self.shuffle,
             )
             self.write_attrs(key, value.attrs, value.data.dtype)
-            variable[:] = value._data.values
+            variable[:] = value.data
         else:
             raise TypeError("Only EOGroup and EOVariable can be set")
 
@@ -302,15 +311,13 @@ class EONetCDFStoreNCpy(EOProductStore):
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
         current_node = self._select_node(group_path)
-        from json import dumps
-        from numbers import Number
 
         conv_attr: MutableMapping[str, Any] = {}
         for attr, value in attrs.items():
             attr_value = value
             if attr not in self.RESTRICTED_ATTR_KEY:
                 if not isinstance(value, Number):
-                    attr_value = dumps(conv(attr_value))
+                    attr_value = json.dumps(conv(attr_value))
             elif type(attr_value) is not data_type:
                 attr_value = reverse_conv(data_type, attr_value)
             conv_attr[attr] = attr_value
@@ -352,8 +359,6 @@ class EONetcdfStringToTimeAccessor(EOProductStore):
         self._root = None
 
     def __getitem__(self, key: str) -> "EOObject":
-        import pandas as pd
-
         from eopf.product.core import EOVariable
 
         if self._root is None:
