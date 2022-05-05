@@ -1,6 +1,7 @@
-from typing import Any
+from typing import Any, Iterable
 
 import numpy as np
+from numpy.typing import DTypeLike
 
 from eopf.computing.abstract import BlockProcessingStep
 from eopf.product import EOVariable
@@ -12,14 +13,11 @@ class FlagEvaluationStep(BlockProcessingStep):
     to demonstrate the chaining of processing steps.
     """
 
-    def __init__(self, variable: EOVariable) -> None:
-        """
-        Initialises flag masks and meanings from variable attributes.
-        :param variable: EOVariable to interprete
-        """
-        super().__init__()
+    SYNTAX_TOKEN = ["AND", "OR", "NOT"]
 
-        # @todo add support for flag_values 2022-03-17
+    def apply(  # type: ignore[override]
+        self, variable: EOVariable, dtype: DTypeLike = float, **kwargs: Any
+    ) -> EOVariable:
         flag_masks = variable.attrs.get("flag_masks")
         flag_meanings = variable.attrs.get("flag_meanings")
 
@@ -30,12 +28,13 @@ class FlagEvaluationStep(BlockProcessingStep):
         if (len_meanings := len(flag_meanings_list)) != (len_masks := len(flag_masks)):
             raise ValueError(f"Flags masks and meanings must have the same length: {len_meanings} != {len_masks}.")
 
-        self._flags = dict(zip(flag_meanings_list, flag_masks))
-        self._syntax_tokens = ["AND", "OR", "NOT"]
+        flags = dict(zip(flag_meanings_list, flag_masks))
+        return super().apply(variable, dtype=dtype, flags=flags, **kwargs)
 
     def func(  # type: ignore[override]
         self,
         data: np.ndarray[Any, np.dtype[Any]],
+        flags: dict[str, Any] = {},
         flag_expression: str = "",
     ) -> np.ndarray[Any, np.dtype[Any]]:
         """
@@ -47,7 +46,7 @@ class FlagEvaluationStep(BlockProcessingStep):
         # @todo add support for braces () tb 2022-03-17
         tokens = flag_expression.split(" ")
         for token in tokens:
-            if not self._is_valid_token(token):
+            if not self._is_valid_token(token, extra_token=flags.keys()):
                 raise ValueError(f"invalid token detected in expression: {token}")
 
         # TODO remove after types are preserved by reader
@@ -81,9 +80,9 @@ class FlagEvaluationStep(BlockProcessingStep):
                 reduce = 0
                 continue
 
-            select = select | self._flags[operator]
+            select = select | flags[operator]
             if not not_set:
-                reduce = reduce | self._flags[operator]
+                reduce = reduce | flags[operator]
             not_set = False
 
         mask = data & select == reduce
@@ -92,5 +91,5 @@ class FlagEvaluationStep(BlockProcessingStep):
 
         return mask
 
-    def _is_valid_token(self, token: str) -> bool:
-        return token in [*self._flags, *self._syntax_tokens]
+    def _is_valid_token(self, token: str, extra_token: Iterable[str] = []) -> bool:
+        return token in [*extra_token, *self.SYNTAX_TOKEN]

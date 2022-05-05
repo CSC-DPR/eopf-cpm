@@ -40,7 +40,9 @@ def init_product(
 
 
 def merge_product(*products: EOProduct, product_name: str = "") -> EOProduct:
-    def _merge(*containers: EOContainer, output: EOProduct = None, level=[]) -> EOProduct:
+    def _merge(*containers: EOContainer, output: Optional[EOProduct] = None) -> EOProduct:
+        if output is None:
+            output = EOProduct("")
         for container in containers:
             for item in container:
                 set_ = False
@@ -53,12 +55,16 @@ def merge_product(*products: EOProduct, product_name: str = "") -> EOProduct:
                     set_ = True
                 if item_path not in output:
                     output[item_path] = EOGroup()
-                output[item_path].attrs |= container[item_path].attrs
+                output[item_path].attrs.update(container[item_path].attrs)
                 if not set_:
-                    _merge(*(c[item] for c in containers if item in c), output=output)
+                    _merge(*(c[item] for c in containers if item in c), output=output)  # type: ignore[arg-type]
         return output
 
-    return _merge(*products, output=EOProduct(product_name))
+    with contextlib.ExitStack() as stack:
+        for product in products:
+            stack.enter_context(product)
+        product = _merge(*products, output=EOProduct(product_name))
+    return product
 
 
 @contextlib.contextmanager

@@ -3,8 +3,10 @@ from numbers import Number
 from typing import Any, Optional
 
 import numpy as np
+from numpy.typing import DTypeLike
 
 from eopf.computing.abstract import BlockProcessingStep
+from eopf.product import EOVariable
 
 
 class RadToReflStep(BlockProcessingStep):
@@ -12,6 +14,30 @@ class RadToReflStep(BlockProcessingStep):
     Radiance to reflectances conversion example processing step implementation
     to demonstrate the chaining of processing steps.
     """
+
+    def apply(  # type: ignore[override]
+        self,
+        radiance: EOVariable,
+        valid_mask: EOVariable,
+        detector_index: EOVariable,
+        sza: EOVariable,
+        dtype: DTypeLike = float,
+        **kwargs: Any,
+    ) -> EOVariable:
+        scale_factor = radiance.attrs.get("scale_factor")
+        add_offset = radiance.attrs.get("add_offset")
+        fill_value = radiance.attrs.get("_FillValue")
+        return super().apply(
+            radiance,
+            valid_mask,
+            detector_index,
+            sza,
+            dtype=dtype,
+            scale_factor=scale_factor,
+            add_offset=add_offset,
+            fill_value=fill_value,
+            **kwargs,
+        )
 
     def func(  # type: ignore[override]
         self,

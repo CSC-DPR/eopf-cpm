@@ -6,7 +6,7 @@ from eopf.computing.general import ChainProcessor
 from .unit import OlciL2FinalisingUnit, OlciL2LandUnit, OlciL2PreProcessingUnit
 
 
-class OLCIL2LandProcessor(ChainProcessor):
+class OlciL2LandProcessor(ChainProcessor):
 
     _PROCESSES: Sequence[ProcessingUnit] = [
         OlciL2PreProcessingUnit("olci-l2-pre-processing"),

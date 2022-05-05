@@ -1,33 +1,21 @@
 from typing import Any
 
 from eopf.computing.abstract import ProcessingUnit
-from eopf.computing.general import IdentityProcessingUnit, MergedProcessingStep
+from eopf.computing.general import ExtractVariableProcessingUnit, IdentityProcessingUnit
 from eopf.computing.steps import FlagEvaluationStep, InterpolateTpStep, RadToReflStep
 from eopf.product import EOProduct
-from eopf.product.conveniences import init_product, open_store
+from eopf.product.conveniences import open_store
 from eopf.product.core.eo_group import EOGroup
 from eopf.product.core.eo_variable import EOVariable
 
 
-class OlciL2MergeUnit(MergedProcessingStep):
-
-    _PROCESSES = [IdentityProcessingUnit()]
-
-
-class OlciL2FinalisingUnit(ProcessingUnit):
+class OlciL2FinalisingUnit(ExtractVariableProcessingUnit):
     """
     Very preliminary finalisation step.
     Should implement the addition of coordinate variables.
     """
 
-    def run(self, l2_raw: EOProduct, **kwargs: Any) -> EOProduct:  # type: ignore[override]
-        target_product = init_product("S3A_OL_2_LFR")
-        # copy variables from raw L2 to final output
-        l2_measurements: EOGroup = l2_raw.measurements  # type: ignore[assignment]
-        target_measurements: EOGroup = target_product.measurements  # type: ignore[assignment]
-        for n, v in l2_measurements.variables:
-            target_measurements[n] = v
-        return target_product
+    _CONTAINER_VARIABLES_PATHS = ["/measurements"]
 
 
 class OlciL2LandUnit(IdentityProcessingUnit):
@@ -59,7 +47,7 @@ class OlciL2PreProcessingUnit(ProcessingUnit):
         with open_store(l1b):
             # compute valid mask
             quality_flags: EOVariable = l1b.quality.image.quality_flags  # type: ignore[attr-defined]
-            valid_mask_step = FlagEvaluationStep(quality_flags)
+            valid_mask_step = FlagEvaluationStep()
             l1b_valid_mask = valid_mask_step.apply(quality_flags, flag_expression="NOT invalid")
 
             # read solar flux and SZA required for rad2refl conversion
@@ -80,21 +68,16 @@ class OlciL2PreProcessingUnit(ProcessingUnit):
             rad_to_refl_step = RadToReflStep()
             result_measurements: EOGroup = result.measurements  # type: ignore[assignment]
             for band in range(21):
-                bandKey = str(band + 1).rjust(2, "0")
-                band_name = f"oa{bandKey}_radiance"
+                band_name = f"oa{band+1:02}_radiance"
                 radiance_var = l1b.measurements.image[band_name]  # type: ignore[attr-defined]
-                radiance_dask_array = radiance_var
                 reflectance = rad_to_refl_step.apply(
-                    radiance_dask_array,
+                    radiance_var,
                     l1b_valid_mask,
                     detector_index,
                     sza,
                     solar_flux=solar_flux[band],
-                    scale_factor=radiance_var.attrs["scale_factor"],
-                    add_offset=radiance_var.attrs["add_offset"],
-                    fill_value=radiance_var.attrs["_FillValue"],
                 )
-                target_band_name = f"oa{bandKey}_reflectance"
+                target_band_name = band_name.replace("radiance", "reflectance")
                 result_measurements[target_band_name] = reflectance
 
             return result

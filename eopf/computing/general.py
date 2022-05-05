@@ -1,18 +1,18 @@
-from abc import ABC
-from typing import Any, Sequence
+from typing import Any, Sequence, Union
 
-from numpy import _DTypeLike
+from numpy.typing import DTypeLike
 
 from eopf.computing.abstract import ProcessingStep, ProcessingUnit, Processor
 from eopf.product import EOProduct, EOVariable
 from eopf.product.conveniences import merge_product, open_store
+from eopf.product.utils import join_eo_path
 
 
-class ChainedMixin(ABC):
-    _PROCESSES: Sequence[Any]
+class ChainedProcessingUnit(ProcessingUnit):
+    _PROCESSES: Sequence[ProcessingUnit]
 
     @property
-    def processes(self):
+    def processes(self) -> Sequence[ProcessingUnit]:
         return self._PROCESSES
 
     def run(self, *args: EOProduct, **kwargs: Any) -> EOProduct:
@@ -20,14 +20,6 @@ class ChainedMixin(ABC):
         for unit in self.processes:
             products = [unit(*products, **kwargs)]
         return products[0]
-
-
-class ChainedProcessingStep(ProcessingUnit, ChainedMixin):
-    _PROCESSES: Sequence[ProcessingStep]
-
-
-class ChainedProcessingUnit(ProcessingUnit, ChainedMixin):
-    _PROCESSES: Sequence[ProcessingUnit]
 
 
 class ChainProcessor(Processor, ChainedProcessingUnit):
@@ -38,44 +30,45 @@ class MergedProcessingUnit(ProcessingUnit):
     _PROCESSES: Sequence[ProcessingUnit]
 
     @property
-    def processes(self):
+    def processes(self) -> Sequence[ProcessingUnit]:
         return self._PROCESSES
 
     def run(self, *args: EOProduct, **kwargs: Any) -> EOProduct:
         return merge_product(*(process(*args, **kwargs.get(process.identifier, {})) for process in self.processes))
 
 
-class MergedProcessingStep(ProcessingUnit):
-    _PROCESSES: Sequence[ProcessingUnit]
-
-    @property
-    def processes(self):
-        return self._PROCESSES
-
-    def run(self, product: EOProduct, **kwargs: Any) -> EOProduct:
-        return merge_product(
-            *(
-                process(product[kwargs[process.identifier]["variable_path"]], **kwargs[process.identifier])
-                for process in self.processes
-            )
-        )
-
-
 class IdentityProcessingStep(ProcessingStep):
-    def apply(self, variable: EOVariable, dtype: _DTypeLike = float, **kwargs: Any) -> EOVariable:
+    def apply(  # type: ignore[override]
+        self, variable: EOVariable, dtype: DTypeLike = float, **kwargs: Any
+    ) -> EOVariable:
         return variable
 
 
 class IdentityProcessingUnit(ProcessingUnit):
-    def run(self, product: EOProduct, **kwargs: Any) -> EOProduct:
+    def run(self, product: EOProduct, **kwargs: Any) -> EOProduct:  # type: ignore[override]
         return product
 
 
 class ExtractVariableProcessingUnit(ProcessingUnit):
 
-    _VARIABLE_PATH: str
+    _VARIABLES_PATHS: Sequence[str] = []
+    _CONTAINER_VARIABLES_PATHS: Sequence[str] = []
 
-    def run(self, *args: EOProduct, **kwargs: Any) -> EOProduct:
-        product = args[0]
+    @staticmethod
+    def _extract_origin_dest_paths(paths: Union[str, tuple[str, str]]) -> tuple[str, ...]:
+        if isinstance(paths, str):
+            return paths, paths
+        return paths
+
+    def run(self, product: EOProduct, **kwargs: Any) -> EOProduct:  # type: ignore[override]
+        output = EOProduct("")
         with open_store(product):
-            ...
+            for variable_path in self._VARIABLES_PATHS:
+                origin, dest = self._extract_origin_dest_paths(variable_path)
+                output[dest] = product[origin]
+
+            for group_path in self._CONTAINER_VARIABLES_PATHS:
+                origin, dest = self._extract_origin_dest_paths(group_path)
+                for variable_path, variable in product[origin].variables:  # type: ignore[attr-defined]
+                    output[join_eo_path(dest, variable_path)] = variable
+        return output
