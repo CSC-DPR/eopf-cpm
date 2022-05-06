@@ -733,8 +733,7 @@ def test_write_real_s3(dask_client_all, w_store: type, w_path: str, w_kwargs: di
 def test_cog_store(store_cls: type[EOCogStore], format_file: str):
     assert store_cls.guess_can_read("some_file.cog")
     assert not store_cls.guess_can_read("some_other_file.false")
-    cog = store_cls("some_file.jp2")
-
+    cog = store_cls(_FILES["cog"])
     with pytest.raises(ValueError):
         cog.open(mode="r+")
 
@@ -743,60 +742,18 @@ def test_cog_store(store_cls: type[EOCogStore], format_file: str):
     coord_a = [1, 2, 4]
     coord_b = [5, 6, 7]
 
-    with patch("rioxarray.open_rasterio") as mock_function:
-        mock_function.return_value = xarray.DataArray(data_val, coords={"a": coord_a, "b": coord_b})
-        with open_store(cog):
-            value = cog[""]
-            assert [i for i in cog] == [i for i in cog.iter("")]
-            assert len(cog) == len([i for i in cog])
-            assert isinstance(value, EOVariable)
-            assert cog.is_variable("")
-            assert sum([1 for _ in value]) == len(value)
-            assert np.array_equal(value._data, data_val)
-            assert isinstance(value["a"], EOVariable)
-            assert np.array_equal(value["a"]._data, coord_a)
-            assert np.array_equal(value["b"]._data, coord_b)
-            with pytest.raises(KeyError):
-                cog["invalid_key"]
-
-        mock_function.return_value = xarray.Dataset(data_vars={"var1": xarray.DataArray(data=data_val)})
-        with open_store(cog):
-            value = cog[""]
-            assert [i for i in cog] == [i for i in cog.iter("")]
-            assert len(cog) == len([i for i in cog])
-            assert isinstance(value, EOGroup)
-            assert cog.is_group("")
-            assert isinstance(value["var1"], EOVariable)
-            assert np.array_equal(value["var1"], data_val)
-            value = cog["var1"]
-            assert cog.is_variable("var1")
-            assert isinstance(value, EOVariable)
-            assert np.array_equal(value, data_val)
-
-            with pytest.raises(KeyError):
-                cog["invalid_key"]
-
-        mock_function.return_value = [xarray.Dataset(data_vars={"var1": xarray.DataArray(data=data_val)})]
-        with open_store(cog):
-            with pytest.raises(NotImplementedError):
-                cog[""]
-            with pytest.raises(NotImplementedError):
-                cog["var1"]
-            not_existing_key = "not_existing_key"
-            with pytest.raises(KeyError):
-                value[not_existing_key]
-
     with (
         patch("xarray.DataArray.rio.to_raster") as mock_raster,
         patch("eopf.product.store.EONetCDFStore.__setitem__") as mock_netcdf,
     ):
-        cog = store_cls(_FILES["cog"])
         with open_store(cog, mode="w"):
             cog["var1"] = EOVariable(data=xarray.DataArray(data_val, coords={"x": coord_a, "y": coord_b}))
             assert mock_raster.call_count == 1
             cog["group0"] = EOGroup(
                 variables={"var2": EOVariable(data=xarray.DataArray(data_val, coords={"x": coord_a, "y": coord_b}))},
             )
+
+            cog.write_attrs("", {"a": "b"})
             assert mock_raster.call_count == 2
             assert mock_netcdf.call_count == 0
             cog["var1"] = EOVariable(data=xarray.DataArray(complex_data_val))
@@ -804,8 +761,6 @@ def test_cog_store(store_cls: type[EOCogStore], format_file: str):
             assert mock_netcdf.call_count == 1
             with pytest.raises(NotImplementedError):
                 cog["anything"] = "something"
-            with pytest.raises(NotImplementedError):
-                cog.write_attrs("", {"a": "b"})
 
     with pytest.raises(StoreNotOpenError):
         cog[""]
@@ -813,5 +768,6 @@ def test_cog_store(store_cls: type[EOCogStore], format_file: str):
         cog.close()
     with pytest.raises(StoreNotOpenError):
         len(cog)
-    with pytest.raises(StoreNotOpenError):
-        len(cog._select_node(""))
+    with pytest.raises(NotImplementedError):
+        cog.open(mode="r")
+        cog.write_attrs("", {})
