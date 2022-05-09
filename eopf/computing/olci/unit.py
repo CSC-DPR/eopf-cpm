@@ -60,8 +60,8 @@ class OlciL2PreProcessingUnit(ProcessingUnit):
             sza = interpolate_tp_step.apply(
                 sza_tp,
                 tp_step=(1, 64),  # TBD calc from input
-                image_shape=detector_index.shape,
-                image_chunksize=detector_index.data.chunksize,
+                shape=detector_index.shape,
+                chunksize=detector_index.data.chunksize,
             )
 
             # convert radiance to reflectance for each radiance band

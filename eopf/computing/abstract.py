@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Protocol
+from typing import Any
 
 import numpy as np
 from dask import array as da
@@ -10,7 +10,7 @@ from eopf.product.store.abstract import EOProductStore
 from eopf.product.store.store_factory import EOStoreFactory
 
 
-class ProcessingStep(Protocol):
+class ProcessingStep(ABC):
     _identifier: Any
 
     @property
@@ -52,7 +52,7 @@ class OverlapProcessingStep(ProcessingStep):
         ...
 
 
-class ProcessingUnit(Protocol):
+class ProcessingUnit(ABC):
     _identifier: Any
 
     @property
