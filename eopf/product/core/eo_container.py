@@ -95,7 +95,7 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
             return self.product._get_item(product_relative_path(self.path, key))
 
         key, subkey = downsplit_eo_path(key)
-        item: EOGroup
+        item: "EOObject"
 
         if key not in self._groups and (self.store is None or self.store.status == StorageStatus.CLOSE):
             raise KeyError(f"Invalide EOGroup item name {key}")
@@ -105,6 +105,8 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
             item = self.store[self._store_key(key)]
             self[key] = item
         if subkey is not None:
+            if not isinstance(item, EOGroup):
+                raise TypeError
             return item[subkey]
         return item
 

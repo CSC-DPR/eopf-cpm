@@ -62,13 +62,12 @@ def _compute_rec(node):
     structure = {}
     for section in sections:
         structure |= _compute_rec(section)
-    import json
 
     node_attrs = node.xpath('div/ul/li/div/dl[@class="eopf-attrs"][1]/dd')
     attrs = {}
     coords = []
     if node_attrs:
-        attrs = json.loads(node_attrs[0].text)
+        attrs = eval(node_attrs[0].text)
         if len(node_attrs) > 2:
             coords = [i.text for i in node_attrs[2:]]
 
@@ -121,4 +120,13 @@ def realize_strategy(draw, to_realize: Union[Any, st.SearchStrategy]):
 PARENT_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..")
 
 
-S3_CONFIG = dict(key="aaaa", secret="bbbbb", client_kwargs=dict(endpoint_url="https://localhost", region_name="local"))
+S3_CONFIG_FAKE = dict(
+    key="aaaa",
+    secret="bbbbb",
+    client_kwargs=dict(endpoint_url="https://localhost", region_name="local"),
+)
+S3_CONFIG_REAL = dict(
+    key=os.environ.get("S3_KEY"),
+    secret=os.environ.get("S3_SECRET"),
+    client_kwargs=dict(endpoint_url=os.environ.get("S3_URL"), region_name=os.environ.get("S3_REGION")),
+)

@@ -12,8 +12,10 @@ from typing import (
     ValuesView,
 )
 
+import numpy as np
 import xarray
 from dask import array as da
+from numpy.typing import DTypeLike
 
 from eopf.product.core.eo_mixins import EOVariableOperatorsMixin
 from eopf.product.core.eo_object import _DIMENSIONS_NAME, EOObject
@@ -86,7 +88,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
 
         # we let our current data to work with their dimensions
         attrs = copy.deepcopy(self.attrs)
-        attrs.pop(_DIMENSIONS_NAME)
+        attrs.pop(_DIMENSIONS_NAME, None)
         return EOVariable(data=data, attrs=attrs)
 
     def assign_dims(self, dims: Iterable[str]) -> None:
@@ -210,6 +212,20 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         """
         self._data = self._data.chunk(chunks, name_prefix=name_prefix, token=token, lock=lock)
         return self
+
+    @property
+    def dtype(self) -> DTypeLike:
+        return self.data.dtype
+
+    @property
+    def is_masked(self) -> bool:
+        return isinstance(self.data, np.ma.MaskedArray) or (
+            isinstance(self.data, da.Array) and isinstance(self.data._meta, np.ma.MaskedArray)
+        )
+
+    @property
+    def ndim(self) -> int:
+        return self.data.ndim
 
     @property
     def loc(self) -> "_LocIndexer":

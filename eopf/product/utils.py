@@ -7,6 +7,7 @@ from pathlib import PurePosixPath
 from typing import Any, Callable, Optional, Union
 
 import dask.array as da
+import dateutil.parser as date_parser
 import fsspec
 import numpy as np
 import pytz
@@ -86,7 +87,7 @@ def conv(obj: Any) -> Any:
 
     # check numpy
     if isinstance(obj, ndarray):
-        return conv(obj.tolist())
+        return [conv(i) for i in obj.tolist()]
 
     # check np int
     if isinstance(obj, (int64, int32, int16, uint64, uint32, uint16, uint8, int8, int)):
@@ -106,6 +107,9 @@ def conv(obj: Any) -> Any:
     if isinstance(obj, datetime.datetime):
         return convert_to_unix_time(obj)
 
+    if isinstance(obj, bytes):
+        return obj.decode()
+
     # if no conversion can be done
     return obj
 
@@ -122,10 +126,11 @@ def is_date(string: str) -> bool:
     ----------
     bool
     """
-    from dateutil.parser import parse
-
+    # minimal size of valid date is year size (4 character)
+    if len(string) < 4:
+        return False
     try:
-        parse(string)
+        date_parser.parse(string)
         return True
     except ValueError:
         return False
@@ -203,7 +208,7 @@ def reverse_conv(data_type: Any, obj: Any) -> Any:
         np.float64,
         np.float128,
     ]:
-        if data_type == dtype:
+        if np.dtype(data_type) == np.dtype(dtype):
             return dtype(obj)
     return obj
 
@@ -225,9 +230,10 @@ def decode_attrs(attrs: Any) -> Any:
     from json import JSONDecodeError, loads
 
     try:
-        attrs = loads(attrs)
+        new_attrs = loads(attrs)
     except (JSONDecodeError, TypeError):
         return attrs
+    return new_attrs
 
 
 def downsplit_eo_path(eo_path: str) -> tuple[str, Optional[str]]:
@@ -351,9 +357,11 @@ def norm_eo_path(eo_path: str) -> str:
     """
     if eo_path == "":
         raise KeyError("Invalid empty eo_path")
-    eo_path = posixpath.normpath(eo_path)  # Do not use pathlib (does not remove ..)
-    if eo_path.startswith("//"):  # text is a special path so it's not normalised by normpath
-        eo_path = eo_path[1:]
+    # Do not use pathlib (does not remove ..)
+    eo_path = posixpath.normpath(eo_path)
+    # text is a special path so it's not normalised by normpath
+    if eo_path.startswith("//"):
+        return eo_path[1:]
     return eo_path
 
 

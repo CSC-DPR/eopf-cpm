@@ -229,9 +229,6 @@ class EOSafeStore(EOProductStore):
                     warnings.warn("Safe Accessor NotImplementedError : " + key)
         return self._eo_object_merge(*eo_obj_list)
 
-    def __iter__(self) -> Iterator[str]:
-        return self.iter("")
-
     def __len__(self) -> int:
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
@@ -295,12 +292,12 @@ class EOSafeStore(EOProductStore):
         return iter(key_set)
 
     # docstr-coverage: inherited
-    def open(self, mode: str = "r", fsspec_kwargs: dict[str, Any] = {}, **kwargs: Any) -> None:
+    def open(self, mode: str = "r", storage_options: dict[str, Any] = {}, **kwargs: Any) -> None:
         # Must not read the product mapping between  super.open and accessor.open
         # Otherwise Hierachy accessor are opened twice.
         super().open()
-        self._accessor_manager.open_all(mode, fsspec_kwargs=fsspec_kwargs, **kwargs)
-        self._fs_map_access = fsspec.get_mapper(self.url, **fsspec_kwargs)
+        self._accessor_manager.open_all(mode, fsspec_kwargs=storage_options, **kwargs)
+        self._fs_map_access = fsspec.get_mapper(self.url, **storage_options)
 
         self._open_kwargs = kwargs
         if mode == "w":
@@ -345,21 +342,6 @@ class EOSafeStore(EOProductStore):
                 eo_obj = parameter_transformation(eo_obj, parameters[parameter_name])
         # add a warning if a parameter is missing from _parameters_transformations ?
         return eo_obj
-
-        from ..core import EOGroup, EOVariable
-
-        data = eo_obj._data if isinstance(eo_obj, EOVariable) else None
-        attrs = eo_obj.attrs
-        dims = eo_obj.dims
-
-        if "dimensions" in parameters:
-            dims = parameters["dimensions"]
-        else:
-            dims = eo_obj.dims
-
-        if isinstance(eo_obj, EOVariable):
-            return EOVariable(data=data, dims=dims, attrs=attrs)
-        return EOGroup(dims=dims, attrs=attrs)
 
     def _eo_object_merge(self, *eo_obj_list: "EOObject") -> "EOObject":
         """Merge all eo objectect passed to this function.
@@ -447,8 +429,11 @@ class SafeMappingManager:
         """Close all managed accessors and switch default mode to closed."""
         self._mode = "CLOSED"
         for accessor, _ in self:
-            accessor.close()
+            if accessor.status == StorageStatus.OPEN:
+                accessor.close()
         self._is_compressed = False
+
+    def __del__(self) -> None:
         if self._temp_dir:
             self._temp_dir.cleanup()
             self._temp_dir = None
@@ -471,7 +456,7 @@ class SafeMappingManager:
             if len(accessor_source_split) == 2:
                 accessor_local_path = accessor_source_split[1]
             else:
-                accessor_local_path = conf.get("parameters", {}).get("xpath")
+                accessor_local_path = conf.get("local_path")
             accessor = self._get_accessor(
                 accessor_file_regex,
                 conf[self.CONFIG_FORMAT],
@@ -495,7 +480,8 @@ class SafeMappingManager:
         for accessor, _accessor_config in self:
             # FIXME Should probably check if the accessor is open intead of seting it to None
             # FIXME when opeing fail, otherwise we can't reopen it later with another mode.
-            accessor.open(mode, **_accessor_config, **kwargs)
+            if accessor.status != StorageStatus.OPEN:
+                accessor.open(mode, **_accessor_config, **kwargs)
 
     def split_target_path(self, target_path: str) -> Sequence[tuple[str, Optional[str]]]:
         """Split target_path between a path where a mapping is registered, and a local path."""
@@ -546,8 +532,11 @@ class SafeMappingManager:
                 if not os.path.exists(accessor_file):
                     # create parent directory (needed if the file is in a subfolder of the zip)
                     os.makedirs(os.path.split(accessor_file)[0], exist_ok=True)
-                    with open(accessor_file, mode="wb") as file_:
-                        file_.write(self._fs_map_access[file_path])
+                    if file_path in self._fs_map_access:  # For file
+                        with open(accessor_file, mode="wb") as file_:
+                            file_.write(self._fs_map_access[file_path])
+                    elif not any(path.startswith(file_path) for path in self._fs_map_access):  # check directory level
+                        raise FileNotFoundError()
             else:
                 accessor_file = self._fs_map_access.fs.sep.join([self._fs_map_access.root, file_path])
             mapped_store = self._store_factory.get_store(
@@ -603,15 +592,18 @@ class SafeMappingManager:
         config_definitions: dict[str, Any],
     ) -> None:
         """Extract in config the accessor config by matching it to config_definitions and build an hashable id of it."""
+
         if self.CONFIG_ACCESSOR_CONF_DEC in config:
             config_declarations = config[self.CONFIG_ACCESSOR_CONF_DEC]
         else:
             config_declarations = dict()
+
         # The reduce allow us to do a get item on a nested directory using a split path.
         accessor_config = {
             config_key: reduce(dict.get, partition_eo_path(config_path), config_definitions)  # type: ignore[arg-type]
             for config_key, config_path in config_declarations.items()
         }
+
         config[self.CONFIG_ACCESSOR_ID] = frozenset(config_declarations.items())
         config[self.CONFIG_ACCESSOR_CONFIG] = accessor_config
 
@@ -633,8 +625,7 @@ class SafeMappingManager:
         accessor_id = f"{item_format}:{accessor_file}"
         if accessor_id in self._accessor_map and accessor_config_id in self._accessor_map[accessor_id]:
             return self._accessor_map[accessor_id][accessor_config_id][0]
-        else:
-            return self._add_accessor(accessor_file, item_format, accessor_config_id, accessor_config)
+        return self._add_accessor(accessor_file, item_format, accessor_config_id, accessor_config)
 
     def _read_product_mapping(self) -> None:
         """Read mapping from the mapping factory and fill _config_mapping from it."""

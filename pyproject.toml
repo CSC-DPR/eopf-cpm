@@ -20,6 +20,7 @@ classifiers = [
 requires-python = ">=3.9"
 dependencies = [
     "dask ==2021.11.2",
+    "distributed ==2021.11.2",
     "xarray ==0.20.1",
     "netcdf4 ==1.5.7",
     "numpy ==1.22.3",
@@ -29,6 +30,8 @@ dependencies = [
     "ecmwflibs ==0.4.6",
     "cfgrib ==0.9.10.1",
     "rioxarray ==0.10.2",
+    "kerchunk ==0.0.6",
+    "h5py ==3.6.0",
     "s3fs",
 ]
 license = {file = "LICENSE"}

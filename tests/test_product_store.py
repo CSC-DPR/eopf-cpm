@@ -19,14 +19,25 @@ from eopf.exceptions import StoreNotOpenError
 from eopf.exceptions.warnings import AlreadyOpen
 from eopf.product.conveniences import init_product, open_store
 from eopf.product.core import EOGroup, EOProduct, EOVariable
-from eopf.product.store import EONetCDFStore, EOProductStore, EOZarrStore, convert
-from eopf.product.store.flags import EOFlagAccessor
+from eopf.product.store import (
+    EONetCDFStore,
+    EOProductStore,
+    EOSafeStore,
+    EOZarrStore,
+    convert,
+)
+from eopf.product.store.cog import EOCogStore
 from eopf.product.store.manifest import ManifestStore
 from eopf.product.store.rasterio import EORasterIOAccessor
+from eopf.product.store.wrappers import (
+    FromAttributesToFlagValueAccessor,
+    FromAttributesToVariableAccessor,
+)
 
 from .decoder import Netcdfdecoder
 from .utils import (
-    S3_CONFIG,
+    S3_CONFIG_FAKE,
+    S3_CONFIG_REAL,
     assert_contain,
     assert_has_coords,
     assert_issubdict,
@@ -41,6 +52,7 @@ _FILES = {
     "zarr": "test_zarr_files_.zarr",
     "zarr0": "test_zarr_read_files_.zarr",
     "zarr1": "test_zarr_write_files_.zarr",
+    "cog": "test_cog.cog",
 }
 
 
@@ -109,7 +121,7 @@ def zarr_file(OUTPUT_DIR: str):
 
 
 @pytest.mark.unit
-def test_load_product_from_zarr(zarr_file: str):
+def test_load_product_from_zarr(dask_client_all, zarr_file: str):
     product = EOProduct("a_product", store_or_path_url=zarr_file)
     with product.open(mode="r"):
         product.load()
@@ -212,14 +224,12 @@ def test_check_capabilities(store, readable, writable, listable, erasable):
         (EONetCDFStore(_FILES["netcdf"]), Netcdfdecoder),
     ],
 )
-def test_write_stores(store: EOProductStore, decoder_type: Any):
-
-    store.open(mode="w")
-    store["a_group"] = EOGroup()
-    store.write_attrs("a_group", attrs={"description": "value"})
-    store["a_group/a_variable"] = EOVariable(data=[])
-    store["coordinates/a_coord"] = EOVariable(data=[1, 2, 3], dims=["a"])
-    store.close()
+def test_write_stores(dask_client_all, store: EOProductStore, decoder_type: Any):
+    with open_store(store, mode="w"):
+        store["a_group"] = EOGroup()
+        store.write_attrs("a_group", attrs={"description": "value"})
+        store["a_group/a_variable"] = EOVariable(data=[])
+        store["coordinates/a_coord"] = EOVariable(data=[1, 2, 3], dims=["a"])
 
     decoder = decoder_type(store.url, mode="r")
     assert dict(decoder["a_group"].attrs) == {"description": "value"}
@@ -236,21 +246,18 @@ def test_write_stores(store: EOProductStore, decoder_type: Any):
         EONetCDFStore(_FILES["netcdf"]),
     ],
 )
-def test_read_stores(store: EOProductStore):
-    store.open(mode="w")
-    store["a_group"] = EOGroup()
-    store["a_group/a_variable"] = EOVariable(data=[])
-    store.close()
+def test_read_stores(dask_client_all, store: EOProductStore):
+    with open_store(store, mode="w"):
+        store["a_group"] = EOGroup()
+        store["a_group/a_variable"] = EOVariable(data=[])
 
-    store.open(mode="r")
-    assert isinstance(store["a_group"], EOGroup)
-    assert isinstance(store["a_group/a_variable"], EOVariable)
-    assert len(store) == 1
-    assert "a_group" in [_ for _ in store]
-    with pytest.raises(KeyError):
-        store["invalid_key"]
-
-    store.close()
+    with open_store(store, mode="r"):
+        assert isinstance(store["a_group"], EOGroup)
+        assert isinstance(store["a_group/a_variable"], EOVariable)
+        assert len(store) == 1
+        assert "a_group" in [_ for _ in store]
+        with pytest.raises(KeyError):
+            store["invalid_key"]
 
 
 @pytest.mark.unit
@@ -265,12 +272,12 @@ def test_abstract_store_cant_be_instantiate():
     [
         EOZarrStore("a_product"),
         EONetCDFStore(_FILES["netcdf"]),
-        EOFlagAccessor("a.jp2"),
         EORasterIOAccessor("a.jp2"),
+        FromAttributesToVariableAccessor(""),
+        FromAttributesToFlagValueAccessor(""),
     ],
 )
 def test_store_must_be_open_read_method(store: EOProductStore):
-
     with pytest.raises(StoreNotOpenError):
         store["a_group"]
 
@@ -315,20 +322,18 @@ def test_store_must_be_open_write_method(store):
         EONetCDFStore(_FILES["netcdf"]),
     ],
 )
-def test_store_structure(store: EOProductStore):
-    store.open(mode="w")
-    store["a_group"] = EOGroup()
-    store["another_one"] = EOGroup()
-    store["a_final_one"] = EOGroup()
+def test_store_structure(dask_client_all, store: EOProductStore):
+    with open_store(store, mode="w"):
+        store["a_group"] = EOGroup()
+        store["another_one"] = EOGroup()
+        store["a_final_one"] = EOGroup()
 
-    assert isinstance(store["a_group"], EOGroup)
-    assert isinstance(store["another_one"], EOGroup)
-    assert isinstance(store["a_final_one"], EOGroup)
+        assert isinstance(store["a_group"], EOGroup)
+        assert isinstance(store["another_one"], EOGroup)
+        assert isinstance(store["a_final_one"], EOGroup)
 
-    assert store.is_group("another_one")
-    assert not store.is_variable("another_one")
-
-    store.close()
+        assert store.is_group("another_one")
+        assert not store.is_variable("another_one")
 
 
 @pytest.mark.unit
@@ -341,10 +346,9 @@ def test_store_structure(store: EOProductStore):
     ],
 )
 def test_open_close_already(store, exceptions):
-    store.open(mode="w")
-    with pytest.raises(exceptions[0]):
-        store.open()
-    store.close()
+    with open_store(store, mode="w"):
+        with pytest.raises(exceptions[0]):
+            store.open()
     with pytest.raises(exceptions[1]):
         store.close()
 
@@ -418,7 +422,12 @@ def test_close_manifest_store():
 
 @pytest.mark.need_files
 @pytest.mark.integration
-def test_retrieve_from_manifest_store(S3_OLCI_L1_EFR: str, S3_OLCI_L1_MAPPING: str, tmp_path: pathlib.Path):
+def test_retrieve_from_manifest_store(
+    dask_client_all,
+    S3_OLCI_L1_EFR: str,
+    S3_OLCI_L1_MAPPING: str,
+    tmp_path: pathlib.Path,
+):
     """Tested on 24th of February on data coming from
     S3A_OL_1_EFR____20220116T092821_20220116T093121_20220117T134858_0179_081_036_2160_LN1_O_NT_002.SEN3
     Given a manifest XML file from a Legacy product and a mapping file,
@@ -439,8 +448,8 @@ def test_retrieve_from_manifest_store(S3_OLCI_L1_EFR: str, S3_OLCI_L1_MAPPING: s
     mapping_file = open(S3_OLCI_L1_MAPPING)
     map_olci = json.load(mapping_file)
     config = {"namespaces": map_olci["namespaces"], "mapping": map_olci["metadata_mapping"]}
-    manifest.open(**config)
-    eog = manifest[""]
+    with open_store(manifest, **config):
+        eog = manifest[""]
     assert isinstance(eog, EOGroup)
     returned_cf = eog.attrs["CF"]
     returned_om_eop = eog.attrs["OM_EOP"]
@@ -452,7 +461,12 @@ def test_retrieve_from_manifest_store(S3_OLCI_L1_EFR: str, S3_OLCI_L1_MAPPING: s
             "institution": "European Space Agency, Land OLCI Processing and Archiving Centre [LN1]",
             "source": "Sentinel-3A OLCI Ocean Land Colour Instrument",
             "comment": "Operational",
-            "references": "https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-2, https://sentinels.copernicus.eu/web/sentinel/user-guides/sentinel-2-msi/processing-levels/level-1",  # noqa
+            "references": ",".join(
+                [
+                    "https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-2",
+                    " https://sentinels.copernicus.eu/web/sentinel/user-guides/sentinel-2-msi/processing-levels/level-1",  # noqa
+                ],
+            ),
             "Conventions": "CF-1.9",
         },
     ) and ("history" in returned_cf)
@@ -488,7 +502,39 @@ def test_retrieve_from_manifest_store(S3_OLCI_L1_EFR: str, S3_OLCI_L1_MAPPING: s
         {
             "result": {
                 "product": {
-                    "fileName": "./Oa01_radiance.nc,./Oa02_radiance.nc,./Oa03_radiance.nc,./Oa04_radiance.nc,./Oa05_radiance.nc,./Oa06_radiance.nc,./Oa07_radiance.nc,./Oa08_radiance.nc,./Oa09_radiance.nc,./Oa10_radiance.nc,./Oa11_radiance.nc,./Oa12_radiance.nc,./Oa13_radiance.nc,./Oa14_radiance.nc,./Oa15_radiance.nc,./Oa16_radiance.nc,./Oa17_radiance.nc,./Oa18_radiance.nc,./Oa19_radiance.nc,./Oa20_radiance.nc,./Oa21_radiance.nc,./geo_coordinates.nc,./instrument_data.nc,./qualityFlags.nc,./removed_pixels.nc,./tie_geo_coordinates.nc,./tie_geometries.nc,./tie_meteo.nc,./time_coordinates.nc",  # noqa
+                    "fileName": ",".join(
+                        [
+                            "./Oa01_radiance.nc",
+                            "./Oa02_radiance.nc",
+                            "./Oa03_radiance.nc",
+                            "./Oa04_radiance.nc",
+                            "./Oa05_radiance.nc",
+                            "./Oa06_radiance.nc",
+                            "./Oa07_radiance.nc",
+                            "./Oa08_radiance.nc",
+                            "./Oa09_radiance.nc",
+                            "./Oa10_radiance.nc",
+                            "./Oa11_radiance.nc",
+                            "./Oa12_radiance.nc",
+                            "./Oa13_radiance.nc",
+                            "./Oa14_radiance.nc",
+                            "./Oa15_radiance.nc",
+                            "./Oa16_radiance.nc",
+                            "./Oa17_radiance.nc",
+                            "./Oa18_radiance.nc",
+                            "./Oa19_radiance.nc",
+                            "./Oa20_radiance.nc",
+                            "./Oa21_radiance.nc",
+                            "./geo_coordinates.nc",
+                            "./instrument_data.nc",
+                            "./qualityFlags.nc",
+                            "./removed_pixels.nc",
+                            "./tie_geo_coordinates.nc",
+                            "./tie_geometries.nc",
+                            "./tie_meteo.nc",
+                            "./time_coordinates.nc",
+                        ],
+                    ),
                     "timeliness": "NT",
                 },
             },
@@ -530,8 +576,7 @@ _FORMAT = {
 @given(
     st.sampled_from(couple_combinaison_from(elements=[EOZarrStore, EONetCDFStore])),
 )
-def test_convert(read_write_stores):
-
+def test_convert(dask_client_all, read_write_stores):
     cls_read_store, cls_write_store = read_write_stores
     read_store = cls_read_store(_FILES[f"{_FORMAT[cls_read_store]}0"])
     write_store = cls_write_store(_FILES[f"{_FORMAT[cls_write_store]}1"])
@@ -551,10 +596,9 @@ def test_convert(read_write_stores):
     [
         (EORasterIOAccessor, "tiff", {}),
         (EORasterIOAccessor, "jp2", {}),
-        (EOFlagAccessor, "jp2", {"flag_meanings": "a,b,c", "flag_values": "1,2,3"}),
     ],
 )
-def test_rasters(store_cls: type[EORasterIOAccessor], format_file: str, params: dict[str, Any]):
+def test_rasters(dask_client_all, store_cls: type[EORasterIOAccessor], format_file: str, params: dict[str, Any]):
     file_name = f"a_file.{format_file}"
     assert store_cls.guess_can_read(file_name)
     assert not store_cls.guess_can_read("false_format.false")
@@ -571,52 +615,50 @@ def test_rasters(store_cls: type[EORasterIOAccessor], format_file: str, params: 
                 "b": coord_b,
             },
         )
-        raster.open(mode="r", **params)
-        value = raster[""]
-        assert isinstance(value, EOGroup)
-        assert sum([1 for _ in raster]) == len(raster)
+        with open_store(raster, mode="r", **params):
+            value = raster[""]
+            assert isinstance(value, EOGroup)
+            assert sum([1 for _ in raster]) == len(raster)
 
-        assert isinstance(value["value"], EOVariable)
-        assert np.array_equal(value["value"]._data, data_val)
+            assert isinstance(value["value"], EOVariable)
+            assert np.array_equal(value["value"]._data, data_val)
 
-        assert isinstance(raster["value"], EOVariable)
-        assert np.array_equal(value["value"]._data, data_val)
-        assert raster.is_variable("value")
-        assert not raster.is_group("value")
+            assert isinstance(raster["value"], EOVariable)
+            assert np.array_equal(value["value"]._data, data_val)
+            assert raster.is_variable("value")
+            assert not raster.is_group("value")
 
-        assert isinstance(raster["coordinates"], EOGroup)
-        assert raster.is_group("coordinates")
-        assert not raster.is_variable("coordinates")
+            assert isinstance(raster["coordinates"], EOGroup)
+            assert raster.is_group("coordinates")
+            assert not raster.is_variable("coordinates")
 
-        assert isinstance(raster["coordinates"]["a"], EOVariable)
-        assert np.array_equal(raster["coordinates"]["a"]._data, coord_a)
-        assert np.array_equal(raster["coordinates/a"]._data, coord_a)
+            assert isinstance(raster["coordinates"]["a"], EOVariable)
+            assert np.array_equal(raster["coordinates"]["a"]._data, coord_a)
+            assert np.array_equal(raster["coordinates/a"]._data, coord_a)
 
-        assert isinstance(raster["coordinates"]["b"], EOVariable)
-        assert np.array_equal(raster["coordinates"]["b"]._data, coord_b)
-        assert np.array_equal(raster["coordinates/b"]._data, coord_b)
+            assert isinstance(raster["coordinates"]["b"], EOVariable)
+            assert np.array_equal(raster["coordinates"]["b"]._data, coord_b)
+            assert np.array_equal(raster["coordinates/b"]._data, coord_b)
 
-        assert len([i for i in raster.iter("coordinates")]) == 2
-        assert len([i for i in raster.iter("value")]) == 0
+            assert len([i for i in raster.iter("coordinates")]) == 2
+            assert len([i for i in raster.iter("value")]) == 0
 
-        not_existing_key = "not_existing_key"
-        with pytest.raises(KeyError):
-            raster[not_existing_key]
-        assert not raster.is_group(not_existing_key)
-        assert not raster.is_variable(not_existing_key)
-
-        raster.close()
+            not_existing_key = "not_existing_key"
+            with pytest.raises(KeyError):
+                raster[not_existing_key]
+            assert not raster.is_group(not_existing_key)
+            assert not raster.is_variable(not_existing_key)
 
         for return_val in [xarray.Dataset(data_vars={"a": xarray.DataArray()}), [xarray.Dataset()]]:
             mock_function.return_value = return_val
-            raster.open(mode="r", **params)
-            with pytest.raises(NotImplementedError):
-                raster[""]
-            with pytest.raises(NotImplementedError):
-                [i for i in raster.iter("")]
-            with pytest.raises(NotImplementedError):
-                [i for i in raster.iter("not_implemeted")]
-            raster.close()
+            with open_store(raster, mode="r", **params):
+                with pytest.raises(NotImplementedError):
+                    raster[""]
+                with pytest.raises(NotImplementedError):
+                    [i for i in raster.iter("")]
+                with pytest.raises(NotImplementedError):
+                    [i for i in raster.iter("not_implemeted")]
+
             with pytest.raises(StoreNotOpenError):
                 raster.close()
 
@@ -625,18 +667,107 @@ def test_rasters(store_cls: type[EORasterIOAccessor], format_file: str, params: 
 @pytest.mark.parametrize(
     "product, fakefilename, open_kwargs",
     [
-        (EOProduct("", store_or_path_url="s3://a_simple_zarr.zarr"), lazy_fixture("zarr_file"), S3_CONFIG),
+        (EOProduct("", store_or_path_url="s3://a_simple_zarr.zarr"), lazy_fixture("zarr_file"), S3_CONFIG_FAKE),
         (
             EOProduct("", store_or_path_url="zip::s3://a_simple_zarr.zarr"),
             lazy_fixture("zarr_file"),
-            dict(s3=S3_CONFIG),
+            dict(s3=S3_CONFIG_FAKE),
         ),
     ],
 )
-def test_zarr_open_on_different_fs(product: EOProduct, fakefilename: str, open_kwargs: dict[str, Any]):
-    with patch("fsspec.get_mapper") as mock:
-        mock.return_value = fsspec.FSMap(fakefilename, LocalFileSystem())
-        with product.open(storage_options=open_kwargs):
-            product.load()
-        assert mock.call_count == 1
-        mock.assert_called_with(product.store.url, **open_kwargs)
+def test_zarr_open_on_different_fs(dask_client_all, product: EOProduct, fakefilename: str, open_kwargs: dict[str, Any]):
+    with patch("dask.array.core.get_mapper") as mock_dask:
+        with patch("fsspec.get_mapper") as mock_zarr:
+            mock_dask.return_value = fsspec.FSMap(fakefilename, LocalFileSystem())
+            mock_zarr.return_value = fsspec.FSMap(fakefilename, LocalFileSystem())
+            with product.open(storage_options=open_kwargs):
+                product.load()
+            assert mock_zarr.call_count == 1
+            mock_zarr.assert_called_with(product.store.url, **open_kwargs)
+            assert mock_dask.call_count == 10
+
+
+@pytest.mark.real_s3
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "store, path, open_kwargs",
+    [
+        (EOZarrStore, "zip::s3://eopf/cpm/test_data/olci_zarr_test.zip", dict(s3=S3_CONFIG_REAL)),
+        (EOZarrStore, "s3://eopf/cpm/test_data/olci_zarr_test.zarr/", S3_CONFIG_REAL),
+        (EONetCDFStore, "s3://eopf/cpm/test_data/olci_netcdf_test.nc", S3_CONFIG_REAL),
+        (
+            EOSafeStore,
+            "zip::s3://eopf/cpm/test_data/"
+            + "S3A_OL_1_EFR____20200101T101517_20200101T101817_20200102T141102_0179_053_179_2520_LN1_O_NT_002.zip",
+            dict(s3=S3_CONFIG_REAL),
+        ),
+    ],
+)
+def test_read_real_s3(dask_client_all, store: type, path: str, open_kwargs: dict[str, Any]):
+    product = EOProduct("s3_test_product", store_or_path_url=store(path))
+    with product.open(storage_options=open_kwargs):
+        product.load()
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "w_store, w_path, w_kwargs",
+    [
+        (EOZarrStore, "s3://eopf/cpm/test_data/tmp/olci_zarr_test_cpy.zarr/", S3_CONFIG_REAL),
+    ],
+)
+@pytest.mark.real_s3
+def test_write_real_s3(dask_client_all, w_store: type, w_path: str, w_kwargs: dict[str, Any]):
+    in_store = EOZarrStore("zip::s3://eopf/cpm/test_data/olci_zarr_test.zip")
+    out_store = w_store(w_path)
+    convert(in_store, out_store, dict(storage_options=dict(s3=S3_CONFIG_REAL)), dict(storage_options=w_kwargs))
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "store_cls, format_file",
+    [
+        (EOCogStore, "jp2"),
+    ],
+)
+def test_cog_store(store_cls: type[EOCogStore], format_file: str):
+    assert store_cls.guess_can_read("some_file.cog")
+    assert not store_cls.guess_can_read("some_other_file.false")
+    cog = store_cls(_FILES["cog"])
+    with pytest.raises(ValueError):
+        cog.open(mode="r+")
+
+    data_val = [[1, 2, 3], [3, 4, 5], [6, 7, 8]]
+    complex_data_val = [[[1, 2, 3], [3, 4, 5], [6, 7, 8]], [[1, 2, 3], [3, 4, 5], [6, 7, 8]]]
+    coord_a = [1, 2, 4]
+    coord_b = [5, 6, 7]
+
+    with (
+        patch("xarray.DataArray.rio.to_raster") as mock_raster,
+        patch("eopf.product.store.EONetCDFStore.__setitem__") as mock_netcdf,
+    ):
+        with open_store(cog, mode="w"):
+            cog["var1"] = EOVariable(data=xarray.DataArray(data_val, coords={"x": coord_a, "y": coord_b}))
+            assert mock_raster.call_count == 1
+            cog["group0"] = EOGroup(
+                variables={"var2": EOVariable(data=xarray.DataArray(data_val, coords={"x": coord_a, "y": coord_b}))},
+            )
+
+            cog.write_attrs("", {"a": "b"})
+            assert mock_raster.call_count == 2
+            assert mock_netcdf.call_count == 0
+            cog["var1"] = EOVariable(data=xarray.DataArray(complex_data_val))
+            assert mock_raster.call_count == 2
+            assert mock_netcdf.call_count == 1
+            with pytest.raises(NotImplementedError):
+                cog["anything"] = "something"
+
+    with pytest.raises(StoreNotOpenError):
+        cog[""]
+    with pytest.raises(StoreNotOpenError):
+        cog.close()
+    with pytest.raises(StoreNotOpenError):
+        len(cog)
+    with pytest.raises(NotImplementedError):
+        cog.open(mode="r")
+        cog.write_attrs("", {})
