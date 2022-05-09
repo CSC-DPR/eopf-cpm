@@ -1,3 +1,4 @@
+import datetime
 import itertools as it
 import json
 import os
@@ -5,13 +6,14 @@ import pathlib
 from collections.abc import Mapping, MutableMapping
 from numbers import Number
 from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
+
 import fsspec
 import kerchunk.hdf
 import pandas as pd
 import pytz
 import xarray as xr
 from netCDF4 import Dataset, Group, Variable
-import datetime
+
 from eopf.exceptions import StoreNotOpenError
 from eopf.product.store import EOProductStore
 from eopf.product.store.zarr import EOZarrStore

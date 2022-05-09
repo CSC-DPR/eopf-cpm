@@ -1,7 +1,7 @@
 # We need to use a mix of posixpath (normpath) and pathlib (partition) in the eo_path methods.
 # As we work with strings we use posixpath (the unix path specific implementation of os.path) as much as possible.
 import datetime
-from platform import platform
+import platform
 import posixpath
 import re
 from pathlib import PurePosixPath
@@ -140,7 +140,7 @@ def convert_to_unix_time(date: Any) -> Any:
     if isinstance(date, datetime.datetime):
         if date <= get_min_datetime_for_timestamp():
             return 0
-        return int(date.timestamp()* 1000000)  # microseconds
+        return int(date.timestamp() * 1000000)  # microseconds
 
     if isinstance(date, str):
         import pandas as pd
@@ -183,8 +183,6 @@ def reverse_conv(data_type: Any, obj: Any) -> Any:
     ----------
     Any
     """
-
-
     for dtype in get_managed_numpy_dtype():
         if np.dtype(data_type) == np.dtype(dtype):
             return dtype(obj)
@@ -323,7 +321,6 @@ def join_eo_path_optional(*subpaths: Optional[str]) -> str:
 
 
 def get_min_datetime_for_timestamp():
-    import platform
     if platform.system() == "Windows":
         return (datetime.datetime.fromtimestamp(0, tz=pytz.UTC) + datetime.timedelta(days=1))
     return datetime.datetime.fromtimestamp(0, tz=pytz.UTC)
