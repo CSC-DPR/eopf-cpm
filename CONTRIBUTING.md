@@ -1,5 +1,6 @@
 # Install your environment
 
+The current target python version is 3.9.
 You can use any tools you want to manage your virtual environment (ex: poetry, pipenv, conda, etc ...).
 
 ## Install eopf as development package
@@ -7,11 +8,11 @@ You can use any tools you want to manage your virtual environment (ex: poetry, p
 After creating your virtual environment, and activate it (ex: `conda activate` or `pipenv shell`),
 at the root level of the eopf-cpm project, run the following installation command:
 ```bash
-pip install -e .[dev]
+pip install -e ".[dev]"
 ```
 the extra `[dev]` arguments extract all packages for development
 
-> **WARNING** If pip is not up to date, you can have an error, so, try `pip install -U pip` before.
+> **WARNING** pip version must be _22.0.0_ or higher, otherwise try `pip install -U pip` before.
 
 ## Pre-commit hook
 
