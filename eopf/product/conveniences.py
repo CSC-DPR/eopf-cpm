@@ -62,7 +62,8 @@ def merge_product(*products: EOProduct, product_name: str = "") -> EOProduct:
 
     with contextlib.ExitStack() as stack:
         for product in products:
-            stack.enter_context(product)
+            if product.store is not None:
+                stack.enter_context(product, mode="r")
         product = _merge(*products, output=EOProduct(product_name))
     return product
 

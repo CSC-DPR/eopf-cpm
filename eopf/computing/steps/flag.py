@@ -43,6 +43,7 @@ class FlagEvaluationStep(BlockProcessingStep):
         :param kwargs: flag_expression: logical expression made up of flag_meanings and logical operators
         :return: numpy array with block of boolean values
         """
+
         # @todo add support for braces () tb 2022-03-17
         tokens = flag_expression.split(" ")
         for token in tokens:
@@ -88,7 +89,6 @@ class FlagEvaluationStep(BlockProcessingStep):
         mask = data & select == reduce
         for layer_mask in stack:
             mask = mask | layer_mask
-
         return mask
 
     def _is_valid_token(self, token: str, extra_token: Iterable[str] = []) -> bool:

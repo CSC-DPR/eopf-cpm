@@ -12,6 +12,7 @@ from eopf.product.utils import (
     join_path,
     norm_eo_path,
     product_relative_path,
+    upsplit_eo_path,
 )
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -45,6 +46,11 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
         if key == "":
             raise KeyError("Invalid key")
         if is_absolute_eo_path(key):
+            m = self.product
+            for k in upsplit_eo_path(key):
+                if k.removeprefix("/") not in m:
+                    m = m.add_group(k)
+                    break
             self.product[product_relative_path(self.path, key)] = value
             return
         # fixme should probably set the product and path

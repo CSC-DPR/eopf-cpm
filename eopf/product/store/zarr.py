@@ -195,7 +195,8 @@ class EOZarrStore(EOProductStore):
                 dask_array = da.ma.masked_array(data, fill_value=value.attrs.get("_FillValue"))
             else:
                 dask_array = da.asarray(data, dtype=value.data.dtype)  # .data is generally already a dask array.
-            if dask_array.size > 0:
+
+            if dask_array.size > 0 and dask_array.shape:
                 # We must use to_zarr for writing on a distributed cluster,
                 # but to_zarr fail to write array with a 0 dim (divide by zero Exception)
                 delayed = dask_array.to_zarr(self.url, component=key, **self._zarr_kwargs)

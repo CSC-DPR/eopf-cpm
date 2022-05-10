@@ -31,17 +31,17 @@ class InterpolateTpStep(BlockProcessingStep):
         :return: numpy array of interpolated tp_data with the extent of the image block,
                  usually image_chunksize except for the right and lower border.
         """
-
         # extend tp grid by one column and one row for interpolation
         tp_height, tp_width = tp_data.shape
         tp_y_step, tp_x_step = tp_step
         tp_dummy_column = np.zeros((tp_height, 1))
         tp_dummy_row = np.zeros(tp_width + 1)
-        tp_data = np.vstack([np.hstack([tp_data, tp_dummy_column]), tp_dummy_row])
 
+        tp_data = np.vstack([np.hstack([tp_data, tp_dummy_column]), tp_dummy_row])
         # corner pixel coordinates of the block
         y = self.process(block_id[0], chunksize[0], shape[0]).T
         x = self.process(block_id[1], chunksize[1], shape[1])
+
         y_tp = y // tp_y_step
         x_tp = x // tp_x_step
         wy = (y - y_tp * tp_y_step) / tp_y_step
