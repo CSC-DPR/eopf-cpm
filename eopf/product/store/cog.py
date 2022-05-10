@@ -5,6 +5,7 @@ from json import loads
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Iterator, Optional
 
+import fsspec
 import rasterio
 import rioxarray
 import xarray
@@ -21,6 +22,58 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class EOCogStore(EOProductStore):
+    # Wrapper class
+    def __init__(self, url: str) -> None:
+        super().__init__(url)
+        self.url = url
+        self._ds = None
+
+    def open(self, mode: str = "r", **kwargs: Any) -> None:
+        if self.url.startswith("s3:"):
+            self._sub_store = self._open_cloud(mode, **kwargs)
+        else:
+            self._sub_store = self._open_local(mode, **kwargs)
+        super().open(mode)
+
+    def _open_local(self, mode: str = "r", **kwargs: Any) -> "EOCogStoreLOCAL":
+        sub_store = EOCogStoreLOCAL("some_local_url")
+        sub_store.open(mode, **kwargs)
+        return sub_store
+
+    def _open_cloud(self, mode: str = "r", **kwargs: Any) -> "EOCogStoreLOCAL":
+        storage_options = kwargs.pop("storage_options", dict())
+        self.url = fsspec.open_local("filecache::" + self.url, mode, s3=storage_options, filecache={"cache_storage": "TMP"})
+
+        sub_store = EOCogStoreLOCAL(self.url)
+        sub_store.open(mode, **kwargs)
+        return sub_store
+
+    def is_group(self, path: str) -> bool:
+        return self._sub_store.is_group(path)
+
+    def is_variable(self, path: str) -> bool:
+        return self._sub_store.is_variable(path)
+
+    def __len__(self) -> int:
+        return len(self._sub_store)
+
+    def iter(self, path: str) -> Iterator[str]:
+        return iter("")
+
+    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = ...) -> None:
+        return self._sub_store.write_attrs(group_path, attrs)
+
+    def __getitem__(self, key: str) -> "EOObject":
+        if key in ["", "/"]:
+            if self._ds is None:
+                self._ds = rioxarray.open_rasterio(self.url)
+            return self._ds
+        # More logic to be added for folder
+        
+    def __setitem__(self, key: str, value: "EOObject") -> None:
+        self._sub_store[key] = value
+
+class EOCogStoreLOCAL(EOProductStore):
     """
     Accessor representation to access Raster like jpg2000 or tiff.
 
@@ -34,7 +87,7 @@ class EOCogStore(EOProductStore):
     expected_raster_dims = [("band", "x", "y"), ("band", "y", "x"), ("x", "y"), ("y", "x"), ("rows", "columns")]
     attributes_file_name = "attrs.json"
 
-    def __init__(self, url: str) -> None:
+    def __init__(self, url: str, **kwargs) -> None:
         super().__init__(url)
         self._mode: Optional[str] = None
         self._lock: Optional[Lock] = None
