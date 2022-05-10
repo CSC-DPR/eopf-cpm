@@ -11,7 +11,7 @@ from eopf.product.store.abstract import EOProductStore, StorageStatus
 from eopf.product.store.store_factory import EOStoreFactory
 
 
-class ProcessingStep(ABC):
+class EOProcessingStep(ABC):
     _identifier: Any
 
     @property
@@ -29,7 +29,7 @@ class ProcessingStep(ABC):
         ...
 
 
-class BlockProcessingStep(ProcessingStep):
+class EOBlockProcessingStep(EOProcessingStep):
     def apply(self, *args: EOVariable, dtype: DTypeLike = float, **kwargs: Any) -> EOVariable:
         blocks = da.map_blocks(self.func, *map(lambda x: x.data, args), dtype=dtype, **kwargs)
         if not isinstance(blocks, EOVariable):
@@ -41,7 +41,7 @@ class BlockProcessingStep(ProcessingStep):
         ...
 
 
-class OverlapProcessingStep(ProcessingStep):
+class EOOverlapProcessingStep(EOProcessingStep):
     def apply(self, *args: EOVariable, dtype: DTypeLike = float, depth: int = 1, **kwargs: Any) -> EOVariable:
         blocks = da.map_overlap(
             self.func, *map(lambda x: x.data, args), depth=depth, dtype=dtype, meta=np.array((), dtype=dtype), **kwargs
@@ -55,7 +55,7 @@ class OverlapProcessingStep(ProcessingStep):
         ...
 
 
-class ProcessingUnit(ABC):
+class EOProcessingUnit(ABC):
     _identifier: Any
 
     @property
@@ -86,12 +86,12 @@ class ProcessingUnit(ABC):
         return f"[{id(self)}]{str(self)}"
 
 
-class ProcessorMixin(ABC):
+class EOProcessorMixin(ABC):
     def validate_product(self, product: EOProduct) -> None:
         product.validate()
 
 
-class Processor(ProcessingUnit, ProcessorMixin):
+class EOProcessor(EOProcessingUnit, EOProcessorMixin):
     _OUTPUT_PATH: str
     _STORE_TYPE: str = "zarr"
 

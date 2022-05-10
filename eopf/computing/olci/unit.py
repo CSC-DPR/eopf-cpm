@@ -3,8 +3,11 @@ from typing import Any
 import numpy as np
 from dask import array as da
 
-from eopf.computing.abstract import ProcessingUnit
-from eopf.computing.general import ExtractVariableProcessingUnit, IdentityProcessingUnit
+from eopf.computing.abstract import EOProcessingUnit
+from eopf.computing.general import (
+    EOExtractVariableProcessingUnit,
+    EOIdentityProcessingUnit,
+)
 from eopf.computing.steps import FlagEvaluationStep, InterpolateTpStep, RadToReflStep
 from eopf.product import EOProduct
 from eopf.product.conveniences import init_product
@@ -12,7 +15,7 @@ from eopf.product.core.eo_group import EOGroup
 from eopf.product.core.eo_variable import EOVariable
 
 
-class OlciL2FinalisingUnit(ExtractVariableProcessingUnit):
+class OlciL2FinalisingUnit(EOExtractVariableProcessingUnit):
     """
     Very preliminary finalisation step.
     Should implement the addition of coordinate variables.
@@ -24,13 +27,13 @@ class OlciL2FinalisingUnit(ExtractVariableProcessingUnit):
         return init_product(self.identifier)
 
 
-class OlciL2LandUnit(IdentityProcessingUnit):
+class OlciL2LandUnit(EOIdentityProcessingUnit):
     """
     Very prototypical land processing unit of the OLCI Level 2 processor.
     """
 
 
-class OlciL2PreProcessingUnit(ProcessingUnit):
+class OlciL2PreProcessingUnit(EOProcessingUnit):
     """
     Example processing unit implementation to demonstrate the chaining of processing units
     and of processing steps.
@@ -84,6 +87,6 @@ class OlciL2PreProcessingUnit(ProcessingUnit):
                 solar_flux=solar_flux[band],
             )
             target_band_name = band_name.replace("radiance", "reflectance")
-            result_measurements[target_band_name] = reflectance
+            result_measurements.add_variable(target_band_name, reflectance.data)
 
         return result

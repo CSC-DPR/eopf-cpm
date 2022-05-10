@@ -2,10 +2,10 @@ from typing import Any, Sequence
 
 import numpy as np
 
-from eopf.computing.abstract import BlockProcessingStep
+from eopf.computing.abstract import EOBlockProcessingStep
 
 
-class InterpolateTpStep(BlockProcessingStep):
+class InterpolateTpStep(EOBlockProcessingStep):
     """
     Interpolation of tie-point grid to image grid.
     Implementation borrowed from xcube resampling. TODO replace by import

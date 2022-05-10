@@ -5,11 +5,11 @@ from typing import Any, Optional
 import numpy as np
 from numpy.typing import DTypeLike
 
-from eopf.computing.abstract import BlockProcessingStep
+from eopf.computing.abstract import EOBlockProcessingStep
 from eopf.product import EOVariable
 
 
-class RadToReflStep(BlockProcessingStep):
+class RadToReflStep(EOBlockProcessingStep):
     """
     Radiance to reflectances conversion example processing step implementation
     to demonstrate the chaining of processing steps.

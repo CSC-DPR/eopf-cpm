@@ -3,18 +3,18 @@ from typing import Any, Callable, Sequence, Union
 
 from numpy.typing import DTypeLike
 
-from eopf.computing.abstract import ProcessingStep, ProcessingUnit, Processor
+from eopf.computing.abstract import EOProcessingStep, EOProcessingUnit, EOProcessor
 from eopf.logging import logger
 from eopf.product import EOProduct, EOVariable
 from eopf.product.conveniences import merge_product
 from eopf.product.utils import join_eo_path
 
 
-class ChainedProcessingUnit(ProcessingUnit):
-    _PROCESSES: Sequence[ProcessingUnit]
+class EOChainedProcessingUnit(EOProcessingUnit):
+    _PROCESSES: Sequence[EOProcessingUnit]
 
     @property
-    def processes(self) -> Sequence[ProcessingUnit]:
+    def processes(self) -> Sequence[EOProcessingUnit]:
         return self._PROCESSES
 
     def run(self, *args: EOProduct, **kwargs: Any) -> EOProduct:
@@ -25,34 +25,34 @@ class ChainedProcessingUnit(ProcessingUnit):
         return products[0]
 
 
-class ChainProcessor(Processor, ChainedProcessingUnit):
+class EOChainProcessor(EOProcessor, EOChainedProcessingUnit):
     ...
 
 
-class MergedProcessingUnit(ProcessingUnit):
-    _PROCESSES: Sequence[ProcessingUnit]
+class EOMergedProcessingUnit(EOProcessingUnit):
+    _PROCESSES: Sequence[EOProcessingUnit]
 
     @property
-    def processes(self) -> Sequence[ProcessingUnit]:
+    def processes(self) -> Sequence[EOProcessingUnit]:
         return self._PROCESSES
 
     def run(self, *args: EOProduct, **kwargs: Any) -> EOProduct:
         return merge_product(*(process(*args, **kwargs.get(process.identifier, {})) for process in self.processes))
 
 
-class IdentityProcessingStep(ProcessingStep):
+class EOIdentityProcessingStep(EOProcessingStep):
     def apply(  # type: ignore[override]
         self, variable: EOVariable, dtype: DTypeLike = float, **kwargs: Any
     ) -> EOVariable:
         return variable
 
 
-class IdentityProcessingUnit(ProcessingUnit):
+class EOIdentityProcessingUnit(EOProcessingUnit):
     def run(self, product: EOProduct, **kwargs: Any) -> EOProduct:  # type: ignore[override]
         return product
 
 
-class ExtractVariableProcessingUnit(ProcessingUnit):
+class EOExtractVariableProcessingUnit(EOProcessingUnit):
 
     _VARIABLES_PATHS: Sequence[str] = []
     _CONTAINER_VARIABLES_PATHS: Sequence[str] = []
@@ -80,14 +80,14 @@ try:
 
     from prefect import Flow, Parameter, task
 
-    def migrate_unit_to_prefect(unit: ProcessingUnit, *task_args: Any, **task_kwargs: Any) -> Callable:
+    def migrate_unit_to_prefect(unit: EOProcessingUnit, *task_args: Any, **task_kwargs: Any) -> Callable:
         @task(*task_args, **task_kwargs)
         def dec(args, kwargs) -> EOProduct:
             return unit(*args, **kwargs)
 
         return dec
 
-    def define_prefect_workflow(processor: Processor, workflow_name="") -> Flow:
+    def define_prefect_workflow(processor: EOProcessor, workflow_name="") -> Flow:
         workflow_name = workflow_name or f"Processor<{processor.identifier}>"
         with Flow(workflow_name) as flow:
             args = Parameter("args", default=[])

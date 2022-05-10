@@ -2,10 +2,10 @@ from typing import Any
 
 import numpy as np
 
-from eopf.computing.abstract import BlockProcessingStep
+from eopf.computing.abstract import EOBlockProcessingStep
 
 
-class NdviStep(BlockProcessingStep):
+class NdviStep(EOBlockProcessingStep):
     def func(  # type: ignore[override]
         self,
         ir: np.ndarray[Any, np.dtype[Any]],
