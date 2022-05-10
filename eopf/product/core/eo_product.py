@@ -205,7 +205,7 @@ class EOProduct(EOContainer):
 
             warnings.warn("IPython not found")
         # Iterate and print EOProduct structure otherwise (CLI)
-        for name, group in self._groups.items():
+        for name, group in self.items():
             print(f"├── {name}")
             self._create_structure(group, level=2)
         return

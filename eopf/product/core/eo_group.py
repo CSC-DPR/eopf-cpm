@@ -78,9 +78,12 @@ class EOGroup(EOContainer, EOObject):
             super().__delitem__(key)
 
     def __iter__(self) -> Iterator[str]:
-        yield from super().__iter__()
+        already_yield = []
+        for key in super().__iter__():
+            yield key
+            already_yield.append(key)
         if self._variables is not None:
-            yield from self._variables.keys()
+            yield from filter(lambda x: x not in already_yield, self._variables)
 
     def __contains__(self, key: object) -> bool:
         return super().__contains__(key) or (key in self._variables)
