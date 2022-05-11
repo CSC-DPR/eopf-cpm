@@ -23,10 +23,13 @@ if TYPE_CHECKING:  # pragma: no cover
 
 class EOCogStore(EOProductStore):
     # Wrapper class
+    attributes_file_name = "attrs.json"
+    sep = "/"
     def __init__(self, url: str) -> None:
         super().__init__(url)
-        self.url = url
+        self.url: fsspec.core.OpenFile = url
         self._ds = None
+        self.mapper: fsspec.mapping.FSMap = None
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         if self.url.startswith("s3:"):
@@ -41,37 +44,99 @@ class EOCogStore(EOProductStore):
         return sub_store
 
     def _open_cloud(self, mode: str = "r", **kwargs: Any) -> "EOCogStoreLOCAL":
-        storage_options = kwargs.pop("storage_options", dict())
-        self.url = fsspec.open_local("filecache::" + self.url, mode, s3=storage_options, filecache={"cache_storage": "TMP"})
+        self.storage_options = kwargs.pop("storage_options", dict())
+
+        # To be reviewd
+        self.url = fsspec.open("filecache::" + self.url, mode, s3=self.storage_options, filecache={"cache_storage": "TMP"})
+        print(type(self.url))
+        self.mapper = self.url.fs.get_mapper(self.url.path)
+        print(type(self.mapper))
 
         sub_store = EOCogStoreLOCAL(self.url)
         sub_store.open(mode, **kwargs)
         return sub_store
 
     def is_group(self, path: str) -> bool:
-        return self._sub_store.is_group(path)
+        group_path = self.url.path + self.sep + path
+        return self.url.fs.isdir(group_path)
 
     def is_variable(self, path: str) -> bool:
-        return self._sub_store.is_variable(path)
+        file_path = self.url.path + self.sep + path
+        return self.url.fs.isfile(file_path)
 
     def __len__(self) -> int:
+        # NYI
         return len(self._sub_store)
 
     def iter(self, path: str) -> Iterator[str]:
-        return iter("")
+        if path in ["", "/"]:
+            iter_path = self.mapper.root
+        else:
+            iter_path = f"{self.mapper.root}/{path}"
+        for item in self.mapper.fs.listdir(iter_path):
+            if self.url.fs.isdir(item["Key"]) or self.guess_can_read(item["Key"]):
+                # To be changed, get folder/file name and remove extension if needed
+                item_name = item["Key"].split("/")[-1]
+                if ".cog" in item_name:
+                    item_name = item_name.removesuffix(".cog")
+                else:
+                    item_name = item_name.removesuffix(".nc")
+                yield item_name
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = ...) -> None:
+        # NYI
         return self._sub_store.write_attrs(group_path, attrs)
 
     def __getitem__(self, key: str) -> "EOObject":
+        from eopf.product.core import EOGroup, EOVariable
         if key in ["", "/"]:
-            if self._ds is None:
-                self._ds = rioxarray.open_rasterio(self.url)
-            return self._ds
-        # More logic to be added for folder
+            return EOGroup(attrs=self._read_attrs(key))
+
+        key_path = f"{self.mapper.root}/{key}"
+
+        if self.is_group(key):
+            # If key is a directory, return json attributes
+            return EOGroup(attrs=self._read_attrs(key))
+
+        if self.guess_can_read(key_path):
+            # If key is path to .nc or .cog file, read EOV and return
+            if self.is_variable(key):
+                # read data here
+                return EOVariable("EMPTY_SO_FAR", [])
+        else:
+            # If key is EOP-like path, append file extension, try to read and return
+            for suffix in [".nc", ".cog"]:
+                if self.is_variable(key + suffix):
+                    from eopf.product.core import EOVariable
+                    # read data here
+                    return EOVariable("EMPTY_SO_FAR", [])
+
+        raise KeyError(f"{key_path} not found!")
         
     def __setitem__(self, key: str, value: "EOObject") -> None:
+        # NIY
         self._sub_store[key] = value
+    
+    # docstr-coverage: inherited
+    @staticmethod
+    def guess_can_read(file_path: str) -> bool:
+        # To be added .ZIP
+        return pathlib.Path(file_path).suffix in [".cog", ".nc"]
+    
+    def _read_attrs(self, path) -> dict[str, Any]:
+        # To be changed
+        import json
+        # Create attrs.json file-path
+        if path in ["", "/"]:
+            attrs_path = f"{self.mapper.root}/{self.attributes_file_name}"
+        else:
+            attrs_path = f"{self.mapper.root}/{path}/{self.attributes_file_name}"
+        # If file is found, read and return attributes, otherwise just an empty dict
+        if self.url.fs.isfile(attrs_path):
+            attrs_path = fsspec.open_local("filecache::s3://" + attrs_path, "r", s3=self.storage_options, filecache={"cache_storage": "TMP"})
+            with open(attrs_path) as fp:
+                return json.loads(fp.read())
+        return {}
 
 class EOCogStoreLOCAL(EOProductStore):
     """
