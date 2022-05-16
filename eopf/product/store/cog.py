@@ -4,7 +4,8 @@ from collections.abc import MutableMapping
 from json import loads
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Iterator, Optional
-
+from attr import attr
+import tempfile
 import fsspec
 import rasterio
 import rioxarray
@@ -32,12 +33,13 @@ class EOCogStore(EOProductStore):
         self._ds = None
         self._mode = None
         self._sub_store = None
+        self._is_zip = False
         self.mapper: fsspec.mapping.FSMap = None
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         self._mode = mode
         # Use wrapper-class if target path is an S3, otherwise, use normal CogStore
-        if self.url.startswith("s3:") or self.url.startswith("zip::s3"):
+        if self.url.startswith("s3:") or self.url.startswith("zip::s3:"):
             self._open_cloud(mode, **kwargs)
         else:
             self._sub_store = self._open_local(mode, **kwargs)
@@ -50,20 +52,26 @@ class EOCogStore(EOProductStore):
 
     def _open_cloud(self, mode: str = "r", **kwargs: Any) -> "EOCogStoreLOCAL":
         self.storage_options = kwargs.pop("storage_options", dict())
-
-        # To be reviewd, load url just to get mapper
-        self.url = fsspec.open(
-            "filecache::" + self.url,
-            mode,
-            s3=self.storage_options,
-            filecache={"cache_storage": "TMP"},
-        )
+    
+        # Load URL, according to target, Standard or ZIP
+        if self.url.startswith("zip"):
+            # for ZIP, opened with a dict(s3=credentials)
+            self.url = fsspec.open(self.url, mode, s3=self.storage_options)
+            self._is_zip = True
+        else:
+            # For standard storage, opened with a hasable dict.
+            self.url = fsspec.open(self.url, mode, **self.storage_options)
+        # Get mapper
         self.mapper = self.url.fs.get_mapper(self.url.path)
 
     def is_group(self, path: str) -> bool:
         if self._sub_store is not None:
             return self._sub_store.is_group(path)
 
+        if self._is_zip:
+            # Check if path is a directory inside ZIP
+            return self.mapper.fs.isdir(path)
+        # Compose ful path and check if it is a directory
         group_path = self.url.path + self.sep + path
         return self.url.fs.isdir(group_path)
 
@@ -71,6 +79,14 @@ class EOCogStore(EOProductStore):
         if self._sub_store is not None:
             return self._sub_store.is_variable(path)
 
+        if self._is_zip:
+            # Check if (non composed) key is found inside ZIP file
+            # tbd? return path in self.mapper.keys()
+            for extension in [".cog", ".nc"]:
+                if self.mapper.fs.isfile(self.add_extension(path, extension)):
+                    return True
+            return False
+        # For standard S3, compose full path, and check if it's a file
         file_path = self.url.path + self.sep + path
         return self.url.fs.isfile(file_path)
 
@@ -79,22 +95,31 @@ class EOCogStore(EOProductStore):
         return len(self._sub_store)
 
     def iter(self, path: str) -> Iterator[str]:
-        print(path)
-        # Return sub_store iter if it's set, and a empty iter if url is S3, but mapper is not set.
+        # Return sub_store iter if it's set
         if self._sub_store is not None:
-            for something in self._sub_store.iter(path):
-                yield something
+            for file_name in self._sub_store.iter(path):
+                yield file_name
             return
-
-        if path in ["", "/"]:
-            iter_path = self.mapper.root
+        print("ITER", path)
+        if not self._is_zip:
+            # Standard S3 storage, compose iterator path, mapper.root + path
+            if path in ["", "/"]:
+                path = self.mapper.root
+            else:
+                path = f"{self.mapper.root}/{path}"
+            # List subdirectories, and return variables/groups names (files/directories)
+            for item in self.mapper.fs.listdir(path):
+                if self.url.fs.isdir(item["name"]) or self.guess_can_read(item["name"]):
+                    item_name = item["name"].split(self.sep)[-1]
+                    # Remove file extensions (cog, nc) if found
+                    yield self.remove_extension(item_name)
         else:
-            iter_path = f"{self.mapper.root}/{path}"
-        for item in self.mapper.fs.listdir(iter_path):
-            if self.url.fs.isdir(item["name"]) or self.guess_can_read(item["name"]):
-                # To be changed, get folder/file name and remove extension if needed
-                item_name = item["name"].split("/")[-1]
-                yield self.remove_extension(item_name)
+            for item in self.mapper.fs.listdir(path):
+                if self.mapper.fs.isdir(item["name"]) or self.guess_can_read(item["name"]):
+                    item_name = item["name"].removesuffix(self.sep).split(self.sep)[-1]
+                    #yield item_name
+                    #yield self.remove_extension(item_name)
+
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = ...) -> None:
         return self._sub_store.write_attrs(group_path, attrs)
@@ -103,33 +128,42 @@ class EOCogStore(EOProductStore):
         if self._sub_store is not None:
             return self._sub_store[key]
         from eopf.product.core import EOGroup, EOVariable
-
-        if key in ["", "/"]:
-            return EOGroup(attrs=self._read_attrs(key))
-        # remove double // from EOP if present
-        key = key.removeprefix("//")
-        key_path = f"{self.mapper.root}/{key}"
-        print(key)
-        if self.is_group(key):
-            # If key is a directory, return json attributes
-            return EOGroup(attrs=self._read_attrs(key))
-
-        if self.guess_can_read(key_path):
-            # If key is path to .nc or .cog file, read EOV and return
-            if self.is_variable(key):
-                var_name, var_data = self._read_eov(key)
-                return EOVariable(var_name, data=var_data)
+        print("GETITEM", key)
+        if not self._is_zip:
+            # Standard S3 Storage, directory hierarchy
+            if key in ["", "/"]:
+                return EOGroup(attrs=self._read_attrs(key))
+            # Remove // if needed and compose full path (mapper.root + key)
+            key = key.removeprefix("//")
+            key_path = f"{self.mapper.root}/{key}"
+            # Return attributes if key is path to directory (group)
+            if self.is_group(key):
+                return EOGroup(attrs=self._read_attrs(key))
+            # If key is path to .nc or .cog file, build data and return EOV
+            # guess_can_read() is needed since key can be <<group/variable>> or <<group/variable.cog>> 
+            if self.guess_can_read(key_path):
+                if self.is_variable(key):
+                    var_name, var_data = self._read_eov(key)
+                    return EOVariable(var_name, data=var_data)
+            else:
+                # If cannot be read, try to append a accepted extension, and check if file exist
+                for suffix in [".nc", ".cog"]:
+                    if self.is_variable(key + suffix):
+                        # If composed variable path is found, build data and return EOV
+                        from eopf.product.core import EOVariable
+                        var_name, var_data = self._read_eov(key)
+                        return EOVariable(var_name, data=var_data)
+            raise KeyError(f"{key_path} not found!")
         else:
-            # If key is EOP-like path, append file extension, try to read and return
-            for suffix in [".nc", ".cog"]:
-                if self.is_variable(key + suffix):
-                    from eopf.product.core import EOVariable
-
-                    # read data here, convert to xarray dataset
+            # ZIPed target
+            # For top level or directories, return attributes
+            if key in ["", "/"] or self.mapper.fs.isdir(key):
+                return EOGroup(attrs=self._read_attrs(key))
+            # if key is in mapper, build data and return EOV
+            if key in self.mapper.keys():
                 var_name, var_data = self._read_eov(key)
                 return EOVariable(var_name, data=var_data)
-
-        raise KeyError(f"{key_path} not found!")
+            raise KeyError(f"{key} not found!")
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
         if self._sub_store is not None:
@@ -142,43 +176,31 @@ class EOCogStore(EOProductStore):
         return pathlib.Path(file_path).suffix in [".cog", ".nc"]
 
     def _read_attrs(self, path) -> dict[str, Any]:
-        # To be changed
         import json
-
-        # Create attrs.json file-path
-        if path in ["", "/"]:
-            attrs_path = f"{self.mapper.root}/{self.attributes_file_name}"
+        # if path/attrs.json is file, read and return it as a dict, else return an empty dict
+        if self.mapper.fs.isfile(os.path.join(path, self.attributes_file_name)):
+            return json.loads(self.mapper[self.attributes_file_name])
         else:
-            attrs_path = f"{self.mapper.root}/{path}/{self.attributes_file_name}"
-        # If file is found, read and return attributes, otherwise just an empty dict
-        if self.url.fs.isfile(attrs_path):
-            # maybe try open
-            attrs_path = fsspec.open_local(
-                "filecache::s3://" + attrs_path,
-                "r",
-                s3=self.storage_options,
-                filecache={"cache_storage": "TMP"},
-            )
-            with open(attrs_path) as fp:
-                return json.loads(fp.read())
-        return {}
+            return {}
 
     def _read_eov(self, path) -> dict[str, xarray.DataArray]:
+        # Create variable name by removing extension if exists
         if self.guess_can_read(path):
             variable_name = self.remove_extension(path.split("/")[-1])
-            variable_path = f"{self.mapper.root}/{path}"
         else:
-            path = self.add_extension(path, ".cog")  # NC?
-            variable_name = path.split("/")[-1]
-            variable_path = f"{self.mapper.root}/{path}"
-        # check extension
-        var_url = fsspec.open_local(
-            "filecache::s3://" + variable_path,
-            self._mode,
-            s3=self.storage_options,
-            filecache={"cache_storage": "TMP"},
-        )
-        variable_data = rioxarray.open_rasterio(var_url, lock=False, chunks="auto")
+            # Check if file is cog or netcdf, raise valueError otherwise
+            for extension in [".cog", ".nc"]:
+                if self.mapper.fs.isfile(self.add_extension(path, extension)):
+                    variable_name = path.split("/")[-1]
+                    path = self.add_extension(path, extension)
+        # Write bytes from mapper to a temporary file, and create a xarray 
+        with tempfile.NamedTemporaryFile() as fp:
+            # Write bytes
+            fp.write(self.mapper[path])
+            # Reset file pointer in order to read
+            fp.seek(0)
+            # Pass temp file to xarray
+            variable_data = xarray.open_rasterio(fp.name, lock=False, chunks="auto")
         return variable_name, variable_data
 
     @staticmethod
