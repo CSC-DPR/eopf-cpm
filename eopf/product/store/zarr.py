@@ -89,9 +89,20 @@ class EOZarrStore(EOProductStore):
         self._storage_options: dict[str, Any] = dict()
         self._zarr_kwargs: dict[str, Any] = dict()
 
-        # docstr-coverage: inherited
-
+    # docstr-coverage: inherited
     def open(self, mode: str = "r", **kwargs: Any) -> None:
+        """Open the store in the given mode
+
+        library specifics parameters :
+            - compressor : numcodecs compressor. ex : Blosc(cname="zstd", clevel=3, shuffle=Blosc.BITSHUFFLE)
+
+        Parameters
+        ----------
+        mode: str, optional
+            mode to open the store
+        **kwargs: Any
+            extra kwargs of open on librairy used.
+        """
         super().open()
         self._mode = mode
         self._root: Group = zarr.open(store=self.url, mode=mode, **kwargs)
