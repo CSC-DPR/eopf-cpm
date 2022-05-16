@@ -731,8 +731,10 @@ def test_write_real_s3(dask_client_all, w_store: type, w_path: str, w_kwargs: di
     ],
 )
 def test_cog_store(store_cls: type[EOCogStore], format_file: str):
-    assert store_cls.guess_can_read("some_file.cog")
+    assert store_cls.guess_can_read("some_file.cogs")
     assert not store_cls.guess_can_read("some_other_file.false")
+    assert not store_cls.guess_can_read("some_other_file.cog")
+    assert not store_cls.guess_can_read("some_other_file.nc")
     cog = store_cls(_FILES["cog"])
     with pytest.raises(ValueError):
         cog.open(mode="r+")
