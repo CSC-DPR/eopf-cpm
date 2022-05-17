@@ -83,6 +83,9 @@ accessor_config
 item_format :
     registration string of an accessor/store in the EOStoreFactory. We currently provide : grib, jp2, netcdf, netcdf_string_to_time, xmlangles, xmlmetadata, xmltp, zarr
 
+is_optional:
+    (optional) a boolean indicating if the presence of this data is optional (default to false)
+
 local_path :
     (optional) an alternative way of passing the local_path used by the accessor to get the item. It's not recommended to use both local_path and source_path:local_path.
 
