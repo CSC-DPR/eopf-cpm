@@ -90,8 +90,11 @@ class EOCogStore(EOProductStore):
         return self.url.fs.isfile(file_path)
 
     def __len__(self) -> int:
-        # NYI
-        return len(self._sub_store)
+        if self._sub_store is not None:
+            return len(self._sub_store)
+        else:
+            return sum(1 for _ in self.iter(""))
+
 
     def iter(self, path: str) -> Iterator[str]:
         # Return sub_store iter if it's set
