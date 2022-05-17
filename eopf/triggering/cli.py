@@ -86,6 +86,7 @@ class EOLocalCLITrigger(EOTrigger, EOPFPluginCommandCLI):
             callback=load_json_file,
         ),
     ]
+    help = "Trigger a specific EOProcessingUnit locally from the given json data"
 
     @staticmethod
     def callback_function(json_data_file: dict[str, Any]) -> None:  # type: ignore[override]
@@ -139,8 +140,14 @@ class EORequestCLITrigger(EOTrigger, EOPFPluginCommandCLI):
             type=click.Path(exists=True, file_okay=True, dir_okay=False),
             callback=load_json_file,
         ),
-        click.Option(["--server-info"], default="http://127.0.0.1:8080", callback=format_server_info),
+        click.Option(
+            ["--server-info"],
+            default="http://127.0.0.1:8080",
+            callback=format_server_info,
+            help="target server (default: http://127.0.0.1:8080)",
+        ),
     ]
+    help = "Trigger a specific EOProcessingUnit on the target web server from the given json data"
 
     @staticmethod
     def callback_function(json_data_file: dict[str, Any], server_info: str) -> None:  # type: ignore[override]
@@ -197,9 +204,14 @@ class EOKafkaCLITrigger(EOTrigger, EOPFPluginCommandCLI):
             type=click.Path(exists=True, file_okay=True, dir_okay=False),
             callback=load_json_file,
         ),
-        click.Option(["--kafka-server"], default="127.0.0.1:9092"),
-        click.Option(["--kafka-topic"], default="run"),
+        click.Option(
+            ["--kafka-server"],
+            default="127.0.0.1:9092",
+            help="Kafka server information (default 127.0.0.1:9092)",
+        ),
+        click.Option(["--kafka-topic"], default="run", help="Kafka topic (default 'run')"),
     ]
+    help = "Trigger a specific EOProcessingUnit on the target kafka server from the given json data"
 
     @staticmethod
     @async_cmd
@@ -235,6 +247,18 @@ class EOCLITrigger(EOTrigger, EOPFPluginGroupCLI):
         name of this group of command
     cli_commands: Sequence[click.Command]
         Sequence of command aggregate here
+    help: str
+        text use to specified to the user what this command is made for
+    short_help: str
+        shortter version of the help part
+    epilog: str
+        like help, but only provide at the end of the help command
+    enable_help_option: bool
+        indicate if the help option is provide automatically (default True)
+    hidden: bool
+        indicate if this command is hidden when it's search (default False)
+    deprecated: bool
+        indicate if this command is deprecated or not (default False)
 
     Parameters
     ----------
@@ -252,3 +276,4 @@ class EOCLITrigger(EOTrigger, EOPFPluginGroupCLI):
         EORequestCLITrigger(),
         EOKafkaCLITrigger(),
     ]
+    help = "CLI commands to trigger EOProcessingUnit"

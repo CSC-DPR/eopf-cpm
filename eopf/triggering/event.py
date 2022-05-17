@@ -42,9 +42,14 @@ class EOEventTrigger(EOTrigger, EOPFPluginCommandCLI):
 
     name = "kafka-consumer"
     cli_params: list[click.Parameter] = [
-        click.Option(["--kafka-server"], default="127.0.0.1:9092"),
-        click.Option(["--kafka-topic"], default="run"),
+        click.Option(
+            ["--kafka-server"],
+            default="127.0.0.1:9092",
+            help="Kafka server information (default 127.0.0.1:9092)",
+        ),
+        click.Option(["--kafka-topic"], default="run", help="Kafka topic (default 'run')"),
     ]
+    help = "Get and load messages from kafka an execute EOTrigger"
 
     @staticmethod
     @async_cmd

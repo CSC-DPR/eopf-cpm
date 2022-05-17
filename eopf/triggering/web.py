@@ -43,10 +43,11 @@ class EOWebTrigger(EOTrigger, FastAPI, EOPFPluginCommandCLI):
 
     name = "web-server"
     cli_params: list[click.Parameter] = [
-        click.Option(["--host"], default="127.0.0.1"),
-        click.Option(["--port"], default=8080),
+        click.Option(["--host"], default="127.0.0.1", help="host information (default 127.0.0.1)"),
+        click.Option(["--port"], default=8080, help="Port (default 8080)"),
         click.Option(["--log-level"], default="info"),
     ]
+    help = "Run web server to run EOTrigger with post payload"
 
     def __init__(self) -> None:
         FastAPI.__init__(self)

@@ -4,7 +4,7 @@ class EOObjectExistError(Exception):
 
 class EOObjectMultipleParentError(Exception):
     """Raised by `EOObject` with already set parent and
-    manipulte them in context with an other one"""
+    manipulate them in context with an other one"""
 
 
 class InvalidProductError(Exception):

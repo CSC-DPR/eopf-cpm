@@ -70,7 +70,7 @@ class EOPFPluginCommandCLI(ABC, click.Command):
 
     @staticmethod
     @abstractmethod
-    def callback_function(*args: Any, **kwargs: Any) -> Any:
+    def callback_function(*args: Any, **kwargs: Any) -> Any:  # pragma: no cover
         """Abstract method to provide an interface for the logic to implement in this command"""
 
     @property
@@ -87,6 +87,18 @@ class EOPFPluginGroupCLI(click.Group):
         name of this group of command
     cli_commands: Sequence[click.Command]
         Sequence of command aggregate here
+    help: str
+        text use to specified to the user what this command is made for
+    short_help: str
+        shortter version of the help part
+    epilog: str
+        like help, but only provide at the end of the help command
+    enable_help_option: bool
+        indicate if the help option is provide automatically (default True)
+    hidden: bool
+        indicate if this command is hidden when it's search (default False)
+    deprecated: bool
+        indicate if this command is deprecated or not (default False)
 
     Parameters
     ----------
@@ -100,9 +112,25 @@ class EOPFPluginGroupCLI(click.Group):
 
     name: str
     cli_commands: list[click.Command] = []
+    help: str = ""
+    short_help: str = ""
+    epilog: str = ""
+    enable_help_option = True
+    hidden = False
+    deprecated = False
 
     def __init__(self, **attrs: Any) -> None:
-        super().__init__(self.name, self.cli_commands, **attrs)
+        super().__init__(
+            self.name,
+            self.cli_commands,
+            help=self.help,
+            epilog=self.epilog,
+            short_help=self.short_help,
+            add_help_option=self.enable_help_option,
+            hidden=self.hidden,
+            deprecated=self.deprecated,
+            **attrs,
+        )
 
 
 class EOPFCLI(click.MultiCommand):
@@ -125,7 +153,7 @@ class EOPFCLI(click.MultiCommand):
 
 
 @click.command(name="eopf", cls=EOPFCLI, add_help_option=True)
-def eopf_cli() -> None:
+def eopf_cli() -> None:  # pragma: no cover
     ...
 
 

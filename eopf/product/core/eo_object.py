@@ -4,8 +4,7 @@ from typing import TYPE_CHECKING, Iterable, Optional
 
 from xarray.backends import zarr
 
-# from eopf.exceptions import EOObjectMultipleParentError
-from eopf.exceptions import InvalidProductError
+from eopf.exceptions import EOObjectMultipleParentError, InvalidProductError
 from eopf.product.core.eo_abstract import EOAbstract
 from eopf.product.store.abstract import EOProductStore
 from eopf.product.utils import join_eo_path
@@ -76,11 +75,11 @@ class EOObject(EOAbstract):
              If the object has a product and a not undefined attribute is modified.
 
         """
-        # if self._parent is not None:
-        #     if self._name != "" and self._name != name:
-        #         raise EOObjectMultipleParentError("The EOObject name does not match it's new path")
-        #     if self._parent is not parent:
-        #         raise EOObjectMultipleParentError("The EOObject product does not match it's new parent")
+        if self._parent is not None:
+            if self._name != "" and self._name != name:
+                raise EOObjectMultipleParentError("The EOObject name does not match it's new path")
+            if self._parent is not parent:
+                raise EOObjectMultipleParentError("The EOObject product does not match it's new parent")
 
         self._name = name
         self._parent = parent
