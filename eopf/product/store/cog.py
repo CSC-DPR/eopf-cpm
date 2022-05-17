@@ -31,6 +31,7 @@ class EOCogStore(EOProductStore):
         super().__init__(url)
         self.url: fsspec.core.OpenFile = url
         self._ds = None
+        self._sub_store = None
         self._is_zip = False
         self.mapper: fsspec.mapping.FSMap = None
 
@@ -98,7 +99,7 @@ class EOCogStore(EOProductStore):
             for file_name in self._sub_store.iter(path):
                 yield file_name
             return
-        print("ITER", path)
+        # print("ITER", path)
         if not self._is_zip:
             # Standard S3 storage, compose iterator path, mapper.root + path
             if path in ["", "/"]:
@@ -125,7 +126,7 @@ class EOCogStore(EOProductStore):
         if self._sub_store is not None:
             return self._sub_store[key]
         from eopf.product.core import EOGroup, EOVariable
-        print("GETITEM", key)
+        # print("GETITEM", key)
         if not self._is_zip:
             # Standard S3 Storage, directory hierarchy
             if key in ["", "/"]:
