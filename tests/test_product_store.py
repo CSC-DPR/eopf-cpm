@@ -781,16 +781,16 @@ def test_cog_store(dask_client_all, store: type, path: str, open_kwargs: dict[st
     product = EOProduct("s3_test_product", store_or_path_url=cog_store)
     with product.open(storage_options=open_kwargs):
         product.load()
-    # Test getitem
-    assert isinstance(product["conditions/geometry/altitude.cog"], EOVariable)
-    assert isinstance(product["conditions/geometry"], EOGroup)
-    with pytest.raises(KeyError):
-        product["invalid_key"]
-    # Test iter
-    expected_top_level_groups = ["conditions", "coordinates", "measurements", "quality"]
-    actual_top_level_groups = [str(x) for x in cog_store.iter("")]
-    assert expected_top_level_groups==actual_top_level_groups
+        # Test getitem
+        assert isinstance(product["conditions/geometry/altitude.cog"], EOVariable)
+        assert isinstance(product["conditions/geometry"], EOGroup)
+        with pytest.raises(KeyError):
+            product["invalid_key"]
+        # Test iter
+        expected_top_level_groups = ["conditions", "coordinates", "measurements", "quality"]
+        actual_top_level_groups = [str(x) for x in cog_store.iter("")]
+        assert expected_top_level_groups==actual_top_level_groups
 
-    # Test len
-    assert len(product) == len(expected_top_level_groups)
+        # Test len
+        assert len(product) == len(expected_top_level_groups)
     
