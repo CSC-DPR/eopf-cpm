@@ -33,7 +33,12 @@ dependencies = [
     "kerchunk ==0.0.6",
     "h5py ==3.6.0",
     "s3fs",
-    "bokeh ==2.4.3"
+    "bokeh ==2.4.3",
+    "click ==8.1.2",
+    "fastapi ==0.77.1",
+    "uvicorn[standard] ==0.17.6",
+    "requests ==2.27.1",
+    "aiokafka ==0.7.2",
 ]
 license = {file = "LICENSE"}
 
@@ -47,7 +52,8 @@ tests = [
 linter = ["flake8 >=4.0.1"]
 typing = [
     "mypy >=0.931", "types-python-dateutil >=2.8.10",
-    "types-pytz >=2021.3.6"
+    "types-pytz >=2021.3.6",
+    "types-setuptools >=57.4.14"
 ]
 formatter = ["black >=21.11b1", "isort >=5.10.1"]
 security = ["bandit >=1.7.1", "safety >=1.10.3"]
@@ -69,6 +75,15 @@ dev = [
     "eopf[linter,typing,formatter]",
     "eopf[security,doc,notebook]",
 ]
+
+
+[project.scripts]
+eopf = "eopf.cli:eopf_cli"
+
+[project.entry-points."eopf.cli"]
+trigger = "eopf.triggering.cli:EOCLITrigger"
+web-server = "eopf.triggering.web:EOWebTrigger"
+kafka-consumer = "eopf.triggering.event:EOEventTrigger"
 
 [tool.isort]
 profile = "black"

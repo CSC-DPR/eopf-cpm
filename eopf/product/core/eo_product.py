@@ -207,7 +207,7 @@ class EOProduct(EOContainer):
         # Iterate and print EOProduct structure otherwise (CLI)
         for name, group in self.items():
             print(f"├── {name}")
-            self._create_structure(group, level=2)
+            self._create_structure(group, level=2)  # type: ignore[arg-type]
         return
 
     @property

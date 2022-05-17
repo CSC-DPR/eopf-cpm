@@ -19,6 +19,7 @@ class EOStoreFactory:
                 EONetCDFStore,
                 EONetcdfStringToTimeAccessor,
             )
+            from eopf.product.store.safe import EOSafeStore
             from eopf.product.store.wrappers import (
                 FromAttributesToFlagValueAccessor,
                 FromAttributesToVariableAccessor,
@@ -31,6 +32,7 @@ class EOStoreFactory:
 
             self.register_store(EOZarrStore)
             self.register_store(EOZarrStore, "zarr")
+            self.register_store(EOSafeStore, "safe")
             self.register_store(EOCogStore, "cogs")
             self.register_store(FilenameToVariableAccessor, "filename_to_subswath")
             self.register_store(EONetCDFStore, "netcdf")
