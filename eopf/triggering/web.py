@@ -10,10 +10,35 @@ from eopf.triggering.abstract import EOTrigger
 
 
 class EOWebTrigger(EOTrigger, FastAPI, EOPFPluginCommandCLI):
-    """
-    Expected behaviour : WebServiceTrigger is a permanent service which exposes the following endpoints:
-     * run : run the asked service with the given payload as a json stream
-     * healthcheck : check service is alive and well
+    """EOTrigger cli command to run a web server
+
+    Parameters
+    ----------
+    context_settings: dict, optional
+        default values provide to click
+
+    Attributes
+    ----------
+    name: str
+        name of this command
+    cli_params: Sequence[click.Parameter]
+        all argument and option associated to this command
+    help: str
+        text use to specified to the user what this command is made for
+    short_help: str
+        shortter version of the help part
+    epilog: str
+        like help, but only provide at the end of the help command
+    enable_help_option: bool
+        indicate if the help option is provide automatically (default True)
+    hidden: bool
+        indicate if this command is hidden when it's search (default False)
+    deprecated: bool
+        indicate if this command is deprecated or not (default False)
+
+    See Also
+    --------
+    click.Command
     """
 
     name = "web-server"
@@ -31,6 +56,18 @@ class EOWebTrigger(EOTrigger, FastAPI, EOPFPluginCommandCLI):
 
     @staticmethod
     async def run_request(request: Request) -> JSONResponse:
+        """API route provide a simple way to execute EOTrigger.run
+
+        Parameters
+        ----------
+        request: Request
+            post information (should be json data)
+
+        Returns
+        -------
+        JSONResponse
+            if "err" is provide, an error as occur
+        """
         try:
             payload = await request.json()
             logger.info(f"Triggered with {payload}")
@@ -42,6 +79,17 @@ class EOWebTrigger(EOTrigger, FastAPI, EOPFPluginCommandCLI):
 
     @staticmethod
     def callback_function(host: str, port: int, log_level: str) -> None:  # type: ignore[override]
+        """Start a web server with the given information
+
+        Parameters
+        ----------
+        host: str
+            On which IP/host name should start
+        port: int
+            On which port start
+        log_level: str
+            base level information
+        """
         uvicorn.run(EOWebTrigger(), host=host, port=port, log_level=log_level)
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:  # type: ignore[override]

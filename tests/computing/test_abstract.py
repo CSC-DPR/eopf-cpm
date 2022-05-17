@@ -9,14 +9,14 @@ from pytest_lazyfixture import lazy_fixture
 
 from eopf.computing import EOProcessingStep, EOProcessingUnit, EOProcessor
 from eopf.computing.abstract import EOBlockProcessingStep, EOOverlapProcessingStep
-from eopf.product import EOProduct, EOVariable
+from eopf.product import EOProduct
 from eopf.product.conveniences import init_product
 
 from ..utils import assert_is_subeocontainer
 
 
 class SumProcessStep(EOProcessingStep):
-    def apply(self, *args: da.Array, dtype: DTypeLike = float, **kwargs: Any) -> EOVariable:
+    def apply(self, *args: da.Array, dtype: DTypeLike = float, **kwargs: Any) -> da.Array:
         arg = args[0]
         for a in args[1:]:
             arg += a

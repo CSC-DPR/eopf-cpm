@@ -1,30 +1,44 @@
 import json
 import urllib.parse as urlparser
-from typing import Any, Callable
+from typing import Any
 
 import click
 import requests
 
-from eopf.cli import EOPFPluginCommandCLI, EOPFPluginGroupCLI, async_cmd
+from eopf.cli import EOPFPluginCommandCLI, EOPFPluginGroupCLI, async_cmd, click_callback
 from eopf.triggering.abstract import EOTrigger
-
-
-def click_callback(func: Callable[..., Any]) -> Callable[..., Any]:
-    def wrapper(ctx: click.Context, param: click.Parameter, value: Any) -> Any:
-        if value is not None:
-            return func(value)
-
-    return wrapper
 
 
 @click_callback
 def load_json_file(file_name: str) -> dict[str, Any]:
+    """Wrap json load to automatically load from a filename in click.Command
+
+    Parameters
+    ----------
+    file_name: str
+        name of the file to load the json content
+
+    Returns
+    -------
+    dict[str, Any]
+    """
     with open(file_name) as f:
         return json.load(f)
 
 
 @click_callback
 def format_server_info(value: Any) -> str:
+    """Wrap urlparse to automatically format url with trigger endpoint
+
+    Parameters
+    ----------
+    value: str
+        url to the target web server
+
+    Returns
+    -------
+    str
+    """
     url = urlparser.urlparse(value)
     if not url.path.endswith("/run"):
         url = urlparser.urlparse(f"{url.geturl()}/run")
@@ -32,6 +46,38 @@ def format_server_info(value: Any) -> str:
 
 
 class EOLocalCLITrigger(EOTrigger, EOPFPluginCommandCLI):
+    """EOTrigger cli command to run locally an EOProcessingUnit from a specific
+    json file.
+
+    Parameters
+    ----------
+    context_settings: dict, optional
+        default values provide to click
+
+    Attributes
+    ----------
+    name: str
+        name of this command
+    cli_params: Sequence[click.Parameter]
+        all argument and option associated to this command
+    help: str
+        text use to specified to the user what this command is made for
+    short_help: str
+        shortter version of the help part
+    epilog: str
+        like help, but only provide at the end of the help command
+    enable_help_option: bool
+        indicate if the help option is provide automatically (default True)
+    hidden: bool
+        indicate if this command is hidden when it's search (default False)
+    deprecated: bool
+        indicate if this command is deprecated or not (default False)
+
+    See Also
+    --------
+    click.Command
+    """
+
     name = "local"
     cli_params: list[click.Parameter] = [
         click.Argument(
@@ -43,11 +89,49 @@ class EOLocalCLITrigger(EOTrigger, EOPFPluginCommandCLI):
 
     @staticmethod
     def callback_function(json_data_file: dict[str, Any]) -> None:  # type: ignore[override]
+        """Run the EOTrigger.run with the json data
+
+        Parameters
+        ----------
+        json_data_file: dict
+            json data used as payload
+        """
         click.echo(f"Run with {json_data_file}")
         EOLocalCLITrigger.run(json_data_file)
 
 
 class EORequestCLITrigger(EOTrigger, EOPFPluginCommandCLI):
+    """EOTrigger cli command to trigger web server from a json file
+
+    Parameters
+    ----------
+    context_settings: dict, optional
+        default values provide to click
+
+    Attributes
+    ----------
+    name: str
+        name of this command
+    cli_params: Sequence[click.Parameter]
+        all argument and option associated to this command
+    help: str
+        text use to specified to the user what this command is made for
+    short_help: str
+        shortter version of the help part
+    epilog: str
+        like help, but only provide at the end of the help command
+    enable_help_option: bool
+        indicate if the help option is provide automatically (default True)
+    hidden: bool
+        indicate if this command is hidden when it's search (default False)
+    deprecated: bool
+        indicate if this command is deprecated or not (default False)
+
+    See Also
+    --------
+    click.Command
+    """
+
     name = "request"
     cli_params: list[click.Parameter] = [
         click.Argument(
@@ -60,11 +144,52 @@ class EORequestCLITrigger(EOTrigger, EOPFPluginCommandCLI):
 
     @staticmethod
     def callback_function(json_data_file: dict[str, Any], server_info: str) -> None:  # type: ignore[override]
+        """Send the request to the web service to trigger EOTrigger.run*
+
+        Parameters
+        ----------
+        json_data_file: dict
+            json data used as payload
+        server_info: str
+            target server information, must start with scheme
+        """
         r = requests.post(url=server_info, json=json_data_file)
         click.echo(f"Server return status code {r.status_code} with content: {r.content}")
 
 
 class EOKafkaCLITrigger(EOTrigger, EOPFPluginCommandCLI):
+    """EOTrigger cli command to send data from a json file to
+    kafka server
+
+    Parameters
+    ----------
+    context_settings: dict, optional
+        default values provide to click
+
+    Attributes
+    ----------
+    name: str
+        name of this command
+    cli_params: Sequence[click.Parameter]
+        all argument and option associated to this command
+    help: str
+        text use to specified to the user what this command is made for
+    short_help: str
+        shortter version of the help part
+    epilog: str
+        like help, but only provide at the end of the help command
+    enable_help_option: bool
+        indicate if the help option is provide automatically (default True)
+    hidden: bool
+        indicate if this command is hidden when it's search (default False)
+    deprecated: bool
+        indicate if this command is deprecated or not (default False)
+
+    See Also
+    --------
+    click.Command
+    """
+
     name = "kafka"
     cli_params: list[click.Parameter] = [
         click.Argument(
@@ -79,6 +204,17 @@ class EOKafkaCLITrigger(EOTrigger, EOPFPluginCommandCLI):
     @staticmethod
     @async_cmd
     async def callback_function(json_data_file: dict[str, Any], kafka_server: str, kafka_topic: str) -> None:
+        """Send the request to kafka service to trigger EOTrigger.run
+
+        Parameters
+        ----------
+        json_data_file: dict
+            json data used as payload
+        kafka_server: str
+            target server information
+        kafka_topic: str
+            target topic
+        """
         from aiokafka import AIOKafkaProducer
 
         producer = AIOKafkaProducer(bootstrap_servers=kafka_server)
@@ -91,6 +227,25 @@ class EOKafkaCLITrigger(EOTrigger, EOPFPluginCommandCLI):
 
 
 class EOCLITrigger(EOTrigger, EOPFPluginGroupCLI):
+    """EOTrigger cli command aggregator to trigger other services
+
+    Attributes:
+    -----------
+    name: str
+        name of this group of command
+    cli_commands: Sequence[click.Command]
+        Sequence of command aggregate here
+
+    Parameters
+    ----------
+    **attrs: Any
+        any argument for click.Command, click.MultiCommand
+
+    See Also
+    --------
+    click.Group
+    """
+
     name = "trigger"
     cli_commands: list[click.Command] = [
         EOLocalCLITrigger(),
