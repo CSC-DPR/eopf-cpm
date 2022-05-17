@@ -24,24 +24,26 @@ class EOTrigger(ABC):
 
         Scheduler type
         """
-        processing_unit, input_product, output_store, scheduler_mode, scheduler_info = EOTrigger.extract_from_payload(
+        (
+            processing_unit,
+            input_product,
+            output_store,
+            scheduler_mode,
+            scheduler_info,
+            parameters,
+        ) = EOTrigger.extract_from_payload(
             payload,
         )
 
-        # If dask context asks for local mode we set the local config, else we pass the url of dask scheduler
-        if scheduler_mode == "local":
-            dask.config.set(scheduler=scheduler_info)
-        elif scheduler_mode == "distributed":
-            dask.distribution.client(scheduler_info)
-
-        output = processing_unit.run(input_product)
+        dask.config.set(scheduler=scheduler_info)
+        output = processing_unit.run(input_product, **parameters)
         with output.open(mode="w", store_or_path_url=output_store):
             output.write()
 
     @staticmethod
     def extract_from_payload(
         payload: dict[str, Any],
-    ) -> tuple[EOProcessingUnit, EOProduct, Union[EOProductStore, str], str, str]:
+    ) -> tuple[EOProcessingUnit, EOProduct, Union[EOProductStore, str], str, str, dict[str, Any]]:
         input_product_payload = payload.get("input_product", {})
         output_product_payload = payload.get("output_product", {})
         dask_context = payload.get("dask_context", {})
@@ -56,7 +58,8 @@ class EOTrigger(ABC):
             output_product_payload.get("store_type", "zarr"),
         )
         scheduler_mode, scheduler_info = EOTrigger.parse_dask_context(dask_context)
-        return processing_unit, input_product, ouput_store, scheduler_mode, scheduler_info
+        parameters = payload.get("parameters", {})
+        return processing_unit, input_product, ouput_store, scheduler_mode, scheduler_info, parameters
 
     @staticmethod
     def instanciate_store(path: str, store_type: str = "zarr") -> Union[EOProductStore, str]:
@@ -79,7 +82,7 @@ class EOTrigger(ABC):
     @staticmethod
     def get_processing_unit(module_name: str, class_name: str) -> EOProcessingUnit:
         if not module_name:
-            raise Exception("Missing module name in EOTrigger configuration")
+            raise AttributeError("Missing module name in EOTrigger configuration")
         if not class_name:
-            raise Exception("Missing processing unit class name in EOTrigger configuration")
+            raise AttributeError("Missing processing unit class name in EOTrigger configuration")
         return getattr(importlib.import_module(module_name), class_name)()

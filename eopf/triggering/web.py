@@ -1,16 +1,15 @@
-from typing import Any
-
 import click
 import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+from starlette.types import Receive, Scope, Send
 
 from eopf.cli import EOPFPluginCommandCLI
 from eopf.logging import logger
 from eopf.triggering.abstract import EOTrigger
 
 
-class EOWebTrigger(EOTrigger, EOPFPluginCommandCLI, FastAPI):
+class EOWebTrigger(EOTrigger, FastAPI, EOPFPluginCommandCLI):
     """
     Expected behaviour : WebServiceTrigger is a permanent service which exposes the following endpoints:
      * run : run the asked service with the given payload as a json stream
@@ -38,12 +37,12 @@ class EOWebTrigger(EOTrigger, EOPFPluginCommandCLI, FastAPI):
             EOWebTrigger.run(payload)
         except Exception as e:
             logger.error(f"An error occur: {e}")
-            return JSONResponse(content={"err": e}, status_code=200)
+            return JSONResponse(content={"err": str(e)}, status_code=200)
         return JSONResponse(content={}, status_code=200)
 
     @staticmethod
     def callback_function(host: str, port: int, log_level: str) -> None:  # type: ignore[override]
         uvicorn.run(EOWebTrigger(), host=host, port=port, log_level=log_level)
 
-    def __call__(self, *args: Any, **kwds: Any) -> Any:
-        return FastAPI.__call__(self, *args, **kwds)
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:  # type: ignore[override]
+        await FastAPI.__call__(self, scope, receive, send)

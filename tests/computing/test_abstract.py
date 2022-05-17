@@ -1,3 +1,4 @@
+import contextlib
 from typing import Any
 
 import numpy as np
@@ -35,12 +36,15 @@ class SumProcessingUnit(EOProcessingUnit):
 
 class SumProcessor(EOProcessor):
     def run(self, product: EOProduct, **kwargs: Any) -> EOProduct:
-        paths = kwargs.get("variables_paths", [])
-        dest_path = kwargs.get("dest_path", "/variable")
-        step = SumProcessStep()
-        new_da = step.apply(*[product[path].data for path in paths])
-        new_product = init_product("new_product")
-        new_product.add_variable(dest_path, data=new_da)
+        with contextlib.ExitStack() as stack:
+            if product.store is not None:
+                stack.enter_context(product.open(mode="r"))
+            paths = kwargs.get("variables_paths", [])
+            dest_path = kwargs.get("dest_path", "/variable")
+            step = SumProcessStep()
+            new_da = step.apply(*[product[path].data for path in paths])
+            new_product = init_product("new_product")
+            new_product.add_variable(dest_path, data=new_da)
         return new_product
 
 

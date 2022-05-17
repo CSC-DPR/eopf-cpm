@@ -6,7 +6,6 @@ import click
 import requests
 
 from eopf.cli import EOPFPluginCommandCLI, EOPFPluginGroupCLI, async_cmd
-from eopf.logging import logger
 from eopf.triggering.abstract import EOTrigger
 
 
@@ -44,7 +43,7 @@ class EOLocalCLITrigger(EOTrigger, EOPFPluginCommandCLI):
 
     @staticmethod
     def callback_function(json_data_file: dict[str, Any]) -> None:  # type: ignore[override]
-        logger.info(f"Run with {json_data_file}")
+        click.echo(f"Run with {json_data_file}")
         EOLocalCLITrigger.run(json_data_file)
 
 
@@ -61,7 +60,8 @@ class EORequestCLITrigger(EOTrigger, EOPFPluginCommandCLI):
 
     @staticmethod
     def callback_function(json_data_file: dict[str, Any], server_info: str) -> None:  # type: ignore[override]
-        requests.post(url=server_info, json=json_data_file)
+        r = requests.post(url=server_info, json=json_data_file)
+        click.echo(f"Server return status code {r.status_code} with content: {r.content}")
 
 
 class EOKafkaCLITrigger(EOTrigger, EOPFPluginCommandCLI):
@@ -87,7 +87,7 @@ class EOKafkaCLITrigger(EOTrigger, EOPFPluginCommandCLI):
             msg = await producer.send_and_wait(kafka_topic, json.dumps(json_data_file).encode())
         finally:
             await producer.stop()
-        logger.info(f"{msg}")
+        click.echo(f"{msg}")
 
 
 class EOCLITrigger(EOTrigger, EOPFPluginGroupCLI):

@@ -1,0 +1,30 @@
+{
+    "module": "tests.computing.test_abstract",
+    "processing_unit": "SumProcessor",
+    "parameters": {
+        "variables_paths": [
+            "/measurements/image/oa01_radiance",
+            "/measurements/image/oa02_radiance",
+            "/measurements/image/oa03_radiance",
+            "/measurements/image/oa04_radiance",
+            "/measurements/image/oa05_radiance",
+            "/measurements/image/oa06_radiance",
+            "/measurements/image/oa07_radiance",
+            "/measurements/image/oa08_radiance",
+            "/measurements/image/oa09_radiance",
+            "/measurements/image/oa10_radiance"
+        ],
+        "dest_path": "/measurements/variable"
+    },
+    "input_product": {
+        "id": "OLCI",
+        "path": "",
+        "store_type": "safe"
+    },
+    "output_product": {
+        "id": "output",
+        "path": "output.zarr",
+        "store_type": "zarr"
+    },
+    "dask_context":{"local": "processes"}
+}
