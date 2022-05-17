@@ -729,10 +729,10 @@ def test_write_real_s3(dask_client_all, w_store: type, w_path: str, w_kwargs: di
 @pytest.mark.parametrize(
     "store_cls, format_file",
     [
-        (EOCogStore, "jp2"),
+        (EOCogStore, "cog"),
     ],
 )
-def test_cog_store(store_cls: type[EOCogStore], format_file: str):
+def test_patch_cog_store(store_cls: type[EOCogStore], format_file: str):
     assert store_cls.guess_can_read("some_file.cog")
     assert not store_cls.guess_can_read("some_other_file.false")
     cog = store_cls(_FILES["cog"])
@@ -764,12 +764,33 @@ def test_cog_store(store_cls: type[EOCogStore], format_file: str):
             with pytest.raises(NotImplementedError):
                 cog["anything"] = "something"
 
-    with pytest.raises(StoreNotOpenError):
-        cog[""]
-    with pytest.raises(StoreNotOpenError):
-        cog.close()
-    with pytest.raises(StoreNotOpenError):
-        len(cog)
     with pytest.raises(NotImplementedError):
         cog.open(mode="r")
         cog.write_attrs("", {})
+
+@pytest.mark.real_s3
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "store, path, open_kwargs",
+    [
+        (EOCogStore, "s3://eopf/cpm/test_data/OLCI_COG", S3_CONFIG_REAL)
+    ],
+)
+def test_cog_store(dask_client_all, store: type, path: str, open_kwargs: dict[str, Any]):
+    cog_store = store(path)
+    product = EOProduct("s3_test_product", store_or_path_url=cog_store)
+    with product.open(storage_options=open_kwargs):
+        product.load()
+    # Test getitem
+    assert isinstance(product["conditions/geometry/altitude.cog"], EOVariable)
+    assert isinstance(product["conditions/geometry"], EOGroup)
+    with pytest.raises(KeyError):
+        product["invalid_key"]
+    # Test iter
+    expected_top_level_groups = ["conditions", "coordinates", "measurements", "quality"]
+    actual_top_level_groups = [str(x) for x in cog_store.iter("")]
+    assert expected_top_level_groups==actual_top_level_groups
+
+    # Test len
+    assert len(product) == len(expected_top_level_groups)
+    
