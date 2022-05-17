@@ -210,7 +210,12 @@ class EOCogStore(EOProductStore):
             # Reset file pointer in order to read
             fp.seek(0)
             # Pass temp file to xarray
-            variable_data = xarray.open_rasterio(fp.name, lock=False, chunks="auto")
+            try:
+                # Open tempfile and create dataset
+                variable_data = xarray.open_rasterio(fp.name, lock=False, chunks="auto")
+            except:
+                # Re-try to open tempfile using netcdf scheme identifier (may use EONetCDFAccessor?)
+                variable_data = xarray.open_rasterio(f"netcdf:{fp.name}:{variable_name}", lock=False, chunks="auto")
         return variable_name, variable_data
 
     @staticmethod
