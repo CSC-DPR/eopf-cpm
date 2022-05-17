@@ -31,7 +31,7 @@ class EOCogStore(EOProductStore):
         super().__init__(url)
         self.url: fsspec.core.OpenFile = url
         self._ds = None
-        self._sub_store = None
+        self._sub_store: Any = None
         self._is_zip = False
         self.mapper: fsspec.mapping.FSMap = None
 
@@ -41,7 +41,7 @@ class EOCogStore(EOProductStore):
         if self.url.startswith("s3:") or self.url.startswith("zip::s3:"):
             self._open_cloud(mode, **kwargs)
         else:
-            self._sub_store: EOCogStoreLOCAL = self._open_local(mode, **kwargs)
+            self._sub_store = self._open_local(mode, **kwargs)
         super().open(mode)
 
     def _open_local(self, mode: str = "r", **kwargs: Any) -> "EOCogStoreLOCAL":
@@ -99,7 +99,7 @@ class EOCogStore(EOProductStore):
             for file_name in self._sub_store.iter(path):
                 yield file_name
             return
-        # print("ITER", path)
+
         if not self._is_zip:
             # Standard S3 storage, compose iterator path, mapper.root + path
             if path in ["", "/"]:
@@ -125,43 +125,51 @@ class EOCogStore(EOProductStore):
     def __getitem__(self, key: str) -> "EOObject":
         if self._sub_store is not None:
             return self._sub_store[key]
-        from eopf.product.core import EOGroup, EOVariable
-        # print("GETITEM", key)
+
         if not self._is_zip:
-            # Standard S3 Storage, directory hierarchy
-            if key in ["", "/"]:
-                return EOGroup(attrs=self._read_attrs(key))
-            # Remove // if needed and compose full path (mapper.root + key)
-            key = key.removeprefix("//")
-            key_path = f"{self.mapper.root}/{key}"
-            # Return attributes if key is path to directory (group)
-            if self.is_group(key):
-                return EOGroup(attrs=self._read_attrs(key))
-            # If key is path to .nc or .cog file, build data and return EOV
-            # guess_can_read() is needed since key can be <<group/variable>> or <<group/variable.cog>>
-            if self.guess_can_read(key_path):
-                if self.is_variable(key):
-                    var_name, var_data = self._read_eov(key)
-                    return EOVariable(var_name, data=var_data)
-            else:
-                # If cannot be read, try to append a accepted extension, and check if file exist
-                for suffix in [".nc", ".cog"]:
-                    if self.is_variable(key + suffix):
-                        # If composed variable path is found, build data and return EOV
-                        from eopf.product.core import EOVariable
-                        var_name, var_data = self._read_eov(key)
-                        return EOVariable(var_name, data=var_data)
-            raise KeyError(f"{key_path} not found!")
+            return self._standard_getitem(key)
         else:
-            # ZIPed target
-            # For top level or directories, return attributes
-            if key in ["", "/"] or self.mapper.fs.isdir(key):
-                return EOGroup(attrs=self._read_attrs(key))
-            # if key is in mapper, build data and return EOV
-            if key in self.mapper.keys():
+            return self._zip_getitem(key)
+
+    def _standard_getitem(self, key: str) -> "EOObject":
+        # Standard S3 Storage, directory hierarchy
+        from eopf.product.core import EOGroup, EOVariable
+
+        if key in ["", "/"]:
+            return EOGroup(attrs=self._read_attrs(key))
+        # Remove // if needed and compose full path (mapper.root + key)
+        key = key.removeprefix("//")
+        key_path = f"{self.mapper.root}/{key}"
+        # Return attributes if key is path to directory (group)
+        if self.is_group(key):
+            return EOGroup(attrs=self._read_attrs(key))
+        # If key is path to .nc or .cog file, build data and return EOV
+        # guess_can_read() is needed since key can be <<group/variable>> or <<group/variable.cog>>
+        if self.guess_can_read(key_path):
+            if self.is_variable(key):
                 var_name, var_data = self._read_eov(key)
                 return EOVariable(var_name, data=var_data)
-            raise KeyError(f"{key} not found!")
+        else:
+            # If cannot be read, try to append a accepted extension, and check if file exist
+            for suffix in [".nc", ".cog"]:
+                if self.is_variable(key + suffix):
+                    # If composed variable path is found, build data and return EOV
+                    var_name, var_data = self._read_eov(key)
+                    return EOVariable(var_name, data=var_data)
+        raise KeyError(f"{key_path} not found!")
+
+    def _zip_getitem(self, key: str) -> "EOObject":
+        from eopf.product.core import EOGroup, EOVariable
+
+        # ZIPed target
+        # For top level or directories, return attributes
+        if key in ["", "/"] or self.mapper.fs.isdir(key):
+            return EOGroup(attrs=self._read_attrs(key))
+        # if key is in mapper, build data and return EOV
+        if key in self.mapper.keys():
+            var_name, var_data = self._read_eov(key)
+            return EOVariable(var_name, data=var_data)
+        raise KeyError(f"{key} not found!")
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
         if self._sub_store is not None:
