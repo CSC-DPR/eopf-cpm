@@ -1,11 +1,11 @@
 import os
 import pathlib
+import tempfile
 from collections.abc import MutableMapping
 from json import loads
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Iterator, Optional
-from attr import attr
-import tempfile
+from typing import TYPE_CHECKING, Any, Iterator, Optional, Tuple
+
 import fsspec
 import rasterio
 import rioxarray
@@ -31,18 +31,16 @@ class EOCogStore(EOProductStore):
         super().__init__(url)
         self.url: fsspec.core.OpenFile = url
         self._ds = None
-        self._mode = None
-        self._sub_store = None
         self._is_zip = False
         self.mapper: fsspec.mapping.FSMap = None
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
-        self._mode = mode
+        self._mode: str = mode
         # Use wrapper-class if target path is an S3, otherwise, use normal CogStore
         if self.url.startswith("s3:") or self.url.startswith("zip::s3:"):
             self._open_cloud(mode, **kwargs)
         else:
-            self._sub_store = self._open_local(mode, **kwargs)
+            self._sub_store: EOCogStoreLOCAL = self._open_local(mode, **kwargs)
         super().open(mode)
 
     def _open_local(self, mode: str = "r", **kwargs: Any) -> "EOCogStoreLOCAL":
@@ -50,9 +48,9 @@ class EOCogStore(EOProductStore):
         sub_store.open(mode, **kwargs)
         return sub_store
 
-    def _open_cloud(self, mode: str = "r", **kwargs: Any) -> "EOCogStoreLOCAL":
+    def _open_cloud(self, mode: str = "r", **kwargs: Any) -> None:
         self.storage_options = kwargs.pop("storage_options", dict())
-    
+
         # Load URL, according to target, Standard or ZIP
         if self.url.startswith("zip"):
             # for ZIP, opened with a dict(s3=credentials)
@@ -117,11 +115,10 @@ class EOCogStore(EOProductStore):
             for item in self.mapper.fs.listdir(path):
                 if self.mapper.fs.isdir(item["name"]) or self.guess_can_read(item["name"]):
                     item_name = item["name"].removesuffix(self.sep).split(self.sep)[-1]
-                    #yield item_name
-                    #yield self.remove_extension(item_name)
+                    # yield item_name
+                    # yield self.remove_extension(item_name)
 
-
-    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = ...) -> None:
+    def write_attrs(self, group_path: str, attrs: Any = ...) -> None:
         return self._sub_store.write_attrs(group_path, attrs)
 
     def __getitem__(self, key: str) -> "EOObject":
@@ -140,7 +137,7 @@ class EOCogStore(EOProductStore):
             if self.is_group(key):
                 return EOGroup(attrs=self._read_attrs(key))
             # If key is path to .nc or .cog file, build data and return EOV
-            # guess_can_read() is needed since key can be <<group/variable>> or <<group/variable.cog>> 
+            # guess_can_read() is needed since key can be <<group/variable>> or <<group/variable.cog>>
             if self.guess_can_read(key_path):
                 if self.is_variable(key):
                     var_name, var_data = self._read_eov(key)
@@ -175,15 +172,16 @@ class EOCogStore(EOProductStore):
         # To be added .ZIP
         return pathlib.Path(file_path).suffix in [".cog", ".nc"]
 
-    def _read_attrs(self, path) -> dict[str, Any]:
+    def _read_attrs(self, path: str) -> dict[str, Any]:
         import json
+
         # if path/attrs.json is file, read and return it as a dict, else return an empty dict
         if self.mapper.fs.isfile(os.path.join(path, self.attributes_file_name)):
             return json.loads(self.mapper[self.attributes_file_name])
         else:
             return {}
 
-    def _read_eov(self, path) -> dict[str, xarray.DataArray]:
+    def _read_eov(self, path: str) -> Tuple[str, Any]:
         # Create variable name by removing extension if exists
         if self.guess_can_read(path):
             variable_name = self.remove_extension(path.split("/")[-1])
@@ -193,7 +191,7 @@ class EOCogStore(EOProductStore):
                 if self.mapper.fs.isfile(self.add_extension(path, extension)):
                     variable_name = path.split("/")[-1]
                     path = self.add_extension(path, extension)
-        # Write bytes from mapper to a temporary file, and create a xarray 
+        # Write bytes from mapper to a temporary file, and create a xarray
         with tempfile.NamedTemporaryFile() as fp:
             # Write bytes
             fp.write(self.mapper[path])
@@ -204,13 +202,13 @@ class EOCogStore(EOProductStore):
         return variable_name, variable_data
 
     @staticmethod
-    def remove_extension(path):
+    def remove_extension(path: str) -> str:
         for suffix in [".cog", ".nc"]:
             path = path.removesuffix(suffix)
         return path
 
     @staticmethod
-    def add_extension(path, extension):
+    def add_extension(path: str, extension: str) -> str:
         return path + extension
 
 
@@ -228,7 +226,7 @@ class EOCogStoreLOCAL(EOProductStore):
     expected_raster_dims = [("band", "x", "y"), ("band", "y", "x"), ("x", "y"), ("y", "x"), ("rows", "columns")]
     attributes_file_name = "attrs.json"
 
-    def __init__(self, url: str, **kwargs) -> None:
+    def __init__(self, url: str, **kwargs: Any) -> None:
         super().__init__(url)
         self._mode: Optional[str] = None
         self._lock: Optional[Lock] = None
