@@ -78,7 +78,7 @@ class SafeHierarchy(EOProductStore):
         from ..core import EOGroup
 
         cond1 = not isinstance(value, EOGroup)
-        cond2 = key != "" and value.name not in self._child_list
+        cond2 = key != "" and value.name not in self._optional_child_dict
         if cond1 or cond2:
             raise KeyError("Safe can't write key outside of it's dictionary")
 
@@ -444,7 +444,7 @@ class SafeMappingManager:
     def get_accessors_from_mapping(
         self,
         conf_path: str,
-    ) -> Sequence[Tuple[EOProductStore, Optional[Any], dict[str, Any]]]:
+    ) -> Sequence[Tuple[EOProductStore, str, dict[str, Any]]]:
         """Get all accessor corresponding to the configs of conf_path.
         As multiple mapping car match a single conf_path, it can return multiple accessors.
         """
@@ -632,7 +632,7 @@ class SafeMappingManager:
         item_format: str,
         accessor_config_id: Any,
         accessor_config: dict[str, Any],
-        accessor_optional: Optional[bool] = False,
+        accessor_optional: bool = False,
     ) -> Optional[EOProductStore]:
         """Get an accessor from the opened accessors dictionary. If it's not present a new one is added."""
         if item_format == self.SAFE_HIERARCHY_FORMAT:
