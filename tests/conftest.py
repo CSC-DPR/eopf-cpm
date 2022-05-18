@@ -46,7 +46,10 @@ def pytest_collection_modifyitems(config, items):
 @pytest.fixture
 def INPUT_DIR():
     """Path to te folder where the data should be readed"""
-    return os.environ.get("TEST_DATA_FOLDER", os.path.join(PARENT_DATA_PATH, "data"))
+    folder = os.environ.get("TEST_DATA_FOLDER", os.path.join(PARENT_DATA_PATH, "data"))
+    if os.path.isdir(folder):
+        return folder
+    raise FileNotFoundError(f"{folder} does not exist or is not accessible")
 
 
 @pytest.fixture
@@ -116,7 +119,7 @@ def S3_OLCI_L1_EFR(INPUT_DIR: str):
 
 
 @pytest.fixture
-def S3_SL_1_RBT(MAPPING_FOLDER: str):
+def S3_SL_1_RBT(INPUT_DIR: str):
     """Path to a S3 SL 1 RBT product"""
     file_name = "S3*_SL_1_RBT*.zip"
     glob_path = os.path.join(INPUT_DIR, file_name)
@@ -124,7 +127,7 @@ def S3_SL_1_RBT(MAPPING_FOLDER: str):
 
 
 @pytest.fixture
-def S3_SY_2_SYN(MAPPING_FOLDER: str):
+def S3_SY_2_SYN(INPUT_DIR: str):
     """Path to a S3 SY 2 SYN product"""
     file_name = "S3*_SY_2_SYN*.zip"
     glob_path = os.path.join(INPUT_DIR, file_name)
