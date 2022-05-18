@@ -20,3 +20,14 @@ Subpackages
    eopf.remotesensing
    eopf.tracing
    eopf.triggering
+
+Submodules
+----------
+
+eopf.cli module
+---------------
+
+.. automodule:: eopf.cli
+   :members:
+   :undoc-members:
+   :show-inheritance:

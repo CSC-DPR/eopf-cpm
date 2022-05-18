@@ -17,6 +17,14 @@ eopf.product.store.abstract module
    :undoc-members:
    :show-inheritance:
 
+eopf.product.store.cog module
+-----------------------------
+
+.. automodule:: eopf.product.store.cog
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 eopf.product.store.conveniences module
 --------------------------------------
 
