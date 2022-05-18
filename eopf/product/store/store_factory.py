@@ -29,6 +29,11 @@ class EOStoreFactory:
                 XMLManifestAccessor,
                 XMLTPAccessor,
             )
+            from eopf.product.store.memmap_accessors import (
+                MemMapAccessor,
+                FixedMemMapAccessor,
+            )
+
             from eopf.product.store.zarr import EOZarrStore
 
             self.register_store(EOZarrStore)
@@ -46,6 +51,8 @@ class EOStoreFactory:
             self.register_store(XMLTPAccessor, "xmltp")
             self.register_store(FromAttributesToVariableAccessor, "attribute_element_to_float_variable")
             self.register_store(FromAttributesToFlagValueAccessor, "attribute_element_to_flag_variable")
+            self.register_store(MemMapAccessor, "L0packetlist")
+            self.register_store(FixedMemMapAccessor, "L0annotationlist")
 
     def register_store(self, store_class: type[EOProductStore], *args: str) -> None:
         self.store_types.add(store_class)
