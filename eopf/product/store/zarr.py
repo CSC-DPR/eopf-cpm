@@ -160,7 +160,7 @@ class EOZarrStore(EOProductStore):
         # Use dask instead of zarr to read the object data to :
         # - avoid memory leak/let dask manage lazily close the data file
         # - read in parallel
-        var_data = da.from_zarr(self.url, component=key, **self._zarr_kwargs)
+        var_data = da.from_zarr(self.url, component=key, storage_options=self._zarr_kwargs["storage_options"])
         if "scale_factor" in obj.attrs:
             var_data *= obj.attrs["scale_factor"]
         return EOVariable(data=var_data, attrs=obj.attrs)
