@@ -86,7 +86,6 @@ class EOZarrStore(EOProductStore):
     # docstr-coverage: inherited
     def __init__(self, url: str) -> None:
         super().__init__(url)
-        self._storage_options: dict[str, Any] = dict()
         self._zarr_kwargs: dict[str, Any] = dict()
 
     # docstr-coverage: inherited
@@ -107,9 +106,9 @@ class EOZarrStore(EOProductStore):
         self._mode = mode
         self._root: Group = zarr.open(store=self.url, mode=mode, **kwargs)
         self._fs = self._root.store
-        self._storage_options = kwargs.get("storage_options", dict())
-        if not mode.startswith("r"):
-            kwargs["compressor"] = kwargs.get("compressor", self.DEFAULT_COMPRESSOR)
+        kwargs.setdefault("storage_options", dict())
+        if not mode.startswith("r") or "+" in mode:
+            kwargs.setdefault("compressor", self.DEFAULT_COMPRESSOR)
         self._zarr_kwargs = kwargs
 
     # docstr-coverage: inherited
@@ -124,7 +123,6 @@ class EOZarrStore(EOProductStore):
         super().close()
         self._root = None
         self._fs = None
-        self._storage_options = dict()
 
     # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
@@ -162,7 +160,7 @@ class EOZarrStore(EOProductStore):
         # Use dask instead of zarr to read the object data to :
         # - avoid memory leak/let dask manage lazily close the data file
         # - read in parallel
-        var_data = da.from_zarr(self.url, component=key, storage_options=self._storage_options)
+        var_data = da.from_zarr(self.url, component=key, **self._zarr_kwargs)
         if "scale_factor" in obj.attrs:
             var_data *= obj.attrs["scale_factor"]
         return EOVariable(data=var_data, attrs=obj.attrs)
@@ -186,7 +184,7 @@ class EOZarrStore(EOProductStore):
             if dask_array.size > 0:
                 # We must use to_zarr for writing on a distributed cluster,
                 # but to_zarr fail to write array with a 0 dim (divide by zero Exception)
-                dask_array.to_zarr(self.url, component=key, storage_options=self._storage_options, **self._zarr_kwargs)
+                dask_array.to_zarr(self.url, component=key, **self._zarr_kwargs)
             else:
                 self._root.create(key, shape=dask_array.shape)
         else:
