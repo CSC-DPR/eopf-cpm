@@ -42,7 +42,7 @@
             "item_format": "netcdf"
         },
         {
-            "short_name": "latitude_tp_olci",
+            "short_name": "olci_tp_latitude",
             "target_path": "/coordinates/olci_tp_grid/latitude",
             "source_path": "tiepoints_olci.nc:OLC_TP_lat",
             "item_format": "netcdf"
