@@ -5,7 +5,7 @@ import platform
 import posixpath
 import re
 from pathlib import PurePosixPath
-from typing import Any, Callable, Optional, Union
+from typing import Any, Callable, Optional, Sequence, Union
 
 import dask.array as da
 import dateutil.parser as date_parser
@@ -320,15 +320,15 @@ def join_eo_path_optional(*subpaths: Optional[str]) -> str:
     return join_eo_path(*valid_subpaths)
 
 
-def get_min_datetime_for_timestamp():
+def get_min_datetime_for_timestamp() -> datetime.datetime:
     if platform.system() == "Windows":
-        return (datetime.datetime.fromtimestamp(0, tz=pytz.UTC) + datetime.timedelta(days=1))
+        return datetime.datetime.fromtimestamp(0, tz=pytz.UTC) + datetime.timedelta(days=1)
     return datetime.datetime.fromtimestamp(0, tz=pytz.UTC)
 
 
 def get_managed_numpy_dtype(type_: Optional[str] = None) -> tuple[type, ...]:
     """Retrieve OS dependent dtype for numpy"""
-    managed_type = {
+    managed_type: dict[str, Sequence[str]] = {
         "uint": ("uint64", "uint32", "uint16", "uint8"),
     }
     managed_type["int"] = ("int64", "int32", "int16", "int8", *managed_type["uint"])
