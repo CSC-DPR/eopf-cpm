@@ -1,6 +1,6 @@
 {
     "recognition": {
-        "filename_pattern": "S3*.*_0_*.*SEN3",
+        "filename_pattern": "S3.?_.+_0_.*SEN3",
         "product_type_pattern": "S3_L0",
         "version": "TODO"
     },
@@ -26,7 +26,7 @@
             "target_path": "/conditions/packet_type",
             "item_format": "L0packetlist",
             "accessor_config": {
-                "target_type": "l0_mapping/types/scalar_uint8"
+                "target_type": "l0_mapping/types/scalar_bool"
             },
             "parameters": {
                 "attributes": {
@@ -41,7 +41,7 @@
             "target_path": "/conditions/datafield_header_flag",
             "item_format": "L0packetlist",
             "accessor_config": {
-                "target_type": "l0_mapping/types/scalar_uint8"
+                "target_type": "l0_mapping/types/scalar_bool"
             },
             "parameters": {
                 "attributes": {
@@ -112,7 +112,7 @@
         },
 		{
             "short_name": "packet_data_length",
-            "source_path": "ISPData.dat:(32,49,16)",
+            "source_path": "ISPData.dat:(32,48,16)",
             "target_path": "/conditions/packet_data_length",
             "item_format": "L0packetlist",
             "accessor_config": {
@@ -217,11 +217,11 @@
         },
 		{
             "short_name": "time_status",
-            "source_path": "ISPData.dat:(136:144,1)",
+            "source_path": "ISPData.dat:(136,144,1)",
             "target_path": "/conditions/time_status",
             "item_format": "L0packetlist",
             "accessor_config": {
-                "target_type": "l0_mapping/types/uint8"
+                "target_type": "l0_mapping/types/bool"
             },
             "parameters": {
                 "attributes": {
@@ -257,7 +257,7 @@
                 "attributes": {
                     "long_name": "fep annotation data"
                 },
-                "dimensions": [ "annotation_number", "fep_info"]
+                "dimensions": [ "packet_number", "fep_info"]
             }
         },
 		{
@@ -272,7 +272,7 @@
                 "attributes": {
                     "long_name": "gps time days"
                 },
-                "dimensions": [ "annotation_number"]
+                "dimensions": [ "packet_number"]
             }
         },
 		{
@@ -287,7 +287,7 @@
                 "attributes": {
                     "long_name": "gps time seconds"
                 },
-                "dimensions": [ "annotation_number"]
+                "dimensions": [ "packet_number"]
             }
         },
 		{
@@ -302,13 +302,14 @@
                 "attributes": {
                     "long_name": "gps time microseconds"
                 },
-                "dimensions": [ "annotation_number"]
+                "dimensions": [ "packet_number"]
             }
         }
     ],
     "l0_mapping": {
         "types": {
             "bool": "bool",
+            "scalar_bool": "s_bool",
             "uint8": "uint8",
             "scalar_uint8": "s_uint8",
             "uint16": "uint16",
@@ -320,6 +321,7 @@
 	"annotation_mapping": {
 	    "types": {
             "bool": "bool",
+            "scalar_bool": "s_bool",
             "uint8": "uint8",
             "scalar_uint8": "s_uint8",
             "uint16": "uint16",
@@ -329,4 +331,3 @@
         }
     }
 }
-
