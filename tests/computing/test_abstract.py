@@ -120,7 +120,14 @@ def valide_output_expected_product(variable_paths):
         ),
     ],
 )
-def test_processing_step(dasks_arrays: da.Array, processing_step: EOProcessingStep, kwargs, expected_data, expected_id):
+def test_processing_step(
+    dask_client_all,
+    dasks_arrays: da.Array,
+    processing_step: EOProcessingStep,
+    kwargs,
+    expected_data,
+    expected_id,
+):
     assert processing_step.identifier == expected_id
     new_da = processing_step.apply(*dasks_arrays, **kwargs)
     assert new_da.compute() == expected_data
@@ -149,7 +156,7 @@ def test_processing_step(dasks_arrays: da.Array, processing_step: EOProcessingSt
         ),
     ],
 )
-def test_processing_unit(product, kwargs, processing_unit, expected_product, expected_id):
+def test_processing_unit(dask_client_all, product, kwargs, processing_unit, expected_product, expected_id):
     assert str(processing_unit) == f"{processing_unit.__class__.__name__}<{processing_unit.identifier}>"
     assert (
         repr(processing_unit)
@@ -185,7 +192,7 @@ def test_processing_unit(product, kwargs, processing_unit, expected_product, exp
         ),
     ],
 )
-def test_processor(product, kwargs, processing_unit, expected_product, expected_id):
+def test_processor(dask_client_all, product, kwargs, processing_unit, expected_product, expected_id):
     assert str(processing_unit) == f"{processing_unit.__class__.__name__}<{processing_unit.identifier}>"
     assert (
         repr(processing_unit)
@@ -193,7 +200,7 @@ def test_processor(product, kwargs, processing_unit, expected_product, expected_
     )
 
     assert processing_unit.identifier == expected_id
-    new_product = processing_unit.run(product, **kwargs)
+    new_product = processing_unit.run_validating(product, **kwargs)
     new_product.tree()
     expected_product.tree()
     assert_is_subeocontainer(new_product, expected_product)

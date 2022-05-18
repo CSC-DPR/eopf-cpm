@@ -9,10 +9,13 @@ from eopf.product import EOProduct
 
 
 class EOProcessingStep(ABC):
-    """Abstract Base class For Processing Step.
+    """Converts one or several input dask arrays (of one or several variables)
+    into one dask array (of one intermediate or output variable). Usually,
+    application happens delayed, data is computed only when written or used.
 
-    EOProcessingStep are available to produce algorithm working with
-    dask.array.Array and produce an dask.array.Array.
+    Derived abstract classes come with specific implementations of apply
+    that e.g. call da.map_blocks() on the arrays with a function provided
+    in the concrete implementation of ProcessingStep. See BlockProcessingStep.
 
     Parameters
     ----------
@@ -40,14 +43,14 @@ class EOProcessingStep(ABC):
 
     @abstractmethod
     def apply(self, *args: da.Array, dtype: DTypeLike = float, **kwargs: Any) -> da.Array:  # pragma: no cover
-        """Abstract method implemented in subclass to provide the algorithme
+        """Abstract method that creates a new dask array from dask arrays.
 
         Parameters
         ----------
         *args: dask.array.Array
-            inputs dask array to compute for this algorithm
+            inputs dask array to use for this algorithm
         dtype: DTypeLike
-            dtype for the output dask array
+             output array data type
         **kwargs: any
             any needed kwargs
 
@@ -58,7 +61,13 @@ class EOProcessingStep(ABC):
 
 
 class EOBlockProcessingStep(EOProcessingStep):
-    """Abstract class to applicate low level algorithm to chunk block of da.Array
+    """Block-wise converts one or several input dask arrays (of one or several variables)
+    into one dask array (of one intermediate or output variable). Usually,
+    application happens delayed, data is computed only when written or used.
+
+    This abstract class comes with an implementation of apply that calls map_blocks
+    and an abstract method func that must be overwritten by concrete implementation classes.
+    func is called for each block (=chunk) of the inputs independently and maybe concurrently.
 
     Parameters
     ----------
@@ -75,14 +84,14 @@ class EOBlockProcessingStep(EOProcessingStep):
     """
 
     def apply(self, *args: da.Array, dtype: DTypeLike = float, **kwargs: Any) -> da.Array:
-        """apply map_blocks on all given dask array
+        """Block-wise application of a function to create a new dask array from dask arrays
 
         Parameters
         ----------
         *args: dask.array.Array
-            inputs dask array to compute for this algorithm
+             input arrays with same number of chunks each
         dtype: DTypeLike
-            dtype for the output dask array
+            output array data type
         **kwargs: any
             any needed kwargs
 
@@ -90,18 +99,20 @@ class EOBlockProcessingStep(EOProcessingStep):
         -------
         dask.array.Array
         """
-        return da.map_blocks(self.func, *args, dtype=dtype, **kwargs)
+        return da.map_blocks(self.func, *args, dtype=dtype, meta=np.array((), dtype=dtype), **kwargs)
 
     @abstractmethod
     def func(
         self, *args: np.ndarray[Any, np.dtype[Any]], **kwargs: Any
     ) -> np.ndarray[Any, np.dtype[Any]]:  # pragma: no cover
-        """Abstract method of the low level interface for the algorithm
+        """Abstract method that is applied for one block of the inputs.
+
+        It creates a new numpy array from numpy arrays.
 
         Parameters
         ----------
         *args: numpy.ndarray
-            inputs numpy array from the map_blocks
+            input arrays with same number of chunks each
         **kwargs: any
             any needed kwargs
 
@@ -112,7 +123,14 @@ class EOBlockProcessingStep(EOProcessingStep):
 
 
 class EOOverlapProcessingStep(EOProcessingStep):
-    """Abstract class to applicate low level algorithm to chunk block of da.Array
+    """Block-wise converts one or several input dask arrays (of one or several variables)
+    into one dask array (of one intermediate or output variable), providing spatial
+    overlap between input blocks. Usually, application happens delayed, data is computed
+    only when written or used.
+
+    This abstract class comes with an implementation of apply that calls map_blocks
+    and an abstract method func that must be overwritten by concrete implementation classes.
+    func is called for each block (=chunk) of the inputs independently and maybe concurrently.
 
     Parameters
     ----------
@@ -129,13 +147,36 @@ class EOOverlapProcessingStep(EOProcessingStep):
     """
 
     def apply(self, *args: da.Array, dtype: DTypeLike = float, depth: int = 1, **kwargs: Any) -> da.Array:
+        """Block-wise application of a function with some overlap buffer from adjacent blocks.
+        Creates a new dask array from dask arrays.
+        (Note that using trim=False is broken in dask.)
+
+        Parameters
+        ----------
+        *args: dask.array.Array
+            input arrays with same number of chunks each
+        dtype: DTypeLike
+            output array data type
+        depth: int
+            size of buffer around each block from adjacent blocks that is provided to func as part of its inputs
+        **kwargs: any
+            any needed kwargs
+
+        Returns
+        -------
+        dask.array.Array
+        """
         return da.map_overlap(self.func, *args, depth=depth, dtype=dtype, meta=np.array((), dtype=dtype), **kwargs)
 
     @abstractmethod
     def func(
         self, *args: np.ndarray[Any, np.dtype[Any]], **kwargs: Any
     ) -> np.ndarray[Any, np.dtype[Any]]:  # pragma: no cover
-        """Abstract method of the low level interface for the algorithm
+        """Abstract method that is applied for one block of the inputs extended by a buffer with data
+        from adjacent blocks. It creates a new numpy array from numpy arrays.
+
+        The output numpy array will be trimmed by the buffer size (depth parameter of apply) by dask
+        before creating the dask array mosaic.
 
         Parameters
         ----------
@@ -197,9 +238,8 @@ class EOProcessingUnit(ABC):
 
 
 class EOProcessor(EOProcessingUnit):
-    """Abstract class to applicate high level algorithm direclty on EOProducts
-
-    Used to provide complete and valide product
+    """Abstract base class of processors i.e. processing units
+    that provide valid EOProducts with coordinates etc.
 
     Parameters
     ----------
@@ -214,6 +254,24 @@ class EOProcessor(EOProcessingUnit):
     --------
     eopf.product.EOProduct
     """
+
+    def run_validating(self, *args: EOProduct, **kwargs: Any) -> EOProduct:
+        """Transforms input products into a new valid EOProduct with new variables.
+
+        Parameters
+        ----------
+        *args: EOProduct
+            inputs products to combine
+        **kwargs: any
+            any needed kwargs
+
+        Returns
+        -------
+        EOProduct
+        """
+        result_product = self.run(*args, **kwargs)
+        self.validate_product(result_product)
+        return result_product
 
     def validate_product(self, product: EOProduct) -> None:
         """verify that the given product is valid.
