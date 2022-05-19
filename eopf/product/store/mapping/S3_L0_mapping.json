@@ -280,13 +280,13 @@
 		{
             "short_name": "fep",
             "source_path": "ISPAnnotation.dat",
-            "target_path": "/quality/fep",
+            "target_path": "/conditions/fep",
             "item_format": "L0annotationlist",
             "accessor_config": {
 			    "length_of_packet": "annotation_mapping/packet_len/annotation",
                 "offset_in_bits_within_packet": "annotation_mapping/offset/fep",
-				"length_in_bits": "annotation_stream_mapping/len/fep",
-                "target_type": "annotation_stream_mapping/types/bytearray"
+				"length_in_bits": "annotation_mapping/len/fep",
+                "target_type": "annotation_mapping/types/bytearray"
             },
             "parameters": {
                 "attributes": {
@@ -303,8 +303,8 @@
             "accessor_config": {
 			    "length_of_packet": "annotation_mapping/packet_len/annotation",
                 "offset_in_bits_within_packet": "annotation_mapping/offset/gps_days",
-				"length_in_bits": "annotation_stream_mapping/len/gps_days",
-                "target_type": "annotation_stream_mapping/types/uint32"
+				"length_in_bits": "annotation_mapping/len/gps_days",
+                "target_type": "annotation_mapping/types/uint32"
             },
             "parameters": {
                 "attributes": {
@@ -332,7 +332,7 @@
             }
         },
 		{
-            "short_name": "gps_time_micorseconds",
+            "short_name": "gps_time_microseconds",
             "source_path": "ISPAnnotation.dat",
             "target_path": "/coordinates/gps_time_microseconds",
             "item_format": "L0annotationlist",
@@ -358,13 +358,13 @@
              "scalar_uint8": {
                 "name": "s_uint8"
             },
-            "unit16": {
-                "name": "unit16"
+            "uint16": {
+                "name": "uint16"
             },
-            "unit32": {
-                "name": "unit32"
+            "uint32": {
+                "name": "uint32"
             },
-            "unit32": {
+            "bytearray": {
                 "name": "bytearray"
             }
         },
@@ -422,7 +422,7 @@
             "packet_version": {
                 "value": 3
             },
-            "packet_version": {
+            "packet_type": {
                 "value": 1
             },
             "header_flag": {
@@ -479,13 +479,13 @@
             "uint8": {
                 "name": "uint8"
             },
-            "unit16": {
-                "name": "unit16"
+            "uint16": {
+                "name": "uint16"
             },
-            "unit32": {
-                "name": "unit32"
+            "uint32": {
+                "name": "uint32"
             },
-            "unit32": {
+            "bytearray": {
                 "name": "bytearray"
             }
         },
