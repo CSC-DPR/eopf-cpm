@@ -43,7 +43,7 @@ def test_read_product(dask_client_all, store_type, get_key):
     product[get_key]
     with patch.object(ManifestStore, "__getitem__", return_value=EOGroup()) as mock_method:
         product.attrs
-    mock_method.call_count == 1
+    assert mock_method.call_count == 1
     product.store.close()
 
 
@@ -59,12 +59,12 @@ def test_load_product(dask_client_all, store_type):
     product.open()
     with patch.object(ManifestStore, "__getitem__", return_value=EOGroup()) as mock_method:
         product.attrs
-    mock_method.call_count == 1
+    assert mock_method.call_count == 1
     product.load()
     assert len(product._groups) > 0
     with patch.object(ManifestStore, "__getitem__", return_value=EOGroup()) as mock_method:
         product.attrs
-    mock_method.call_count == 1
+    assert mock_method.call_count == 1
     product.store.close()
 
 
