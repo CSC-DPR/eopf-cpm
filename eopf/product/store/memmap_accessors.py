@@ -131,10 +131,10 @@ class MemMapAccessor(EOProductStore):
         raise NotImplementedError()
 
     def is_group(self, path: str) -> bool:
-        return true
+        return False
 
     def is_variable(self, path: str) -> bool:
-        return true
+        return True
 
     def iter(self, path: str) -> Iterator[str]:
         """Has no functionality within this store"""
@@ -243,11 +243,11 @@ class FixedMemMapAccessor(EOProductStore):
 
     # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
-        return true
+        return False
 
     # docstr-coverage: inherited
     def is_variable(self, path: str) -> bool:
-        return true
+        return True
 
     def iter(self, path: str) -> Iterator[str]:
         """Has no functionality within this store"""
