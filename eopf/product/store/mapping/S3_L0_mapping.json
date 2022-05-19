@@ -268,7 +268,7 @@
             "accessor_config": {
                 "offset_in_bits_within_packet": "l0_mapping/offset/user_data",
 				"length_in_bits": "l0_mapping/len/user_data",
-                "target_type": "l0_mapping/types/bytearray"
+                "target_type": "l0_mapping/types/var_bytearray"
             },
             "parameters": {
                 "attributes": {
@@ -366,6 +366,9 @@
             },
             "bytearray": {
                 "name": "bytearray"
+            },
+            "var_bytearray": {
+                "name": "var_bytearray"
             }
         },
         "offset": {

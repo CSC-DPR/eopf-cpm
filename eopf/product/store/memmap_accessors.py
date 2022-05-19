@@ -18,6 +18,10 @@ if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_object import EOObject
 
 class MemMapAccessor(EOProductStore):
+
+    incr_step      = 10000
+    primary_header = 6
+
     def __init__(self, url: str, **kwargs: Any) -> None:
         super().__init__(url)
         self._root = None
@@ -63,30 +67,34 @@ class MemMapAccessor(EOProductStore):
                 (self._packet_offset).resize(self._n_packets + self.incr_step, refcheck=False)
 
             self._packet_offset[self._n_packets] = k
-            self._packet_length[self._n_packets] = int.from_bytes(self._buffer[k + 4:k + 6], "big") + 1
+            self._packet_length[self._n_packets] = int.from_bytes(self._buffer[k + 4:k + primary_header], "big") + primary_header + 1
 
-            k += self._packet_length[self._n_packets] + 6
+            k += self._packet_length[self._n_packets]
             self._n_packets += 1
 
     def parsekey(self, offset_in_bits, length_in_bits, outputType):
 
-        if (outputType == 'userData'):
+        if (outputType == 'var_bytearray'):
             start_byte = offset_in_bits // 8
             parameter = np.zeros((self._n_packets, np.max(self._packet_length) - start_byte), dtype='uint8')
             for k in range(self._n_packets):
-                end_byte = (self._packet_length[k] + 6 - start_byte)
-                parameter[k,] = self._buffer[self._packet_offset[k] + start_byte:self._packet_offset[k] + end_byte]
+                end_byte = (self._packet_length[k])
+                parameter[k,end_byte-start_byte] = self._buffer[self._packet_offset[k] + start_byte:self._packet_offset[k] + end_byte]
 
             return parameter
 
         else:
-            parameter = np.zeros(self._n_packets, dtype=outputType)
+            output_packets = self._n_packets
+            if (outputType[:2] == "s_"):
+                outputpackets = 1
+                outputType = outputType[2:]
+            parameter = np.zeros(output_packets, dtype=outputType)
             start_byte = offset_in_bits // 8
             end_byte = (offset_in_bits + length_in_bits - 1) // 8 + 1
             shift = end_byte * 8 - (offset_in_bits + length_in_bits)
             mask = np.sum(2 ** np.arange(length_in_bits))
 
-            for k in range(self._n_packets):
+            for k in range(output_packets):
                 data = self._buffer[self._packet_offset[k] + start_byte:self._packet_offset[k] + end_byte] >> shift
                 parameter[k] = ((int.from_bytes(data, 'big')) & mask)
 
@@ -161,7 +169,7 @@ class FixedMemMapAccessor(EOProductStore):
             self._offset_in_bits  = kwargs["offset_in_bits"]
             self._length_in_bits = kwargs["length_in_bits"]
             self._target_type = kwargs["target_type"]
-            self._packet_length = kwargs["target_type"]
+            self._packet_length = kwargs["length_of_packet"]
 
         except KeyError as e:
             raise TypeError(f"Missing configuration parameter: {e}")
@@ -180,23 +188,27 @@ class FixedMemMapAccessor(EOProductStore):
 
     def parsekey(self, offset_in_bits, length_in_bits, packet_len, outputType):
 
-        if (outputType == 'userData'):
+        if (outputType == 'bytearray'):
             start_byte = offset_in_bits // 8
-            parameter = np.zeros((self._n_packets, np.max(self._packet_length) - start_byte), dtype='uint8')
+            parameter = np.zeros((self._n_packets, length_in_bits//8), dtype='uint8')
             for k in range(self._n_packets):
-                end_byte = (packet_len*k + 6 - start_byte)
-                parameter[k,] = self._buffer[self._packet_offset[k] + start_byte:self._packet_offset[k] + end_byte]
+                end_byte = (packet_len*k - start_byte)
+                parameter[k,] = self._buffer[packet_len*k + start_byte:packet_len*k + end_byte]
 
             return parameter
 
         else:
-            parameter = np.zeros(self._n_packets, dtype=outputType)
+            output_packets = self._n_packets
+            if (outputType[:2] == "s_"):
+                outputpackets = 1
+                outputType=outputType[2:]
+            parameter = np.zeros(output_packets, dtype=outputType)
             start_byte = offset_in_bits // 8
             end_byte = (offset_in_bits + length_in_bits - 1) // 8 + 1
             shift = end_byte * 8 - (offset_in_bits + length_in_bits)
             mask = np.sum(2 ** np.arange(length_in_bits))
 
-            for k in range(self._n_packets):
+            for k in range(output_packets):
                 data = self._buffer[packet_len*k + start_byte:packet_len*k + end_byte] >> shift
                 parameter[k] = ((int.from_bytes(data, 'big')) & mask)
 
@@ -222,7 +234,7 @@ class FixedMemMapAccessor(EOProductStore):
         from eopf.product.core import EOVariable
 
         self.loadbuffer()
-        self._n_packets = self._buffer // self._packet_length['value']
+        self._n_packets = self._buffer.size // self._packet_length['value']
 
         ndarray = parsekey(self._offset_in_bits['value'], self._length_in_bits['value'], self._packet_length['value'], self._target_type['name'])
         if len(ndarray.shape) == 0:
