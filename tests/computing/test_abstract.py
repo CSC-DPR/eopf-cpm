@@ -1,5 +1,6 @@
 import contextlib
 from typing import Any
+from unittest import mock
 
 import numpy as np
 import pytest
@@ -16,11 +17,10 @@ from ..utils import assert_is_subeocontainer
 
 
 class SumProcessStep(EOProcessingStep):
-    def apply(self, *args: da.Array, dtype: DTypeLike = float, **kwargs: Any) -> da.Array:
-        arg = args[0]
-        for a in args[1:]:
-            arg += a
-        return arg
+    def apply(
+        self, *inputs: np.ndarray[Any, np.dtype[Any]], dtype: DTypeLike = float, **kwargs: Any
+    ) -> np.ndarray[Any, np.dtype[Any]]:
+        return sum(inputs)
 
 
 class SumProcessingUnit(EOProcessingUnit):
@@ -49,13 +49,13 @@ class SumProcessor(EOProcessor):
 
 
 class SumBlockProcessingStep(EOBlockProcessingStep):
-    def func(self, *args: np.ndarray[Any, np.dtype[Any]], **kwargs: Any) -> np.ndarray[Any, np.dtype[Any]]:
-        return sum(args)
+    def func(self, *inputs: np.ndarray[Any, np.dtype[Any]], **kwargs: Any) -> np.ndarray[Any, np.dtype[Any]]:
+        return sum(inputs)
 
 
 class SumOverlapProcessingStep(EOOverlapProcessingStep):
-    def func(self, *args: np.ndarray[Any, np.dtype[Any]], **kwargs: Any) -> np.ndarray[Any, np.dtype[Any]]:
-        return sum(args)
+    def func(self, *inputs: np.ndarray[Any, np.dtype[Any]], **kwargs: Any) -> np.ndarray[Any, np.dtype[Any]]:
+        return sum(inputs)
 
 
 @pytest.fixture
@@ -73,7 +73,6 @@ def variable_paths():
 @pytest.fixture
 def fake_product(variable_paths):
     product = EOProduct("fake_product")
-
     for path in variable_paths:
         product.add_variable(path, data=np.array([15]))
     return product
@@ -95,47 +94,78 @@ def valide_output_expected_product(variable_paths):
 
 @pytest.mark.unit
 @pytest.mark.parametrize(
-    "dasks_arrays, processing_step, kwargs, expected_data, expected_id",
+    "dasks_arrays, processing_step, kwargs, expected_id",
     [
         (
             [da.asarray(np.array([1])) for _ in range(10)],
             SumProcessStep("identifier"),
             {},
-            np.array([10]),
             "identifier",
         ),
         (
             [da.asarray(np.array([1])) for _ in range(10)],
             SumBlockProcessingStep("identifier"),
             {},
-            np.array([10]),
             "identifier",
         ),
         (
             [da.asarray(np.array([1])) for _ in range(10)],
             SumOverlapProcessingStep("identifier"),
             {},
-            np.array([10]),
             "identifier",
         ),
     ],
 )
-def test_processing_step(
-    dask_client_all,
+def test_abstract_processing_step(
     dasks_arrays: da.Array,
     processing_step: EOProcessingStep,
     kwargs,
-    expected_data,
     expected_id,
 ):
     assert processing_step.identifier == expected_id
-    new_da = processing_step.apply(*dasks_arrays, **kwargs)
-    assert new_da.compute() == expected_data
+    with mock.patch(f"{processing_step.__class__.__module__}.{processing_step.__class__.__name__}.apply") as mock_apply:
+        processing_step.apply(*dasks_arrays, **kwargs)
+    mock_apply.assert_called_once_with(*dasks_arrays, **kwargs)
+    assert all(isinstance(i, da.Array) for i in mock_apply.call_args.args)
+    assert kwargs == mock_apply.call_args.kwargs
 
 
 @pytest.mark.unit
 @pytest.mark.parametrize(
-    "product, kwargs, processing_unit, expected_product, expected_id",
+    "dasks_arrays, processing_step, kwargs, expected_id",
+    [
+        (
+            [da.asarray(np.array([1])) for _ in range(10)],
+            SumBlockProcessingStep("identifier"),
+            {},
+            "identifier",
+        ),
+        (
+            [da.asarray(np.array([1])) for _ in range(10)],
+            SumOverlapProcessingStep("identifier"),
+            {},
+            "identifier",
+        ),
+    ],
+)
+def test_maps_processing_step(
+    dasks_arrays: da.Array,
+    processing_step: EOProcessingStep,
+    kwargs,
+    expected_id,
+):
+    assert processing_step.identifier == expected_id
+    with mock.patch(f"{processing_step.__class__.__module__}.{processing_step.__class__.__name__}.func") as mock_func:
+        mock_func.side_effect = lambda *x: sum(x)
+        ret_val = processing_step.apply(*dasks_arrays, **kwargs).compute()
+    assert isinstance(ret_val, np.ndarray)
+    assert all(isinstance(i, np.ndarray) for i in mock_func.call_args.args)
+    assert kwargs == mock_func.call_args.kwargs
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "product, kwargs, processing_unit, expected_id",
     [
         (
             lazy_fixture("fake_product"),
@@ -151,22 +181,22 @@ def test_processing_step(
                 "dest_path": "/measurements/variable",
             },
             SumProcessingUnit("identifier"),
-            lazy_fixture("output_expected_product"),
             "identifier",
         ),
     ],
 )
-def test_processing_unit(dask_client_all, product, kwargs, processing_unit, expected_product, expected_id):
+def test_abstract_processing_unit(product, kwargs, processing_unit, expected_id):
     assert str(processing_unit) == f"{processing_unit.__class__.__name__}<{processing_unit.identifier}>"
     assert (
         repr(processing_unit)
         == f"[{id(processing_unit)}]{processing_unit.__class__.__name__}<{processing_unit.identifier}>"
     )
-
     assert processing_unit.identifier == expected_id
-    new_product = processing_unit.run(product, **kwargs)
-    assert_is_subeocontainer(new_product, expected_product)
-    assert_is_subeocontainer(expected_product, new_product)
+    with mock.patch(f"{processing_unit.__class__.__module__}.{processing_unit.__class__.__name__}.run") as mock_run:
+        processing_unit.run(product, **kwargs)
+    mock_run.assert_called_once_with(product, **kwargs)
+    assert all(isinstance(p, EOProduct) for p in mock_run.call_args.args)
+    assert kwargs == mock_run.call_args.kwargs
 
 
 @pytest.mark.unit
@@ -192,7 +222,7 @@ def test_processing_unit(dask_client_all, product, kwargs, processing_unit, expe
         ),
     ],
 )
-def test_processor(dask_client_all, product, kwargs, processing_unit, expected_product, expected_id):
+def test_abstract_processor(product, kwargs, processing_unit, expected_product, expected_id):
     assert str(processing_unit) == f"{processing_unit.__class__.__name__}<{processing_unit.identifier}>"
     assert (
         repr(processing_unit)
@@ -200,9 +230,16 @@ def test_processor(dask_client_all, product, kwargs, processing_unit, expected_p
     )
 
     assert processing_unit.identifier == expected_id
-    new_product = processing_unit.run_validating(product, **kwargs)
-    new_product.tree()
-    expected_product.tree()
-    assert_is_subeocontainer(new_product, expected_product)
-    assert_is_subeocontainer(expected_product, new_product)
-    processing_unit.validate_product(new_product)
+    with (
+        mock.patch(
+            f"{processing_unit.__class__.__module__}.{processing_unit.__class__.__name__}.run",
+            return_value=expected_product,
+        ) as mock_run,
+    ):
+        p = processing_unit.run_validating(product, **kwargs)
+    mock_run.assert_called_once_with(product, **kwargs)
+    assert all(isinstance(p, EOProduct) for p in mock_run.call_args.args)
+    assert kwargs == mock_run.call_args.kwargs
+
+    assert_is_subeocontainer(p, expected_product)
+    assert_is_subeocontainer(expected_product, p)
