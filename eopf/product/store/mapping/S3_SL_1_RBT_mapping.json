@@ -11992,9 +11992,9 @@
             "short_name": "metadata",
             "target_path": "",
             "source_path": "xfdumanifest.xml",
-            "item_format": "xfdumetadata",
+            "item_format": "xmlmetadata",
             "accessor_config": {
-                "metadata_mapping": "metadata_mapping",
+                "mapping": "metadata_mapping",
                 "namespaces": "namespaces"
             }
         }

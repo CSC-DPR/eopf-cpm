@@ -138,7 +138,7 @@
         {
             "short_name": "b01",
             "source_path": "GRANULE/[^/]*/IMG_DATA/.*B01.jp2:value",
-            "target_path": "/measurements/reflectances_20m/b01",
+            "target_path": "/measurements/reflectances_60m/b01",
             "item_format": "jp2",
             "parameters": {
                 "sub_array" : {
@@ -222,7 +222,7 @@
         {
             "short_name": "b08",
             "source_path": "GRANULE/[^/]*/IMG_DATA/.*B08.jp2:value",
-            "target_path": "/measurements/reflectances_20m/b08",
+            "target_path": "/measurements/reflectances_10m/b08",
             "item_format": "jp2",
             "parameters": {
                 "sub_array" : {
@@ -246,7 +246,7 @@
         {
             "short_name": "b09",
             "source_path": "GRANULE/[^/]*/IMG_DATA/.*B09.jp2:value",
-            "target_path": "/measurements/reflectances_20m/b09",
+            "target_path": "/measurements/reflectances_60m/b09",
             "item_format": "jp2",
             "parameters": {
                 "sub_array" : {
@@ -258,7 +258,7 @@
         {
             "short_name": "b10",
             "source_path": "GRANULE/[^/]*/IMG_DATA/.*B10.jp2:value",
-            "target_path": "/measurements/reflectances_20m/b10",
+            "target_path": "/measurements/reflectances_60m/b10",
             "item_format": "jp2",
             "parameters": {
                 "sub_array" : {
