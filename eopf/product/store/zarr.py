@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional
 
 import zarr
 from dask import array as da
+from numcodecs import Blosc
 from zarr.hierarchy import Group
 from zarr.storage import FSStore, contains_array, contains_group
 
@@ -80,19 +81,35 @@ class EOZarrStore(EOProductStore):
     _root: Optional[Group] = None
     _fs: Optional[FSStore] = None
     sep = "/"
+    DEFAULT_COMPRESSOR = Blosc(cname="zstd", clevel=3, shuffle=Blosc.BITSHUFFLE)
 
     # docstr-coverage: inherited
     def __init__(self, url: str) -> None:
         super().__init__(url)
-        self._storage_options: dict[str, Any] = dict()
+        self._zarr_kwargs: dict[str, Any] = dict()
 
     # docstr-coverage: inherited
     def open(self, mode: str = "r", **kwargs: Any) -> None:
+        """Open the store in the given mode
+
+        library specifics parameters :
+            - compressor : numcodecs compressor. ex : Blosc(cname="zstd", clevel=3, shuffle=Blosc.BITSHUFFLE)
+
+        Parameters
+        ----------
+        mode: str, optional
+            mode to open the store
+        **kwargs: Any
+            extra kwargs of open on librairy used.
+        """
         super().open()
         self._mode = mode
         self._root: Group = zarr.open(store=self.url, mode=mode, **kwargs)
         self._fs = self._root.store
-        self._storage_options = kwargs.get("storage_options", dict())
+        kwargs.setdefault("storage_options", dict())
+        if not mode.startswith("r") or "+" in mode:
+            kwargs.setdefault("compressor", self.DEFAULT_COMPRESSOR)
+        self._zarr_kwargs = kwargs
 
     # docstr-coverage: inherited
     def close(self) -> None:
@@ -106,7 +123,6 @@ class EOZarrStore(EOProductStore):
         super().close()
         self._root = None
         self._fs = None
-        self._storage_options = dict()
 
     # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
@@ -144,7 +160,7 @@ class EOZarrStore(EOProductStore):
         # Use dask instead of zarr to read the object data to :
         # - avoid memory leak/let dask manage lazily close the data file
         # - read in parallel
-        var_data = da.from_zarr(self.url, component=key, storage_options=self._storage_options)
+        var_data = da.from_zarr(self.url, component=key, storage_options=self._zarr_kwargs["storage_options"])
         if "scale_factor" in obj.attrs:
             var_data *= obj.attrs["scale_factor"]
         return EOVariable(data=var_data, attrs=obj.attrs)
@@ -168,7 +184,7 @@ class EOZarrStore(EOProductStore):
             if dask_array.size > 0:
                 # We must use to_zarr for writing on a distributed cluster,
                 # but to_zarr fail to write array with a 0 dim (divide by zero Exception)
-                dask_array.to_zarr(self.url, component=key, storage_options=self._storage_options)
+                dask_array.to_zarr(self.url, component=key, **self._zarr_kwargs)
             else:
                 self._root.create(key, shape=dask_array.shape)
         else:
