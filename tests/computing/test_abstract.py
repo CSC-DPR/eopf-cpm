@@ -1,4 +1,3 @@
-import contextlib
 from typing import Any
 from unittest import mock
 
@@ -16,46 +15,31 @@ from eopf.product.conveniences import init_product
 from ..utils import assert_is_subeocontainer
 
 
-class SumProcessStep(EOProcessingStep):
+class TestAbstractProcessStep(EOProcessingStep):
     def apply(
         self, *inputs: np.ndarray[Any, np.dtype[Any]], dtype: DTypeLike = float, **kwargs: Any
     ) -> np.ndarray[Any, np.dtype[Any]]:
-        return sum(inputs)
+        ...
 
 
-class SumProcessingUnit(EOProcessingUnit):
+class TestAbstractProcessingUnit(EOProcessingUnit):
     def run(self, product: EOProduct, **kwargs: Any) -> EOProduct:
-        paths = kwargs.get("variables_paths", [])
-        dest_path = kwargs.get("dest_path", "/variable")
-        step = SumProcessStep()
-        new_da = step.apply(*[product[path].data for path in paths])
-        new_product = EOProduct("new_product")
-        new_product.add_variable(dest_path, data=new_da)
-        return new_product
+        ...
 
 
-class SumProcessor(EOProcessor):
+class TestAbstractProcessor(EOProcessor):
     def run(self, product: EOProduct, **kwargs: Any) -> EOProduct:
-        with contextlib.ExitStack() as stack:
-            if product.store is not None:
-                stack.enter_context(product.open(mode="r"))
-            paths = kwargs.get("variables_paths", [])
-            dest_path = kwargs.get("dest_path", "/variable")
-            step = SumProcessStep()
-            new_da = step.apply(*[product[path].data for path in paths])
-            new_product = init_product("new_product")
-            new_product.add_variable(dest_path, data=new_da)
-        return new_product
+        ...
 
 
-class SumBlockProcessingStep(EOBlockProcessingStep):
+class TestAbstractBlockProcessingStep(EOBlockProcessingStep):
     def func(self, *inputs: np.ndarray[Any, np.dtype[Any]], **kwargs: Any) -> np.ndarray[Any, np.dtype[Any]]:
-        return sum(inputs)
+        ...
 
 
-class SumOverlapProcessingStep(EOOverlapProcessingStep):
+class TestAbstractOverlapProcessingStep(EOOverlapProcessingStep):
     def func(self, *inputs: np.ndarray[Any, np.dtype[Any]], **kwargs: Any) -> np.ndarray[Any, np.dtype[Any]]:
-        return sum(inputs)
+        ...
 
 
 @pytest.fixture
@@ -98,19 +82,19 @@ def valide_output_expected_product(variable_paths):
     [
         (
             [da.asarray(np.array([1])) for _ in range(10)],
-            SumProcessStep("identifier"),
+            TestAbstractProcessStep("identifier"),
             {},
             "identifier",
         ),
         (
             [da.asarray(np.array([1])) for _ in range(10)],
-            SumBlockProcessingStep("identifier"),
+            TestAbstractBlockProcessingStep("identifier"),
             {},
             "identifier",
         ),
         (
             [da.asarray(np.array([1])) for _ in range(10)],
-            SumOverlapProcessingStep("identifier"),
+            TestAbstractOverlapProcessingStep("identifier"),
             {},
             "identifier",
         ),
@@ -136,13 +120,13 @@ def test_abstract_processing_step(
     [
         (
             [da.asarray(np.array([1])) for _ in range(10)],
-            SumBlockProcessingStep("identifier"),
+            TestAbstractBlockProcessingStep("identifier"),
             {},
             "identifier",
         ),
         (
             [da.asarray(np.array([1])) for _ in range(10)],
-            SumOverlapProcessingStep("identifier"),
+            TestAbstractOverlapProcessingStep("identifier"),
             {},
             "identifier",
         ),
@@ -180,7 +164,7 @@ def test_maps_processing_step(
                 ],
                 "dest_path": "/measurements/variable",
             },
-            SumProcessingUnit("identifier"),
+            TestAbstractProcessingUnit("identifier"),
             "identifier",
         ),
     ],
@@ -216,7 +200,7 @@ def test_abstract_processing_unit(product, kwargs, processing_unit, expected_id)
                 ],
                 "dest_path": "/measurements/variable",
             },
-            SumProcessor("identifier"),
+            TestAbstractProcessor("identifier"),
             lazy_fixture("valide_output_expected_product"),
             "identifier",
         ),
