@@ -44,19 +44,19 @@
     {
       "short_name": " rc681",
       "target_path": "/measurements/image/rc681",
-      "source_path": "rc_ogvi.nc:RC681",
+      "source_path": "rc_gifapar.nc:RC681",
       "item_format": "netcdf"
     },
     {
       "short_name": " rc865",
       "target_path": "/measurements/image/rc865",
-      "source_path": "rc_ogvi.nc:RC865",
+      "source_path": "rc_gifapar.nc:RC865",
       "item_format": "netcdf"
     },
     {
-      "short_name": "ogvi",
-      "target_path": "/measurements/image/ogvi",
-      "source_path": "ogvi.nc:OGVI",
+      "short_name": "gifapar",
+      "target_path": "/measurements/image/gifapar",
+      "source_path": "gifapar.nc:GIFAPAR",
       "item_format": "netcdf"
     },
     {
@@ -91,21 +91,21 @@
       "item_format": "netcdf"
     },
     {
-      "short_name": "ogvi_err",
-      "target_path": "/quality/image/ogvi_err",
-      "source_path": "ogvi.nc:OGVI_err",
+      "short_name": "gifapar_err",
+      "target_path": "/quality/image/gifapar_err",
+      "source_path": "gifapar.nc:GIFAPAR_err",
       "item_format": "netcdf"
     },
     {
       "short_name": "rc681_err",
       "target_path": "/quality/image/rc681_err",
-      "source_path": "rc_ogvi.nc:RC681_err",
+      "source_path": "rc_gifapar.nc:RC681_err",
       "item_format": "netcdf"
     },
     {
       "short_name": "rc865_err",
       "target_path": "/quality/image/rc865_err",
-      "source_path": "rc_ogvi.nc:RC865_err",
+      "source_path": "rc_gifapar.nc:RC865_err",
       "item_format": "netcdf"
     },
     {
