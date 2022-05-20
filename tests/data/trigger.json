@@ -1,6 +1,6 @@
 {
     "module": "tests.computing.test_abstract",
-    "processing_unit": "SumProcessor",
+    "processing_unit": "TestAbstractProcessor",
     "parameters": {
         "variables_paths": [
             "/measurements/image/oa01_radiance",

@@ -9,6 +9,7 @@ import pytest
 from click.testing import CliRunner
 from fastapi.testclient import TestClient
 
+from eopf.product.conveniences import init_product
 from eopf.product.store.store_factory import EOStoreFactory
 from eopf.triggering import EOCLITrigger, EOEventTrigger, EOWebTrigger
 from eopf.triggering.abstract import EOTrigger
@@ -78,7 +79,8 @@ def client():
 )
 def test_cli_trigger(dask_client_all, server, TRIGGER_JSON_FILE, args, match_output):
     runner = CliRunner()
-    r = runner.invoke(EOCLITrigger(), args=" ".join([*args, TRIGGER_JSON_FILE]))
+    with mock.patch("tests.computing.test_abstract.TestAbstractProcessor.run", return_value=init_product("")):
+        r = runner.invoke(EOCLITrigger(), args=" ".join([*args, TRIGGER_JSON_FILE]))
     assert re.match(match_output, r.output) is not None, r.output
     assert r.exception is None
     assert r.exit_code == 0
@@ -92,6 +94,7 @@ def test_kafka_send(TRIGGER_JSON_FILE):
         mock.patch("aiokafka.AIOKafkaProducer.start") as start,
         mock.patch("aiokafka.AIOKafkaProducer.send_and_wait") as send,
         mock.patch("aiokafka.AIOKafkaProducer.stop") as stop,
+        mock.patch("tests.computing.test_abstract.TestAbstractProcessor.run", return_value=init_product("")),
     ):
         runner.invoke(EOCLITrigger(), args=f"kafka {TRIGGER_JSON_FILE}")
     assert start.call_count == 1
@@ -108,6 +111,7 @@ def test_kafka_consume(dask_client_all, fake_kafka_consumer):
         mock.patch("aiokafka.AIOKafkaConsumer.__aiter__", return_value=fake_kafka_consumer) as retrieve,
         mock.patch("aiokafka.AIOKafkaConsumer.stop") as stop,
         mock.patch("aiokafka.AIOKafkaConsumer._closed", return_value=True),
+        mock.patch("tests.computing.test_abstract.TestAbstractProcessor.run", return_value=init_product("")),
     ):
         r = runner.invoke(EOEventTrigger(), args=())
         assert r.exception is None
@@ -122,13 +126,14 @@ def test_kafka_consume(dask_client_all, fake_kafka_consumer):
 def test_web_trigger(dask_client_all, client, TRIGGER_JSON_FILE):
     with open(TRIGGER_JSON_FILE) as f:
         data = json.load(f)
-    r = client.post("/run", json=data)
-    assert r.status_code == 200
-    assert r.json() == {}
+    with mock.patch("tests.computing.test_abstract.TestAbstractProcessor.run", return_value=init_product("")):
+        r = client.post("/run", json=data)
+        assert r.status_code == 200
+        assert r.json() == {}
 
-    r = client.post("/run", json={})
-    assert r.status_code == 200
-    assert "err" in r.json()
+        r = client.post("/run", json={})
+        assert r.status_code == 200
+        assert "err" in r.json()
 
 
 @pytest.mark.unit
@@ -138,7 +143,7 @@ def test_web_trigger(dask_client_all, client, TRIGGER_JSON_FILE):
     [
         {
             "module": "tests.computing.test_abstract",
-            "processing_unit": "SumProcessor",
+            "processing_unit": "TestAbstractProcessor",
             "parameters": {"key": "value"},
             "input_product": {"id": "OLCI", "path": "product_path", "store_type": "safe"},
             "output_product": {"id": "output", "path": "output.zarr", "store_type": "zarr"},
@@ -146,7 +151,7 @@ def test_web_trigger(dask_client_all, client, TRIGGER_JSON_FILE):
         },
         {
             "module": "tests.computing.test_abstract",
-            "processing_unit": "SumProcessor",
+            "processing_unit": "TestAbstractProcessor",
             "parameters": {"key": "value"},
             "input_product": {"id": "OLCI", "path": "product_path", "store_type": "safe"},
             "output_product": {"id": "output", "path": "output.zarr", "store_type": "zarr"},
@@ -199,7 +204,7 @@ def test_extract_payload(trigger_class, payload):
         (
             {
                 "module": "",
-                "processing_unit": "SumProcessor",
+                "processing_unit": "TestAbstractProcessor",
                 "input_product": {"id": "OLCI", "path": "product_path", "store_type": "safe"},
                 "output_product": {"id": "output", "path": "output.zarr", "store_type": "zarr"},
                 "dask_context": {"local": "processes"},
@@ -209,7 +214,7 @@ def test_extract_payload(trigger_class, payload):
         (
             {
                 "module": "aaaa",
-                "processing_unit": "SumProcessor",
+                "processing_unit": "TestAbstractProcessor",
                 "input_product": {"id": "OLCI", "path": "product_path", "store_type": "safe"},
                 "output_product": {"id": "output", "path": "output.zarr", "store_type": "zarr"},
                 "dask_context": {"local": "processes"},
