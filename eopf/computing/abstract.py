@@ -42,12 +42,12 @@ class EOProcessingStep(ABC):
         self._identifier = identifier or str(id(self))
 
     @abstractmethod
-    def apply(self, *args: da.Array, dtype: DTypeLike = float, **kwargs: Any) -> da.Array:  # pragma: no cover
+    def apply(self, *inputs: da.Array, dtype: DTypeLike = float, **kwargs: Any) -> da.Array:  # pragma: no cover
         """Abstract method that creates a new dask array from dask arrays.
 
         Parameters
         ----------
-        *args: dask.array.Array
+        *inputs: dask.array.Array
             inputs dask array to use for this algorithm
         dtype: DTypeLike
              output array data type
@@ -83,12 +83,12 @@ class EOBlockProcessingStep(EOProcessingStep):
     dask.array.map_blocks
     """
 
-    def apply(self, *args: da.Array, dtype: DTypeLike = float, **kwargs: Any) -> da.Array:
+    def apply(self, *inputs: da.Array, dtype: DTypeLike = float, **kwargs: Any) -> da.Array:
         """Block-wise application of a function to create a new dask array from dask arrays
 
         Parameters
         ----------
-        *args: dask.array.Array
+        *inputs: dask.array.Array
              input arrays with same number of chunks each
         dtype: DTypeLike
             output array data type
@@ -99,11 +99,11 @@ class EOBlockProcessingStep(EOProcessingStep):
         -------
         dask.array.Array
         """
-        return da.map_blocks(self.func, *args, dtype=dtype, meta=np.array((), dtype=dtype), **kwargs)
+        return da.map_blocks(self.func, *inputs, dtype=dtype, meta=np.array((), dtype=dtype), **kwargs)
 
     @abstractmethod
     def func(
-        self, *args: np.ndarray[Any, np.dtype[Any]], **kwargs: Any
+        self, *inputs: np.ndarray[Any, np.dtype[Any]], **kwargs: Any
     ) -> np.ndarray[Any, np.dtype[Any]]:  # pragma: no cover
         """Abstract method that is applied for one block of the inputs.
 
@@ -111,7 +111,7 @@ class EOBlockProcessingStep(EOProcessingStep):
 
         Parameters
         ----------
-        *args: numpy.ndarray
+        *inputs: numpy.ndarray
             input arrays with same number of chunks each
         **kwargs: any
             any needed kwargs
@@ -146,14 +146,14 @@ class EOOverlapProcessingStep(EOProcessingStep):
     dask.array.map_overlap
     """
 
-    def apply(self, *args: da.Array, dtype: DTypeLike = float, depth: int = 1, **kwargs: Any) -> da.Array:
+    def apply(self, *inputs: da.Array, dtype: DTypeLike = float, depth: int = 1, **kwargs: Any) -> da.Array:
         """Block-wise application of a function with some overlap buffer from adjacent blocks.
         Creates a new dask array from dask arrays.
         (Note that using trim=False is broken in dask.)
 
         Parameters
         ----------
-        *args: dask.array.Array
+        *inputs: dask.array.Array
             input arrays with same number of chunks each
         dtype: DTypeLike
             output array data type
@@ -166,11 +166,11 @@ class EOOverlapProcessingStep(EOProcessingStep):
         -------
         dask.array.Array
         """
-        return da.map_overlap(self.func, *args, depth=depth, dtype=dtype, meta=np.array((), dtype=dtype), **kwargs)
+        return da.map_overlap(self.func, *inputs, depth=depth, dtype=dtype, meta=np.array((), dtype=dtype), **kwargs)
 
     @abstractmethod
     def func(
-        self, *args: np.ndarray[Any, np.dtype[Any]], **kwargs: Any
+        self, *inputs: np.ndarray[Any, np.dtype[Any]], **kwargs: Any
     ) -> np.ndarray[Any, np.dtype[Any]]:  # pragma: no cover
         """Abstract method that is applied for one block of the inputs extended by a buffer with data
         from adjacent blocks. It creates a new numpy array from numpy arrays.
@@ -180,7 +180,7 @@ class EOOverlapProcessingStep(EOProcessingStep):
 
         Parameters
         ----------
-        *args: numpy.ndarray
+        *inputs: numpy.ndarray
             inputs numpy array from the map_overlap
         **kwargs: any
             any needed kwargs
@@ -219,12 +219,12 @@ class EOProcessingUnit(ABC):
         self._identifier = identifier or str(id(self))
 
     @abstractmethod
-    def run(self, *args: EOProduct, **kwargs: Any) -> EOProduct:  # pragma: no cover
+    def run(self, *inputs: EOProduct, **kwargs: Any) -> EOProduct:  # pragma: no cover
         """Abstract method to provide an interface for algorithm implementation
 
         Parameters
         ----------
-        *args: EOProduct
+        *inputs: EOProduct
             all the product to process in this processing unit
         **kwargs: any
             any needed kwargs
@@ -255,12 +255,12 @@ class EOProcessor(EOProcessingUnit):
     eopf.product.EOProduct
     """
 
-    def run_validating(self, *args: EOProduct, **kwargs: Any) -> EOProduct:
+    def run_validating(self, *inputs: EOProduct, **kwargs: Any) -> EOProduct:
         """Transforms input products into a new valid EOProduct with new variables.
 
         Parameters
         ----------
-        *args: EOProduct
+        *inputs: EOProduct
             inputs products to combine
         **kwargs: any
             any needed kwargs
@@ -269,7 +269,7 @@ class EOProcessor(EOProcessingUnit):
         -------
         EOProduct
         """
-        result_product = self.run(*args, **kwargs)
+        result_product = self.run(*inputs, **kwargs)
         self.validate_product(result_product)
         return result_product
 

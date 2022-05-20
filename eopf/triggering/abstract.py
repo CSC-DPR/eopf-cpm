@@ -4,7 +4,7 @@ from typing import Any, Union
 
 import dask
 
-from eopf.computing.abstract import EOProcessingUnit
+from eopf.computing.abstract import EOProcessingUnit, EOProcessor
 from eopf.product.core.eo_product import EOProduct
 from eopf.product.store.abstract import EOProductStore
 from eopf.product.store.store_factory import EOStoreFactory
@@ -39,7 +39,10 @@ class EOTrigger(ABC):
         )
 
         dask.config.set(scheduler=scheduler_info)
-        output = processing_unit.run(input_product, **parameters)
+        if isinstance(processing_unit, EOProcessor):
+            output = processing_unit.run_validating(input_product, **parameters)
+        else:
+            output = processing_unit.run(input_product, **parameters)
         with output.open(mode="w", store_or_path_url=output_store):
             output.write()
 
