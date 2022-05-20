@@ -1,17 +1,15 @@
 import json
 import os
 from typing import Callable
-from unittest.mock import patch
 
 import numpy as np
 import pytest
 from pytest_lazyfixture import lazy_fixture
 
 from eopf.product.conveniences import open_store
-from eopf.product.core import EOGroup, EOProduct, EOVariable
+from eopf.product.core import EOProduct, EOVariable
 from eopf.product.store import EOProductStore, EOZarrStore
 from eopf.product.store.conveniences import convert
-from eopf.product.store.manifest import ManifestStore
 from eopf.product.store.safe import EOSafeStore
 from eopf.product.utils import conv
 
@@ -41,9 +39,7 @@ def test_read_product(dask_client_all, store_type, get_key):
     product = EOProduct("my_product", store_or_path_url=store)
     product.open()
     product[get_key]
-    with patch.object(ManifestStore, "__getitem__", return_value=EOGroup()) as mock_method:
-        product.attrs
-    mock_method.call_count == 1
+    assert isinstance(product.attrs, dict)
     product.store.close()
 
 
@@ -57,14 +53,10 @@ def test_load_product(dask_client_all, store_type):
     store = EOSafeStore(store_type)
     product = EOProduct("my_product", store_or_path_url=store)
     product.open()
-    with patch.object(ManifestStore, "__getitem__", return_value=EOGroup()) as mock_method:
-        product.attrs
-    mock_method.call_count == 1
+    assert isinstance(product.attrs, dict)
     product.load()
     assert len(product._groups) > 0
-    with patch.object(ManifestStore, "__getitem__", return_value=EOGroup()) as mock_method:
-        product.attrs
-    mock_method.call_count == 1
+    assert isinstance(product.attrs, dict)
     product.store.close()
 
 
