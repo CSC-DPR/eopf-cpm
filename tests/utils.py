@@ -103,10 +103,29 @@ def assert_issubdict(set_dict: dict, subset_dict: dict) -> bool:
     assert (set_dict | subset_dict) == set_dict
 
 
+def assert_eovariable_equal(variable1, variable2):
+    if variable1.is_masked:
+        source_data = np.ma.getdata(variable1.data)
+    else:
+        source_data = variable1.data
+
+    if variable2.is_masked:
+        target_data = np.ma.getdata(variable2.data)
+    else:
+        target_data = variable2.data
+
+    if variable1.is_masked and variable2.is_masked:
+        assert np.ma.allequal(source_data, target_data)
+    elif source_data.dtype == np.dtype("S1") or target_data.dtype == np.dtype("S1"):
+        assert np.array_equal(source_data, target_data)
+    else:
+        assert np.array_equal(source_data, target_data, equal_nan=True)
+
+
 def assert_is_subeocontainer(container1, container2):
     assert type(container1) == type(container2)
     if isinstance(container1, EOVariable):
-        assert np.array_equal(container1, container2)
+        assert_eovariable_equal(container1, container2)
         return
     for item in container1:
         assert item in container2

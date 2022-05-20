@@ -12,6 +12,7 @@ from eopf.product.store import EOProductStore, EOZarrStore
 from eopf.product.store.conveniences import convert
 from eopf.product.store.safe import EOSafeStore
 from eopf.product.utils import conv
+from tests.utils import assert_eovariable_equal
 
 
 @pytest.mark.need_files
@@ -142,20 +143,5 @@ def test_convert_safe_mapping(
             assert type(source_object) == type(target_object)
             np.testing.assert_equal(conv(source_object.attrs), conv(target_object.attrs))
             if isinstance(source_object, EOVariable):
-                if source_object.is_masked:
-                    source_data = np.ma.getdata(source_object.data)
-                else:
-                    source_data = source_object.data
-
-                if target_object.is_masked:
-                    target_data = np.ma.getdata(target_object.data)
-                else:
-                    target_data = target_object.data
-
-                if source_object.is_masked and target_object.is_masked:
-                    assert np.ma.allequal(source_data, target_data)
-                elif source_data.dtype == np.dtype("S1") or target_data.dtype == np.dtype("S1"):
-                    assert np.array_equal(source_data, target_data)
-                else:
-                    assert np.array_equal(source_data, target_data, equal_nan=True)
+                assert_eovariable_equal(source_object, target_object)
     assert expected_optional_miss == optional_miss
