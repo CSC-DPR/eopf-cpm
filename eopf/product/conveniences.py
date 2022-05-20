@@ -30,7 +30,7 @@ def init_product(
     eopf.product.EOProduct
     eopf.product.EOProduct.is_valid
     """
-    product = EOProduct(product_name, store_or_path_url=store_or_path_url, **kwargs)
+    product = EOProduct(product_name, storage=store_or_path_url, **kwargs)
 
     for group_name in product.MANDATORY_FIELD:
         product.add_group(group_name)

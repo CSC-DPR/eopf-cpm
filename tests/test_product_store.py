@@ -122,7 +122,7 @@ def zarr_file(OUTPUT_DIR: str):
 
 @pytest.mark.unit
 def test_load_product_from_zarr(dask_client_all, zarr_file: str):
-    product = EOProduct("a_product", store_or_path_url=zarr_file)
+    product = EOProduct("a_product", storage=zarr_file)
     with product.open(mode="r"):
         product.load()
 
@@ -584,7 +584,7 @@ def test_convert(dask_client_all, read_write_stores):
     product = init_product("a_product", store_or_path_url=read_store)
     with open_store(product, mode="w"):
         product.write()
-    new_product = EOProduct("new_one", store_or_path_url=convert(read_store, write_store))
+    new_product = EOProduct("new_one", storage=convert(read_store, write_store))
     with open_store(new_product, mode="r"):
         new_product["measurements"]
         new_product["coordinates"]
@@ -667,9 +667,9 @@ def test_rasters(dask_client_all, store_cls: type[EORasterIOAccessor], format_fi
 @pytest.mark.parametrize(
     "product, fakefilename, open_kwargs",
     [
-        (EOProduct("", store_or_path_url="s3://a_simple_zarr.zarr"), lazy_fixture("zarr_file"), S3_CONFIG_FAKE),
+        (EOProduct("", storage="s3://a_simple_zarr.zarr"), lazy_fixture("zarr_file"), S3_CONFIG_FAKE),
         (
-            EOProduct("", store_or_path_url="zip::s3://a_simple_zarr.zarr"),
+            EOProduct("", storage="zip::s3://a_simple_zarr.zarr"),
             lazy_fixture("zarr_file"),
             dict(s3=S3_CONFIG_FAKE),
         ),
@@ -704,7 +704,7 @@ def test_zarr_open_on_different_fs(dask_client_all, product: EOProduct, fakefile
     ],
 )
 def test_read_real_s3(dask_client_all, store: type, path: str, open_kwargs: dict[str, Any]):
-    product = EOProduct("s3_test_product", store_or_path_url=store(path))
+    product = EOProduct("s3_test_product", storage=store(path))
     with product.open(storage_options=open_kwargs):
         product.load()
 

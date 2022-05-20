@@ -36,7 +36,7 @@ from eopf.product.utils import conv
 )
 def test_read_product(dask_client_all, store_type, get_key):
     store = EOSafeStore(store_type)
-    product = EOProduct("my_product", store_or_path_url=store)
+    product = EOProduct("my_product", storage=store)
     product.open()
     product[get_key]
     assert isinstance(product.attrs, dict)
@@ -51,7 +51,7 @@ def test_read_product(dask_client_all, store_type, get_key):
 )
 def test_load_product(dask_client_all, store_type):
     store = EOSafeStore(store_type)
-    product = EOProduct("my_product", store_or_path_url=store)
+    product = EOProduct("my_product", storage=store)
     product.open()
     assert isinstance(product.attrs, dict)
     product.load()
@@ -109,8 +109,8 @@ def test_convert_safe_mapping(
     name = os.path.basename(input_path)
     target_store = output_store(os.path.join(OUTPUT_DIR, output_formatter(name)))
     convert(source_store, target_store)
-    source_product = EOProduct("", store_or_path_url=source_store)
-    target_product = EOProduct("", store_or_path_url=target_store)
+    source_product = EOProduct("", storage=source_store)
+    target_product = EOProduct("", storage=target_store)
 
     with open(mapping_filename) as f:
         mappin_data = json.load(f)

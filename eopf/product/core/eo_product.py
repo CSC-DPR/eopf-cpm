@@ -20,7 +20,7 @@ class EOProduct(EOContainer):
     ----------
     name: str
         name of this product
-    store_or_path_url: Union[str, EOProductStore], optional
+    storage: Union[str, EOProductStore], optional
         a EOProductStore or a string to create to a EOZarrStore
     attrs: dict[str, Any], optional
         global attributes of this product
@@ -35,17 +35,32 @@ class EOProduct(EOContainer):
     def __init__(
         self,
         name: str,
-        store_or_path_url: Optional[Union[str, EOProductStore]] = None,
+        storage: Optional[Union[str, EOProductStore]] = None,
         attrs: Optional[MutableMapping[str, Any]] = None,
     ) -> None:
         EOContainer.__init__(self, attrs=attrs)
         self._name: str = name
         self._store: Optional[EOProductStore] = None
-        self.__set_store(store_or_path_url=store_or_path_url)
+        self.__set_store(storage=storage)
 
-    @property
-    def _is_root(self) -> "bool":
-        return True
+    def __enter__(self) -> "EOProduct":
+        return self
+
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_value: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> None:
+        if self.store is None:  # pragma: no cover
+            raise StoreNotDefinedError("Store must be defined")
+        self.store.close()
+
+    def __repr__(self) -> str:
+        return f"[EOProduct]{hex(id(self))}"
+
+    def __str__(self) -> str:
+        return self.__repr__()
 
     @property
     def attributes(self) -> dict[str, Any]:
@@ -57,54 +72,38 @@ class EOProduct(EOContainer):
         """
         return self.attrs
 
-    # docstr-coverage: inherited
     @property
-    def product(self) -> "EOProduct":
-        return self
+    def coordinates(self) -> EOGroup:
+        """EOGroup: Coordinates mandatory group"""
+        coords = self.get("coordinates")
+        if not isinstance(coords, EOGroup):  # pragma: no cover (theorically impossible)
+            raise InvalidProductError("coordinates must be defined at product level and must be an EOGroup")
+        return coords
+
+    def is_valid(self) -> bool:
+        """Check if the product is a valid eopf product
+
+        Returns
+        -------
+        bool
+
+        See Also
+        --------
+        EOProduct.validate"""
+        return all(key in self for key in self.MANDATORY_FIELD)
 
     # docstr-coverage: inherited
-    @property
-    def store(self) -> Optional[EOProductStore]:
-        return self._store
-
-    # docstr-coverage: inherited
-    @property
-    def path(self) -> str:
-        return "/"
-
-    # docstr-coverage: inherited
-    @property
-    def relative_path(self) -> Iterable[str]:
-        return []
+    def load(self) -> None:
+        if self.store is None:
+            raise StoreNotDefinedError("Store must be defined")
+        if self.store.status == StorageStatus.CLOSE:
+            raise StoreNotOpenError("Store must be open")
+        return super().load()
 
     # docstr-coverage: inherited
     @property
     def name(self) -> str:
         return self._name
-
-    def __set_store(self, store_or_path_url: Optional[Union[str, EOProductStore]] = None) -> None:
-        from ..store.zarr import EOZarrStore
-
-        if isinstance(store_or_path_url, str):
-            self._store = EOZarrStore(store_or_path_url)
-        elif isinstance(store_or_path_url, EOProductStore):
-            self._store = store_or_path_url
-        elif store_or_path_url is not None:
-            raise TypeError(f"{type(store_or_path_url)} can't be used to instantiate EOProductStore.")
-
-    def __str__(self) -> str:
-        return self.__repr__()
-
-    def __repr__(self) -> str:
-        return f"[EOProduct]{hex(id(self))}"
-
-    def _repr_html_(self) -> str:
-        from ..formatting import renderer
-
-        return renderer("product.html", product=self)
-
-    def _add_local_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> EOVariable:
-        raise InvalidProductError("Products can't directly store variables.")
 
     def open(
         self, *, store_or_path_url: Optional[Union[EOProductStore, str]] = None, mode: str = "r", **kwargs: Any
@@ -123,7 +122,7 @@ class EOProduct(EOContainer):
             extra kwargs to open the store
         """
         if store_or_path_url is not None:
-            self.__set_store(store_or_path_url=store_or_path_url)
+            self.__set_store(storage=store_or_path_url)
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
         self.store.open(mode=mode, **kwargs)
@@ -132,54 +131,25 @@ class EOProduct(EOContainer):
             self.attrs.update(group.attrs)
         return self
 
-    def is_valid(self) -> bool:
-        """Check if the product is a valid eopf product
+    # docstr-coverage: inherited
+    @property
+    def path(self) -> str:
+        return "/"
 
-        Returns
-        -------
-        bool
-
-        See Also
-        --------
-        EOProduct.validate"""
-        return all(key in self for key in self.MANDATORY_FIELD)
-
-    def validate(self) -> None:
-        """check if the product is a valid eopf product, raise an error if is not a valid one
-
-        Raises
-        ------
-        InvalidProductError
-            If the product not follow the harmonized common data model
-
-        See Also
-        --------
-        EOProduct.is_valid
-        """
-        if not self.is_valid():
-            raise InvalidProductError(f"Invalid product {self}, missing mandatory groups.")
-
-    def __enter__(self) -> "EOProduct":
+    # docstr-coverage: inherited
+    @property
+    def product(self) -> "EOProduct":
         return self
 
-    def __exit__(
-        self,
-        exc_type: Optional[Type[BaseException]],
-        exc_value: Optional[BaseException],
-        traceback: Optional[TracebackType],
-    ) -> None:
-        if self.store is None:  # pragma: no cover
-            raise StoreNotDefinedError("Store must be defined")
-        self.store.close()
+    # docstr-coverage: inherited
+    @property
+    def relative_path(self) -> Iterable[str]:
+        return []
 
-    def _create_structure(self, group: Union[EOGroup, tuple[str, EOGroup]], level: int) -> None:
-        if isinstance(group, tuple):
-            group = group[1]
-        for v in group.variables:
-            print("|" + " " * level + "└──", v[0])
-        for g in group.groups:
-            print("|" + " " * level + "├──", g[0])
-            self._create_structure(g, level + 2)
+    # docstr-coverage: inherited
+    @property
+    def store(self) -> Optional[EOProductStore]:
+        return self._store
 
     def tree(self, interactive: bool = True) -> None:
         """Display the hierarchy of the product.
@@ -210,13 +180,20 @@ class EOProduct(EOContainer):
             self._create_structure(group, level=2)
         return
 
-    @property
-    def coordinates(self) -> EOGroup:
-        """EOGroup: Coordinates mandatory group"""
-        coords = self.get("coordinates")
-        if not isinstance(coords, EOGroup):  # pragma: no cover (theorically impossible)
-            raise InvalidProductError("coordinates must be defined at product level and must be an EOGroup")
-        return coords
+    def validate(self) -> None:
+        """check if the product is a valid eopf product, raise an error if is not a valid one
+
+        Raises
+        ------
+        InvalidProductError
+            If the product not follow the harmonized common data model
+
+        See Also
+        --------
+        EOProduct.is_valid
+        """
+        if not self.is_valid():
+            raise InvalidProductError(f"Invalid product {self}, missing mandatory groups.")
 
     # docstr-coverage: inherited
     def write(self) -> None:
@@ -227,10 +204,33 @@ class EOProduct(EOContainer):
         self.store.write_attrs("", attrs=self.attrs)
         return super().write()
 
-    # docstr-coverage: inherited
-    def load(self) -> None:
-        if self.store is None:
-            raise StoreNotDefinedError("Store must be defined")
-        if self.store.status == StorageStatus.CLOSE:
-            raise StoreNotOpenError("Store must be open")
-        return super().load()
+    def _add_local_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> EOVariable:
+        raise InvalidProductError("Products can't directly store variables.")
+
+    def _create_structure(self, group: Union[EOGroup, tuple[str, EOGroup]], level: int) -> None:
+        if isinstance(group, tuple):
+            group = group[1]
+        for v in group.variables:
+            print("|" + " " * level + "└──", v[0])
+        for g in group.groups:
+            print("|" + " " * level + "├──", g[0])
+            self._create_structure(g, level + 2)
+
+    @property
+    def _is_root(self) -> "bool":
+        return True
+
+    def _repr_html_(self) -> str:
+        from ..formatting import renderer
+
+        return renderer("product.html", product=self)
+
+    def __set_store(self, storage: Optional[Union[str, EOProductStore]] = None) -> None:
+        from ..store.zarr import EOZarrStore
+
+        if isinstance(storage, str):
+            self._store = EOZarrStore(storage)
+        elif isinstance(storage, EOProductStore):
+            self._store = storage
+        elif storage is not None:
+            raise TypeError(f"{type(storage)} can't be used to instantiate EOProductStore.")
