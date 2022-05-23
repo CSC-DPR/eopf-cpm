@@ -178,7 +178,13 @@ build-doc:
   script:
   - pip install .[doc]
   - cd docs
-  - sphinx-multiversion source ../../docs/build/html
+  - |-
+      if [[ $CI_PIPELINE_SOURCE == "merge_request_event" ]]; then
+        make html
+        mv build/html ../../docs/build/html
+      else
+        sphinx-multiversion source ../../docs/build/html
+      fi
   - mv source/_redirects ../../docs/build/html
   artifacts:
     expire_in: 1h
