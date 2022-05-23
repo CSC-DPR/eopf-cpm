@@ -25,3 +25,31 @@ class StoreNotOpenError(Exception):
 
 class XmlParsingError(Exception):
     """Raised when xml have different structure has expected"""
+
+
+class LoggingConfigurationDirDoesNotExist(Exception):
+    """When the preset or given logging directory does not exist"""
+
+
+class LoggingConfigurationAlreadyExists(Exception):
+    """When a logging configuration with the same name is already registered"""
+
+
+class LoggingConfigurationFileTypeNotSupported(Exception):
+    """When the logging file name does not have a .conf or .yaml extension"""
+
+
+class LoggingConfigurationNotRegistered(Exception):
+    """When a given logging configuration name is not registered"""
+
+
+class LoggingConfigurationFileIsNotValid(Exception):
+    """When a given logging configuration file .conf/.yaml can applyed"""
+
+
+class DaskProfilerError(Exception):
+    """When the dask_profiler raises any error"""
+
+
+class SingleThreadProfilerError(Exception):
+    """When the single_thread_profiler raises any error"""
