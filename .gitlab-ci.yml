@@ -181,6 +181,7 @@ build-doc:
   - |-
       if [[ $CI_PIPELINE_SOURCE == "merge_request_event" ]]; then
         make html
+        mkdir -p ../../docs/build/html
         mv build/html ../../docs/build/html
       else
         sphinx-multiversion source ../../docs/build/html
