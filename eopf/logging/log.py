@@ -54,7 +54,7 @@ class EOLogFactory(object):
     def __new__(cls) -> "EOLogFactory":
         """Ensures there is only one object of EOLogFactory (singletone)"""
 
-        if not hasattr(cls, 'instance'):
+        if not hasattr(cls, "instance"):
             cls.instance = super(EOLogFactory, cls).__new__(cls)
         return cls.instance
 
@@ -98,9 +98,9 @@ class EOLogFactory(object):
         self.register_cfg_dir()
 
     def get_log(
-            self,
-            cfg_name: str = "default",
-            name: str = "default",
+        self,
+        cfg_name: str = "default",
+        name: str = "default",
     ) -> Logger:
         """Retrieve a logger by specifyng the name of the configuration
         and set the logger's name
@@ -128,7 +128,7 @@ class EOLogFactory(object):
                 fileConfig(cfg_path, disable_existing_loggers=False)
             else:
                 # yaml configuration
-                with open(cfg_path, 'r') as f:
+                with open(cfg_path, "r") as f:
                     yaml_cfg = safe_load(f.read())
                     dictConfig(yaml_cfg)
         except Exception as e:
@@ -201,7 +201,8 @@ def _in_ipynb() -> bool:
     """
     try:
         from IPython import get_ipython
-        if 'IPKernelApp' not in get_ipython().config:  # pragma: no cover
+
+        if "IPKernelApp" not in get_ipython().config:  # pragma: no cover
             return False
     except ImportError:
         return False
@@ -254,17 +255,13 @@ def dask_profiler(
     ...     nc_store = EONetCDFStore("data/olci.nc")
     ...     convert(safe_store, nc_store)
     """
+
     def wrap_outer(fn: Callable[[Any, Any], Any]) -> Any:
         @wraps(fn)
         def wrap_inner(*args: Any, **kwargs: Any) -> Any:
 
             # determine if a specific dask configuration is given
-            if (
-                n_workers and
-                    n_workers > 0 and
-                    threads_per_worker and
-                    threads_per_worker > 0
-            ):
+            if n_workers and n_workers > 0 and threads_per_worker and threads_per_worker > 0:
                 dask_specific_config = True
             else:
                 dask_specific_config = False
@@ -295,6 +292,7 @@ def dask_profiler(
             # display the html report if wanted and possible
             if display_report and _in_ipynb():
                 from IPython.display import HTML, display
+
                 try:
                     with open(report_name, mode="r") as f:
                         html_page = f.read()
@@ -303,7 +301,9 @@ def dask_profiler(
                     raise DaskProfilerHtmlDisplayNotWorking(f"Report display faillure reason: {e}")
 
             return result
+
         return wrap_inner
+
     return wrap_outer
 
 
@@ -356,6 +356,7 @@ def single_thread_profiler(
     -------
     pstats.Stats
     """
+
     def wrap_outer(fn: Callable[[Any, Any], Any]) -> Any:
         @wraps(fn)
         def wrap_inner(*args: Any, **kwargs: Any) -> Stats:
@@ -373,7 +374,7 @@ def single_thread_profiler(
                 profiler.disable()
 
                 # extract, print and return stats
-                stats: Stats = Stats(profiler).sort_stats('ncalls')
+                stats: Stats = Stats(profiler).sort_stats("ncalls")
                 if report_name:
                     stats.dump_stats(report_name)
                 stats.print_stats()
@@ -387,4 +388,5 @@ def single_thread_profiler(
                 raise SingleThreadProfilerError(f"Exception encountered: {e}")
 
         return wrap_inner
+
     return wrap_outer
