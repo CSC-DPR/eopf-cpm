@@ -104,7 +104,10 @@ class EOZarrStore(EOProductStore):
         """
         super().open()
         self._mode = mode
-        self._root: Group = zarr.open(store=self.url, mode=mode, **kwargs)
+        if mode == "r":
+            self._root: Group = zarr.open_consolidated(store=self.url, mode=mode, **kwargs)
+        else:
+            self._root: Group = zarr.open(store=self.url, mode=mode, **kwargs)
         self._fs = self._root.store
         kwargs.setdefault("storage_options", dict())
         if not mode.startswith("r") or "+" in mode:
