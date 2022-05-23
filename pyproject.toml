@@ -6,7 +6,7 @@ build-backend = "flit_core.buildapi"
 name = "eopf"
 authors = []
 dynamic = ["version", "description"]
-readme = "README.md"
+readme = "README.rst"
 classifiers = [
     "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python :: 3 :: Only",
