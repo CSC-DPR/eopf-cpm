@@ -178,9 +178,8 @@ class EOLogFactory(object):
             When the preset/given logging configuration file does not contain any .conf or yaml file
         """
 
-        # empty the dictionary for potential current configurations
-        for k in self._cfgs.keys():
-            self._cfgs.pop(k)
+        # remove current configurations
+        self._cfgs = {}
 
         # register the configurations in the cfg_dir
         no_cofiguration_present = True
