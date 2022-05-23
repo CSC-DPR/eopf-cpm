@@ -89,7 +89,7 @@ class EOZarrStore(EOProductStore):
         self._zarr_kwargs: dict[str, Any] = dict()
 
     # docstr-coverage: inherited
-    def open(self, mode: str = "r", **kwargs: Any) -> None:
+    def open(self, mode: str = "r", consolidated=True, **kwargs: Any) -> None:
         """Open the store in the given mode
 
         library specifics parameters :
@@ -99,12 +99,14 @@ class EOZarrStore(EOProductStore):
         ----------
         mode: str, optional
             mode to open the store
+        consolidated: bool
+            in reading mode, indicate if consolidate metadata file should be use or not
         **kwargs: Any
             extra kwargs of open on librairy used.
         """
         super().open()
         self._mode = mode
-        if mode == "r":
+        if mode == "r" and consolidated:
             self._root: Group = zarr.open_consolidated(store=self.url, mode=mode, **kwargs)
         else:
             self._root: Group = zarr.open(store=self.url, mode=mode, **kwargs)
