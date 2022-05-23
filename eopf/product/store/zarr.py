@@ -89,7 +89,7 @@ class EOZarrStore(EOProductStore):
         self._zarr_kwargs: dict[str, Any] = dict()
 
     # docstr-coverage: inherited
-    def open(self, mode: str = "r", consolidated=True, **kwargs: Any) -> None:
+    def open(self, mode: str = "r", consolidated: bool = True, **kwargs: Any) -> None:
         """Open the store in the given mode
 
         library specifics parameters :
