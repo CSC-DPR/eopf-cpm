@@ -257,8 +257,8 @@ class EONetCDFStoreNCpy(EOProductStore):
     # docstr-coverage: inherited
     @staticmethod
     def guess_can_read(file_path: str) -> bool:
-        """
-            Determines if a given file path can be read with the current store
+        """Determines if a given file path can be read with the current store
+
         Parameters
         ----------
         file_path: str

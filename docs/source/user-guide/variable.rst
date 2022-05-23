@@ -4,7 +4,7 @@ Using Variable
 Operation
 ---------
 
-:obj:`eopf.product.EOVariable` can be used for computation and support base operator:
+:obj:`EOVariable` can be used for computation and support base operator:
 
     .. jupyter-execute::
 
@@ -19,14 +19,14 @@ Operation
         variable = variable - (variable / 2)
         variable
 
-In this case, the variable is not computed, to apply operation, you have to use the method :obj:`EOVariable.compute()`
+In this case, the variable is not computed, to apply operation, you have to use the method :meth:`EOVariable.compute()`
 
     .. jupyter-execute::
 
         variable.compute()
 
 
-The data of a variable is accessible direcly with the `data` property:
+The data of a variable is accessible direcly with the ``data`` property:
 
     .. jupyter-execute::
 
@@ -53,7 +53,7 @@ You can also create mask variable using comparison:
 Plotting an EOVariable
 -----------------------
 
-    :obj:`eopf.product.core.EOVariable` provide a **plot** methode, to plot them, it use obj:`matplotlib.pyplot`:
+    :obj:`EOVariable` provide a **plot** methode, to plot them, it use obj:`matplotlib.pyplot`:
 
     .. jupyter-execute::
 

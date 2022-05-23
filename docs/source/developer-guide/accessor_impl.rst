@@ -5,6 +5,7 @@ For reading unsuported file format, or apply complex (*check SAFE store paramete
 
 Difference between a Store and an Accessor
 ------------------------------------------
+
 The only difference between a Store and an Accessor is it's main usage :
 
 - Store are expected to be used independently to open a file. Stores can always be used as Accessor.
@@ -19,6 +20,7 @@ In the rest of the document Accessor ans Store wil be uses interchangeably as th
 
 Interfaces and implementation
 -----------------------------
+
 All accessors/stores must implement the EOProductStore interface. For read only stores you can instead implement the EOReadOnlyStore.
 
 See their documentation for more details : :obj:`eopf.product.core.eo_abstract.EOAbstract`

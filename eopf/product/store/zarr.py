@@ -51,9 +51,9 @@ class EOZarrStore(EOProductStore):
 
         * <path_to_my_file>
         * s3://<path_to_my_file>
-            >>> zarr.open(mode=mode, storage_options=storage_options)
+            ``zarr.open(mode=mode, storage_options=storage_options)``
         * zip::s3://<path_to_my_file>
-            >>> zarr.open(mode=mode, storage_options=storage_options)
+            ``zarr.open(mode=mode, storage_options=storage_options)``
 
     Storage options is used to identify s3 storage:
         >>> storage_options = dict(

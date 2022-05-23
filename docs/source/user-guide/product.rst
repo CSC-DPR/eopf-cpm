@@ -38,8 +38,8 @@ Create a product
 
     Every component to work with product are given in the module :obj:`eopf.product`.
 
-    The main object class is the :obj:`eopf.product.EOProduct`, a dict-like class that aggregate group object,
-    named :obj:`eopf.product.core.EOGroup`, and are compliant with Common data model.
+    The main object class is the :obj:`EOProduct`, a dict-like class that aggregate group object,
+    named :obj:`EOGroup`, and are compliant with Common data model.
 
         .. jupyter-execute::
 
@@ -49,7 +49,7 @@ Create a product
 
 
 
-    :obj:`eopf.product.EOProduct` must follow a specific format to be `valid`, so our `empty_product` is not a valid one:
+    :obj:`EOProduct` must follow a specific format to be `valid`, so our `empty_product` is not a valid one:
 
         .. jupyter-execute::
 
@@ -63,7 +63,7 @@ Create a product
             empty_product.add_group("coordinates")
             empty_product.is_valid()
 
-    the :obj:`eopf.product.conveniences` provide a simple function :obj:`init_product` to help you to create a valid product.
+    the :obj:`eopf.product.conveniences` provide a simple function :func:`init_product` to help you to create a valid product.
 
         .. jupyter-execute::
 
@@ -96,11 +96,11 @@ Using groups and variables
         data_coord_dim_10 = xarray.DataArray([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
 
 
-    When you use :obj:`eopf.product.EOProduct`, you can add :obj:`eopf.product.core.EOGroup` (resp. :obj:`eopf.product.core.EOVariable`) from different way.
+    When you use :obj:`EOProduct`, you can add :obj:`EOGroup` (resp. :obj:`EOVariable`) from different way.
     the first one is to simply add them from the top level product, using :meth:`EOProduct.add_group` (resp. :meth:`EOProduct.add_variable`) method.
 
         .. warning::
-            :obj:`eopf.product.EOProduct` does not support variable at top level.
+            :obj:`EOProduct` does not support variable at top level.
 
             .. jupyter-execute::
                 :raises: InvalidProductError
@@ -125,7 +125,7 @@ Using groups and variables
 
             product.add_variable("measurements/group1/group2c/variable_d", dims=["c1", "c2"], data=data_d) # We create both group2c and variable_d.
 
-    :obj:`eopf.product.EOProduct` are dict-like object (i.e :obj:`collections.abc.MutableMapping`), so you can retrieve
+    :obj:`EOProduct` are dict-like object (i.e :obj:`collections.abc.MutableMapping`), so you can retrieve
     your group by index, with the fullpath for exemple, or directly with a `dot`:
 
         .. jupyter-execute::
@@ -141,7 +141,7 @@ Using groups and variables
             product["measurements/group1/group2c/variable_d"]
 
 
-    :obj:`eopf.product.core.EOGroup` are similar to :obj:`eopf.product.EOProduct`, and you can retrieve or create sub :obj:`eopf.product.core.EOGroup` (resp. :obj:`eopf.product.core.EOVariable`) from them:
+    :obj:`EOGroup` are similar to :obj:`EOProduct`, and you can retrieve or create sub :obj:`EOGroup` (resp. :obj:`EOVariable`) from them:
 
         .. jupyter-execute::
             :hide-output:
@@ -151,7 +151,7 @@ Using groups and variables
             product.measurements["group1"].add_variable("variable_a", data=data_a)
             product["measurements/group1"].add_variable("group2/variable_b", data=data_b)
 
-    If you have a sub :obj:`eopf.product.core.EOGroup`, and you want to retrieve or add an other one higher in the hierarchy,
+    If you have a sub :obj:`EOGroup`, and you want to retrieve or add an other one higher in the hierarchy,
     you can path an asbolute path from the top level product:
 
         .. jupyter-execute::
@@ -165,7 +165,7 @@ Using groups and variables
             subgroup.add_variable("/measurements/group1/group2/variable_c", data=data_c, dims=data_c.dims)
 
 
-    The last option to create a group is by directly indexing one in the :obj:`eopf.product.EOProduct` or :obj:`eopf.product.core.EOGroup`
+    The last option to create a group is by directly indexing one in the :obj:`EOProduct` or :obj:`EOGroup`
 
         .. jupyter-execute::
 
@@ -181,13 +181,13 @@ Using groups and variables
 
     .. note::
 
-        For :obj:`eopf.product.core.EOVariable` data must be an object usable by :obj:`xarray.DataArray`
+        For :obj:`EOVariable` data must be an object usable by :obj:`xarray.DataArray`
 
 
 Coordinates
 -----------
 
-    Coordinates are determined by dimensions and retrieved from :obj:`eopf.product.EOProduct.coordinates` field
+    Coordinates are determined by dimensions and retrieved from :obj:`EOProduct.coordinates` field
 
     .. jupyter-execute::
 
@@ -198,7 +198,7 @@ Coordinates
 Attibutes
 ---------
 
-    :obj:`eopf.product.EOProduct`, :obj:`eopf.product.core.EOGroup` and :obj:`eopf.product.core.EOVariable` have a field named **attrs**, a dict object, that
+    :obj:`EOProduct`, :obj:`EOGroup` and :obj:`EOVariable` have a field named **attrs**, a dict object, that
     contained all attributes of the class compliant with the CF Convention.
 
     .. jupyter-execute::
@@ -224,7 +224,7 @@ Attibutes
 Tree of the product
 -------------------
 
-    :obj:`eopf.product.EOProduct` have a tree function that can be used to display a tree.
+    :obj:`EOProduct` have a tree function that can be used to display a tree.
     If you are in a :obj:`jupyter` environment, an interactive version is displayed.
 
     .. jupyter-execute::
@@ -300,20 +300,20 @@ Reading a Product from a store
         file_name = write_zarr_file()
 
 
-    To read data of a product, from a specific format, you must instantiate your :obj:`eopf.product.EOProduct` with
-    the parameter **store_or_path_url**, that can be a :obj:`str` or a :obj:`eopf.product.store.EOProductStore`.
+    To read data of a product, from a specific format, you must instantiate your :obj:`EOProduct` with
+    the parameter **store_or_path_url**, that can be a :obj:`str` or a :obj:`EOProductStore`.
 
     .. jupyter-execute::
 
         product_read_from_store = EOProduct("product_read", store_or_path_url=EOZarrStore(file_name))
 
     .. note::
-        The default type when you provide a :obj:`str` is a :obj:`eopf.product.store.EOZarrStore`
+        The default type when you provide a :obj:`str` is a :obj:`EOZarrStore`
 
     So now if you access to an elements of your product, it come from the zarr file.
 
     .. warning::
-        You have to **open** your store before, using :obj:`eopf.product.EOProduct.open` or :obj:`eopf.product.conveniences.open_store`
+        You have to **open** your store before, using :meth:`EOProduct.open` or :func:`eopf.product.conveniences.open_store`
 
     .. jupyter-execute::
 
@@ -332,7 +332,7 @@ Reading a Product from a store
             print(product_read_from_store["measurements/geo_position/latitude/cartesian"]._data)
             print(product_read_from_store["measurements/geo_position/latitude/polar"]._data.to_numpy())
 
-    If you want to load a full product in memory, you can use the :obj:`eopf.product.EOProduct.load` method:
+    If you want to load a full product in memory, you can use the :meth:`EOProduct.load` method:
 
     .. jupyter-execute::
 
@@ -344,7 +344,7 @@ Reading a Product from a store
 Writting Products
 -----------------
 
-    Writting is pretty similar, but you have to use the :obj:`eopf.product.EOProduct.write` method
+    Writting is pretty similar, but you have to use the :meth:`EOProduct.write` method
 
     .. jupyter-execute::
 
@@ -352,4 +352,4 @@ Writting Products
             product.write()
 
     .. warning::
-        You have to **open** your store before, using :obj:`eopf.product.EOProduct.open` or :obj:`eopf.product.conveniences.open_store`
+        You have to **open** your store before, using :meth:`EOProduct.open` or :func:`eopf.product.conveniences.open_store`
