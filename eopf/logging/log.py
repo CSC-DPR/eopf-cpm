@@ -372,7 +372,7 @@ def single_thread_profiler(
                 fn(*args, **kwargs)
                 profiler.disable()
 
-                # extract print and return stats
+                # extract, print and return stats
                 stats: Stats = Stats(profiler).sort_stats('ncalls')
                 if report_name:
                     stats.dump_stats(report_name)
