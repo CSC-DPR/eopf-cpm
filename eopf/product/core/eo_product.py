@@ -4,6 +4,8 @@ from typing import TYPE_CHECKING, Any, Iterable, MutableMapping, Optional, Type,
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError, StoreNotOpenError
 
 from ..store.abstract import EOProductStore, StorageStatus
+from ..store.mapping_factory import EOMappingFactory
+from ..store.store_factory import EOStoreFactory
 from .eo_container import EOContainer
 from .eo_group import EOGroup
 from .eo_variable import EOVariable
@@ -42,15 +44,30 @@ class EOProduct(EOContainer):
         storage: Optional[Union[str, EOProductStore]] = None,
         attrs: Optional[MutableMapping[str, Any]] = None,
         type: str = "",
+        store_factory: Optional[EOStoreFactory] = None,
+        mapping_factory: Optional[EOMappingFactory] = None,
     ) -> None:
+        if store_factory is None:
+            store_factory = EOStoreFactory(default_stores=True)
+        if mapping_factory is None:
+            mapping_factory = EOMappingFactory(default_mappings=True)
+        self._store_factory = store_factory
+        self._mapping_factory = mapping_factory
         EOContainer.__init__(self, attrs=attrs)
         self._name: str = name
         self._store: Optional[EOProductStore] = None
         self.__set_store(storage=storage)
         self.__type = ""
         self.__short_names: dict[str, str] = dict()
-        if type != "":
-            self.set_type(type)
+        self.set_type(type)
+
+    def __delitem__(self, key: str) -> None:
+        # Support short name to path conversion
+        key = self.short_names.get(key, key)
+        if key[0] == "/":
+            self.__delitem__(key[1:])
+        else:
+            super().__delitem__(key)
 
     def __enter__(self) -> "EOProduct":
         return self
@@ -67,12 +84,12 @@ class EOProduct(EOContainer):
 
     def __getitem__(self, key: str) -> "EOObject":
         # Support short name to path conversion
-        key = self.__short_names.get(key, key)
+        key = self.short_names.get(key, key)
         return super().__getitem__(key)
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
         # Support short name to path conversion
-        key = self.__short_names.get(key, key)
+        key = self.short_names.get(key, key)
         super().__setitem__(key, value)
 
     def __repr__(self) -> str:
@@ -82,11 +99,11 @@ class EOProduct(EOContainer):
         return self.__repr__()
 
     def add_group(self, name: str, attrs: dict[str, Any] = {}, dims: tuple[str, ...] = tuple()) -> "EOGroup":
-        key = self.__short_names.get(name, name)
+        key = self.short_names.get(name, name)
         return super().add_group(key, attrs, dims)
 
     def add_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> "EOVariable":
-        key = self.__short_names.get(name, name)
+        key = self.short_names.get(name, name)
         return super().add_variable(key, data, **kwargs)
 
     @property
@@ -179,18 +196,19 @@ class EOProduct(EOContainer):
 
     def set_type(self, type: str, short_names: Optional[dict[str, str]] = None) -> None:
         self.__type = type
+        self.attrs[self._TYPE_ATTR_STR] = type
         if short_names is None:
             short_names = dict()
             if type != "":
                 mapping = self._mapping_factory.get_mapping(product_type=type)
                 for data_mapping in mapping["data_mapping"]:
-                    if "short_name" in data_mapping and "target_path" in data_mapping:
+                    if "short_name" in data_mapping and data_mapping.get("target_path", "") not in ["", "/"]:
                         short_names[data_mapping["short_name"]] = data_mapping["target_path"]
-
         self.__short_names = short_names
 
     @property
     def short_names(self) -> dict[str, str]:
+        self.type  # check type consistency
         return self.__short_names
 
     # docstr-coverage: inherited
@@ -229,6 +247,8 @@ class EOProduct(EOContainer):
 
     @property
     def type(self) -> str:
+        if self.__type is not self.attrs[self._TYPE_ATTR_STR]:
+            self.set_type(self.attrs[self._TYPE_ATTR_STR])
         return self.__type
 
     def validate(self) -> None:

@@ -55,8 +55,8 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
                 raise KeyError("EOVariable not support support item assignment")
             sub_container[subkeys] = value
             return
-
-        value._repath(key, self)
+        if value is not None:
+            value._repath(key, self)
         if isinstance(value, EOGroup):
             self._groups[key] = value
         else:

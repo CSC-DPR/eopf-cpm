@@ -6,7 +6,7 @@ from typing import Any
 
 class EOMappingFactory:
     FILENAME_RECO = "filename_pattern"
-    TYPE_RECO = "product_type_pattern"
+    TYPE_RECO = "product_type"
 
     def __init__(self, default_mappings: bool = True) -> None:
         self.mapping_set: set[str] = set()
