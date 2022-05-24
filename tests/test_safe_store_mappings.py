@@ -51,7 +51,7 @@ def test_read_product(dask_client_all, store_type, get_key):
 @pytest.mark.integration
 @pytest.mark.parametrize(
     "store_type",
-    [lazy_fixture("S3_OLCI_L1_EFR"), lazy_fixture("S1_IM_OCN")],
+    [lazy_fixture("S3_OLCI_L1_EFR")],
 )
 def test_load_product(dask_client_all, store_type):
     store = EOSafeStore(store_type)
@@ -101,13 +101,13 @@ def test_load_product(dask_client_all, store_type):
             EOZarrStore,
             52,
         ),
-        (
-            lazy_fixture("S1_IM_OCN"),
-            lazy_fixture("S1_IM_OCN_MAPPING"),
-            lambda name: f"{name.replace('.zip', '.zarr')}",
-            EOZarrStore,
-            0,
-        ),
+        # (
+        #     lazy_fixture("S1_IM_OCN"),
+        #     lazy_fixture("S1_IM_OCN_MAPPING"),
+        #     lambda name: f"{name.replace('.zip', '.zarr')}",
+        #     EOZarrStore,
+        #     0,
+        # ),
     ],
 )
 def test_convert_safe_mapping(
