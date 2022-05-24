@@ -507,7 +507,7 @@ def test_hierarchy_html(product: EOProduct):
             },
             "group0": {"dims": (), "attrs": {}, "coords": []},
             "dims": (),
-            "attrs": {},
+            "attrs": {"type": ""},
             "coords": [],
         },
     }
@@ -528,6 +528,7 @@ def test_group_to_product(product):
         product.measurements.to_product()
 
 
+@pytest.mark.unit
 @pytest.mark.parametrize(
     "mapping_filename, expected_invalid",
     [

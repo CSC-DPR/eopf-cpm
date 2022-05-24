@@ -7,6 +7,7 @@ from typing import Any
 class EOMappingFactory:
     FILENAME_RECO = "filename_pattern"
     TYPE_RECO = "product_type"
+    RECO = "recognition"
 
     def __init__(self, default_mappings: bool = True) -> None:
         self.mapping_set: set[str] = set()
@@ -30,7 +31,7 @@ class EOMappingFactory:
                 json_mapping_data = json.load(json_mapping_file)
                 if self.guess_can_read(json_mapping_data, recognised, reco):
                     return json_mapping_data
-        raise KeyError(f"No registered store compatible with : {file_path}")
+        raise KeyError(f"No registered store compatible with : {recognised}")
 
     def guess_can_read(self, json_mapping_data: dict[str, Any], recognised: str, recogniton_key: str) -> bool:
         pattern = json_mapping_data.get("recognition", {}).get(recogniton_key)

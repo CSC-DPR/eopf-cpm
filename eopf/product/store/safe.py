@@ -654,4 +654,4 @@ class SafeMappingManager:
         for config in json_config_list:
             if config[self.CONFIG_FORMAT] != "misc":
                 self._add_data_mapping(config[self.CONFIG_TARGET], config, json_data)
-        self._product_type = json_data["recognition"]["product_type_pattern"]
+        self._product_type = json_data[self._mapping_factory.RECO][self._mapping_factory.TYPE_RECO]
