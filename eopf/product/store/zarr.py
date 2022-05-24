@@ -35,8 +35,6 @@ class EOZarrStore(EOProductStore):
     ----------
     url: str
         url to the target store
-    sep: str
-        file separator
 
     Examples
     --------
