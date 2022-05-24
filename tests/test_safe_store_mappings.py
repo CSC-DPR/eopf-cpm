@@ -47,7 +47,7 @@ def test_read_product(dask_client_all, store_type, get_key):
 @pytest.mark.integration
 @pytest.mark.parametrize(
     "store_type",
-    [lazy_fixture("S3_OLCI_L1_EFR"), lazy_fixture("S1_IM_OCN")],
+    [lazy_fixture("S3_OLCI_L1_EFR")],
 )
 def test_load_product(dask_client_all, store_type):
     store = EOSafeStore(store_type)
@@ -63,38 +63,43 @@ def test_load_product(dask_client_all, store_type):
 @pytest.mark.need_files
 @pytest.mark.integration
 @pytest.mark.parametrize(
-    "input_path, mapping_filename, output_formatter, output_store",
+    "input_path, mapping_filename, output_formatter, output_store, expected_optional_miss",
     [
         (
             lazy_fixture("S3_OLCI_L1_EFR"),
             lazy_fixture("S3_OLCI_L1_MAPPING"),
             lambda name: f"{name.replace('.zip', '.SEN3')}",
             EOSafeStore,
+            0,
         ),
         (
             lazy_fixture("S3_OLCI_L1_EFR"),
             lazy_fixture("S3_OLCI_L1_MAPPING"),
             lambda name: f"{name.replace('.zip', '.zarr')}",
             EOZarrStore,
+            0,
         ),
         (
             lazy_fixture("S2A_MSIL1C"),
             lazy_fixture("S2A_MSIL1C_MAPPING"),
             lambda name: f"{name.replace('.zip', '.zarr')}",
             EOZarrStore,
+            52,
         ),
         (
             lazy_fixture("S2A_MSIL1C_ZIP"),
             lazy_fixture("S2A_MSIL1C_MAPPING"),
             lambda name: f"{name.replace('.zip', '.zarr')}",
             EOZarrStore,
+            52,
         ),
-        (
-            lazy_fixture("S1_IM_OCN"),
-            lazy_fixture("S1_IM_OCN_MAPPING"),
-            lambda name: f"{name.replace('.zip', '.zarr')}",
-            EOZarrStore,
-        ),
+        # (
+        #     lazy_fixture("S1_IM_OCN"),
+        #     lazy_fixture("S1_IM_OCN_MAPPING"),
+        #     lambda name: f"{name.replace('.zip', '.zarr')}",
+        #     EOZarrStore,
+        #     0,
+        # ),
     ],
 )
 def test_convert_safe_mapping(
@@ -103,6 +108,7 @@ def test_convert_safe_mapping(
     mapping_filename: str,
     output_formatter: Callable,
     output_store: type[EOProductStore],
+    expected_optional_miss: int,
     OUTPUT_DIR: str,
 ):
     source_store = EOSafeStore(input_path)
@@ -114,7 +120,7 @@ def test_convert_safe_mapping(
 
     with open(mapping_filename) as f:
         mappin_data = json.load(f)
-
+    optional_miss = 0
     with (open_store(source_product), open_store(target_product)):
         for item in mappin_data["data_mapping"]:
             # TODO: should be removed after that misc was removed from mappings
@@ -122,7 +128,13 @@ def test_convert_safe_mapping(
                 continue
             data_path = item["target_path"]
             if data_path:
-                source_object = source_product[data_path]
+                try:
+                    source_object = source_product[data_path]
+                except KeyError as error:
+                    if not item.get("is_optional", False):
+                        raise error
+                    optional_miss += 1
+                    continue
                 target_object = target_product[data_path]
             else:
                 source_object = source_product
@@ -146,3 +158,4 @@ def test_convert_safe_mapping(
                     assert np.array_equal(source_data, target_data)
                 else:
                     assert np.array_equal(source_data, target_data, equal_nan=True)
+    assert expected_optional_miss == optional_miss

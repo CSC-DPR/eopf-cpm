@@ -101,15 +101,17 @@ class XMLAnglesAccessor(EOProductStore):
 
     # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
-        if "Values_List" in path:
+        if path.endswith("Values_List"):
             return False
-        return len(self._root.xpath(path, namespaces=self._namespaces)[0].getchildren()) > 0
+        nodes_matched = self._root.xpath(path, namespaces=self._namespaces)
+        return len(nodes_matched) == 1
 
     # docstr-coverage: inherited
     def is_variable(self, path: str) -> bool:
-        if "Values_List" in path:
-            return True
-        return len(self._root.xpath(path, namespaces=self._namespaces)[0].getchildren()) == 0
+        if not path.endswith("Values_List"):
+            return False
+        nodes_matched = self._root.xpath(path, namespaces=self._namespaces)
+        return len(nodes_matched) == 1
 
     def iter(self, path: str) -> Iterator[str]:
         """Has no functionality within this store"""
@@ -205,7 +207,7 @@ class XMLTPAccessor(EOProductStore):
         return False
 
     def is_variable(self, path: str) -> bool:
-        return True
+        return len(self._root.xpath(path, namespaces=self._namespaces)) == 1
 
     def iter(self, path: str) -> Iterator[str]:
         """Has no functionality within this store"""
