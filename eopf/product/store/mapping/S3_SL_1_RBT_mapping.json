@@ -1,6 +1,7 @@
 {
     "recognition": {
         "filename_pattern": "S3._SL_1_RBT.*SEN3",
+        "product_type": "S3_SL_1_RBT",
         "product_type_pattern": "SL_1_RBT___",
         "version": "TODO"
     },

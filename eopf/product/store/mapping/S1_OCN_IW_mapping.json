@@ -1,6 +1,7 @@
 {
     "recognition": {
         "filename_pattern": "S1._[IE]W_OCN.*SAFE",
+        "product_type": "S1_OCN_IW",
         "product_type_pattern": "OCN",
         "version": "003.40"
     },

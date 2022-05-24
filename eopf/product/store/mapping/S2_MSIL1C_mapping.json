@@ -1,6 +1,7 @@
 {
     "recognition": {
         "filename_pattern": "S2._MSIL1C_.*SAFE",
+        "product_type": "S2_MSIL1C",
         "product_type_pattern": "S2MSIL1C",
         "version": "04.00"
     },

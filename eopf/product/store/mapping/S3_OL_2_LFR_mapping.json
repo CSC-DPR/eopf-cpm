@@ -1,6 +1,7 @@
 {
   "recognition": {
     "filename_pattern": "S3._OL_2_L[FR]R.*SEN3",
+    "product_type": "S3_OL_2_LFR",
     "product_type_pattern": "OL_2_L[FR]R___"
   },
   "data_mapping": [
@@ -71,7 +72,7 @@
       "source_path": "iwv.nc:IWV",
       "item_format": "netcdf"
     },
-      
+
     {
       "short_name": "lqsf",
         "target_path": "/quality/image/lqsf",
@@ -115,7 +116,7 @@
       "item_format": "netcdf"
     },
 
-      
+
     {
       "short_name": "geometry_oaa",
       "target_path": "/conditions/geometry/oaa",
@@ -146,7 +147,7 @@
       "source_path": "geo_coordinates.nc:altitude",
       "item_format": "netcdf"
     },
-      
+
     {
       "short_name": "meteo_atmospheric_temperature_profile",
       "target_path": "/conditions/meteo/atmospheric_temperature_profile",
@@ -220,7 +221,7 @@
       "source_path": "instrument_data.nc:solar_flux",
       "item_format": "netcdf"
     },
-      
+
     {
       "short_name": "metadata",
       "target_path": "",
