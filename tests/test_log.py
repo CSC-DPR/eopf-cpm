@@ -114,14 +114,15 @@ def test_get_log_with_non_valid_configuration_file():
 
 
 @pytest.mark.unit
-def test_dask_profiler_nominal():
+def test_dask_profiler_nominal(OUTPUT_DIR):
     expected_return_value = 100
     expected_parameter_value = 2
+    report_path = Path(OUTPUT_DIR) / "test-dask-report.html"
 
     @dask_profiler(
         n_workers=3,
         threads_per_worker=1,
-        report_name="data/test-dask-report.html",
+        report_name=report_path,
         display_report=False,
     )
     def just_a_simple_dask_func(a_parameter: int):
@@ -137,15 +138,20 @@ def test_dask_profiler_nominal():
     # test that the decorated function returns the expected value
     assert just_a_simple_dask_func(expected_parameter_value) == expected_return_value
 
+    # test that the report was saved on disk
+    assert report_path.is_file()
+
 
 @pytest.mark.unit
 def test_dask_profiler_raises_exception(OUTPUT_DIR):
     """Test that DaskProfilerError is raised when the decorated function raises an exception"""
 
+    report_path = Path(OUTPUT_DIR) / "test-dask-report.html"
+
     @dask_profiler(
         n_workers=3,
         threads_per_worker=1,
-        report_name=Path(OUTPUT_DIR) / "test-dask-report.html",
+        report_name=report_path,
         display_report=False,
     )
     def just_a_simple_dask_func():
@@ -161,9 +167,10 @@ def test_single_threaded_profiler_nominal(OUTPUT_DIR):
     """Test nominal functioning of the single_thread_profiler"""
     expected_return_type = Stats
     expected_parameter_value = 2
+    report_path = Path(OUTPUT_DIR) / "single-thread-report"
 
     @single_thread_profiler(
-        report_name=Path(OUTPUT_DIR) / "single-thread-report",
+        report_name=report_path,
     )
     def just_a_simple_dask_func(a_parameter: int):
         # test parameters are passed correctly
@@ -175,7 +182,11 @@ def test_single_threaded_profiler_nominal(OUTPUT_DIR):
 
         return 100
 
+    # test that the decorated function returns a Stats object
     assert isinstance(just_a_simple_dask_func(expected_parameter_value), expected_return_type)
+
+    # test that the report was saved on disk
+    assert report_path.is_file()
 
 
 @pytest.mark.unit
