@@ -62,7 +62,10 @@ def cleanup_files():
     yield
     for file in _FILES.values():
         if os.path.isfile(file):
-            os.remove(file)
+            try:
+                os.remove(file)
+            except PermissionError:
+                pass
         if os.path.isdir(file):
             shutil.rmtree(file)
 

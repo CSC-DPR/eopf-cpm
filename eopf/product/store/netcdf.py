@@ -1,3 +1,4 @@
+import datetime
 import itertools as it
 import json
 import os
@@ -9,6 +10,7 @@ from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
 import fsspec
 import kerchunk.hdf
 import pandas as pd
+import pytz
 import xarray as xr
 from netCDF4 import Dataset, Group, Variable
 
@@ -366,14 +368,14 @@ class EONetcdfStringToTimeAccessor(EOProductStore):
 
         # convert unix start time to date time format
         time_da = self._root.get(key, "1970-1-1T0:0:0.000000Z")
-        start = pd.to_datetime("1970-1-1T0:0:0.000000Z")
+        start = pd.to_datetime(datetime.datetime.fromtimestamp(0, tz=pytz.UTC))
         end = pd.to_datetime(time_da)
         # compute and convert the time difference into microseconds
         time_delta = (end - start) // pd.Timedelta("1microsecond")
 
         # create coresponding attributes
         attributes = {}
-        attributes["unit"] = "microseconds since 1970-1-1T0:0:0.000000Z"
+        attributes["unit"] = f"microseconds since {start.strftime('%Y-%m-%dT%H:%M:%S.%fZ')}"
         attributes["standard_name"] = "time"
         if key == "ANX_time":
             attributes["long_name"] = "Time of ascending node crossing in UTC"

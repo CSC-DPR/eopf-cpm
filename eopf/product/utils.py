@@ -1,10 +1,11 @@
 # We need to use a mix of posixpath (normpath) and pathlib (partition) in the eo_path methods.
 # As we work with strings we use posixpath (the unix path specific implementation of os.path) as much as possible.
 import datetime
+import platform
 import posixpath
 import re
 from pathlib import PurePosixPath
-from typing import Any, Callable, Optional, Union
+from typing import Any, Callable, Optional, Sequence, Union
 
 import dask.array as da
 import dateutil.parser as date_parser
@@ -62,20 +63,6 @@ def conv(obj: Any) -> Any:
         either the obj conververted to native python data type,
         or the obj as received
     """
-    from numpy import (
-        float16,
-        float32,
-        float64,
-        int8,
-        int16,
-        int32,
-        int64,
-        ndarray,
-        uint8,
-        uint16,
-        uint32,
-        uint64,
-    )
 
     # check dict
     if isinstance(obj, dict):
@@ -86,15 +73,15 @@ def conv(obj: Any) -> Any:
         return type(obj)(map(conv, obj))
 
     # check numpy
-    if isinstance(obj, ndarray):
+    if isinstance(obj, np.ndarray):
         return [conv(i) for i in obj.tolist()]
 
     # check np int
-    if isinstance(obj, (int64, int32, int16, uint64, uint32, uint16, uint8, int8, int)):
+    if isinstance(obj, (*get_managed_numpy_dtype("int"), int)):
         return int(obj)
 
     # check np float
-    if isinstance(obj, (float64, float32, float16, float)):
+    if isinstance(obj, (*get_managed_numpy_dtype("float"), float)):
         return float(obj)
 
     # check str or datetime-like string
@@ -151,12 +138,14 @@ def convert_to_unix_time(date: Any) -> Any:
     """
 
     if isinstance(date, datetime.datetime):
+        if date <= get_min_datetime_for_timestamp():
+            return 0
         return int(date.timestamp() * 1000000)  # microseconds
 
     if isinstance(date, str):
         import pandas as pd
 
-        start = pd.to_datetime("1970-1-1T0:0:0.000000Z")
+        start = pd.to_datetime(datetime.datetime.fromtimestamp(0, tz=pytz.UTC))
         try:
             end = pd.to_datetime(date)
             # Normalize data, if date is incomplete (missing timezone)
@@ -168,7 +157,7 @@ def convert_to_unix_time(date: Any) -> Any:
                     end.hour,
                     end.minute,
                     end.second,
-                    000000,
+                    0,
                     pytz.UTC,
                 )
                 end = pd.to_datetime(str(proxy_date))
@@ -194,20 +183,7 @@ def reverse_conv(data_type: Any, obj: Any) -> Any:
     ----------
     Any
     """
-
-    for dtype in [
-        np.int8,
-        np.int16,
-        np.int32,
-        np.int64,
-        np.uint8,
-        np.uint16,
-        np.uint32,
-        np.float16,
-        np.float32,
-        np.float64,
-        np.float128,
-    ]:
+    for dtype in get_managed_numpy_dtype():
         if np.dtype(data_type) == np.dtype(dtype):
             return dtype(obj)
     return obj
@@ -342,6 +318,26 @@ def join_eo_path_optional(*subpaths: Optional[str]) -> str:
     if not valid_subpaths:
         return ""
     return join_eo_path(*valid_subpaths)
+
+
+def get_min_datetime_for_timestamp() -> datetime.datetime:
+    if platform.system() == "Windows":
+        return datetime.datetime.fromtimestamp(0, tz=pytz.UTC) + datetime.timedelta(days=1)
+    return datetime.datetime.fromtimestamp(0, tz=pytz.UTC)
+
+
+def get_managed_numpy_dtype(type_: Optional[str] = None) -> tuple[type, ...]:
+    """Retrieve OS dependent dtype for numpy"""
+    managed_type: dict[str, Sequence[str]] = {
+        "uint": ("uint64", "uint32", "uint16", "uint8"),
+    }
+    managed_type["int"] = ("int64", "int32", "int16", "int8", *managed_type["uint"])
+    managed_type["float"] = ("float64", "float32", "float16")
+    if type_:
+        types = managed_type.get(type_, tuple())
+    else:
+        types = [dtype for type_group in managed_type.values() for dtype in type_group]
+    return tuple(getattr(np, attr) for attr in types if hasattr(np, attr))
 
 
 def norm_eo_path(eo_path: str) -> str:
