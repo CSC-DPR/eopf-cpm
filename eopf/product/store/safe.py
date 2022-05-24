@@ -636,7 +636,7 @@ class SafeMappingManager:
             return self._accessor_map[accessor_id][accessor_config_id][0]
         return self._add_accessor(accessor_file, item_format, accessor_config_id, accessor_config)
 
-    def _read_product_mapping(self) -> str:
+    def _read_product_mapping(self) -> None:
         """Read mapping from the mapping factory and fill _config_mapping from it."""
         if self._fs_map_access is None:
             raise StoreNotOpenError("Store must be open before access to it")
