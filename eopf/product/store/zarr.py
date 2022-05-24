@@ -1,8 +1,10 @@
 import pathlib
 from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional
 
+import dask
 import zarr
 from dask import array as da
+from dask.delayed import Delayed
 from numcodecs import Blosc
 from zarr.hierarchy import Group
 from zarr.storage import FSStore, contains_array, contains_group
@@ -86,6 +88,7 @@ class EOZarrStore(EOProductStore):
     # docstr-coverage: inherited
     def __init__(self, url: str) -> None:
         super().__init__(url)
+        self._delayed_list: list[Delayed] = []
         self._zarr_kwargs: dict[str, Any] = dict()
 
     # docstr-coverage: inherited
@@ -109,12 +112,18 @@ class EOZarrStore(EOProductStore):
         kwargs.setdefault("storage_options", dict())
         if not mode.startswith("r") or "+" in mode:
             kwargs.setdefault("compressor", self.DEFAULT_COMPRESSOR)
+            kwargs.setdefault("compute", False)
+            kwargs.setdefault("overwrite", True)
         self._zarr_kwargs = kwargs
 
     # docstr-coverage: inherited
     def close(self) -> None:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before close it")
+
+        if len(self._delayed_list) > 0:
+            dask.compute(self._delayed_list)
+        self._delayed_list = []
 
         # only if we write
         if any(self._mode.startswith(mode) for mode in ("w", "a")) or "+" in self._mode:
@@ -184,7 +193,9 @@ class EOZarrStore(EOProductStore):
             if dask_array.size > 0:
                 # We must use to_zarr for writing on a distributed cluster,
                 # but to_zarr fail to write array with a 0 dim (divide by zero Exception)
-                dask_array.to_zarr(self.url, component=key, **self._zarr_kwargs)
+                delayed = dask_array.to_zarr(self.url, component=key, **self._zarr_kwargs)
+                if delayed is not None:
+                    self._delayed_list.append(delayed)
             else:
                 self._root.create(key, shape=dask_array.shape)
         else:
