@@ -145,7 +145,7 @@ def test_dask_profiler_raises_exception(OUTPUT_DIR):
     @dask_profiler(
         n_workers=3,
         threads_per_worker=1,
-        report_name= Path(OUTPUT_DIR) / "test-dask-report.html",
+        report_name=Path(OUTPUT_DIR) / "test-dask-report.html",
         display_report=False,
     )
     def just_a_simple_dask_func():
@@ -163,7 +163,7 @@ def test_single_threaded_profiler_nominal(OUTPUT_DIR):
     expected_parameter_value = 2
 
     @single_thread_profiler(
-        report_name= Path(OUTPUT_DIR) / "single-thread-report",
+        report_name=Path(OUTPUT_DIR) / "single-thread-report",
     )
     def just_a_simple_dask_func(a_parameter: int):
         # test parameters are passed correctly
@@ -183,7 +183,7 @@ def test_single_thread_profiler_raises_exception(OUTPUT_DIR):
     """Test that SingleThreadProfilerError is raised when the decorated function raises an exception"""
 
     @single_thread_profiler(
-        report_name= Path(OUTPUT_DIR) / "single-thread-report",
+        report_name=Path(OUTPUT_DIR) / "single-thread-report",
     )
     def just_a_simple_dask_func():
         raise Exception("Just an exception")
