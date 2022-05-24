@@ -149,6 +149,10 @@ class EOProductStore(MutableMapping[str, "EOObject"]):
         self._status = StorageStatus.OPEN
 
     @property
+    def product_type(self) -> str:
+        return ""
+
+    @property
     def status(self) -> StorageStatus:
         """StorageStatus: give the current status (open or close) of this store"""
         return self._status

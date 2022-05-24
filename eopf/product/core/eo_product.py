@@ -1,5 +1,5 @@
 from types import TracebackType
-from typing import Any, Iterable, MutableMapping, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, Iterable, MutableMapping, Optional, Type, Union
 
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError, StoreNotOpenError
 
@@ -7,6 +7,9 @@ from ..store.abstract import EOProductStore, StorageStatus
 from .eo_container import EOContainer
 from .eo_group import EOGroup
 from .eo_variable import EOVariable
+
+if TYPE_CHECKING:  # pragma: no cover
+    from .eo_object import EOObject
 
 
 class EOProduct(EOContainer):
@@ -31,17 +34,23 @@ class EOProduct(EOContainer):
     """
 
     MANDATORY_FIELD = ("measurements", "coordinates")
+    _TYPE_ATTR_STR = "type"
 
     def __init__(
         self,
         name: str,
         storage: Optional[Union[str, EOProductStore]] = None,
         attrs: Optional[MutableMapping[str, Any]] = None,
+        type: str = "",
     ) -> None:
         EOContainer.__init__(self, attrs=attrs)
         self._name: str = name
         self._store: Optional[EOProductStore] = None
         self.__set_store(storage=storage)
+        self.__type = ""
+        self.__short_names: dict[str, str] = dict()
+        if type != "":
+            self.set_type(type)
 
     def __enter__(self) -> "EOProduct":
         return self
@@ -56,11 +65,29 @@ class EOProduct(EOContainer):
             raise StoreNotDefinedError("Store must be defined")
         self.store.close()
 
+    def __getitem__(self, key: str) -> "EOObject":
+        # Support short name to path conversion
+        key = self.__short_names.get(key, key)
+        return super().__getitem__(key)
+
+    def __setitem__(self, key: str, value: "EOObject") -> None:
+        # Support short name to path conversion
+        key = self.__short_names.get(key, key)
+        super().__setitem__(key, value)
+
     def __repr__(self) -> str:
         return f"[EOProduct]{hex(id(self))}"
 
     def __str__(self) -> str:
         return self.__repr__()
+
+    def add_group(self, name: str, attrs: dict[str, Any] = {}, dims: tuple[str, ...] = tuple()) -> "EOGroup":
+        key = self.__short_names.get(name, name)
+        return super().add_group(key, attrs, dims)
+
+    def add_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> "EOVariable":
+        key = self.__short_names.get(name, name)
+        return super().add_variable(key, data, **kwargs)
 
     @property
     def attributes(self) -> dict[str, Any]:
@@ -127,8 +154,12 @@ class EOProduct(EOContainer):
             raise StoreNotDefinedError("Store must be defined")
         self.store.open(mode=mode, **kwargs)
         if mode in ["r"]:
-            group = self.store[""]
-            self.attrs.update(group.attrs)
+            attributes = self.store[""].attrs
+            self.attrs.update(attributes)
+            if attributes.get(self._TYPE_ATTR_STR, ""):
+                self.set_type(attributes[self._TYPE_ATTR_STR])
+        if not self.type:
+            self.set_type(self.store.product_type)
         return self
 
     # docstr-coverage: inherited
@@ -145,6 +176,22 @@ class EOProduct(EOContainer):
     @property
     def relative_path(self) -> Iterable[str]:
         return []
+
+    def set_type(self, type: str, short_names: Optional[dict[str, str]] = None) -> None:
+        self.__type = type
+        if short_names is None:
+            short_names = dict()
+            if type != "":
+                mapping = self._mapping_factory.get_mapping(product_type=type)
+                for data_mapping in mapping["data_mapping"]:
+                    if "short_name" in data_mapping and "target_path" in data_mapping:
+                        short_names[data_mapping["short_name"]] = data_mapping["target_path"]
+
+        self.__short_names = short_names
+
+    @property
+    def short_names(self) -> dict[str, str]:
+        return self.__short_names
 
     # docstr-coverage: inherited
     @property
@@ -179,6 +226,10 @@ class EOProduct(EOContainer):
             print(f"├── {name}")
             self._create_structure(group, level=2)
         return
+
+    @property
+    def type(self) -> str:
+        return self.__type
 
     def validate(self) -> None:
         """check if the product is a valid eopf product, raise an error if is not a valid one

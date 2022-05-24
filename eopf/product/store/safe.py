@@ -291,6 +291,10 @@ class EOSafeStore(EOProductStore):
                 key_set = key_set.union(accessor.iter(config_accessor_path))
         return iter(key_set)
 
+    @property
+    def product_type(self) -> str:
+        return self._accessor_manager.product_type
+
     # docstr-coverage: inherited
     def open(self, mode: str = "r", storage_options: dict[str, Any] = {}, **kwargs: Any) -> None:
         # Must not read the product mapping between  super.open and accessor.open
@@ -418,6 +422,7 @@ class SafeMappingManager:
         self._temp_dir: Optional[tempfile.TemporaryDirectory[Any]] = None
         self._top_level: Optional[str] = None
         self._fs_map_access: Optional[fsspec.FSMap] = None
+        self._product_type = ""
 
     def __iter__(self) -> Iterator[tuple[EOProductStore, dict[str, Any]]]:
         for accessor_map_2 in self._accessor_map.values():
@@ -482,6 +487,10 @@ class SafeMappingManager:
             # FIXME when opeing fail, otherwise we can't reopen it later with another mode.
             if accessor.status != StorageStatus.OPEN:
                 accessor.open(mode, **_accessor_config, **kwargs)
+
+    @property
+    def product_type(self) -> str:
+        return self._product_type
 
     def split_target_path(self, target_path: str) -> Sequence[tuple[str, Optional[str]]]:
         """Split target_path between a path where a mapping is registered, and a local path."""
@@ -627,7 +636,7 @@ class SafeMappingManager:
             return self._accessor_map[accessor_id][accessor_config_id][0]
         return self._add_accessor(accessor_file, item_format, accessor_config_id, accessor_config)
 
-    def _read_product_mapping(self) -> None:
+    def _read_product_mapping(self) -> str:
         """Read mapping from the mapping factory and fill _config_mapping from it."""
         if self._fs_map_access is None:
             raise StoreNotOpenError("Store must be open before access to it")
@@ -643,5 +652,6 @@ class SafeMappingManager:
         json_data = self._mapping_factory.get_mapping(top_level)
         json_config_list = json_data["data_mapping"]
         for config in json_config_list:
-            if config["item_format"] != "misc":
+            if config[self.CONFIG_FORMAT] != "misc":
                 self._add_data_mapping(config[self.CONFIG_TARGET], config, json_data)
+        self._product_type = json_data["recognition"]["product_type_pattern"]
