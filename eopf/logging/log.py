@@ -183,7 +183,7 @@ class EOLogFactory(object):
 
         # register the configurations in the cfg_dir
         no_cofiguration_present = True
-        for cfg_path in self.cfg_dir.glob(r"*"):
+        for cfg_path in self.cfg_dir.iterdir():
             if cfg_path.is_file() and cfg_path.suffix in [".conf", ".yaml"]:
                 no_cofiguration_present = False
                 self.register_cfg(cfg_path.stem, cfg_path)

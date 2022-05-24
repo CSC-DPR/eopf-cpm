@@ -38,6 +38,8 @@ def test_correct_return_conf():
 def test_correct_return_yaml():
     """Test that the EOLogFactory returns a Logger object configured through a conf file"""
     test_factory = EOLogFactory()
+    yaml_path = Path(__file__).parent / "data" / "a_yaml_log_conf.yaml"
+    test_factory.register_cfg("a_yaml", yaml_path)
     test_log = test_factory.get_log("a_yaml")
     assert isinstance(test_log, Logger)
 
