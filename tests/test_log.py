@@ -97,7 +97,7 @@ def test_register_cfg_dir_with_no_log_configurations():
     """Test that when setting the cfg dir with a non-existent dir it raises NoLoggingConfigurationFile"""
 
     test_factory = EOLogFactory()
-    test_dir_path = Path(__file__).parent / "data" / "empty_dir"
+    test_dir_path = Path(__file__).parent
     with pytest.raises(NoLoggingConfigurationFile):
         test_factory.set_cfg_dir(test_dir_path)
 
@@ -139,13 +139,13 @@ def test_dask_profiler_nominal():
 
 
 @pytest.mark.unit
-def test_dask_profiler_raises_exception():
+def test_dask_profiler_raises_exception(OUTPUT_DIR):
     """Test that DaskProfilerError is raised when the decorated function raises an exception"""
 
     @dask_profiler(
         n_workers=3,
         threads_per_worker=1,
-        report_name="data/test-dask-report.html",
+        report_name= Path(OUTPUT_DIR) / "test-dask-report.html",
         display_report=False,
     )
     def just_a_simple_dask_func():
@@ -157,13 +157,13 @@ def test_dask_profiler_raises_exception():
 
 
 @pytest.mark.unit
-def test_single_threaded_profiler_nominal():
+def test_single_threaded_profiler_nominal(OUTPUT_DIR):
     """Test nominal functioning of the single_thread_profiler"""
     expected_return_type = Stats
     expected_parameter_value = 2
 
     @single_thread_profiler(
-        report_name="data/single-thread-report",
+        report_name= Path(OUTPUT_DIR) / "single-thread-report",
     )
     def just_a_simple_dask_func(a_parameter: int):
         # test parameters are passed correctly
@@ -179,11 +179,11 @@ def test_single_threaded_profiler_nominal():
 
 
 @pytest.mark.unit
-def test_single_thread_profiler_raises_exception():
+def test_single_thread_profiler_raises_exception(OUTPUT_DIR):
     """Test that SingleThreadProfilerError is raised when the decorated function raises an exception"""
 
     @single_thread_profiler(
-        report_name="data/single-thread-report",
+        report_name= Path(OUTPUT_DIR) / "single-thread-report",
     )
     def just_a_simple_dask_func():
         raise Exception("Just an exception")
