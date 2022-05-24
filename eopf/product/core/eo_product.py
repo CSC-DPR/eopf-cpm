@@ -87,13 +87,13 @@ class EOProduct(EOContainer):
         key = self.short_names.get(key, key)
         return super().__getitem__(key)
 
+    def __repr__(self) -> str:
+        return f"[EOProduct]{hex(id(self))}"
+
     def __setitem__(self, key: str, value: "EOObject") -> None:
         # Support short name to path conversion
         key = self.short_names.get(key, key)
         super().__setitem__(key, value)
-
-    def __repr__(self) -> str:
-        return f"[EOProduct]{hex(id(self))}"
 
     def __str__(self) -> str:
         return self.__repr__()
