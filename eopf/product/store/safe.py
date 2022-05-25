@@ -1,3 +1,5 @@
+
+import ast
 import os
 import pathlib
 import tempfile
@@ -222,7 +224,8 @@ class EOSafeStore(EOProductStore):
         for safe_path, accessor_path in self._accessor_manager.split_target_path(key):
             mapping_match_list = self._accessor_manager.get_accessors_from_mapping(safe_path)
             for accessor, config_accessor_path, config in mapping_match_list:
-                config_accessor_path = join_eo_path_optional(config_accessor_path, accessor_path)
+                if isinstance(config_accessor_path, str) and isinstance(accessor_path, str):
+                    config_accessor_path = join_eo_path_optional(config_accessor_path, accessor_path)
                 # We should catch Key Error, and throw if the object isn't found in any of the accessors
                 try:
                     accessed_object = accessor[config_accessor_path]
@@ -465,6 +468,14 @@ class SafeMappingManager:
         """Get all accessor corresponding to the configs of conf_path.
         As multiple mapping car match a single conf_path, it can return multiple accessors.
         """
+
+        def _parse_local_path(local_path: str) -> Any:
+            if local_path:
+                value = ast.parse(local_path).body[0].value
+                if isinstance(value, ast.Tuple):
+                    return slice(*ast.literal_eval(local_path))
+            return local_path
+
         configs = self._config_mapping[conf_path]
         results = list()
         for conf in configs:
@@ -484,7 +495,7 @@ class SafeMappingManager:
                 conf.get(self.CONFIG_OPTIONAL, False),
             )
             if accessor is not None:  # We also want to append accessor of len 0.
-                results.append((accessor, accessor_local_path, conf))
+                results.append((accessor, _parse_local_path(accessor_local_path), conf))
         return results
 
     def open_all(self, mode: str = "r", fsspec_kwargs: dict[str, Any] = {}, **kwargs: Any) -> None:
@@ -641,6 +652,9 @@ class SafeMappingManager:
             config_declarations = dict()
 
         # The reduce allow us to do a get item on a nested directory using a split path.
+
+        print(config_declarations.items())
+
         accessor_config = {
             config_key: reduce(dict.get, partition_eo_path(config_path), config_definitions)  # type: ignore[arg-type]
             for config_key, config_path in config_declarations.items()
