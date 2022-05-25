@@ -3,7 +3,7 @@ What is triggering and how to use it
 
 The triggering module is related to component that run (in one way or another) computing component.
 
-the base class :obj:`eopf.triggering.abstract.EOTrigger` provide a method that parse a payload and execute
+the base class :py:class:`~eopf.triggering.abstract.EOTrigger` provide a method that parse a payload and execute
 the processing unit from the payload.
 
 
@@ -36,12 +36,12 @@ and the component respect the following rules:
 
 * **"module"**: string corresponding to the python path of the module (ex: "eopf.computing")
 * **"processing_unit"**: EOProcessingUnit class name (ex: "SumProcessor")
-* **"parameters"**: kwargs parameters to pass to the :obj:`eopf.triggering.abstract.EOTrigger.run` method
+* **"parameters"**: kwargs parameters to pass to the :py:meth:`~eopf.triggering.abstract.EOTrigger.run` method
 * **"input_product"** and **"output_product"**: dictionary used to identify input (or output) product to use
 
-    - **"id"**: name to give to :obj:`eopf.product.EOProduct`
+    - **"id"**: name to give to :py:class:`~eopf.product.core.eo_product.EOProduct`
     - **"path"**: uri or path (relative to the runner) to the product (ex: "data/S3A_OL_1_EFR____NT_002.SEN3")
-    - **"store_type"**: :obj:`eopf.product.store.store_factory.EOStoreFactory` identifier of the store for the given product
+    - **"store_type"**: :py:class:`~eopf.product.store.store_factory.EOStoreFactory` identifier of the store for the given product
 
 * **"dask_context"**: dictionary that contain one of those possible keys
 
@@ -68,4 +68,4 @@ Available commands are:
 
     - **kafka**: send a message with the given payload json file to the specified kafka server and topic
     - **request**: send a post request with the given payload to the given web server
-    - **local**: run :obj:`eopf.triggering.abstract.EOTrigger.run` with the given payload json file data
+    - **local**: run :py:meth:`~eopf.triggering.abstract.EOTrigger.run` with the given payload json file data

@@ -26,6 +26,7 @@ Requirements for pip install on Windows
 
 Windows require a compiled version of **GDAL** for it, but an issue on the **GDAL** python library blocked the installation.
 We recommand to download and install with pip the **rasterio** and **GDAL** libraries from the following links:
+
     * `GDAL`_
     * `rasterio`_
 

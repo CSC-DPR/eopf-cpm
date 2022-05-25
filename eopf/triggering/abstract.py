@@ -53,13 +53,14 @@ class EOTrigger(ABC):
         """Retrieve all the information from the given payload
 
         the payload should have this keys:
-        * 'module': that provide the module python path
-        * 'processing_unit': corresponding to the name of the target processing unit
-        * 'parameters': kwargs for the processing unit 'run' method
-        * 'input_product': key value pair of data to retrieve input data
-        * 'output_product': key value pair of data to find where to write the
-            output product
-        * 'dask_context': dask client information
+
+            * 'module': that provide the module python path
+            * 'processing_unit': corresponding to the name of the target processing unit
+            * 'parameters': kwargs for the processing unit 'run' method
+            * 'input_product': key value pair of data to retrieve input data
+            * 'output_product': key value pair of data to find where to write the
+                output product
+            * 'dask_context': dask client information
 
         Examples
         --------

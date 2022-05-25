@@ -165,8 +165,7 @@ class EORequestCLITrigger(EOTrigger, EOPFPluginCommandCLI):
 
 
 class EOKafkaCLITrigger(EOTrigger, EOPFPluginCommandCLI):
-    """EOTrigger cli command to send data from a json file to
-    kafka server
+    """EOTrigger cli command to send data from a json file to kafka server
 
     Parameters
     ----------
@@ -241,8 +240,8 @@ class EOKafkaCLITrigger(EOTrigger, EOPFPluginCommandCLI):
 class EOCLITrigger(EOTrigger, EOPFPluginGroupCLI):
     """EOTrigger cli command aggregator to trigger other services
 
-    Attributes:
-    -----------
+    Attributes
+    ----------
     name: str
         name of this group of command
     cli_commands: Sequence[click.Command]

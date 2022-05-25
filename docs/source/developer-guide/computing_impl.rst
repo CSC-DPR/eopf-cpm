@@ -1,7 +1,7 @@
 How to implement Computing component
 ====================================
 
-EOPF-CPM provide abstract classes to help users to write algorithm with EO object (:obj:`EOProduct`, :obj:`EOGroup`, :obj:`EOVariable`).
+EOPF-CPM provide abstract classes to help users to write algorithm with EO object (:py:class:`~eopf.product.core.eo_product.EOProduct`, :py:class:`~eopf.product.core.eo_group.EOGroup`, :py:class:`~eopf.product.core.eo_variable.EOVariable`).
 
 
 Concepts
@@ -9,21 +9,21 @@ Concepts
 
 We introduce distinct concept, step and unit, that are used in different processing level.
 
-* :obj:`eopf.computing.EOProcessingStep`: provide a simple interface to write low level algorithm to work with :obj:`dask.array.Array`
-* :obj:`eopf.computing.EOProcessingUnit`: are related to product level to create partial and/or complete product.
-* :obj:`eopf.computing.EOProcessor`: is a unit that provide a method to validate a product.
+* :py:class:`~eopf.computing.abstract.EOProcessingStep`: provide a simple interface to write low level algorithm to work with :py:class:`~dask.array.Array`
+* :py:class:`~eopf.computing.abstract.EOProcessingUnit`: are related to product level to create partial and/or complete product.
+* :py:class:`~eopf.computing.abstract.EOProcessor`: is a unit that provide a method to validate a product.
 
 
 Generic Abstract EOProcessingStep
 ---------------------------------
 
-In addition of this concept and interface, we provide different declination of :obj:`eopf.computing.EOProcessingStep`
+In addition of this concept and interface, we provide different declination of :py:class:`~eopf.computing.abstract.EOProcessingStep`
 for higher granularity.
 
-* :obj:`eopf.computing.EOBlockProcessingStep`
-* :obj:`eopf.computing.EOOverlapProcessingStep`
+* :py:class:`~eopf.computing.abstract.EOBlockProcessingStep`
+* :py:class:`~eopf.computing.abstract.EOOverlapProcessingStep`
 
-that are direct mapping of :obj:`dask.array.map_blocks` (resp. :obj:`dask.array.map_overlap`) that let you define only
+that are direct mapping of :py:func:`~dask.array.map_blocks` (resp. :py:func:`~dask.array.map_overlap`) that let you define only
 the low level function passed into the corresponding dask function.
 
 
