@@ -4,7 +4,6 @@ from logging import Logger, getLogger
 from logging.config import dictConfig, fileConfig
 from pathlib import Path
 from pstats import Stats
-from time import time
 from typing import Any, Callable, Union
 
 from dask.distributed import Client, LocalCluster, performance_report
@@ -274,19 +273,12 @@ def dask_profiler(
                         threads_per_worker=threads_per_worker,
                     ) as cluster, Client(cluster) as client:
                         # wrap the actual execution of dask function with perfomance monitoring
-                        start_time = time()
                         with performance_report(filename=report_name):
                             result = fn(*args, **kwargs)
-                        end_time = time()
-                        elapsed_time = end_time - start_time
-                        print(f"The execution took {elapsed_time}")
                 else:
-                    start_time = time()
+                    # wrap the actual execution of dask function with perfomance monitoring
                     with performance_report(filename=report_name):
                         result = fn(*args, **kwargs)
-                    end_time = time()
-                    elapsed_time = end_time - start_time
-                    print(f"The execution took {elapsed_time}")
 
                 # close the client to avoid hogging ports
                 if dask_specific_config:
@@ -372,7 +364,7 @@ def single_thread_profiler(
                     n_workers=1,
                     processes=False,
                     threads_per_worker=1,
-                    memory_limit='2GB',
+                    memory_limit="2GB",
                 ) as cluster, Client(cluster) as client:
 
                     # wrap the actual execution of dask function with perfomance monitoring
