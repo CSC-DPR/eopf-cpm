@@ -37,43 +37,45 @@ class MemMapAccessor(EOProductStore):
 
         try:
             with open(self._url, "rb") as f:
-                self._buffer = np.fromfile(f, np.dtype('B'))
+                self._buffer = np.fromfile(f, np.dtype("B"))
         except IOError:
-            print('Error While Opening the file!')
+            print("Error While Opening the file!")
 
-        self._packet_length = np.zeros((self.incr_step), dtype='uint')
-        self._packet_offset = np.zeros((self.incr_step), dtype='uint')
+        self._packet_length = np.zeros((self.incr_step), dtype="uint")
+        self._packet_offset = np.zeros((self.incr_step), dtype="uint")
 
         k = 0
         while k < len(self._buffer):
-            if (self._buffer[k] != 12):
+            if self._buffer[k] != 12:
                 print("error!", k)
                 break
 
-            if (self._n_packets == self._packet_length.shape[0]):
+            if self._n_packets == self._packet_length.shape[0]:
                 (self._packet_length).resize(self._n_packets + self.incr_step, refcheck=False)
                 (self._packet_offset).resize(self._n_packets + self.incr_step, refcheck=False)
 
             self._packet_offset[self._n_packets] = k
-            self._packet_length[self._n_packets] = int.from_bytes(self._buffer[k + 4:k + self.primary_header], "big") + self.primary_header + 1
+            self._packet_length[self._n_packets] = int.from_bytes(self._buffer[k + 4 : k + self.primary_header], "big") + self.primary_header + 1  # noqa
 
-            k += self._packet_length[self._n_packets]
+            k += int(self._packet_length[self._n_packets])
             self._n_packets += 1
 
     def parsekey(self, offset_in_bits, length_in_bits, outputType):
 
-        if (outputType == 'var_bytearray'):
+        if outputType == "var_bytearray":
             start_byte = offset_in_bits // 8
-            parameter = np.zeros((self._n_packets, np.max(self._packet_length) - start_byte), dtype='uint8')
+            parameter = np.zeros((self._n_packets, np.max(self._packet_length) - start_byte), dtype="uint8")
             for k in range(self._n_packets):
                 end_byte = (self._packet_length[k])
-                parameter[k,end_byte-start_byte] = self._buffer[self._packet_offset[k] + start_byte:self._packet_offset[k] + end_byte]  # noqa
+                parameter[k,end_byte-start_byte] = self._buffer[    # noqa
+                                                   self._packet_offset[k] + start_byte:self._packet_offset[k] + end_byte    # noqa
+                                                ]
 
             return parameter
 
         else:
             output_packets = self._n_packets
-            if (outputType[:2] == "s_"):
+            if outputType[:2] == "s_":
                 outputpackets = 1
                 outputType = outputType[2:]
             parameter = np.zeros(output_packets, dtype=outputType)
@@ -83,8 +85,13 @@ class MemMapAccessor(EOProductStore):
             mask = np.sum(2 ** np.arange(length_in_bits))
 
             for k in range(output_packets):
-                data = self._buffer[self._packet_offset[k] + start_byte:self._packet_offset[k] + end_byte] >> shift
-                parameter[k] = ((int.from_bytes(data, 'big')) & mask)
+                data = (
+                        self._buffer[
+                        int(self._packet_offset[k] + start_byte) : int(self._packet_offset[k] + end_byte) # noqa
+                        ]
+                        >> shift
+                    )
+                parameter[k] = (int.from_bytes(data, "big")) & mask
 
             return parameter
 
@@ -167,24 +174,26 @@ class FixedMemMapAccessor(EOProductStore):
 
         try:
             with open(self._url, "rb") as f:
-                self._buffer = np.fromfile(f, np.dtype('B'))
+                self._buffer = np.fromfile(f, np.dtype("B"))
         except IOError:
-            print('Error While Opening the file!')
+            print("Error While Opening the file!")
 
     def parsekey(self, offset_in_bits, length_in_bits, packet_len, outputType):
 
-        if (outputType == 'bytearray'):
+        if outputType == "bytearray":
             start_byte = offset_in_bits // 8
-            parameter = np.zeros((self._n_packets, length_in_bits//8), dtype='uint8')
+            parameter = np.zeros((self._n_packets, length_in_bits//8), dtype="uint8")
             for k in range(self._n_packets):
                 end_byte = (packet_len*k - start_byte)
-                parameter[k,] = self._buffer[packet_len*k + start_byte:packet_len*k + end_byte]
+                parameter[k,] = self._buffer[   # noqa
+                                packet_len*k + start_byte:packet_len*k + end_byte   # noqa
+                                ]
 
             return parameter
 
         else:
             output_packets = self._n_packets
-            if (outputType[:2] == "s_"):
+            if outputType[:2] == "s_":
                 outputpackets = 1
                 outputType=outputType[2:]
             parameter = np.zeros(output_packets, dtype=outputType)
@@ -194,8 +203,8 @@ class FixedMemMapAccessor(EOProductStore):
             mask = np.sum(2 ** np.arange(length_in_bits))
 
             for k in range(output_packets):
-                data = self._buffer[packet_len*k + start_byte:packet_len*k + end_byte] >> shift
-                parameter[k] = ((int.from_bytes(data, 'big')) & mask)
+                data = self._buffer[packet_len * k + start_byte : packet_len * k + end_byte] >> shift  # noqa
+                parameter[k] = (int.from_bytes(data, "big")) & mask
 
             return parameter
 
