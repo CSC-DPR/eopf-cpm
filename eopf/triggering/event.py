@@ -1,11 +1,13 @@
 import json
+import logging
 
 import click
 from aiokafka import AIOKafkaConsumer
 
 from eopf.cli import EOPFPluginCommandCLI, async_cmd
-from eopf.logging import logger
 from eopf.triggering.abstract import EOTrigger
+
+logger = logging.getLogger("eopf")
 
 
 class EOEventTrigger(EOTrigger, EOPFPluginCommandCLI):

@@ -1,3 +1,5 @@
+import logging
+
 import click
 import uvicorn
 from fastapi import FastAPI, Request
@@ -5,8 +7,9 @@ from fastapi.responses import JSONResponse
 from starlette.types import Receive, Scope, Send
 
 from eopf.cli import EOPFPluginCommandCLI
-from eopf.logging import logger
 from eopf.triggering.abstract import EOTrigger
+
+logger = logging.getLogger("eopf")
 
 
 class EOWebTrigger(EOTrigger, FastAPI, EOPFPluginCommandCLI):
