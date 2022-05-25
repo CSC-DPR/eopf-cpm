@@ -223,9 +223,9 @@ class FixedMemMapAccessor(EOProductStore):
         packet_length = key.step
 
         self.loadbuffer()
-        self._n_packets = self._buffer.size // self._packet_length['value']
+        self._n_packets = self._buffer.size // packet_length
 
-        ndarray = self.parsekey(self._offset_in_bits['value'], self._length_in_bits['value'], self._packet_length['value'], self._target_type['name'])
+        ndarray = self.parsekey(offset_in_bits, length_in_bits, packet_length, self._target_type)
         if len(ndarray.shape) == 0:
             raise KeyError
         return EOVariable(data=ndarray)
