@@ -153,7 +153,7 @@ class EONetCDFStore(EOProductStore):
             zarr_store_r = EOZarrStore("reference://")
             storage_options_zopen = storage_options.copy()  # fsspec async problems without.
             storage_options_zopen["fo"] = zarr_compatible_data
-            zarr_store_r.open(mode, storage_options=storage_options_zopen, **kwargs)
+            zarr_store_r.open(mode, consolidated=False, storage_options=storage_options_zopen, **kwargs)
         return zarr_store_r
 
 

@@ -290,6 +290,7 @@ Reading a Product from a store
                     "cartesian": xarray.DataArray([[25, 0], [-5, 72]], attrs={dims: ["grid/orphan"]}),
                 },
             ).to_zarr(store=f"{file_name}/measurements/geo_position/longitude", mode="a")
+            zarr.consolidate_metadata(root.store)
             return file_name
 
     .. jupyter-execute::
