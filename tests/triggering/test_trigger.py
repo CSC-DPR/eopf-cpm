@@ -167,6 +167,8 @@ def test_extract_payload(trigger_class, payload):
         scheduler_mode,
         scheduler_info,
         parameters,
+        input_param,
+        output_param,
     ) = trigger_class.extract_from_payload(payload)
     factory = EOStoreFactory()
     assert processing_unit.__class__.__name__ == payload.get("processing_unit")
@@ -184,6 +186,8 @@ def test_extract_payload(trigger_class, payload):
     assert scheduler_info == payload.get("dask_context", {}).get(scheduler_mode)
 
     assert parameters == payload.get("parameters")
+    assert input_param == payload.get("input_product", {}).get("parameters", {})
+    assert output_param == payload.get("output_product", {}).get("parameters", {})
 
 
 @pytest.mark.unit

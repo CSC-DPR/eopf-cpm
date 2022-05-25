@@ -34,17 +34,20 @@ class EOTrigger(ABC):
             scheduler_mode,
             scheduler_info,
             parameters,
+            input_product_parameter,
+            output_product_parameter,
         ) = EOTrigger.extract_from_payload(
             payload,
         )
 
         dask.config.set(scheduler=scheduler_info)
-        if isinstance(processing_unit, EOProcessor):
-            output = processing_unit.run_validating(input_product, **parameters)
-        else:
-            output = processing_unit.run(input_product, **parameters)
-        with output.open(mode="w", store_or_path_url=output_store):
-            output.write()
+        with input_product.open(mode="r", **input_product_parameter):
+            if isinstance(processing_unit, EOProcessor):
+                output = processing_unit.run_validating(input_product, **parameters)
+            else:
+                output = processing_unit.run(input_product, **parameters)
+            with output.open(mode="w", store_or_path_url=output_store, **output_product_parameter):
+                output.write()
 
     @staticmethod
     def extract_from_payload(
@@ -111,8 +114,16 @@ class EOTrigger(ABC):
             output_product_payload.get("store_type", "zarr"),
         )
         scheduler_mode, scheduler_info = EOTrigger.parse_dask_context(dask_context)
-        parameters = payload.get("parameters", {})
-        return processing_unit, input_product, ouput_store, scheduler_mode, scheduler_info, parameters
+        return (
+            processing_unit,
+            input_product,
+            ouput_store,
+            scheduler_mode,
+            scheduler_info,
+            payload.get("parameters", {}),
+            input_product_payload.get("parameters", {}),
+            output_product_payload.get("parameters", {}),
+        )
 
     @staticmethod
     def instanciate_store(path: str, store_type: str = "zarr") -> EOProductStore:
