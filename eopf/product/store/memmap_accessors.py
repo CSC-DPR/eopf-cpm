@@ -29,7 +29,21 @@ class MemMapAccessor(EOProductStore):
         except KeyError as e:
             raise TypeError(f"Missing configuration parameter: {e}")
 
-        self._root = self._url
+        if self._root is None:
+            self.loadbuffer()
+            self._root = self._url
+
+    def close(self) -> None:
+        super().close()
+
+        self._root = None
+        self._url = None
+        self._target_type = None
+        self._n_packets = 0
+
+        del self._buffer
+        del self._packet_length
+        del self._packet_offset
 
     def loadbuffer(self):
 
@@ -117,8 +131,6 @@ class MemMapAccessor(EOProductStore):
         offset_in_bits = key.start
         length_in_bits = key.step
 
-        self.loadbuffer()
-
         ndarray = self.parsekey(offset_in_bits, length_in_bits, self._target_type)
         if len(ndarray.shape) == 0:
             raise KeyError
@@ -166,7 +178,18 @@ class FixedMemMapAccessor(EOProductStore):
         except KeyError as e:
             raise TypeError(f"Missing configuration parameter: {e}")
 
-        self._root = self._url
+        if self._root is None:
+            self.loadbuffer()
+            self._root = self._url
+
+    def close(self) -> None:
+        super().close()
+        self._root = None
+        self._url = None
+        self._target_type = None
+        self._n_packets = 0
+
+        del self._buffer
 
     def loadbuffer(self):
 
@@ -231,7 +254,6 @@ class FixedMemMapAccessor(EOProductStore):
         length_in_bits = key.stop
         packet_length = key.step
 
-        self.loadbuffer()
         self._n_packets = self._buffer.size // packet_length
 
         ndarray = self.parsekey(offset_in_bits, length_in_bits, packet_length, self._target_type)
