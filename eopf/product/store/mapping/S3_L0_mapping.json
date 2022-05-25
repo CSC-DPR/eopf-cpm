@@ -7,12 +7,10 @@
     "data_mapping": [
 		{
             "short_name": "packet_version",
-            "source_path": "ISPData.dat",
+            "source_path": "ISPData.dat:(0,3,3)",
             "target_path": "/conditions/packet_version",
             "item_format": "L0packetlist",
             "accessor_config": {
-                "offset_in_bits_within_packet": "l0_mapping/offset/packet_version",
-				"length_in_bits": "l0_mapping/len/packet_version",
                 "target_type": "l0_mapping/types/scalar_uint8"
             },
             "parameters": {
@@ -24,12 +22,10 @@
         },
         {
             "short_name": "packet_type",
-            "source_path": "ISPData.dat",
+            "source_path": "ISPData.dat:(3,4,1)",
             "target_path": "/conditions/packet_type",
             "item_format": "L0packetlist",
             "accessor_config": {
-                "offset_in_bits_within_packet": "l0_mapping/offset/packet_type",
-				"length_in_bits": "l0_mapping/len/packet_type",
                 "target_type": "l0_mapping/types/scalar_uint8"
             },
             "parameters": {
@@ -41,12 +37,10 @@
         },
         {
             "short_name": "datafield_header_flag",
-            "source_path": "ISPData.dat",
+            "source_path": "ISPData.dat:(4,5,1)",
             "target_path": "/conditions/datafield_header_flag",
             "item_format": "L0packetlist",
             "accessor_config": {
-                "offset_in_bits_within_packet": "l0_mapping/offset/header_flag",
-				"length_in_bits": "l0_mapping/len/header_flag",
                 "target_type": "l0_mapping/types/scalar_uint8"
             },
             "parameters": {
@@ -57,13 +51,11 @@
             }
         },
 		{
-            "short_name": "application_process_PID",
-            "source_path": "ISPData.dat",
-            "target_path": "/conditions/application_process_PID",
+            "short_name": "PID",
+            "source_path": "ISPData.dat:(5,12,7)",
+            "target_path": "/conditions/PID",
             "item_format": "L0packetlist",
             "accessor_config": {
-                "offset_in_bits_within_packet": "l0_mapping/offset/pid",
-				"length_in_bits": "l0_mapping/len/pid",
                 "target_type": "l0_mapping/types/uint8"
             },
             "parameters": {
@@ -74,13 +66,11 @@
             }
         },
 		{
-            "short_name": "pcat",
-            "source_path": "ISPData.dat",
+            "short_name": "PCAT",
+            "source_path": "ISPData.dat:(12,16,4)",
             "target_path": "/conditions/pcat",
             "item_format": "L0packetlist",
             "accessor_config": {
-                "offset_in_bits_within_packet": "l0_mapping/offset/pcat",
-				"length_in_bits": "l0_mapping/len/pcat",
                 "target_type": "l0_mapping/types/uint8"
             },
             "parameters": {
@@ -92,12 +82,10 @@
         },
         {
             "short_name": "grouping_flags",
-            "source_path": "ISPData.dat",
+            "source_path": "ISPData.dat:(16,18,2)",
             "target_path": "/conditions/grouping_flags",
             "item_format": "L0packetlist",
             "accessor_config": {
-                "offset_in_bits_within_packet": "l0_mapping/offset/grouping_flags",
-				"length_in_bits": "l0_mapping/len/grouping_flags",
                 "target_type": "l0_mapping/types/scalar_uint8"
             },
             "parameters": {
@@ -109,12 +97,10 @@
         },
         {
             "short_name": "packet_sequence_count",
-            "source_path": "ISPData.dat",
+            "source_path": "ISPData.dat:(18,32,14)",
             "target_path": "/conditions/packet_sequence_count",
             "item_format": "L0packetlist",
             "accessor_config": {
-                "offset_in_bits_within_packet": "l0_mapping/offset/seq_count",
-				"length_in_bits": "l0_mapping/len/seq_count",
                 "target_type": "l0_mapping/types/uint16"
             },
             "parameters": {
@@ -126,12 +112,10 @@
         },
 		{
             "short_name": "packet_data_length",
-            "source_path": "ISPData.dat",
+            "source_path": "ISPData.dat:(32,49,16)",
             "target_path": "/conditions/packet_data_length",
             "item_format": "L0packetlist",
             "accessor_config": {
-			    "offset_in_bits_within_packet": "l0_mapping/offset/packet_data_length",
-				"length_in_bits": "l0_mapping/len/packet_data_length",
                 "target_type": "l0_mapping/types/uint16"
             },
             "parameters": {
@@ -143,12 +127,10 @@
         },
         {
             "short_name": "pus_version",
-            "source_path": "ISPData.dat",
+            "source_path": "ISPData.dat:(49,56,3)",
             "target_path": "/conditions/pus_version",
             "item_format": "L0packetlist",
             "accessor_config": {
-			    "offset_in_bits_within_packet": "l0_mapping/offset/pus_version",
-				"length_in_bits": "l0_mapping/len/pus_version",
                 "target_type": "l0_mapping/types/scalar_uint8"
             },
             "parameters": {
@@ -160,12 +142,10 @@
         },
 		{
             "short_name": "service_packet_type",
-            "source_path": "ISPData.dat",
+            "source_path": "ISPData.dat:(56,64,8)",
             "target_path": "/conditions/service_packet_type",
             "item_format": "L0packetlist",
             "accessor_config": {
-				"offset_in_bits_within_packet": "l0_mapping/offset/service_packet_type",
-				"length_in_bits": "l0_mapping/len/service_packet_type",
                 "target_type": "l0_mapping/types/uint8"
             },
             "parameters": {
@@ -177,12 +157,10 @@
         },
 		{
             "short_name": "service_packet_subtype",
-            "source_path": "ISPData.dat",
+            "source_path": "ISPData.dat:(64,72,8)",
             "target_path": "/conditions/service_packet_subtype",
             "item_format": "L0packetlist",
             "accessor_config": {
-				"offset_in_bits_within_packet": "l0_mapping/offset/service_packet_subtype",
-				"length_in_bits": "l0_mapping/len/service_packet_subtype",
                 "target_type": "l0_mapping/types/uint8"
             },
             "parameters": {
@@ -194,12 +172,10 @@
         },
 		{
             "short_name": "destination_id",
-            "source_path": "ISPData.dat",
+            "source_path": "ISPData.dat:(72,80,8)",
             "target_path": "/conditions/destination_id",
             "item_format": "L0packetlist",
             "accessor_config": {
-				"offset_in_bits_within_packet": "l0_mapping/offset/destination_id",
-				"length_in_bits": "l0_mapping/len/destination_id",
                 "target_type": "l0_mapping/types/uint8"
             },
             "parameters": {
@@ -211,12 +187,10 @@
         },
 		{
             "short_name": "coarse_time",
-            "source_path": "ISPData.dat",
+            "source_path": "ISPData.dat:(80,112,32)",
             "target_path": "/coordinates/coarse_time",
             "item_format": "L0packetlist",
             "accessor_config": {
-				"offset_in_bits_within_packet": "l0_mapping/offset/coarse_time",
-				"length_in_bits": "l0_mapping/len/coarse_time",
                 "target_type": "l0_mapping/types/uint32"
             },
             "parameters": {
@@ -228,12 +202,10 @@
         },
 		{
             "short_name": "fine_time",
-            "source_path": "ISPData.dat",
+            "source_path": "ISPData.dat:(112,136,24)",
             "target_path": "/coordinates/fine_time",
             "item_format": "L0packetlist",
             "accessor_config": {
-				"offset_in_bits_within_packet": "l0_mapping/offset/fine_time",
-				"length_in_bits": "l0_mapping/len/fine_time",
                 "target_type": "l0_mapping/types/uint32"
             },
             "parameters": {
@@ -245,12 +217,10 @@
         },
 		{
             "short_name": "time_status",
-            "source_path": "ISPData.dat",
+            "source_path": "ISPData.dat:(136:144,1)",
             "target_path": "/conditions/time_status",
             "item_format": "L0packetlist",
             "accessor_config": {
-				"offset_in_bits_within_packet": "l0_mapping/offset/time_status",
-				"length_in_bits": "l0_mapping/len/time_status",
                 "target_type": "l0_mapping/types/uint8"
             },
             "parameters": {
@@ -262,12 +232,10 @@
         },
         {
             "short_name": "user_data",
-            "source_path": "ISPData.dat",
+            "source_path": "ISPData.dat:(144,None,-1)",
             "target_path": "/measurements/user_data",
             "item_format": "L0packetlist",
             "accessor_config": {
-                "offset_in_bits_within_packet": "l0_mapping/offset/user_data",
-				"length_in_bits": "l0_mapping/len/user_data",
                 "target_type": "l0_mapping/types/var_bytearray"
             },
             "parameters": {
@@ -279,13 +247,10 @@
         },
 		{
             "short_name": "fep",
-            "source_path": "ISPAnnotation.dat",
+            "source_path": "ISPAnnotation.dat:(0,144,30)",
             "target_path": "/conditions/fep",
             "item_format": "L0annotationlist",
             "accessor_config": {
-			    "length_of_packet": "annotation_mapping/packet_len/annotation",
-                "offset_in_bits_within_packet": "annotation_mapping/offset/fep",
-				"length_in_bits": "annotation_mapping/len/fep",
                 "target_type": "annotation_mapping/types/bytearray"
             },
             "parameters": {
@@ -297,13 +262,10 @@
         },
 		{
             "short_name": "gps_time_days",
-            "source_path": "ISPAnnotation.dat",
-            "target_path": "/coordinates/gps_time_days",
+            "source_path": "ISPAnnotation.dat:(144,176,30)",
+            "target_path": "/coordinates/gps_time/days",
             "item_format": "L0annotationlist",
             "accessor_config": {
-			    "length_of_packet": "annotation_mapping/packet_len/annotation",
-                "offset_in_bits_within_packet": "annotation_mapping/offset/gps_days",
-				"length_in_bits": "annotation_mapping/len/gps_days",
                 "target_type": "annotation_mapping/types/uint32"
             },
             "parameters": {
@@ -315,13 +277,10 @@
         },
 		{
             "short_name": "gps_time_seconds",
-            "source_path": "ISPAnnotation.dat",
-            "target_path": "/coordinates/gps_time_seconds",
+            "source_path": "ISPAnnotation.dat:(176,208,30)",
+            "target_path": "/coordinates/gps_time/seconds",
             "item_format": "L0annotationlist",
             "accessor_config": {
-			    "length_of_packet": "annotation_mapping/packet_len/annotation",
-                "offset_in_bits_within_packet": "annotation_mapping/offset/gps_seconds",
-				"length_in_bits": "annotation_mapping/len/gps_seconds",
                 "target_type": "annotation_mapping/types/uint32"
             },
             "parameters": {
@@ -333,13 +292,10 @@
         },
 		{
             "short_name": "gps_time_microseconds",
-            "source_path": "ISPAnnotation.dat",
-            "target_path": "/coordinates/gps_time_microseconds",
+            "source_path": "ISPAnnotation.dat:(208,240,30)",
+            "target_path": "/coordinates/gps_time/microseconds",
             "item_format": "L0annotationlist",
             "accessor_config": {
-			    "length_of_packet": "annotation_mapping/packet_len/annotation",
-                "offset_in_bits_within_packet": "annotation_mapping/offset/gps_microseconds",
-				"length_in_bits": "annotation_mapping/len/gps_microseconds",
                 "target_type": "annotation_mapping/types/uint32"
             },
             "parameters": {
@@ -352,174 +308,25 @@
     ],
     "l0_mapping": {
         "types": {
-            "uint8": {
-                "name": "uint8"
-            },
-             "scalar_uint8": {
-                "name": "s_uint8"
-            },
-            "uint16": {
-                "name": "uint16"
-            },
-            "uint32": {
-                "name": "uint32"
-            },
-            "bytearray": {
-                "name": "bytearray"
-            },
-            "var_bytearray": {
-                "name": "var_bytearray"
-            }
-        },
-        "offset": {
-            "packet_version": {
-                "value": 0
-            },
-            "packet_type": {
-                "value": 3
-            },
-            "header_flag": {
-                "value": 4
-            },
-            "pid": {
-                "value": 5
-            },
-            "pcat": {
-                "value": 12
-            },
-            "grouping_flags": {
-                "value": 16
-            },
-            "seq_count": {
-                "value": 18
-            },
-			"packet_data_length": {
-                "value": 32
-            },
-            "pus_version": {
-                "value": 49
-            },
-			"service_packet_type": {
-                "value": 56
-            },
-			"service_packet_subtype": {
-                "value": 64
-            },
-			"destination_id": {
-                "value": 72
-            },
-			"coarse_time": {
-                "value": 80
-            },
-			"fine_time": {
-                "value": 112
-            },
-			"time_status": {
-                "value": 136
-            },
-            "user_data": {
-                "value": 144
-            }
-        },
-        "len": {
-            "packet_version": {
-                "value": 3
-            },
-            "packet_type": {
-                "value": 1
-            },
-            "header_flag": {
-                "value": 1
-            },
-            "pid": {
-                "value": 7
-            },
-            "pcat": {
-                "value": 4
-            },
-            "grouping_flags": {
-                "value": 2
-            },
-            "seq_count": {
-                "value": 14
-            },
-			"packet_data_length": {
-                "value": 16
-            },
-            "pus_version": {
-                "value": 3
-            },
-			"service_packet_type": {
-                "value": 8
-            },
-			"service_packet_subtype": {
-                "value": 8
-            },
-			"destination_id": {
-                "value": 8
-            },
-			"coarse_time": {
-                "value": 32
-            },
-			"fine_time": {
-                "value": 24
-            },
-			"time_status": {
-                "value": 1
-            },
-            "user_data": {
-                "value": -1
-            }
-        }		
+            "bool": "bool",
+            "uint8": "uint8",
+            "scalar_uint8": "s_uint8",
+            "uint16": "uint16",
+            "uint32": "uint32",
+            "var_bytearray": "var_bytearray",
+            "bytearray": "bytearray"
+        }
     },
 	"annotation_mapping": {
-	    "packet_length": {
-            "annotation": {
-                "value": 30
-            }
-        },
-        "types": {
-            "uint8": {
-                "name": "uint8"
-            },
-            "uint16": {
-                "name": "uint16"
-            },
-            "uint32": {
-                "name": "uint32"
-            },
-            "bytearray": {
-                "name": "bytearray"
-            }
-        },
-        "offset": {
-            "fep": {
-                "value": 0
-            },
-            "gps_days": {
-                "value": 144
-            },
-            "gps_seconds": {
-                "value": 176
-            },
-            "gps_microseconds": {
-                "value": 208
-            }			
-        },
-        "len": {
-            "fep": {
-                "value": 144
-            },
-             "gps_days": {
-                "value": 32
-            },
-            "gps_seconds": {
-                "value": 32
-            },
-            "gps_microseconds": {
-                "value": 32
-            }
-        }		
+	    "types": {
+            "bool": "bool",
+            "uint8": "uint8",
+            "scalar_uint8": "s_uint8",
+            "uint16": "uint16",
+            "uint32": "uint32",
+            "var_bytearray": "var_bytearray",
+            "bytearray": "bytearray"
+        }
     }
 }
 
