@@ -52,7 +52,16 @@ class EOTrigger(ABC):
     @staticmethod
     def extract_from_payload(
         payload: dict[str, Any],
-    ) -> tuple[EOProcessingUnit, EOProduct, Union[EOProductStore, str], str, str, dict[str, Any]]:
+    ) -> tuple[
+        EOProcessingUnit,
+        EOProduct,
+        Union[EOProductStore, str],
+        str,
+        str,
+        dict[str, Any],
+        dict[str, Any],
+        dict[str, Any],
+    ]:
         """Retrieve all the information from the given payload
 
         the payload should have this keys:
