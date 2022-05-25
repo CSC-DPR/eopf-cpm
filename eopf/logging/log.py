@@ -7,7 +7,7 @@ from pstats import Stats
 from time import time
 from typing import Any, Callable, Union
 
-from dask.distributed import Client, performance_report
+from dask.distributed import Client, LocalCluster, performance_report
 from yaml import safe_load
 
 from eopf.exceptions import (
@@ -269,18 +269,24 @@ def dask_profiler(
             try:
                 # start a dask cluster with given specification
                 if dask_specific_config:
-                    client = Client(
+                    with LocalCluster(
                         n_workers=n_workers,
                         threads_per_worker=threads_per_worker,
-                    )
-
-                # wrap the actual execution of dask function with perfomance monitoring
-                start_time = time()
-                with performance_report(filename=report_name):
-                    result = fn(*args, **kwargs)
-                end_time = time()
-                elapsed_time = end_time - start_time
-                print(f"The execution took {elapsed_time}")
+                    ) as cluster, Client(cluster) as client:
+                        # wrap the actual execution of dask function with perfomance monitoring
+                        start_time = time()
+                        with performance_report(filename=report_name):
+                            result = fn(*args, **kwargs)
+                        end_time = time()
+                        elapsed_time = end_time - start_time
+                        print(f"The execution took {elapsed_time}")
+                else:
+                    start_time = time()
+                    with performance_report(filename=report_name):
+                        result = fn(*args, **kwargs)
+                    end_time = time()
+                    elapsed_time = end_time - start_time
+                    print(f"The execution took {elapsed_time}")
 
                 # close the client to avoid hogging ports
                 if dask_specific_config:
@@ -362,27 +368,29 @@ def single_thread_profiler(
         def wrap_inner(*args: Any, **kwargs: Any) -> Stats:
             try:
                 # start a dask cluster with 1 worker and 1 thread
-                client = Client(
+                with LocalCluster(
                     n_workers=1,
+                    processes=False,
                     threads_per_worker=1,
-                )
+                    memory_limit='2GB',
+                ) as cluster, Client(cluster) as client:
 
-                # wrap the actual execution of dask function with perfomance monitoring
-                profiler = Profile()
-                profiler.enable()
-                fn(*args, **kwargs)
-                profiler.disable()
+                    # wrap the actual execution of dask function with perfomance monitoring
+                    profiler = Profile()
+                    profiler.enable()
+                    fn(*args, **kwargs)
+                    profiler.disable()
 
-                # extract, print and return stats
-                stats: Stats = Stats(profiler).sort_stats("ncalls")
-                if report_name:
-                    stats.dump_stats(report_name)
-                stats.print_stats()
+                    # extract, print and return stats
+                    stats: Stats = Stats(profiler).sort_stats("ncalls")
+                    if report_name:
+                        stats.dump_stats(report_name)
+                    stats.print_stats()
 
-                # close the client to avoid hogging ports
-                client.close()
+                    # close the client to avoid hogging ports
+                    client.close()
 
-                return stats
+                    return stats
 
             except Exception as e:
                 raise SingleThreadProfilerError(f"Exception encountered: {e}")
