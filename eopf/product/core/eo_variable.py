@@ -98,6 +98,9 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         self._data = self._data.swap_dims(dict(zip(self._data.dims, dims)))
         super().assign_dims(dims)
 
+    def astype(self, dtype: DTypeLike) -> "EOVariable":
+        return self._init_similar(self.data.astype(dtype))
+
     # docstr-coverage: inherited
     @property
     def attrs(self) -> dict[str, Any]:

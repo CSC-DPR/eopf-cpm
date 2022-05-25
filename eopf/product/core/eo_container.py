@@ -63,13 +63,14 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
             self._add_local_variable(key, value)
 
     def __iter__(self) -> Iterator[str]:
+        already_yield = []
         if self.store is not None and self.store.status == StorageStatus.CLOSE:
             warnings.warn("`for in` statement can't check store")
         elif self.store is not None:
-            for key in self.store.iter(self.path):
-                if key not in self._groups:
-                    yield key
-        yield from self._groups
+            for key in filter(lambda x: x not in self._groups, self.store.iter(self.path)):
+                yield key
+                already_yield.append(key)
+        yield from filter(lambda x: x not in already_yield, self._groups)
 
     def _get_item(self, key: str) -> "EOObject":
         """find and return eovariable or eogroup from the given key.
