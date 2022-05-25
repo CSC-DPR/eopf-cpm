@@ -1,18 +1,9 @@
-from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional, TextIO, Union, List
+from typing import TYPE_CHECKING, Any, Iterator, MutableMapping
 
-import lxml
-import xarray as xr
-import glob
 import numpy as np
-from datetime import datetime
 
-from eopf.exceptions import StoreNotOpenError, XmlParsingError
 from eopf.product.store import EOProductStore
-from eopf.product.utils import (  # to be reviewed
-    apply_xpath,
-    parse_xml,
-    translate_structure,
-)
+
 
 if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_object import EOObject
@@ -25,18 +16,15 @@ class MemMapAccessor(EOProductStore):
     def __init__(self, url: str, **kwargs: Any) -> None:
         super().__init__(url)
         self._root = None
-        self._url = [p for p in glob.iglob(url)]
-        self._offset_in_bits = None
-        self._length_in_bits = None
+        self._url = url
         self._target_type = None
+        self._n_packets = 0
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         super().open()
         if mode != "r":
             raise NotImplementedError()
         try:
-            self._offset_in_bits  = kwargs["offset_in_bits"]
-            self._length_in_bits = kwargs["length_in_bits"]
             self._target_type = kwargs["target_type"]
         except KeyError as e:
             raise TypeError(f"Missing configuration parameter: {e}")
@@ -79,7 +67,7 @@ class MemMapAccessor(EOProductStore):
             parameter = np.zeros((self._n_packets, np.max(self._packet_length) - start_byte), dtype='uint8')
             for k in range(self._n_packets):
                 end_byte = (self._packet_length[k])
-                parameter[k,end_byte-start_byte] = self._buffer[self._packet_offset[k] + start_byte:self._packet_offset[k] + end_byte]
+                parameter[k,end_byte-start_byte] = self._buffer[self._packet_offset[k] + start_byte:self._packet_offset[k] + end_byte]  # noqa
 
             return parameter
 
@@ -100,7 +88,7 @@ class MemMapAccessor(EOProductStore):
 
             return parameter
 
-    def __getitem__(self, key: str) -> "EOObject":
+    def __getitem__(self, key: slice) -> "EOObject":
         """
         This method is used to return eo_variables if parameters value match
 
@@ -119,9 +107,12 @@ class MemMapAccessor(EOProductStore):
         """
         from eopf.product.core import EOVariable
 
+        offset_in_bits = key.start
+        length_in_bits = key.step
+
         self.loadbuffer()
 
-        ndarray = parsekey(self._offset_in_bits['value'], self._length_in_bits['value'], self._target_type['name'])
+        ndarray = parsekey(offset_in_bits, length_in_bits, self._target_type)
         if len(ndarray.shape) == 0:
             raise KeyError
         return EOVariable(data=ndarray)
@@ -155,21 +146,15 @@ class FixedMemMapAccessor(EOProductStore):
     def __init__(self, url: str, **kwargs: Any) -> None:
         super().__init__(url)
         self._root = None
-        self._url = [p for p in glob.iglob(url)]
-        self._offset_in_bits = None
-        self._length_in_bits = None
+        self._url = url
         self._target_type = None
-        self._packet_length = None
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
         super().open()
         if mode != "r":
             raise NotImplementedError()
         try:
-            self._offset_in_bits  = kwargs["offset_in_bits"]
-            self._length_in_bits = kwargs["length_in_bits"]
             self._target_type = kwargs["target_type"]
-            self._packet_length = kwargs["length_of_packet"]
 
         except KeyError as e:
             raise TypeError(f"Missing configuration parameter: {e}")
@@ -214,7 +199,7 @@ class FixedMemMapAccessor(EOProductStore):
 
             return parameter
 
-    def __getitem__(self, key: str) -> "EOObject":
+    def __getitem__(self, key: slice) -> "EOObject":
         """
         This method is used to return eo_variables if parameters value match
 
@@ -232,6 +217,10 @@ class FixedMemMapAccessor(EOProductStore):
         EOVariable
         """
         from eopf.product.core import EOVariable
+
+        offset_in_bits = key.start
+        length_in_bits = key.stop
+        packet_length = key.step
 
         self.loadbuffer()
         self._n_packets = self._buffer.size // self._packet_length['value']
