@@ -27,7 +27,7 @@ from eopf.product.utils import conv
         (lazy_fixture("S2A_MSIL1C"), "/conditions/geometry/saa"),
         (lazy_fixture("S2A_MSIL1C"), "/quality/msk_detfoo_b11"),
         (lazy_fixture("S2A_MSIL1C"), "/quality/msk_qualit_b11"),
-        (lazy_fixture("S2A_MSIL1C"), "/measurements/reflectances_20m/b01"),
+        (lazy_fixture("S2A_MSIL1C"), "/measurements/reflectances_20m/b05"),
         (lazy_fixture("S2A_MSIL1C"), "/coordinates/meteo/longitude_meteo"),
         (lazy_fixture("S2A_MSIL1C"), "/coordinates/tiepoint_grid/x_tp"),
         (lazy_fixture("S2A_MSIL1C"), "/coordinates/image_grid_20m/x_20m"),
