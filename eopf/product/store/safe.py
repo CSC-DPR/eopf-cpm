@@ -1,4 +1,3 @@
-
 import ast
 import os
 import pathlib
@@ -224,8 +223,7 @@ class EOSafeStore(EOProductStore):
         for safe_path, accessor_path in self._accessor_manager.split_target_path(key):
             mapping_match_list = self._accessor_manager.get_accessors_from_mapping(safe_path)
             for accessor, config_accessor_path, config in mapping_match_list:
-                if isinstance(config_accessor_path, str) and isinstance(accessor_path, str):
-                    config_accessor_path = join_eo_path_optional(config_accessor_path, accessor_path)
+                config_accessor_path = join_eo_path_optional(config_accessor_path, accessor_path)
                 # We should catch Key Error, and throw if the object isn't found in any of the accessors
                 try:
                     accessed_object = accessor[config_accessor_path]
