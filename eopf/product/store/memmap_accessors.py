@@ -55,7 +55,7 @@ class MemMapAccessor(EOProductStore):
                 (self._packet_offset).resize(self._n_packets + self.incr_step, refcheck=False)
 
             self._packet_offset[self._n_packets] = k
-            self._packet_length[self._n_packets] = int.from_bytes(self._buffer[k + 4:k + primary_header], "big") + primary_header + 1
+            self._packet_length[self._n_packets] = int.from_bytes(self._buffer[k + 4:k + self.primary_header], "big") + self.primary_header + 1
 
             k += self._packet_length[self._n_packets]
             self._n_packets += 1
@@ -112,7 +112,7 @@ class MemMapAccessor(EOProductStore):
 
         self.loadbuffer()
 
-        ndarray = parsekey(offset_in_bits, length_in_bits, self._target_type)
+        ndarray = self.parsekey(offset_in_bits, length_in_bits, self._target_type)
         if len(ndarray.shape) == 0:
             raise KeyError
         return EOVariable(data=ndarray)
@@ -225,7 +225,7 @@ class FixedMemMapAccessor(EOProductStore):
         self.loadbuffer()
         self._n_packets = self._buffer.size // self._packet_length['value']
 
-        ndarray = parsekey(self._offset_in_bits['value'], self._length_in_bits['value'], self._packet_length['value'], self._target_type['name'])
+        ndarray = self.parsekey(self._offset_in_bits['value'], self._length_in_bits['value'], self._packet_length['value'], self._target_type['name'])
         if len(ndarray.shape) == 0:
             raise KeyError
         return EOVariable(data=ndarray)
