@@ -26,6 +26,9 @@ class EOLogFactory(object):
         path to the directory containing logger configurations
     """
 
+    cfg_dir = Path(__file__).parent / "conf"
+    _cfgs: dict[str, Path] = {}
+
     def __init__(self) -> None:
         """Initializes by registering logger configurations in the cfg_dir
 
@@ -34,9 +37,6 @@ class EOLogFactory(object):
         LoggingConfigurationDirDoesNotExist
             When the preset or given logging directory does not exist
         """
-
-        self._cfgs: dict[str, Path] = {}
-        self.cfg_dir = Path(__file__).parent / "conf"
         if not self.cfg_dir.is_dir():
             raise LoggingConfigurationDirDoesNotExist("The logging configuration directory must exist")
         self.register_cfg_dir()
