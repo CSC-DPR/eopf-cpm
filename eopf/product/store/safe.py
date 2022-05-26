@@ -485,6 +485,7 @@ class SafeMappingManager:
                 accessor_local_path = accessor_source_split[1]
             else:
                 accessor_local_path = conf.get("local_path")
+
             accessor = self._get_accessor(
                 accessor_file_regex,
                 conf[self.CONFIG_FORMAT],
@@ -650,9 +651,6 @@ class SafeMappingManager:
             config_declarations = dict()
 
         # The reduce allow us to do a get item on a nested directory using a split path.
-
-        print(config_declarations.items())
-
         accessor_config = {
             config_key: reduce(dict.get, partition_eo_path(config_path), config_definitions)  # type: ignore[arg-type]
             for config_key, config_path in config_declarations.items()
