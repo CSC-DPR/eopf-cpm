@@ -50,9 +50,14 @@ def test_unregistered_configuration():
 @pytest.mark.unit
 def test_non_existent_cfg_dir():
     """Test that when setting the cfg dir with a non-existent dir it raises LoggingConfigurationDirDoesNotExist"""
+    initial_conf_path = EOLogFactory().cfg_dir
     test_factory = EOLogFactory()
     with pytest.raises(LoggingConfigurationDirDoesNotExist):
         _ = test_factory.set_cfg_dir("/tmp/does_not_exist")
+
+    # reset the path to avoid impacting other tests
+    _ = test_factory.set_cfg_dir(initial_conf_path)
+    
 
 
 @pytest.mark.unit
@@ -93,10 +98,14 @@ def test_register_cfg_with_incorrect_file_extension():
 def test_register_cfg_dir_with_no_log_configurations():
     """Test that when setting the cfg dir with a non-existent dir it raises NoLoggingConfigurationFile"""
 
+    initial_conf_path = EOLogFactory().cfg_dir
     test_factory = EOLogFactory()
     test_dir_path = Path(__file__).parent
     with pytest.raises(NoLoggingConfigurationFile):
         test_factory.set_cfg_dir(test_dir_path)
+
+    # reset the path to avoid impacting other tests
+    _ = test_factory.set_cfg_dir(initial_conf_path)
 
 
 @pytest.mark.unit
