@@ -57,7 +57,6 @@ def test_non_existent_cfg_dir():
 
     # reset the path to avoid impacting other tests
     _ = test_factory.set_cfg_dir(initial_conf_path)
-    
 
 
 @pytest.mark.unit
