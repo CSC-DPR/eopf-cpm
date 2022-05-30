@@ -39,7 +39,7 @@ def init_product(
 @contextlib.contextmanager
 def open_store(
     store_or_product: Union[EOProduct, EOProductStore], mode: str = "r", **kwargs: Any
-) -> Iterator[EOProductStore]:
+) -> Iterator[Union[EOProduct, EOProductStore]]:
     """Open an EOProductStore in the given mode.
 
     help you to open EOProductStore from EOProduct or directly to use
@@ -69,6 +69,8 @@ def open_store(
         yield store_or_product
     finally:
         if isinstance(store_or_product, EOProduct):
-            store_or_product.store.close()
+            store = store_or_product.store
+            if store is not None:
+                store.close()
         else:
             store_or_product.close()
