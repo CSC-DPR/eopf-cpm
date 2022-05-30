@@ -32,6 +32,7 @@ release = __version__
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "sphinxcontrib.apidoc",
     "sphinx.ext.napoleon",
     "sphinx.ext.intersphinx",
     "jupyter_sphinx",
@@ -82,4 +83,16 @@ intersphinx_mapping = {
     "rasterio": ("https://rasterio.readthedocs.io/en/latest", None),
     "xarray": ("https://docs.xarray.dev/en/stable/", None),
     "zarr": ("https://zarr.readthedocs.io/en/stable/", None),
+}
+
+autodoc_typehints = "description"
+
+apidoc_module_dir = "../../eopf"
+apidoc_output_dir = "api"
+apidoc_module_first = True
+apidoc_toc_file = False
+apidoc_separate_modules = False
+
+autodoc_default_options = {
+    "ignore-module-all": True,
 }

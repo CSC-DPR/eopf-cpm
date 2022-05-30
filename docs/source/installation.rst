@@ -13,6 +13,23 @@ Requirements
 
 To install eopf, you must use python 3.9 or later
 
+Requirements for conda on Windows
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Windows require a compiled version of **GDAL** for it, but an issue on the **GDAL** python library blocked the installation.
+We recommand to install the **rasterio** from conda to provide a fully worked environment::
+
+    $ conda install -c conda-forge rasterio
+
+Requirements for pip install on Windows
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Windows require a compiled version of **GDAL** for it, but an issue on the **GDAL** python library blocked the installation.
+We recommand to download and install with pip the **rasterio** and **GDAL** libraries from the following links:
+
+    * `GDAL`_
+    * `rasterio`_
+
 Instruction
 -----------
 
@@ -65,3 +82,7 @@ Using pip and index url
 
     $ pip install eopf[notebook] --extra-index-url https://__token__:<your_personal_token>@gitlab.csc-eopf.csgroup.space/api/v4/projects/14/packages/pypi/simple
     $ pip install eopf[tests,notebook] --extra-index-url https://__token__:<your_personal_token>@gitlab.csc-eopf.csgroup.space/api/v4/projects/14/packages/pypi/simple
+
+
+.. _GDAL: https://www.lfd.uci.edu/~gohlke/pythonlibs/#gdal
+.. _rasterio: https://www.lfd.uci.edu/~gohlke/pythonlibs/#rasterio
