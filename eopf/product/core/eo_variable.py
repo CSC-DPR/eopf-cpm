@@ -370,11 +370,14 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
         unlike normal Python indexing.
 
         .. warning::
+
           Do not try to assign values when using any of the indexing methods
           ``isel`` or ``sel``::
+
             da = xr.EOVariable([0, 1, 2, 3], dims=['x'])
             # DO NOT do this
             da.isel(x=[0, 1, 2])[1] = -1
+
           Assigning values with the chained indexing using ``.sel`` or
           ``.isel`` fails silently.
 

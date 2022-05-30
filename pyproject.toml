@@ -64,7 +64,8 @@ notebook = [
 doc = [
     "jupyter-sphinx >=0.3.2", "sphinx-book-theme >=0.2.0",
     "sphinx-multiversion >=0.2.4",
-    "eopf[notebook]"
+    "eopf[notebook]",
+    "sphinxcontrib-apidoc ==0.3.0",
 ]
 complexity = ["xenon >=0.8.0"]
 doc-cov = ["docstr-coverage >=2.1.1"]

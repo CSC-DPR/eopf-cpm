@@ -1,6 +1,6 @@
-###########
+###############
 Developer Guide
-###########
+###############
 
 In this advanced user guide, you will find detailed descriptions and
 examples that describe how to use advanced features and extend the eopf
