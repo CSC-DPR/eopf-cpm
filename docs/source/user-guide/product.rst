@@ -300,11 +300,11 @@ Reading a Product from a store
 
 
     To read data of a product, from a specific format, you must instantiate your :obj:`eopf.product.EOProduct` with
-    the parameter **store_or_path_url**, that can be a :obj:`str` or a :obj:`eopf.product.store.EOProductStore`.
+    the parameter **storage**, that can be a :obj:`str` or a :obj:`eopf.product.store.EOProductStore`.
 
     .. jupyter-execute::
 
-        product_read_from_store = EOProduct("product_read", store_or_path_url=EOZarrStore(file_name))
+        product_read_from_store = EOProduct("product_read", storage=EOZarrStore(file_name))
 
     .. note::
         The default type when you provide a :obj:`str` is a :obj:`eopf.product.store.EOZarrStore`
@@ -347,7 +347,7 @@ Writting Products
 
     .. jupyter-execute::
 
-        with product.open(mode="w", store_or_path_url=EOZarrStore(f"{output_folder}/{output_filename}")):
+        with product.open(mode="w", storage=EOZarrStore(f"{output_folder}/{output_filename}")):
             product.write()
 
     .. warning::
