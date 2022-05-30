@@ -69,19 +69,23 @@ data mapping
 
 The data mapping list contain all the mappings each from a target_path EOPath to a local path inside one of the SAFE files.
 
-accessor_config
-    dictionary of argv key to path in the json of the argv value given to the accessor when it's opened. In the example the passed argv would be :
-::
+accessor_config :
+    dictionary of argv key to path in the json of the argv value given to the accessor when it's opened. In the example the passed argv would be:
 
-    argv = {
-        "namespace": {
-            "n1": "https://psd-14.sentinel2.eo.esa.int/PSD/S2_PDI_Level-1C_Tile_Metadata.xsd"
-        },
-        "step_path": "n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/ROW_STEP"
-    }
+    .. code-block:: python
+
+        argv = {
+            "namespace": {
+                "n1": "https://psd-14.sentinel2.eo.esa.int/PSD/S2_PDI_Level-1C_Tile_Metadata.xsd"
+            },
+            "step_path": "n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/ROW_STEP"
+        }
 
 item_format :
     registration string of an accessor/store in the EOStoreFactory. We currently provide : grib, jp2, netcdf, netcdf_string_to_time, xmlangles, xmlmetadata, xmltp, zarr
+
+is_optional:
+    (optional) a boolean indicating if the presence of this data is optional (default to false)
 
 local_path :
     (optional) an alternative way of passing the local_path used by the accessor to get the item. It's not recommended to use both local_path and source_path:local_path.

@@ -1,4 +1,5 @@
 import glob
+import json
 import os
 import shutil
 from datetime import timedelta
@@ -189,3 +190,25 @@ settings.register_profile(
 )
 # The small hypothesis tests are far slower with dask distributed.
 settings.load_profile("function_fixture_fast")
+
+
+# ----------------------------------#
+# ---------   TRIGGERING  ----------#
+# ----------------------------------#
+
+
+@pytest.fixture
+def TRIGGER_JSON_FILE(dask_client_all, EMBEDED_TEST_DATA_FOLDER, OUTPUT_DIR, S3_OLCI_L1_EFR):
+    trigger_filename = "trigger.json"
+    filepath = os.path.join(EMBEDED_TEST_DATA_FOLDER, trigger_filename)
+    with open(filepath) as f:
+        data = json.load(f)
+    data["input_product"]["path"] = S3_OLCI_L1_EFR
+    data["output_product"]["path"] = os.path.join(OUTPUT_DIR, data["output_product"]["path"])
+    if dask_client_all:
+        data["dask_context"] = {"distributed": "processes"}
+    output_name = os.path.join(OUTPUT_DIR, trigger_filename)
+    with open(os.path.join(OUTPUT_DIR, trigger_filename), mode="w") as f:
+        json.dump(data, f)
+
+    return output_name

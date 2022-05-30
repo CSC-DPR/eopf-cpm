@@ -62,7 +62,10 @@ def cleanup_files():
     yield
     for file in _FILES.values():
         if os.path.isfile(file):
-            os.remove(file)
+            try:
+                os.remove(file)
+            except PermissionError:
+                pass
         if os.path.isdir(file):
             shutil.rmtree(file)
 
@@ -117,6 +120,7 @@ def zarr_file(OUTPUT_DIR: str):
             "cartesian": xarray.DataArray([[25, 0, 11], [-5, 72, 44]], attrs={dims: ["rows", "columns"]}),
         },
     ).to_zarr(store=f"{file_name}/measurements/geo_position/longitude", mode="a")
+    zarr.consolidate_metadata(root.store)
     return file_name
 
 

@@ -23,8 +23,6 @@ class FromAttributesToVariableAccessor(EOProductStore):
 
     Attributes
     ----------
-    store: EOProductStore
-        accessor to extract base element
     attr_name: str
         attribute name to extract
     index: any, optional
