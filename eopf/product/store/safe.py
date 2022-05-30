@@ -212,9 +212,11 @@ class EOSafeStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
 
         eo_obj_list: list[EOObject] = list()
+        if key in ["", "/"]:
+            from eopf.product import EOProduct
+
+            eo_obj_list.append(EOGroup(attrs={EOProduct._TYPE_ATTR_STR: self.product_type}))
         for safe_path, accessor_path in self._accessor_manager.split_target_path(key):
-            if key in ["", "/"]:
-                eo_obj_list.append(EOGroup())
             mapping_match_list = self._accessor_manager.get_accessors_from_mapping(safe_path)
             for accessor, config_accessor_path, config in mapping_match_list:
                 config_accessor_path = join_eo_path_optional(config_accessor_path, accessor_path)

@@ -173,10 +173,7 @@ class EOProduct(EOContainer):
         if mode in ["r"]:
             attributes = self.store[""].attrs
             self.attrs.update(attributes)
-            if attributes.get(self._TYPE_ATTR_STR, ""):
-                self.set_type(attributes[self._TYPE_ATTR_STR])
-        if not self.type:
-            self.set_type(self.store.product_type)
+            self.set_type(attributes.get(self._TYPE_ATTR_STR, ""))
         return self
 
     # docstr-coverage: inherited
