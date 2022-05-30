@@ -1,7 +1,6 @@
 import contextlib
 from typing import Any, Iterator, Optional, Union
 
-from eopf.exceptions import StoreNotDefinedError
 from eopf.product.core import EOProduct
 from eopf.product.store.abstract import EOProductStore
 
@@ -64,15 +63,12 @@ def open_store(
     --------
     EOProductStore.open
     """
-    if isinstance(store_or_product, EOProduct):
-        store = store_or_product.store
-    else:
-        store = store_or_product
-    if store is None:
-        raise StoreNotDefinedError()
 
     try:
-        store.open(mode=mode, **kwargs)
-        yield store
+        store_or_product.open(mode=mode, **kwargs)
+        yield store_or_product
     finally:
-        store.close()
+        if isinstance(store_or_product, EOProduct):
+            store_or_product.store.close()
+        else:
+            store_or_product.close()
