@@ -60,7 +60,7 @@ class EmptyTestStore(EOProductStore):
 
 @pytest.fixture
 def product() -> EOProduct:
-    product: EOProduct = init_product("product_name", store_or_path_url=EmptyTestStore(""))
+    product: EOProduct = init_product("product_name", storage=EmptyTestStore(""))
     with product.open(mode="w"):
         product.add_group(
             "measurements/group1",

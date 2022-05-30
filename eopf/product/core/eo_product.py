@@ -154,7 +154,7 @@ class EOProduct(EOContainer):
     ) -> "EOProduct":
         """Setup the store to be readable or writable
 
-        if store_or_path_url is given, the store is override by the new one.
+        if storage is given, the store is override by the new one.
 
         Parameters
         ----------

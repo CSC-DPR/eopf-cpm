@@ -581,7 +581,7 @@ def test_convert(dask_client_all, read_write_stores):
     read_store = cls_read_store(_FILES[f"{_FORMAT[cls_read_store]}0"])
     write_store = cls_write_store(_FILES[f"{_FORMAT[cls_write_store]}1"])
 
-    product = init_product("a_product", store_or_path_url=read_store)
+    product = init_product("a_product", storage=read_store)
     with open_store(product, mode="w"):
         product.write()
     new_product = EOProduct("new_one", storage=convert(read_store, write_store))
