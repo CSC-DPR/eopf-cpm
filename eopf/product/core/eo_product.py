@@ -150,7 +150,7 @@ class EOProduct(EOContainer):
         return self._name
 
     def open(
-        self, *, store_or_path_url: Optional[Union[EOProductStore, str]] = None, mode: str = "r", **kwargs: Any
+        self, *, storage: Optional[Union[EOProductStore, str]] = None, mode: str = "r", **kwargs: Any
     ) -> "EOProduct":
         """Setup the store to be readable or writable
 
@@ -158,15 +158,15 @@ class EOProduct(EOContainer):
 
         Parameters
         ----------
-        store_or_path_url: EOProductStore or str, optional
+        storage: EOProductStore or str, optional
             the new store or a path url the target file system
         mode: str, optional
             mode to open the store
         **kwargs: Any
             extra kwargs to open the store
         """
-        if store_or_path_url is not None:
-            self.__set_store(storage=store_or_path_url)
+        if storage is not None:
+            self.__set_store(storage=storage)
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
         self.store.open(mode=mode, **kwargs)

@@ -99,7 +99,7 @@ def product() -> EOProduct:
 def test_product_store_is_valid():
     product = EOProduct("a_product")
     with pytest.raises(TypeError):
-        product.open(mode="r", store_or_path_url=1)
+        product.open(mode="r", storage=1)
 
 
 @pytest.mark.unit
