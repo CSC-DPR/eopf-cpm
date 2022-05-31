@@ -3,7 +3,7 @@ package eopf.product {
     class EOProduct {
         ' EOProduct class shall implement Python magic/dunder methods necessary to emulate MutableMapping[Hashable, Group] type. The (Hashable) 'key' being the name of the group.
         __ Methods __
-        __init__(self, name[, store_or_path_url]): Constructor
+        __init__(self, name[, storage]): Constructor
         __getattr__(self, key): access to the given key as a member field
         __str__(self) -> str: string readable representation
         __repr__(self) -> str: unique identifying string
@@ -14,7 +14,7 @@ package eopf.product {
         validate(): check if the product follows the harmonized structure, raise an exception if
             is not the case
         add_group(self, name): create a subgroup with the given name
-        open(self[, store_or_path_url, mode, **kwargs]): open the store with the given parameters
+        open(self[, storage, mode, **kwargs]): open the store with the given parameters
         load(self) -> load all the product in memory
         write(self) -> write the product on the store
         ' REQ-41 add selection rules ( bands , polarization, depending of the sensor)

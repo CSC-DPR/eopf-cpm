@@ -41,7 +41,7 @@ def test_mapping_factory(filename, mapping_path):
     with open(mapping_path) as f:
         assert mapping == json.load(f)
 
-    assert factory.guess_can_read({}, "") is False
+    assert factory.guess_can_read({}, "", factory.FILENAME_RECO) is False
 
     with pytest.raises(KeyError):
         factory.get_mapping("false_false")

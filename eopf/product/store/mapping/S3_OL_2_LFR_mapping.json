@@ -1,6 +1,7 @@
 {
   "recognition": {
     "filename_pattern": "S3._OL_2_L[FR]R.*SEN3",
+    "product_type": "S3_OL_2_LFR",
     "product_type_pattern": "OL_2_L[FR]R___"
   },
   "data_mapping": [

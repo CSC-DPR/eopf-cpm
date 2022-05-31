@@ -37,7 +37,7 @@ from tests.utils import assert_eovariable_equal
 )
 def test_read_product(dask_client_all, store_type, get_key):
     store = EOSafeStore(store_type)
-    product = EOProduct("my_product", store_or_path_url=store)
+    product = EOProduct("my_product", storage=store)
     product.open()
     product[get_key]
     assert isinstance(product.attrs, dict)
@@ -52,7 +52,7 @@ def test_read_product(dask_client_all, store_type, get_key):
 )
 def test_load_product(dask_client_all, store_type):
     store = EOSafeStore(store_type)
-    product = EOProduct("my_product", store_or_path_url=store)
+    product = EOProduct("my_product", storage=store)
     product.open()
     assert isinstance(product.attrs, dict)
     product.load()
@@ -116,13 +116,16 @@ def test_convert_safe_mapping(
     name = os.path.basename(input_path)
     target_store = output_store(os.path.join(OUTPUT_DIR, output_formatter(name)))
     convert(source_store, target_store)
-    source_product = EOProduct("", store_or_path_url=source_store)
-    target_product = EOProduct("", store_or_path_url=target_store)
+    source_product = EOProduct("", storage=source_store)
+    target_product = EOProduct("", storage=target_store)
 
     with open(mapping_filename) as f:
         mappin_data = json.load(f)
     optional_miss = 0
     with (open_store(source_product), open_store(target_product)):
+        assert source_product.type == mappin_data["recognition"]["product_type"]
+        assert target_product.type == mappin_data["recognition"]["product_type"]
+
         for item in mappin_data["data_mapping"]:
             # TODO: should be removed after that misc was removed from mappings
             if item["item_format"] == "misc":
@@ -141,7 +144,10 @@ def test_convert_safe_mapping(
                 source_object = source_product
                 target_object = target_product
             assert type(source_object) == type(target_object)
-            np.testing.assert_equal(conv(source_object.attrs), conv(target_object.attrs))
+
+            if output_store != EOSafeStore or data_path not in ["", "/"]:
+                # Manifest accessor set item not yet implemented
+                np.testing.assert_equal(conv(source_object.attrs), conv(target_object.attrs))
             if isinstance(source_object, EOVariable):
                 assert_eovariable_equal(source_object, target_object)
     assert expected_optional_miss == optional_miss

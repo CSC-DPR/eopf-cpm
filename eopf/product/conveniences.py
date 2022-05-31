@@ -1,13 +1,12 @@
 import contextlib
 from typing import Any, Iterator, Optional, Union
 
-from eopf.exceptions import StoreNotDefinedError
 from eopf.product.core import EOProduct
 from eopf.product.store.abstract import EOProductStore
 
 
 def init_product(
-    product_name: str, *, store_or_path_url: Optional[Union[str, EOProductStore]] = None, **kwargs: Any
+    product_name: str, *, storage: Optional[Union[str, EOProductStore]] = None, **kwargs: Any
 ) -> EOProduct:
     """Convenience function to create a valid EOProduct base.
 
@@ -15,7 +14,7 @@ def init_product(
     ----------
     product_name: str
         name of the product to create
-    store_or_path_url: Union[str, EOProductStore], optional
+    storage: Union[str, EOProductStore], optional
         a EOProductStore or a string to create to a EOZarrStore
     **kwargs: any
         Any valid named arguments for EOProduct
@@ -30,7 +29,7 @@ def init_product(
     eopf.product.EOProduct
     eopf.product.EOProduct.is_valid
     """
-    product = EOProduct(product_name, store_or_path_url=store_or_path_url, **kwargs)
+    product = EOProduct(product_name, storage=storage, **kwargs)
 
     for group_name in product.MANDATORY_FIELD:
         product.add_group(group_name)
@@ -40,7 +39,7 @@ def init_product(
 @contextlib.contextmanager
 def open_store(
     store_or_product: Union[EOProduct, EOProductStore], mode: str = "r", **kwargs: Any
-) -> Iterator[EOProductStore]:
+) -> Iterator[Union[EOProduct, EOProductStore]]:
     """Open an EOProductStore in the given mode.
 
     help you to open EOProductStore from EOProduct or directly to use
@@ -64,15 +63,14 @@ def open_store(
     --------
     EOProductStore.open
     """
-    if isinstance(store_or_product, EOProduct):
-        store = store_or_product.store
-    else:
-        store = store_or_product
-    if store is None:
-        raise StoreNotDefinedError()
 
     try:
-        store.open(mode=mode, **kwargs)
-        yield store
+        store_or_product.open(mode=mode, **kwargs)
+        yield store_or_product
     finally:
-        store.close()
+        if isinstance(store_or_product, EOProduct):
+            store = store_or_product.store
+            if store is not None:
+                store.close()
+        else:
+            store_or_product.close()

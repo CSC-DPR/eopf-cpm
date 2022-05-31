@@ -1,6 +1,7 @@
 {
   "recognition": {
     "filename_pattern": "S3._SL_2_LST.*SEN3",
+    "product_type": "S3_SL_2_LST",
     "product_type_pattern": "SL_2_LST___",
     "version": "004"
   },

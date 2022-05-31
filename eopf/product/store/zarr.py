@@ -39,7 +39,7 @@ class EOZarrStore(EOProductStore):
     Examples
     --------
     >>> zarr_store = EOZarrStore("zip::s3://eopf_storage/S3A_OL_1_EFR___LN1_O_NT_002.zarr")
-    >>> product = EOProduct("OLCI Product", store_or_path_url=zarr_store)
+    >>> product = EOProduct("OLCI Product", storage=zarr_store)
     >>> with open_store(product, storage_options=storage_options):
     ...    measurements = product["/measurements"]
 

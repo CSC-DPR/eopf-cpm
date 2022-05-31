@@ -1,6 +1,7 @@
 {
     "recognition": {
         "filename_pattern": "S3._SY_2_SYN.*SEN3",
+        "product_type": "S3_SY_2_SYN",
         "product_type_pattern": "SY_2_SYN___",
         "version": "TODO"
     },

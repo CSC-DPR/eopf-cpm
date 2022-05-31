@@ -214,9 +214,11 @@ class EOSafeStore(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
 
         eo_obj_list: list[EOObject] = list()
+        if key in ["", "/"]:
+            from eopf.product import EOProduct
+
+            eo_obj_list.append(EOGroup(attrs={EOProduct._TYPE_ATTR_STR: self.product_type}))
         for safe_path, accessor_path in self._accessor_manager.split_target_path(key):
-            if key in ["", "/"]:
-                eo_obj_list.append(EOGroup())
             mapping_match_list = self._accessor_manager.get_accessors_from_mapping(safe_path)
             for accessor, config_accessor_path, config in mapping_match_list:
                 config_accessor_path = join_eo_path_optional(config_accessor_path, accessor_path)
@@ -292,6 +294,10 @@ class EOSafeStore(EOProductStore):
                 # Should not throw exception if their store is Open.
                 key_set = key_set.union(accessor.iter(config_accessor_path))
         return iter(key_set)
+
+    @property
+    def product_type(self) -> str:
+        return self._accessor_manager.product_type
 
     # docstr-coverage: inherited
     def open(self, mode: str = "r", storage_options: dict[str, Any] = {}, **kwargs: Any) -> None:
@@ -418,6 +424,7 @@ class SafeMappingManager:
         self._temp_dir: Optional[tempfile.TemporaryDirectory[Any]] = None
         self._top_level: Optional[str] = None
         self._fs_map_access: Optional[fsspec.FSMap] = None
+        self._product_type = ""
 
     def __iter__(self) -> Iterator[tuple[EOProductStore, dict[str, Any]]]:
         for accessor_map_2 in self._accessor_map.values():
@@ -483,6 +490,10 @@ class SafeMappingManager:
             # FIXME when opeing fail, otherwise we can't reopen it later with another mode.
             if accessor.status != StorageStatus.OPEN:
                 accessor.open(mode, **_accessor_config, **kwargs)
+
+    @property
+    def product_type(self) -> str:
+        return self._product_type
 
     def split_target_path(self, target_path: str) -> Sequence[tuple[str, Optional[str]]]:
         """Split target_path between a path where a mapping is registered, and a local path."""
@@ -663,3 +674,4 @@ class SafeMappingManager:
         for config in json_config_list:
             if config[self.CONFIG_FORMAT] != "misc":
                 self._add_data_mapping(config[self.CONFIG_TARGET], config, json_data)
+        self._product_type = json_data[self._mapping_factory.RECO][self._mapping_factory.TYPE_RECO]
