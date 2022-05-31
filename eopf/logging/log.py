@@ -107,6 +107,9 @@ class EOLogFactory(object):
         name: str
             name of the logger
 
+        level: int
+            logger level
+
         Raises
         ----------
         LoggingConfigurationFileIsNotValid
