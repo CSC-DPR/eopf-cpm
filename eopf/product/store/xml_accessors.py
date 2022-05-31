@@ -4,7 +4,7 @@ import lxml
 import xarray as xr
 
 from eopf.exceptions import StoreNotOpenError, XmlParsingError
-from eopf.product.store import EOProductStore
+from eopf.product.store import EOProductStore, StorageStatus
 from eopf.product.utils import (  # to be reviewed
     apply_xpath,
     parse_xml,
@@ -52,6 +52,8 @@ class XMLAnglesAccessor(EOProductStore):
         """
         from eopf.product.core import EOVariable
 
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         variable_data = self.create_eo_variable(key)
         return EOVariable(data=variable_data)
 
@@ -89,10 +91,14 @@ class XMLAnglesAccessor(EOProductStore):
 
     def __iter__(self) -> Iterator[str]:
         """Has no functionality within this store"""
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         yield from ()
 
     def __len__(self) -> int:
         """Has no functionality within this accessor"""
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         return 0
 
     def __setitem__(self, key: str, value: Any) -> None:
@@ -101,6 +107,8 @@ class XMLAnglesAccessor(EOProductStore):
 
     # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         if path.endswith("Values_List"):
             return False
         nodes_matched = self._root.xpath(path, namespaces=self._namespaces)
@@ -108,6 +116,8 @@ class XMLAnglesAccessor(EOProductStore):
 
     # docstr-coverage: inherited
     def is_variable(self, path: str) -> bool:
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         if not path.endswith("Values_List"):
             return False
         nodes_matched = self._root.xpath(path, namespaces=self._namespaces)
@@ -115,6 +125,8 @@ class XMLAnglesAccessor(EOProductStore):
 
     def iter(self, path: str) -> Iterator[str]:
         """Has no functionality within this store"""
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         yield from ()
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
@@ -186,15 +198,21 @@ class XMLTPAccessor(EOProductStore):
         """
         from eopf.product.core import EOVariable
 
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         if not len(self._root.xpath(key, namespaces=self._namespaces)):
             raise TypeError(f"Incorrect xpath {key}")
 
         return EOVariable(name=key, data=self.get_tie_points_data(key))
 
     def __iter__(self) -> Iterator[str]:
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         raise NotImplementedError()
 
     def __len__(self) -> int:
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         """Has no functionality within this store"""
         return 2
 
@@ -203,14 +221,20 @@ class XMLTPAccessor(EOProductStore):
         raise NotImplementedError()
 
     def is_group(self, path: str) -> bool:
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         # xmlTP accessors only returns variables
         return False
 
     def is_variable(self, path: str) -> bool:
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         return len(self._root.xpath(path, namespaces=self._namespaces)) == 1
 
     def iter(self, path: str) -> Iterator[str]:
         """Has no functionality within this store"""
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         yield from ()
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:

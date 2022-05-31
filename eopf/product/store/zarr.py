@@ -121,8 +121,7 @@ class EOZarrStore(EOProductStore):
 
     # docstr-coverage: inherited
     def close(self) -> None:
-        if self._root is None:
-            raise StoreNotOpenError("Store must be open before close it")
+        super().close()
 
         if len(self._delayed_list) > 0:
             dask.compute(self._delayed_list)
@@ -132,7 +131,6 @@ class EOZarrStore(EOProductStore):
         if any(self._mode.startswith(mode) for mode in ("w", "a")) or "+" in self._mode:
             zarr.consolidate_metadata(self._root.store)
 
-        super().close()
         self._root = None
         self._fs = None
 

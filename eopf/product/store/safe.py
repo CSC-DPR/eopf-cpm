@@ -1,4 +1,5 @@
 import os
+import pathlib
 import tempfile
 import warnings
 from functools import reduce
@@ -384,6 +385,10 @@ class EOSafeStore(EOProductStore):
         if count_eovar:
             return EOVariable(data=data, attrs=attrs, dims=tuple(dims))
         return EOGroup(attrs=attrs, dims=tuple(dims))
+
+    @staticmethod
+    def guess_can_read(file_path: str) -> bool:
+        return pathlib.Path(file_path).suffix in [".SEN3", ".SAFE"]
 
 
 class SafeMappingManager:

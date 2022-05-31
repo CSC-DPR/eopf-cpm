@@ -142,8 +142,6 @@ class EOCogStore(EOProductStore):
 
     # docstr-coverage: inherited
     def close(self) -> None:
-        if self.status == StorageStatus.CLOSE:
-            raise StoreNotOpenError("Store must be open before access to it")
         super().close()
         self._mode = None
         self._lock = None
@@ -156,6 +154,8 @@ class EOCogStore(EOProductStore):
 
     # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         if self._mode == "w":
             raise NotImplementedError("Only available in reading mode")
         path = path.removeprefix(self.sep)
@@ -166,6 +166,8 @@ class EOCogStore(EOProductStore):
 
     # docstr-coverage: inherited
     def is_variable(self, path: str) -> bool:
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         # check if it is a file or not
         if self._mode == "w":
             raise NotImplementedError("Only available in reading mode")
@@ -177,6 +179,8 @@ class EOCogStore(EOProductStore):
 
     # docstr-coverage: inherited
     def iter(self, path: str) -> Iterator[str]:
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         if self._mode == "w":
             raise NotImplementedError("Only available in reading mode")
         # Get the full path of requested iterator
@@ -203,6 +207,8 @@ class EOCogStore(EOProductStore):
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         from json import dump
 
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         if self._mode == "r":
             raise NotImplementedError("Only available in writing mode")
 
