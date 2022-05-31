@@ -800,8 +800,6 @@ def test_cog_store(store_cls: type[EOCogStore], format_file: str):
             with pytest.raises(NotImplementedError):
                 cog["anything"] = "something"
 
-    with pytest.raises(StoreNotOpenError):
-        cog.close()
     with pytest.raises(NotImplementedError):
         cog.open(mode="r")
         cog.write_attrs("", {})
