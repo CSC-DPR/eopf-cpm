@@ -33,6 +33,7 @@ def dask_profiler(
     threads_per_worker: int = None,
     report_name: str = "dask-report.html",
     display_report: bool = True,
+    enable: bool = True,
 ) -> Any:
     """Wrapper function used to perform multi-threaded profiling (dask) on code running in dask
 
@@ -76,6 +77,10 @@ def dask_profiler(
     def wrap_outer(fn: Callable[[Any, Any], Any]) -> Any:
         @wraps(fn)
         def wrap_inner(*args: Any, **kwargs: Any) -> Any:
+
+            # if not enabled just call the function as it was not wrapped
+            if not enable:
+                return fn(*args, **kwargs)
 
             # determine if a specific dask configuration is given
             if n_workers and n_workers > 0 and threads_per_worker and threads_per_worker > 0:
@@ -125,6 +130,7 @@ def dask_profiler(
 
 def single_thread_profiler(
     report_name: str = None,
+    enable: bool = True,
 ) -> Any:
     """Decorator function used to perform single threaded profiling (cProfile) on code running in dask
 
@@ -176,6 +182,11 @@ def single_thread_profiler(
     def wrap_outer(fn: Callable[[Any, Any], Any]) -> Any:
         @wraps(fn)
         def wrap_inner(*args: Any, **kwargs: Any) -> Stats:
+
+            # if not enabled just call the function as it was not wrapped
+            if not enable:
+                return fn(*args, **kwargs)
+
             try:
                 # start a dask cluster with 1 worker and 1 thread
                 with LocalCluster(

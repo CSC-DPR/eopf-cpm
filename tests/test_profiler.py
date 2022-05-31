@@ -97,3 +97,51 @@ def test_single_thread_profiler_raises_exception(OUTPUT_DIR):
     # test that an Exception is raised
     with pytest.raises(SingleThreadProfilerError):
         _ = just_a_simple_dask_func()
+
+
+@pytest.mark.unit
+def test_single_thread_profiler_disabled(OUTPUT_DIR):
+    """Test that SingleThreadProfilerError is raised when the decorated function raises an exception"""
+
+    expected_return = 100
+    should_not_exist_report_name = Path(OUTPUT_DIR) / "should-not-be-generated-report"
+
+    @single_thread_profiler(
+        report_name=should_not_exist_report_name,
+        enable=False,
+    )
+    def just_a_simple_dask_func():
+        # some dask computation
+        x = da.arange(10, chunks=10)
+        x.sum().compute()
+        return expected_return
+
+    # test that the disabled decorator does override the return of the decorated function
+    assert just_a_simple_dask_func() == expected_return
+
+    # test that the report is not generated, i.e. not written on disk
+    assert should_not_exist_report_name.is_file() is False
+
+
+@pytest.mark.unit
+def test_dask_profiler_disabled(OUTPUT_DIR):
+    """Test that SingleThreadProfilerError is raised when the decorated function raises an exception"""
+
+    expected_return = 100
+    should_not_exist_report_name = Path(OUTPUT_DIR) / "should-not-be-generated-report"
+
+    @dask_profiler(
+        report_name=should_not_exist_report_name,
+        enable=False,
+    )
+    def just_a_simple_dask_func():
+        # some dask computation
+        x = da.arange(10, chunks=10)
+        x.sum().compute()
+        return expected_return
+
+    # test that the disabled decorator does override the return of the decorated function
+    assert just_a_simple_dask_func() == expected_return
+
+    # test that the report is not generated, i.e. not written on disk
+    assert should_not_exist_report_name.is_file() is False
