@@ -110,6 +110,9 @@ class ManifestStore(EOProductStore):
         if self._xml_fobj is None:
             raise StoreNotOpenError("Store must be open before access to it")
 
+        if key not in ["", self.sep]:
+            raise KeyError(f"Invalid path: {key}")
+
         # create an EOGroup and set its attributes with a dictionary containing CF and OM_EOP
         eog: EOGroup = EOGroup("product_metadata", attrs=self._attrs)
         return eog

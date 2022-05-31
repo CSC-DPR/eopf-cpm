@@ -454,6 +454,8 @@ def test_retrieve_from_manifest_store(
     config = {"namespaces": map_olci["namespaces"], "mapping": map_olci["metadata_mapping"]}
     with open_store(manifest, **config):
         eog = manifest[""]
+        with pytest.raises(KeyError):
+            manifest["error"]
     assert isinstance(eog, EOGroup)
     returned_cf = eog.attrs["CF"]
     returned_om_eop = eog.attrs["OM_EOP"]
