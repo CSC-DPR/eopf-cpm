@@ -496,7 +496,7 @@ def test_retrieve_from_manifest_store(
     assert datetime.strptime(returned_om_eop.get("resultTime", {}).get("timePosition", ""), "%Y%m%dT%H%M%S")
     assert (
         re.match(
-            r"POLYGON\(\((-?\d*\.\d* -?\d*\.\d*,?)*\)\)",
+            r"POLYGON\(\((-?\d*\.\d* -?\d*\.\d*(, )?)*\)\)",
             returned_om_eop.get("featureOfInterest", {}).get("multiExtentOf", ""),
         )
         is not None
