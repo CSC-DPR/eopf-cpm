@@ -12,3 +12,4 @@ examples that describe many common tasks that you can accomplish with the eopf c
    How to use EOProduct <product>
    Using Variable for computing <variable>
    How to use Store and Accessors <stores>
+   What is triggering and how to use it <triggering>

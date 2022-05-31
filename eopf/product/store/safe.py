@@ -40,10 +40,10 @@ class SafeHierarchy(EOProductStore):
     # docstr-coverage: inherited
     def __init__(self) -> None:
         super().__init__("")
-        self._child_list: list[str] = []
+        self._optional_child_dict: dict[str, Optional[Callable[[], bool]]] = dict()
 
     def __iter__(self) -> Iterator[str]:
-        return iter(self._child_list)
+        return iter(self._optional_child_dict)
 
     # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
@@ -65,7 +65,11 @@ class SafeHierarchy(EOProductStore):
     def iter(self, path: str) -> Iterator[str]:
         if path != "":
             raise NotImplementedError()
-        return iter(self._child_list)
+        for possible_child in self._optional_child_dict:
+            optional_exist_check = self._optional_child_dict[possible_child]
+            # Yield for non optional and for optional that exist
+            if optional_exist_check is None or optional_exist_check():
+                yield possible_child
 
     def __delitem__(self, key: str) -> None:
         raise NotImplementedError()
@@ -74,7 +78,7 @@ class SafeHierarchy(EOProductStore):
         from ..core import EOGroup
 
         cond1 = not isinstance(value, EOGroup)
-        cond2 = key != "" and value.name not in self._child_list
+        cond2 = key != "" and value.name not in self._optional_child_dict
         if cond1 or cond2:
             raise KeyError("Safe can't write key outside of it's dictionary")
 
@@ -86,12 +90,12 @@ class SafeHierarchy(EOProductStore):
         raise KeyError("Invalid store group name")
 
     def __len__(self) -> int:
-        return len(self._child_list)
+        return len(set(iter(self)))  # Non trivial since _child_lazy_list is lazy.
 
-    def _add_child(self, child_name: str) -> None:
+    def _add_child(self, child_name: str, lazy_optional_check: Optional[Callable[[], bool]] = None) -> None:
         if not child_name:
             raise KeyError("Invalid store group name")
-        self._child_list.append(child_name)
+        self._optional_child_dict[child_name] = lazy_optional_check
 
 
 # Safe store parameters transformations:
@@ -158,8 +162,6 @@ class EOSafeStore(EOProductStore):
     ----------
     url: str
         url to the target store
-    sep: str
-        file separator
 
     See Also
     -------
@@ -224,9 +226,9 @@ class EOSafeStore(EOProductStore):
                     processed_object = self._apply_mapping_properties(accessed_object, config)
                     eo_obj_list.append(processed_object)
                 except KeyError:
-                    warnings.warn("Safe Accessor KeyError : " + key)
-                except NotImplementedError:
-                    warnings.warn("Safe Accessor NotImplementedError : " + key)
+                    pass
+        if not eo_obj_list:
+            raise KeyError(f"Invalid path :  {key}")
         return self._eo_object_merge(*eo_obj_list)
 
     def __len__(self) -> int:
@@ -358,9 +360,6 @@ class EOSafeStore(EOProductStore):
         # Should at least merge dims and attributes of EOVariables/Group.
         from ..core import EOGroup, EOVariable
 
-        if not eo_obj_list:
-            warnings.warn("Missing variable.")
-            return EOVariable()
         if len(eo_obj_list) == 1:
             return eo_obj_list[0]
         dims: set[str] = set()
@@ -384,14 +383,15 @@ class EOSafeStore(EOProductStore):
 class SafeMappingManager:
     """Class managing reading the Safe store configuration and creating as needed the associated accessors."""
 
-    CONFIG_FORMAT = "item_format"
-    CONFIG_TARGET = "target_path"
-    CONFIG_SOURCE_FILE = "source_path"
-    CONFIG_ACCESSOR_CONF_DEC = "accessor_config"
-
-    SAFE_HIERARCHY_FORMAT = "SafeHierarchy"
+    # keys of mappings properties properties in json file.
     CONFIG_ACCESSOR_CONFIG = "accessor_conf_exp"
+    CONFIG_ACCESSOR_CONF_DEC = "accessor_config"
     CONFIG_ACCESSOR_ID = "accessor_id"
+    CONFIG_FORMAT = "item_format"
+    CONFIG_OPTIONAL = "is_optional"
+    CONFIG_SOURCE_FILE = "source_path"
+    CONFIG_TARGET = "target_path"
+    SAFE_HIERARCHY_FORMAT = "SafeHierarchy"
 
     def __init__(
         self,
@@ -442,7 +442,7 @@ class SafeMappingManager:
     def get_accessors_from_mapping(
         self,
         conf_path: str,
-    ) -> Sequence[Tuple[EOProductStore, Optional[Any], dict[str, Any]]]:
+    ) -> Sequence[Tuple[EOProductStore, str, dict[str, Any]]]:
         """Get all accessor corresponding to the configs of conf_path.
         As multiple mapping car match a single conf_path, it can return multiple accessors.
         """
@@ -462,6 +462,7 @@ class SafeMappingManager:
                 conf[self.CONFIG_FORMAT],
                 conf[self.CONFIG_ACCESSOR_ID],
                 conf[self.CONFIG_ACCESSOR_CONFIG],
+                conf.get(self.CONFIG_OPTIONAL, False),
             )
             if accessor is not None:  # We also want to append accessor of len 0.
                 results.append((accessor, accessor_local_path, conf))
@@ -510,6 +511,7 @@ class SafeMappingManager:
         item_format: str,
         accessor_config_id: Any,
         accessor_config: dict[str, Any],
+        accessor_optional: bool,
     ) -> Optional[EOProductStore]:
         """Add an accessor (sub store) to the opened accessor dictionary.
         The accessor is created using the _store_factory (except for SafeHierarchy).
@@ -548,6 +550,10 @@ class SafeMappingManager:
         except NotImplementedError:
             mapped_store = None
             warnings.warn("Unimplemented store mode")
+        except FileNotFoundError as fnf_error:
+            mapped_store = None
+            if not accessor_optional:
+                raise fnf_error
         self._accessor_map[accessor_id][accessor_config_id] = (mapped_store, accessor_config)
         return mapped_store
 
@@ -567,14 +573,25 @@ class SafeMappingManager:
 
         if not self._contain_hierarchy_mapping(source_path_parent):
             parent_config = dict()
-            parent_config["target_path"] = source_path_parent
-            parent_config["source_path"] = source_path_parent
-            parent_config["item_format"] = self.SAFE_HIERARCHY_FORMAT
+            parent_config[self.CONFIG_TARGET] = source_path_parent
+            parent_config[self.CONFIG_SOURCE_FILE] = source_path_parent
+            parent_config[self.CONFIG_FORMAT] = self.SAFE_HIERARCHY_FORMAT
             self._add_data_mapping(source_path_parent, parent_config, json_data)
         safe_hierachy = self._get_accessor(source_path_parent, self.SAFE_HIERARCHY_FORMAT, frozenset(), dict())
         if not isinstance(safe_hierachy, SafeHierarchy):
             raise TypeError("Unexpected accessor type.")
-        safe_hierachy._add_child(name)
+        if config.get(self.CONFIG_OPTIONAL, False):
+
+            def optional_check_exist() -> bool:
+                mapping_match_list = self.get_accessors_from_mapping(target_path)
+                for accessor, config_accessor_path, _ in mapping_match_list:
+                    if accessor.is_variable(config_accessor_path) or accessor.is_group(config_accessor_path):
+                        return True
+                return False
+
+            safe_hierachy._add_child(name, optional_check_exist)
+        else:
+            safe_hierachy._add_child(name)
 
     def _contain_hierarchy_mapping(self, target_path: str) -> bool:
         """Check if a hierarchy mapping is defined for target_path."""
@@ -613,6 +630,7 @@ class SafeMappingManager:
         item_format: str,
         accessor_config_id: Any,
         accessor_config: dict[str, Any],
+        accessor_optional: bool = False,
     ) -> Optional[EOProductStore]:
         """Get an accessor from the opened accessors dictionary. If it's not present a new one is added."""
         if item_format == self.SAFE_HIERARCHY_FORMAT:
@@ -625,7 +643,7 @@ class SafeMappingManager:
         accessor_id = f"{item_format}:{accessor_file}"
         if accessor_id in self._accessor_map and accessor_config_id in self._accessor_map[accessor_id]:
             return self._accessor_map[accessor_id][accessor_config_id][0]
-        return self._add_accessor(accessor_file, item_format, accessor_config_id, accessor_config)
+        return self._add_accessor(accessor_file, item_format, accessor_config_id, accessor_config, accessor_optional)
 
     def _read_product_mapping(self) -> None:
         """Read mapping from the mapping factory and fill _config_mapping from it."""
@@ -643,5 +661,5 @@ class SafeMappingManager:
         json_data = self._mapping_factory.get_mapping(top_level)
         json_config_list = json_data["data_mapping"]
         for config in json_config_list:
-            if config["item_format"] != "misc":
+            if config[self.CONFIG_FORMAT] != "misc":
                 self._add_data_mapping(config[self.CONFIG_TARGET], config, json_data)

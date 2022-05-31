@@ -138,7 +138,7 @@
         {
             "short_name": "b01",
             "source_path": "GRANULE/[^/]*/IMG_DATA/.*B01.jp2:value",
-            "target_path": "/measurements/reflectances_20m/b01",
+            "target_path": "/measurements/reflectances_60m/b01",
             "item_format": "jp2",
             "parameters": {
                 "sub_array" : {
@@ -222,7 +222,7 @@
         {
             "short_name": "b08",
             "source_path": "GRANULE/[^/]*/IMG_DATA/.*B08.jp2:value",
-            "target_path": "/measurements/reflectances_20m/b08",
+            "target_path": "/measurements/reflectances_10m/b08",
             "item_format": "jp2",
             "parameters": {
                 "sub_array" : {
@@ -246,7 +246,7 @@
         {
             "short_name": "b09",
             "source_path": "GRANULE/[^/]*/IMG_DATA/.*B09.jp2:value",
-            "target_path": "/measurements/reflectances_20m/b09",
+            "target_path": "/measurements/reflectances_60m/b09",
             "item_format": "jp2",
             "parameters": {
                 "sub_array" : {
@@ -258,7 +258,7 @@
         {
             "short_name": "b10",
             "source_path": "GRANULE/[^/]*/IMG_DATA/.*B10.jp2:value",
-            "target_path": "/measurements/reflectances_20m/b10",
+            "target_path": "/measurements/reflectances_60m/b10",
             "item_format": "jp2",
             "parameters": {
                 "sub_array" : {
@@ -741,6 +741,7 @@
             "short_name": "vaa_b01_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b01_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='0' and @detectorId='1']/Azimuth/Values_List",
             "accessor_config": {
@@ -754,6 +755,7 @@
             "short_name": "vza_b01_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b01_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='0' and @detectorId='1']/Zenith/Values_List",
             "accessor_config": {
@@ -767,6 +769,7 @@
             "short_name": "vaa_b02_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b02_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='1' and @detectorId='1']/Azimuth/Values_List",
             "accessor_config": {
@@ -780,6 +783,7 @@
             "short_name": "vza_b02_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b02_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='1' and @detectorId='1']/Zenith/Values_List",
             "accessor_config": {
@@ -793,6 +797,7 @@
             "short_name": "vaa_b03_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b03_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='2' and @detectorId='1']/Azimuth/Values_List",
             "accessor_config": {
@@ -806,6 +811,7 @@
             "short_name": "vza_b03_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b03_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='2' and @detectorId='1']/Zenith/Values_List",
             "accessor_config": {
@@ -819,6 +825,7 @@
             "short_name": "vaa_b04_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b04_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='3' and @detectorId='1']/Azimuth/Values_List",
             "accessor_config": {
@@ -832,6 +839,7 @@
             "short_name": "vza_b04_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b04_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='3' and @detectorId='1']/Zenith/Values_List",
             "accessor_config": {
@@ -845,6 +853,7 @@
             "short_name": "vaa_b05_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b05_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='4' and @detectorId='1']/Azimuth/Values_List",
             "accessor_config": {
@@ -858,6 +867,7 @@
             "short_name": "vza_b05_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b05_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='4' and @detectorId='1']/Zenith/Values_List",
             "accessor_config": {
@@ -871,6 +881,7 @@
             "short_name": "vaa_b06_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b06_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='5' and @detectorId='1']/Azimuth/Values_List",
             "accessor_config": {
@@ -884,6 +895,7 @@
             "short_name": "vza_b06_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b06_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='5' and @detectorId='1']/Zenith/Values_List",
             "accessor_config": {
@@ -897,6 +909,7 @@
             "short_name": "vaa_b07_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b07_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='6' and @detectorId='1']/Azimuth/Values_List",
             "accessor_config": {
@@ -910,6 +923,7 @@
             "short_name": "vza_b07_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b07_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='6' and @detectorId='1']/Zenith/Values_List",
             "accessor_config": {
@@ -923,6 +937,7 @@
             "short_name": "vaa_b08_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b08_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='7' and @detectorId='1']/Azimuth/Values_List",
             "accessor_config": {
@@ -936,6 +951,7 @@
             "short_name": "vza_b08_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b08_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='7' and @detectorId='1']/Zenith/Values_List",
             "accessor_config": {
@@ -949,6 +965,7 @@
             "short_name": "vaa_b8a_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b8a_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='8' and @detectorId='1']/Azimuth/Values_List",
             "accessor_config": {
@@ -962,6 +979,7 @@
             "short_name": "vza_b8a_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b8a_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='8' and @detectorId='1']/Zenith/Values_List",
             "accessor_config": {
@@ -975,6 +993,7 @@
             "short_name": "vaa_b09_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b09_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='9' and @detectorId='1']/Azimuth/Values_List",
             "accessor_config": {
@@ -988,6 +1007,7 @@
             "short_name": "vza_b09_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b09_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='9' and @detectorId='1']/Zenith/Values_List",
             "accessor_config": {
@@ -1001,6 +1021,7 @@
             "short_name": "vaa_b10_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b10_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='10' and @detectorId='1']/Azimuth/Values_List",
             "accessor_config": {
@@ -1014,6 +1035,7 @@
             "short_name": "vza_b10_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b10_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='10' and @detectorId='1']/Zenith/Values_List",
             "accessor_config": {
@@ -1027,6 +1049,7 @@
             "short_name": "vaa_b11_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b11_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='11' and @detectorId='1']/Azimuth/Values_List",
             "accessor_config": {
@@ -1040,6 +1063,7 @@
             "short_name": "vza_b11_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b11_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='11' and @detectorId='1']/Zenith/Values_List",
             "accessor_config": {
@@ -1053,6 +1077,7 @@
             "short_name": "vaa_b12_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b12_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='12' and @detectorId='1']/Azimuth/Values_List",
             "accessor_config": {
@@ -1066,6 +1091,7 @@
             "short_name": "vza_b12_1",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b12_1",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='12' and @detectorId='1']/Zenith/Values_List",
             "accessor_config": {
@@ -1080,6 +1106,7 @@
             "short_name": "vaa_b01_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b01_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='0' and @detectorId='2']/Azimuth/Values_List",
             "accessor_config": {
@@ -1093,6 +1120,7 @@
             "short_name": "vza_b01_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b01_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='0' and @detectorId='2']/Zenith/Values_List",
             "accessor_config": {
@@ -1106,6 +1134,7 @@
             "short_name": "vaa_b02_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b02_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='1' and @detectorId='2']/Azimuth/Values_List",
             "accessor_config": {
@@ -1119,6 +1148,7 @@
             "short_name": "vza_b02_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b02_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='1' and @detectorId='2']/Zenith/Values_List",
             "accessor_config": {
@@ -1132,6 +1162,7 @@
             "short_name": "vaa_b03_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b03_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='2' and @detectorId='2']/Azimuth/Values_List",
             "accessor_config": {
@@ -1145,6 +1176,7 @@
             "short_name": "vza_b03_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b03_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='2' and @detectorId='2']/Zenith/Values_List",
             "accessor_config": {
@@ -1158,6 +1190,7 @@
             "short_name": "vaa_b04_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b04_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='3' and @detectorId='2']/Azimuth/Values_List",
             "accessor_config": {
@@ -1171,6 +1204,7 @@
             "short_name": "vza_b04_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b04_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='3' and @detectorId='2']/Zenith/Values_List",
             "accessor_config": {
@@ -1184,6 +1218,7 @@
             "short_name": "vaa_b05_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b05_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='4' and @detectorId='2']/Azimuth/Values_List",
             "accessor_config": {
@@ -1197,6 +1232,7 @@
             "short_name": "vza_b05_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b05_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='4' and @detectorId='2']/Zenith/Values_List",
             "accessor_config": {
@@ -1210,6 +1246,7 @@
             "short_name": "vaa_b06_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b06_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='5' and @detectorId='2']/Azimuth/Values_List",
             "accessor_config": {
@@ -1223,6 +1260,7 @@
             "short_name": "vza_b06_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b06_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='5' and @detectorId='2']/Zenith/Values_List",
             "accessor_config": {
@@ -1236,6 +1274,7 @@
             "short_name": "vaa_b07_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b07_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='6' and @detectorId='2']/Azimuth/Values_List",
             "accessor_config": {
@@ -1249,6 +1288,7 @@
             "short_name": "vza_b07_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b07_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='6' and @detectorId='2']/Zenith/Values_List",
             "accessor_config": {
@@ -1262,6 +1302,7 @@
             "short_name": "vaa_b08_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b08_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='7' and @detectorId='2']/Azimuth/Values_List",
             "accessor_config": {
@@ -1275,6 +1316,7 @@
             "short_name": "vza_b08_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b08_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='7' and @detectorId='2']/Zenith/Values_List",
             "accessor_config": {
@@ -1288,6 +1330,7 @@
             "short_name": "vaa_b8a_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b8a_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='8' and @detectorId='2']/Azimuth/Values_List",
             "accessor_config": {
@@ -1301,6 +1344,7 @@
             "short_name": "vza_b8a_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b8a_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='8' and @detectorId='2']/Zenith/Values_List",
             "accessor_config": {
@@ -1314,6 +1358,7 @@
             "short_name": "vaa_b09_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b09_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='9' and @detectorId='2']/Azimuth/Values_List",
             "accessor_config": {
@@ -1327,6 +1372,7 @@
             "short_name": "vza_b09_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b09_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='9' and @detectorId='2']/Zenith/Values_List",
             "accessor_config": {
@@ -1340,6 +1386,7 @@
             "short_name": "vaa_b10_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b10_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='10' and @detectorId='2']/Azimuth/Values_List",
             "accessor_config": {
@@ -1353,6 +1400,7 @@
             "short_name": "vza_b10_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b10_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='10' and @detectorId='2']/Zenith/Values_List",
             "accessor_config": {
@@ -1366,6 +1414,7 @@
             "short_name": "vaa_b11_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b11_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='11' and @detectorId='2']/Azimuth/Values_List",
             "accessor_config": {
@@ -1379,6 +1428,7 @@
             "short_name": "vza_b11_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b11_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='11' and @detectorId='2']/Zenith/Values_List",
             "accessor_config": {
@@ -1392,6 +1442,7 @@
             "short_name": "vaa_b12_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b12_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='12' and @detectorId='2']/Azimuth/Values_List",
             "accessor_config": {
@@ -1405,6 +1456,7 @@
             "short_name": "vza_b12_2",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b12_2",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='12' and @detectorId='2']/Zenith/Values_List",
             "accessor_config": {
@@ -1419,6 +1471,7 @@
             "short_name": "vaa_b01_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b01_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='0' and @detectorId='3']/Azimuth/Values_List",
             "accessor_config": {
@@ -1432,6 +1485,7 @@
             "short_name": "vza_b01_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b01_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='0' and @detectorId='3']/Zenith/Values_List",
             "accessor_config": {
@@ -1445,6 +1499,7 @@
             "short_name": "vaa_b02_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b02_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='1' and @detectorId='3']/Azimuth/Values_List",
             "accessor_config": {
@@ -1458,6 +1513,7 @@
             "short_name": "vza_b02_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b02_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='1' and @detectorId='3']/Zenith/Values_List",
             "accessor_config": {
@@ -1471,6 +1527,7 @@
             "short_name": "vaa_b03_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b03_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='2' and @detectorId='3']/Azimuth/Values_List",
             "accessor_config": {
@@ -1484,6 +1541,7 @@
             "short_name": "vza_b03_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b03_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='2' and @detectorId='3']/Zenith/Values_List",
             "accessor_config": {
@@ -1497,6 +1555,7 @@
             "short_name": "vaa_b04_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b04_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='3' and @detectorId='3']/Azimuth/Values_List",
             "accessor_config": {
@@ -1510,6 +1569,7 @@
             "short_name": "vza_b04_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b04_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='3' and @detectorId='3']/Zenith/Values_List",
             "accessor_config": {
@@ -1523,6 +1583,7 @@
             "short_name": "vaa_b05_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b05_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='4' and @detectorId='3']/Azimuth/Values_List",
             "accessor_config": {
@@ -1536,6 +1597,7 @@
             "short_name": "vza_b05_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b05_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='4' and @detectorId='3']/Zenith/Values_List",
             "accessor_config": {
@@ -1549,6 +1611,7 @@
             "short_name": "vaa_b06_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b06_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='5' and @detectorId='3']/Azimuth/Values_List",
             "accessor_config": {
@@ -1562,6 +1625,7 @@
             "short_name": "vza_b06_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b06_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='5' and @detectorId='3']/Zenith/Values_List",
             "accessor_config": {
@@ -1575,6 +1639,7 @@
             "short_name": "vaa_b07_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b07_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='6' and @detectorId='3']/Azimuth/Values_List",
             "accessor_config": {
@@ -1588,6 +1653,7 @@
             "short_name": "vza_b07_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b07_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='6' and @detectorId='3']/Zenith/Values_List",
             "accessor_config": {
@@ -1601,6 +1667,7 @@
             "short_name": "vaa_b08_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b08_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='7' and @detectorId='3']/Azimuth/Values_List",
             "accessor_config": {
@@ -1614,6 +1681,7 @@
             "short_name": "vza_b08_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b08_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='7' and @detectorId='3']/Zenith/Values_List",
             "accessor_config": {
@@ -1627,6 +1695,7 @@
             "short_name": "vaa_b09_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b09_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='9' and @detectorId='3']/Azimuth/Values_List",
             "accessor_config": {
@@ -1640,6 +1709,7 @@
             "short_name": "vza_b09_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b09_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='9' and @detectorId='3']/Zenith/Values_List",
             "accessor_config": {
@@ -1653,6 +1723,7 @@
             "short_name": "vaa_b10_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b10_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='10' and @detectorId='3']/Azimuth/Values_List",
             "accessor_config": {
@@ -1666,6 +1737,7 @@
             "short_name": "vza_b10_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b10_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='10' and @detectorId='3']/Zenith/Values_List",
             "accessor_config": {
@@ -1679,6 +1751,7 @@
             "short_name": "vaa_b11_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b11_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='11' and @detectorId='3']/Azimuth/Values_List",
             "accessor_config": {
@@ -1692,6 +1765,7 @@
             "short_name": "vza_b11_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b11_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='11' and @detectorId='3']/Zenith/Values_List",
             "accessor_config": {
@@ -1705,6 +1779,7 @@
             "short_name": "vaa_b12_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b12_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='12' and @detectorId='3']/Azimuth/Values_List",
             "accessor_config": {
@@ -1718,6 +1793,7 @@
             "short_name": "vza_b12_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b12_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='12' and @detectorId='3']/Zenith/Values_List",
             "accessor_config": {
@@ -1731,6 +1807,7 @@
             "short_name": "vaa_b8a_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b8a_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='8' and @detectorId='3']/Azimuth/Values_List",
             "accessor_config": {
@@ -1744,6 +1821,7 @@
             "short_name": "vza_b8a_3",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b8a_3",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='8' and @detectorId='3']/Zenith/Values_List",
             "accessor_config": {
@@ -1758,6 +1836,7 @@
             "short_name": "vaa_b01_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b01_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='0' and @detectorId='4']/Azimuth/Values_List",
             "accessor_config": {
@@ -1771,6 +1850,7 @@
             "short_name": "vza_b01_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b01_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='0' and @detectorId='4']/Zenith/Values_List",
             "accessor_config": {
@@ -1784,6 +1864,7 @@
             "short_name": "vaa_b02_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b02_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='1' and @detectorId='4']/Azimuth/Values_List",
             "accessor_config": {
@@ -1797,6 +1878,7 @@
             "short_name": "vza_b02_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b02_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='1' and @detectorId='4']/Zenith/Values_List",
             "accessor_config": {
@@ -1810,6 +1892,7 @@
             "short_name": "vaa_b03_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b03_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='2' and @detectorId='4']/Azimuth/Values_List",
             "accessor_config": {
@@ -1823,6 +1906,7 @@
             "short_name": "vza_b03_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b03_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='2' and @detectorId='4']/Zenith/Values_List",
             "accessor_config": {
@@ -1836,6 +1920,7 @@
             "short_name": "vaa_b04_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b04_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='3' and @detectorId='4']/Azimuth/Values_List",
             "accessor_config": {
@@ -1849,6 +1934,7 @@
             "short_name": "vza_b04_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b04_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='3' and @detectorId='4']/Zenith/Values_List",
             "accessor_config": {
@@ -1862,6 +1948,7 @@
             "short_name": "vaa_b05_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b05_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='4' and @detectorId='4']/Azimuth/Values_List",
             "accessor_config": {
@@ -1875,6 +1962,7 @@
             "short_name": "vza_b05_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b05_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='4' and @detectorId='4']/Zenith/Values_List",
             "accessor_config": {
@@ -1888,6 +1976,7 @@
             "short_name": "vaa_b06_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b06_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='5' and @detectorId='4']/Azimuth/Values_List",
             "accessor_config": {
@@ -1901,6 +1990,7 @@
             "short_name": "vza_b06_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b06_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='5' and @detectorId='4']/Zenith/Values_List",
             "accessor_config": {
@@ -1914,6 +2004,7 @@
             "short_name": "vaa_b07_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b07_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='6' and @detectorId='4']/Azimuth/Values_List",
             "accessor_config": {
@@ -1927,6 +2018,7 @@
             "short_name": "vza_b07_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b07_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='6' and @detectorId='4']/Zenith/Values_List",
             "accessor_config": {
@@ -1940,6 +2032,7 @@
             "short_name": "vaa_b08_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b08_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='7' and @detectorId='4']/Azimuth/Values_List",
             "accessor_config": {
@@ -1953,6 +2046,7 @@
             "short_name": "vza_b08_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b08_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='7' and @detectorId='4']/Zenith/Values_List",
             "accessor_config": {
@@ -1966,6 +2060,7 @@
             "short_name": "vaa_b8a_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b8a_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='8' and @detectorId='4']/Azimuth/Values_List",
             "accessor_config": {
@@ -1979,6 +2074,7 @@
             "short_name": "vza_b8a_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b8a_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='8' and @detectorId='4']/Zenith/Values_List",
             "accessor_config": {
@@ -1992,6 +2088,7 @@
             "short_name": "vaa_b09_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b09_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='9' and @detectorId='4']/Azimuth/Values_List",
             "accessor_config": {
@@ -2005,6 +2102,7 @@
             "short_name": "vza_b09_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b09_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='9' and @detectorId='4']/Zenith/Values_List",
             "accessor_config": {
@@ -2018,6 +2116,7 @@
             "short_name": "vaa_b10_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b10_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='10' and @detectorId='4']/Azimuth/Values_List",
             "accessor_config": {
@@ -2031,6 +2130,7 @@
             "short_name": "vza_b10_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b10_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='10' and @detectorId='4']/Zenith/Values_List",
             "accessor_config": {
@@ -2044,6 +2144,7 @@
             "short_name": "vaa_b11_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b11_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='11' and @detectorId='4']/Azimuth/Values_List",
             "accessor_config": {
@@ -2057,6 +2158,7 @@
             "short_name": "vza_b11_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b11_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='11' and @detectorId='4']/Zenith/Values_List",
             "accessor_config": {
@@ -2070,6 +2172,7 @@
             "short_name": "vaa_b12_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b12_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='12' and @detectorId='4']/Azimuth/Values_List",
             "accessor_config": {
@@ -2083,6 +2186,7 @@
             "short_name": "vza_b12_4",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b12_4",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='12' and @detectorId='4']/Zenith/Values_List",
             "accessor_config": {
@@ -2097,6 +2201,7 @@
             "short_name": "vaa_b01_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b01_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='0' and @detectorId='5']/Azimuth/Values_List",
             "accessor_config": {
@@ -2110,6 +2215,7 @@
             "short_name": "vza_b01_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b01_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='0' and @detectorId='5']/Zenith/Values_List",
             "accessor_config": {
@@ -2123,6 +2229,7 @@
             "short_name": "vaa_b02_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b02_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='1' and @detectorId='5']/Azimuth/Values_List",
             "accessor_config": {
@@ -2136,6 +2243,7 @@
             "short_name": "vza_b02_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b02_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='1' and @detectorId='5']/Zenith/Values_List",
             "accessor_config": {
@@ -2149,6 +2257,7 @@
             "short_name": "vaa_b03_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b03_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='2' and @detectorId='5']/Azimuth/Values_List",
             "accessor_config": {
@@ -2162,6 +2271,7 @@
             "short_name": "vza_b03_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b03_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='2' and @detectorId='5']/Zenith/Values_List",
             "accessor_config": {
@@ -2175,6 +2285,7 @@
             "short_name": "vaa_b04_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b04_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='3' and @detectorId='5']/Azimuth/Values_List",
             "accessor_config": {
@@ -2188,6 +2299,7 @@
             "short_name": "vza_b04_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b04_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='3' and @detectorId='5']/Zenith/Values_List",
             "accessor_config": {
@@ -2201,6 +2313,7 @@
             "short_name": "vaa_b05_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b05_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='4' and @detectorId='5']/Azimuth/Values_List",
             "accessor_config": {
@@ -2214,6 +2327,7 @@
             "short_name": "vza_b05_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b05_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='4' and @detectorId='5']/Zenith/Values_List",
             "accessor_config": {
@@ -2227,6 +2341,7 @@
             "short_name": "vaa_b06_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b06_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='5' and @detectorId='5']/Azimuth/Values_List",
             "accessor_config": {
@@ -2240,6 +2355,7 @@
             "short_name": "vza_b06_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b06_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='5' and @detectorId='5']/Zenith/Values_List",
             "accessor_config": {
@@ -2253,6 +2369,7 @@
             "short_name": "vaa_b07_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b07_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='6' and @detectorId='5']/Azimuth/Values_List",
             "accessor_config": {
@@ -2266,6 +2383,7 @@
             "short_name": "vza_b07_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b07_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='6' and @detectorId='5']/Zenith/Values_List",
             "accessor_config": {
@@ -2279,6 +2397,7 @@
             "short_name": "vaa_b08_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b08_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='7' and @detectorId='5']/Azimuth/Values_List",
             "accessor_config": {
@@ -2292,6 +2411,7 @@
             "short_name": "vza_b08_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b08_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='7' and @detectorId='5']/Zenith/Values_List",
             "accessor_config": {
@@ -2305,6 +2425,7 @@
             "short_name": "vaa_b8a_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b8a_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='8' and @detectorId='5']/Azimuth/Values_List",
             "accessor_config": {
@@ -2318,6 +2439,7 @@
             "short_name": "vza_b8a_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b8a_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='8' and @detectorId='5']/Zenith/Values_List",
             "accessor_config": {
@@ -2331,6 +2453,7 @@
             "short_name": "vaa_b09_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b09_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='9' and @detectorId='5']/Azimuth/Values_List",
             "accessor_config": {
@@ -2344,6 +2467,7 @@
             "short_name": "vza_b09_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b09_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='9' and @detectorId='5']/Zenith/Values_List",
             "accessor_config": {
@@ -2357,6 +2481,7 @@
             "short_name": "vaa_b10_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b10_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='10' and @detectorId='5']/Azimuth/Values_List",
             "accessor_config": {
@@ -2370,6 +2495,7 @@
             "short_name": "vza_b10_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b10_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='10' and @detectorId='5']/Zenith/Values_List",
             "accessor_config": {
@@ -2383,6 +2509,7 @@
             "short_name": "vaa_b11_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b11_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='11' and @detectorId='5']/Azimuth/Values_List",
             "accessor_config": {
@@ -2396,6 +2523,7 @@
             "short_name": "vza_b11_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b11_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='11' and @detectorId='5']/Zenith/Values_List",
             "accessor_config": {
@@ -2409,6 +2537,7 @@
             "short_name": "vaa_b12_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b12_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='12' and @detectorId='5']/Azimuth/Values_List",
             "accessor_config": {
@@ -2422,6 +2551,7 @@
             "short_name": "vza_b12_5",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b12_5",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='12' and @detectorId='5']/Zenith/Values_List",
             "accessor_config": {
@@ -2436,6 +2566,7 @@
             "short_name": "vaa_b01_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b01_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='0' and @detectorId='6']/Azimuth/Values_List",
             "accessor_config": {
@@ -2449,6 +2580,7 @@
             "short_name": "vza_b01_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b01_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='0' and @detectorId='6']/Zenith/Values_List",
             "accessor_config": {
@@ -2462,6 +2594,7 @@
             "short_name": "vaa_b02_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b02_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='1' and @detectorId='6']/Azimuth/Values_List",
             "accessor_config": {
@@ -2475,6 +2608,7 @@
             "short_name": "vza_b02_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b02_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='1' and @detectorId='6']/Zenith/Values_List",
             "accessor_config": {
@@ -2488,6 +2622,7 @@
             "short_name": "vaa_b03_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b03_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='2' and @detectorId='6']/Azimuth/Values_List",
             "accessor_config": {
@@ -2501,6 +2636,7 @@
             "short_name": "vza_b03_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b03_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='2' and @detectorId='6']/Zenith/Values_List",
             "accessor_config": {
@@ -2514,6 +2650,7 @@
             "short_name": "vaa_b04_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b04_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='3' and @detectorId='6']/Azimuth/Values_List",
             "accessor_config": {
@@ -2527,6 +2664,7 @@
             "short_name": "vza_b04_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b04_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='3' and @detectorId='6']/Zenith/Values_List",
             "accessor_config": {
@@ -2540,6 +2678,7 @@
             "short_name": "vaa_b05_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b05_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='4' and @detectorId='6']/Azimuth/Values_List",
             "accessor_config": {
@@ -2553,6 +2692,7 @@
             "short_name": "vza_b05_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b05_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='4' and @detectorId='6']/Zenith/Values_List",
             "accessor_config": {
@@ -2566,6 +2706,7 @@
             "short_name": "vaa_b06_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b06_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='5' and @detectorId='6']/Azimuth/Values_List",
             "accessor_config": {
@@ -2579,6 +2720,7 @@
             "short_name": "vza_b06_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b06_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='5' and @detectorId='6']/Zenith/Values_List",
             "accessor_config": {
@@ -2592,6 +2734,7 @@
             "short_name": "vaa_b07_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b07_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='6' and @detectorId='6']/Azimuth/Values_List",
             "accessor_config": {
@@ -2605,6 +2748,7 @@
             "short_name": "vza_b07_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b07_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='6' and @detectorId='6']/Zenith/Values_List",
             "accessor_config": {
@@ -2618,6 +2762,7 @@
             "short_name": "vaa_b8a_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b8a_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='8' and @detectorId='6']/Azimuth/Values_List",
             "accessor_config": {
@@ -2631,6 +2776,7 @@
             "short_name": "vza_b8a_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b8a_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='8' and @detectorId='6']/Zenith/Values_List",
             "accessor_config": {
@@ -2644,6 +2790,7 @@
             "short_name": "vaa_b08_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b08_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='7' and @detectorId='6']/Azimuth/Values_List",
             "accessor_config": {
@@ -2657,6 +2804,7 @@
             "short_name": "vza_b08_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b08_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='7' and @detectorId='6']/Zenith/Values_List",
             "accessor_config": {
@@ -2670,6 +2818,7 @@
             "short_name": "vaa_b09_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b09_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='9' and @detectorId='6']/Azimuth/Values_List",
             "accessor_config": {
@@ -2683,6 +2832,7 @@
             "short_name": "vza_b09_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b09_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='9' and @detectorId='6']/Zenith/Values_List",
             "accessor_config": {
@@ -2696,6 +2846,7 @@
             "short_name": "vaa_b10_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b10_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='10' and @detectorId='6']/Azimuth/Values_List",
             "accessor_config": {
@@ -2709,6 +2860,7 @@
             "short_name": "vza_b10_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b10_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='10' and @detectorId='6']/Zenith/Values_List",
             "accessor_config": {
@@ -2722,6 +2874,7 @@
             "short_name": "vaa_b11_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b11_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='11' and @detectorId='6']/Azimuth/Values_List",
             "accessor_config": {
@@ -2735,6 +2888,7 @@
             "short_name": "vza_b11_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b11_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='11' and @detectorId='6']/Zenith/Values_List",
             "accessor_config": {
@@ -2748,6 +2902,7 @@
             "short_name": "vaa_b12_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vaa_b12_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='12' and @detectorId='6']/Azimuth/Values_List",
             "accessor_config": {
@@ -2761,6 +2916,7 @@
             "short_name": "vza_b12_6",
             "source_path": "GRANULE/[^/]*/MTD_TL.xml",
             "target_path": "/conditions/geometry/vza_b12_6",
+            "is_optional": true,
             "item_format": "xmlangles",
             "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids[@bandId='12' and @detectorId='6']/Zenith/Values_List",
             "accessor_config": {

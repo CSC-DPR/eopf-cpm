@@ -1,8 +1,6 @@
 from types import TracebackType
 from typing import Any, Iterable, MutableMapping, Optional, Type, Union
 
-import IPython.terminal.interactiveshell
-
 from eopf.exceptions import InvalidProductError, StoreNotDefinedError, StoreNotOpenError
 
 from ..store.abstract import EOProductStore, StorageStatus
@@ -183,13 +181,22 @@ class EOProduct(EOContainer):
             print("|" + " " * level + "├──", g[0])
             self._create_structure(g, level + 2)
 
-    def tree(self) -> None:
-        """Display the hierarchy of the product."""
+    def tree(self, interactive: bool = True) -> None:
+        """Display the hierarchy of the product.
+        Default to an interactive html representation  in interactive shell (ex : jupiterhub).
+        If unavailable will print to console (STDOUT).
+
+        Parameters
+        ----------
+        interactive: bool, optional
+            prefer an interactive html representation to a console print.
+        """
         try:  # pragma: no cover
             from IPython import display, get_ipython
+            from IPython.terminal.interactiveshell import TerminalInteractiveShell
 
             py_type = get_ipython()  # Recover python environment from which this is used
-            if py_type and not isinstance(py_type, IPython.terminal.interactiveshell.TerminalInteractiveShell):
+            if interactive and py_type and not isinstance(py_type, TerminalInteractiveShell):
                 # Return EOProduct if environment is interactive
                 display.display(display.HTML(self._repr_html_()))
                 return
@@ -198,9 +205,9 @@ class EOProduct(EOContainer):
 
             warnings.warn("IPython not found")
         # Iterate and print EOProduct structure otherwise (CLI)
-        for name, group in self._groups.items():
+        for name, group in self.items():
             print(f"├── {name}")
-            self._create_structure(group, level=2)
+            self._create_structure(group, level=2)  # type: ignore[arg-type]
         return
 
     @property

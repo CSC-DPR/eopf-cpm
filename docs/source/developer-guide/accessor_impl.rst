@@ -5,6 +5,7 @@ For reading unsuported file format, or apply complex (*check SAFE store paramete
 
 Difference between a Store and an Accessor
 ------------------------------------------
+
 The only difference between a Store and an Accessor is it's main usage :
 
 - Store are expected to be used independently to open a file. Stores can always be used as Accessor.
@@ -19,9 +20,10 @@ In the rest of the document Accessor ans Store wil be uses interchangeably as th
 
 Interfaces and implementation
 -----------------------------
+
 All accessors/stores must implement the EOProductStore interface. For read only stores you can instead implement the EOReadOnlyStore.
 
-See their documentation for more details : :obj:`eopf.product.core.eo_abstract.EOAbstract`
+See their documentation for more details : :py:class:`~eopf.product.core.eo_abstract.EOAbstract`
 
 
 Accessor : correspondence with SAFE json mapping
@@ -40,4 +42,4 @@ For using it as a store
     Initialise your store then initialise a product from it.
 
 For using it as an accessor
-    Create a EOStoreFactory, register your accessor to it and initialise your SafeStore with it in it's store_factory. Cf :obj:`eopf.product.store.store_factory.EOStoreFactory`
+    Create a EOStoreFactory, register your accessor to it and initialise your SafeStore with it in it's store_factory. Cf :py:class:`~eopf.product.store.store_factory.EOStoreFactory`
