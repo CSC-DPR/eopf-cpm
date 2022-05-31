@@ -1,4 +1,4 @@
-from logging import Logger, getLogger
+from logging import CRITICAL, DEBUG, ERROR, INFO, NOTSET, WARNING, Logger, getLogger
 from logging.config import dictConfig, fileConfig
 from pathlib import Path
 from typing import Union
@@ -12,7 +12,10 @@ from eopf.exceptions import (
     LoggingConfigurationFileTypeNotSupported,
     LoggingConfigurationNotRegistered,
 )
-from eopf.exceptions.warnings import NoLoggingConfigurationFile
+from eopf.exceptions.warnings import (
+    LoggingLevelIsNoneStandard,
+    NoLoggingConfigurationFile,
+)
 
 
 class EOLogFactory(object):
@@ -91,6 +94,7 @@ class EOLogFactory(object):
         self,
         cfg_name: str = "default",
         name: str = "default",
+        level: int = None,
     ) -> Logger:
         """Retrieve a logger by specifyng the name of the configuration
         and set the logger's name
@@ -124,7 +128,15 @@ class EOLogFactory(object):
         except Exception as e:
             raise LoggingConfigurationFileIsNotValid(f"Invalid configuration file, reason: {e}")
 
-        return getLogger(name)
+        logger = getLogger(name)
+
+        # override the logging level from the cfg file
+        if level and level != NOTSET:
+            if level not in [DEBUG, INFO, WARNING, ERROR, CRITICAL]:
+                raise LoggingLevelIsNoneStandard("The given log level is set to a value which is none Python standard")
+            logger.setLevel(level=level)
+
+        return logger
 
     def register_cfg(self, cfg_name: str, cfg_path: Union[Path, str]) -> None:
         """Register a logger configuration by name and path

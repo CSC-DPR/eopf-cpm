@@ -1,4 +1,4 @@
-from logging import Logger
+from logging import CRITICAL, DEBUG, ERROR, INFO, NOTSET, WARNING, Logger
 from pathlib import Path
 
 import pytest
@@ -10,7 +10,10 @@ from eopf.exceptions import (
     LoggingConfigurationFileTypeNotSupported,
     LoggingConfigurationNotRegistered,
 )
-from eopf.exceptions.warnings import NoLoggingConfigurationFile
+from eopf.exceptions.warnings import (
+    LoggingLevelIsNoneStandard,
+    NoLoggingConfigurationFile,
+)
 from eopf.logging import EOLogFactory
 
 
@@ -116,3 +119,55 @@ def test_get_log_with_non_valid_configuration_file():
     test_factory.register_cfg("invalid", cfg_path=test_file_path)
     with pytest.raises(LoggingConfigurationFileIsNotValid):
         _ = test_factory.get_log("invalid")
+
+
+@pytest.mark.parametrize(
+    "expected_log_level",
+    [
+        DEBUG,
+        INFO,
+        WARNING,
+        ERROR,
+        CRITICAL,
+    ],
+)
+@pytest.mark.unit
+def test_override_log_cfg_level_with_standard_level_value(expected_log_level: int):
+    """Test the override log level functionaly of the get_log"""
+
+    logger = EOLogFactory().get_log(level=expected_log_level)
+    assert logger.level == expected_log_level
+
+
+@pytest.mark.parametrize(
+    "expected_log_level",
+    [
+        5,
+        100,
+    ],
+)
+@pytest.mark.unit
+def test_override_log_cfg_level_with_non_standard_level_value(expected_log_level: int):
+    """Test the override log level functionaly of the get_log"""
+
+    with pytest.raises(LoggingLevelIsNoneStandard):
+        logger = EOLogFactory().get_log(level=expected_log_level)
+        assert logger.level == expected_log_level
+
+
+@pytest.mark.parametrize(
+    "given_log_level",
+    [
+        None,
+        NOTSET,
+    ],
+)
+@pytest.mark.unit
+def test_override_log_cfg_level_with_none_and_notset(given_log_level: int):
+    """Test the override log level functionaly of the get_log"""
+
+    # test_override_log_cfg_level_with_standard_level_value modies the log level to CRITICAL
+    # hence, we expect that the log value will remain CRITICAL
+    expected_log_level = CRITICAL
+    logger = EOLogFactory().get_log(level=given_log_level)
+    assert logger.level == expected_log_level

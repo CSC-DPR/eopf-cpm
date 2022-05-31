@@ -12,3 +12,7 @@ class NoLoggingConfigurationFile(Warning):
 
 class DaskProfilerHtmlDisplayNotWorking(Warning):
     """When the report display of the dask_profiler is not working"""
+
+
+class LoggingLevelIsNoneStandard(Warning):
+    """When the given log level is set to a value which is none Python standard"""
