@@ -267,7 +267,7 @@ def test_xml_manifest_accessor(path: str, mapping: str, tmp_path: pathlib.Path):
     assert datetime.strptime(returned_om_eop.get("resultTime", {}).get("timePosition", ""), "%Y%m%dT%H%M%S")
     assert (
         re.match(
-            r"POLYGON\(\((-?\d*\.\d* -?\d*\.\d*,?)*\)\)",
+            r"POLYGON\(\((-?\d*\.\d* -?\d*\.\d*(, )?)*\)\)",
             returned_om_eop.get("featureOfInterest", {}).get("multiExtentOf", ""),
         )
         is not None
