@@ -40,8 +40,10 @@ def apply_xpath(dom: Any, xpath: str, namespaces: dict[str, str]) -> str:
             if len(target) == 1:
                 if target[0].tag.endswith("posList"):
                     values = target[0].text.split(" ")
-                    merged_values = ",".join(" ".join([n, i]) for i, n in zip(values, values[1:]))
-                    return f"POLYGON(({merged_values}))"
+                    match_list = ", ".join(
+                        " ".join([values[idx + 1], values[idx]]) for idx in range(0, len(values) - 1, 2)
+                    )
+                    return f"POLYGON(({match_list}))"
                 return target[0].text
             target = [elt.text for elt in target]
         return ",".join(target)
