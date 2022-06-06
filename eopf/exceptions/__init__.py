@@ -53,3 +53,7 @@ class DaskProfilerError(Exception):
 
 class SingleThreadProfilerError(Exception):
     """When the single_thread_profiler raises any error"""
+
+
+class FormattingNoSuchFormatterRegistered(Exception):
+    """When a requested formatter is not registered"""
