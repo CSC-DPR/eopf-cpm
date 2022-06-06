@@ -57,3 +57,7 @@ class SingleThreadProfilerError(Exception):
 
 class FormattingNoSuchFormatterRegistered(Exception):
     """When a requested formatter is not registered"""
+
+
+class FormattingError(Exception):
+    """When a formatter raises exceptions"""

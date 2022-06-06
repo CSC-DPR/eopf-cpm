@@ -5,6 +5,7 @@ from typing import Any
 from pandas import Timedelta, to_datetime
 from pytz import UTC
 
+from eopf.exceptions import FormattingError
 from eopf.product.core import EOVariable
 
 
@@ -35,8 +36,8 @@ class to_str(EOAbstractFormatter):
     def format(self, input: Any, **kwargs: Any) -> str:
         try:
             return str(input)
-        except:
-            raise KeyError("to be modified")
+        except Exception as e:
+            raise FormattingError(f"{e}")
 
 
 class to_float(EOAbstractFormatter):
@@ -46,8 +47,8 @@ class to_float(EOAbstractFormatter):
     def format(self, input: Any, **kwargs: Any) -> float:
         try:
             return float(input)
-        except:
-            raise KeyError("to be modified")
+        except Exception as e:
+            raise FormattingError(f"{e}")
 
 
 class to_int(EOAbstractFormatter):
@@ -57,8 +58,8 @@ class to_int(EOAbstractFormatter):
     def format(self, input: Any, **kwargs: Any) -> float:
         try:
             return int(input)
-        except:
-            raise KeyError("to be modified")
+        except Exception as e:
+            raise FormattingError(f"{e}")
 
 
 class to_unix_time_slstr_l1(EOAbstractFormatter):
@@ -68,7 +69,7 @@ class to_unix_time_slstr_l1(EOAbstractFormatter):
     def format(self, input: Any, **kwargs: Any) -> EOVariable:
 
         start = to_datetime(datetime.fromtimestamp(0, tz=UTC))
-        end = to_datetime(input)
+        end = to_datetime(input[:])
         # compute and convert the time difference into microseconds
         time_delta = (end - start) // Timedelta("1microsecond")
 
@@ -76,12 +77,11 @@ class to_unix_time_slstr_l1(EOAbstractFormatter):
         attributes = {}
         attributes["unit"] = f"microseconds since {start.strftime('%Y-%m-%dT%H:%M:%S.%fZ')}"
         attributes["standard_name"] = "time"
-        if "key" in kwargs:
-            key = kwargs['key']
-            if key == "ANX_time":
-                attributes["long_name"] = "Time of ascending node crossing in UTC"
-            elif key == "calibration_time":
-                attributes["long_name"] = "Time of calibration in UTC"
+
+        if input.name == "ANX_time":
+            attributes["long_name"] = "Time of ascending node crossing in UTC"
+        elif input.name == "calibration_time":
+            attributes["long_name"] = "Time of calibration in UTC"
 
         # create an EOVariable and return it
         eov: EOVariable = EOVariable(data=time_delta, attrs=attributes)
