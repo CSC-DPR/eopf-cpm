@@ -1,4 +1,4 @@
-from re import match, compile
+from re import compile
 from typing import Any, Callable, Dict, Optional, Tuple, Union
 
 from eopf.exceptions import FormattingNoSuchFormatterRegistered
@@ -34,14 +34,14 @@ class EOFormatterFactory(object):
     def __init__(self, default_formatters: bool = True) -> None:
         self.formatters: Dict[str, type[EOAbstractFormatter]] = dict()
         if default_formatters:
-            from eopf.formatting.formatters import ( 
-                to_str,
+            from eopf.formatting.formatters import (
                 to_float,
                 to_int,
-                to_unix_time_slstr_l1,
                 to_iso8601,
+                to_str,
+                to_unix_time_slstr_l1,
             )
-    
+
             self.register_formatter(to_str)
             self.register_formatter(to_float)
             self.register_formatter(to_int)
@@ -50,7 +50,7 @@ class EOFormatterFactory(object):
         else:
             # to implement another logic of importing formatters
             pass
-            
+
     def register_formatter(self, formatter: type[EOAbstractFormatter]) -> None:
         """
         Function to register new formatters
@@ -73,16 +73,16 @@ class EOFormatterFactory(object):
             a path to an object/file
         """
 
-        #try to get a string representation of the path
+        # try to get a string representation of the path
         try:
             str_repr = str(path)
-        except:
-            # path can not be searched and is passed to the reader/accessor
+        except:  # noqa
+            # path can not be searched and is passed to the reader/accessor as is
             return None, path
 
         # build regex expression for formatters
         registered_formaters = "|".join(self.formatters.keys())
-        regex = compile("^(.+://)?(%s)\((.+)\)" % registered_formaters)
+        regex = compile("^(.+://)?(%s)\\((.+)\\)" % registered_formaters)
         # check if regex matches
         m = regex.match(str_repr)
         if m:
@@ -110,7 +110,7 @@ def formatable(fn: Callable[[Any], Any]) -> Any:
     ----------
     fn: Callable[[Any], Any]
         callable function
-    
+
     Returns
     ----------
     Any: formated return of the wrapped function
@@ -125,7 +125,7 @@ def formatable(fn: Callable[[Any], Any]) -> Any:
     >>> ret = get_data('to_float(/tmp/data.nc)', a_float=3.14)
     """
 
-    def wrap(path: Optional[Any] = None, url: Optional[Any] = None, key: Optional[Any]= None, **kwargs: Any) -> Any:
+    def wrap(path: Optional[Any] = None, url: Optional[Any] = None, key: Optional[Any] = None, **kwargs: Any) -> Any:
         """Any function that received a path, url or key can be formatted"""
 
         if path:
@@ -145,6 +145,3 @@ def formatable(fn: Callable[[Any], Any]) -> Any:
         return the_data
 
     return wrap
-
-
-
