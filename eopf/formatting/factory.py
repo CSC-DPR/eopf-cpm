@@ -1,70 +1,150 @@
-from typing import Callable, Any, Dict, Tuple, Union
-from re import match
+from re import match, compile
+from typing import Any, Callable, Dict, Optional, Tuple, Union
 
+from eopf.exceptions import FormattingNoSuchFormatterRegistered
 from eopf.formatting.formatters import EOAbstractFormatter
-
-# class EOFormatterFactory:
-#     def __init__(self, default_formatters = True) -> None:
-#         self.formatters = dict()
-#         if default_formatters:
-#             from eopf.formatting.formatters import to_str
-#             self.register_formatter(to_str)
-
-#     def register_formatter(self, func: Callable) -> None:
-#         self.formatters[func.__name__] = func
-
-#     def get_formatter(self, path: Any) -> None:
-#         try:
-#             str_repr = str(path)
-#         except:
-#             return None, path
-
-#         m = match(r"^(to_\w+)\((.+)\)", str_repr)
-#         if m:
-#             print(self.formatters, m[1])
-#             if m[1] in self.formatters:
-#                 return self.formatters[m[1]], m[2]
-#             else:
-#                 raise KeyError(f"no registered formatter {m[1]}")
-#         else:
-#             return None, path
 
 
 class EOFormatterFactory(object):
+    """
+    Factory for formatters
+
+    Parameters
+    ----------
+    default_formatters: bool
+        ???
+
+    Attributes
+    ----------
+    formatters: Dict[str, type[EOAbstractFormatter]]
+        dictonary of formatters
+
+    Examples
+    ----------
+    def get_the_data(path):
+        ...
+
+    formatter, path = EOAbstractFormatter().get_formatter("to_str(/tmp/some_file.nc)")
+    the_data = get_the_data(path)
+    if formatter:
+        return formatter(the_data)
+    return the_data
+    """
+
     def __init__(self, default_formatters: bool = True) -> None:
         self.formatters: Dict[str, type[EOAbstractFormatter]] = dict()
         if default_formatters:
-            from eopf.formatting.formatters import to_str
+            from eopf.formatting.formatters import ( 
+                to_str,
+                to_float,
+                to_int,
+                to_unix_time_slstr_l1,
+                to_iso8601,
+            )
+    
             self.register_formatter(to_str)
-            from eopf.formatting.formatters import to_str_times
-            self.register_formatter(to_str_times)
-
+            self.register_formatter(to_float)
+            self.register_formatter(to_int)
+            self.register_formatter(to_unix_time_slstr_l1)
+            self.register_formatter(to_iso8601)
+        else:
+            # to implement another logic of importing formatters
+            pass
+            
     def register_formatter(self, formatter: type[EOAbstractFormatter]) -> None:
+        """
+        Function to register new formatters
+
+        Parameters
+        ----------
+        formatter: type[EOAbstractFormatter]
+            a formatter
+        """
         key = str(formatter.name)
         self.formatters[key] = formatter
 
     def get_formatter(self, path: Any) -> Tuple[Union[Callable[[EOAbstractFormatter], Any], None], Any]:
+        """
+        Function retrieve a formatter and path without the formatter pattern
+
+        Parameters
+        ----------
+        path: Any
+            a path to an object/file
+        """
+
+        #try to get a string representation of the path
         try:
             str_repr = str(path)
         except:
+            # path can not be searched and is passed to the reader/accessor
             return None, path
 
-        m = match(r"^(s3://)?(to_\w+)\((.+)\)", str_repr)
+        # build regex expression for formatters
+        registered_formaters = "|".join(self.formatters.keys())
+        regex = compile("^(.+://)?(%s)\((.+)\)" % registered_formaters)
+        # check if regex matches
+        m = regex.match(str_repr)
         if m:
-            s3_prefix = m[1]
+            prefix = m[1]
             formatter_name = m[2]
             inner_path = m[3]
 
+            # check that the specified formatter is registered
             if formatter_name in self.formatters:
-                if s3_prefix:
-                    return self.formatters[formatter_name]().format, s3_prefix + inner_path
+                if prefix:
+                    return self.formatters[formatter_name]().format, prefix + inner_path
                 else:
                     return self.formatters[formatter_name]().format, inner_path
             else:
-                raise KeyError(f"no registered formatter {m[1]}")
+                raise FormattingNoSuchFormatterRegistered(f"{formatter_name} is not registered")
         else:
+            # no formatter pattern found
             return None, path
 
+
+def formatable(fn: Callable[[Any], Any]) -> Any:
+    """Decorator function used to allow formating of the return
+
+    Parameters
+    ----------
+    fn: Callable[[Any], Any]
+        callable function
+    
+    Returns
+    ----------
+    Any: formated return of the wrapped function
+
+    Examples
+    --------
+    >>> @formatable
+    >>> def get_data(key, a_float):
+    ...     unformatted_data = read_data(key)
+    ...     return unformatted_data * a_float
+    ...
+    >>> ret = get_data('to_float(/tmp/data.nc)', a_float=3.14)
+    """
+
+    def wrap(path: Optional[Any] = None, url: Optional[Any] = None, key: Optional[Any]= None, **kwargs: Any) -> Any:
+        """Any function that received a path, url or key can be formatted"""
+
+        if path:
+            uri = path
+        elif url:
+            uri = url
+        elif key:
+            uri = key
+        else:
+            raise KeyError("No key provided")
+
+        formatter, formatter_stripped_uri = EOFormatterFactory().get_formatter(uri)
+        print(formatter, formatter_stripped_uri)
+        the_data = fn(formatter_stripped_uri, **kwargs)
+        if formatter:
+            return formatter(the_data, **kwargs)
+        return the_data
+
+    return wrap
 
 
 
