@@ -3,7 +3,7 @@ import pathlib
 from collections.abc import MutableMapping
 from json import loads
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Iterator, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Iterator, Optional
 
 import boto3
 import fsspec
@@ -58,7 +58,8 @@ class EOCogStore(EOProductStore):
             key=self.storage_options["key"],
             secret=self.storage_options["secret"],
             client_kwargs=dict(
-                endpoint_url=new_endpoint, region_name=self.storage_options["client_kwargs"]["region_name"],
+                endpoint_url=new_endpoint,
+                region_name=self.storage_options["client_kwargs"]["region_name"],
             ),
         )
 
@@ -122,6 +123,7 @@ class EOCogStore(EOProductStore):
             yield from self._sub_store.iter(path)
             return
         # Compose key for top level group (should work for zip also)
+        print(path)
         if self._is_zip:
             if path in ["", "/"]:
                 path = "*"
@@ -216,7 +218,7 @@ class EOCogStore(EOProductStore):
         else:
             return {}
 
-    def _read_eov(self, path: str) -> Tuple[str, Any]:
+    def _read_eov(self, path: str) -> tuple[str, Any]:
         # Create variable name by removing extension if exists
         if self.guess_can_read(path):
             variable_name = self.remove_extension(path.split("/")[-1])
@@ -245,7 +247,6 @@ class EOCogStore(EOProductStore):
                     variable_data = data[variable_name]
                     return variable_name, variable_data
                 else:
-                    print("FFP", full_file_path)
                     # To be added for zips
                     raise NotImplementedError()
 

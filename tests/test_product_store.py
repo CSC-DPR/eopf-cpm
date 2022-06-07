@@ -834,12 +834,6 @@ def test_convert_cog_store(store, legacy_product_path, write_target):
         cog_store.open(mode="w")
         data = cog_store[""] # noqa
 
-    # Try to get an item when store is closed
-    # with pytest.raises(StoreNotOpenError):
-    #     cog_store.open(mode="r")
-    #     cog_store.close()
-    #     data = cog_store[""]
-
     # Test if returned output of getitem is EOGroup or EOVariable
     cog_store.open(mode="r")
     assert isinstance(cog_store[""], EOGroup)
@@ -868,11 +862,6 @@ def test_convert_cog_store(store, legacy_product_path, write_target):
         top_level_len = len(cog_store) # noqa
         cog_store.close()
 
-    # with pytest.raises(StoreNotOpenError):
-    #     cog_store.open(mode="r")
-    #     cog_store.close()
-    #     len(cog_store)
-
     cog_store.open(mode="r")
     assert len(cog_store) == len(expected_top_level_groups)
     cog_store.close()
@@ -884,12 +873,6 @@ def test_convert_cog_store(store, legacy_product_path, write_target):
         cog_store.open(mode="r")
         cog_store["name"] = EOVariable("name", data=[])
         cog_store.close()
-
-    # Try to set an item when store is closed -> FAIL
-    # with pytest.raises(StoreNotOpenError):
-    #     cog_store.open(mode="w")
-    #     cog_store.close()
-    #     cog_store["name"] = EOVariable("name", data=[])
 
     # Try to set an item when item type is not EOV, EOG, DataArray
     with pytest.raises(NotImplementedError):
@@ -919,12 +902,10 @@ def test_convert_cog_store(store, legacy_product_path, write_target):
     assert os.path.isdir(f"{write_target}/full_group")
     assert cog_store.is_group("full_group")
     # Check if variables are written as netcdf files on disk, and stored EOVariable(s)
-    assert isinstance(cog_store["full_group/a"], EOVariable)
-    assert isinstance(cog_store["full_group/b"], EOVariable)
-    assert isinstance(cog_store["full_group/c"], EOVariable)
-    assert os.path.isfile(f"{write_target}/full_group/a.nc")
-    assert os.path.isfile(f"{write_target}/full_group/b.nc")
-    assert os.path.isfile(f"{write_target}/full_group/c.nc")
+    for target in ["a", "b", "c"]:
+        path = f"full_group/{target}"
+        assert isinstance(cog_store[path], EOVariable)
+        assert os.path.isfile(f"{write_target}/{path}.nc")
     # Check variables data using standard netcdf4 module, dataset["variable"][:] outputs variable dataarray
     from netCDF4 import Dataset
 
