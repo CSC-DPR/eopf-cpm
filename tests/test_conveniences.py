@@ -6,6 +6,7 @@ from typing import Any
 
 import dask
 import hypothesis.extra.numpy as xps
+import hypothesis.extra.pytz as xptz
 import hypothesis.strategies as st
 import numpy
 import pytest
@@ -221,7 +222,7 @@ def test_epsilon_on_fp_conv(value, EPSILON):
             expected_type=int,
         ),
         value_with_type(
-            elements=st.datetimes(),
+            elements=st.datetimes(timezones=xptz.timezones()),
             expected_type=int,
         ),
     ),

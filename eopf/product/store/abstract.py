@@ -32,8 +32,6 @@ class EOProductStore(MutableMapping[str, "EOObject"]):
     ----------
     url: str
         url to the target store
-    sep: str
-        file separator
     """
 
     sep: str = "/"

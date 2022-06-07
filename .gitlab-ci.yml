@@ -177,9 +177,17 @@ build-doc:
   - git checkout $BRANCH_NAME
   script:
   - pip install .[doc]
-  - cd docs
-  - sphinx-multiversion source ../../docs/build/html
-  - mv source/_redirects ../../docs/build/html
+  - |-
+      if [[ $CI_PIPELINE_SOURCE == "merge_request_event" ]]; then
+        cd docs
+        make html
+        mkdir -p ../../docs/build/html
+        mv build/html ../../docs/build/html
+        mv source/_redirects ../../docs/build/html
+      else
+        sphinx-multiversion docs/source ../docs/build/html
+        mv docs/source/_redirects ../docs/build/html
+      fi
   artifacts:
     expire_in: 1h
     paths:

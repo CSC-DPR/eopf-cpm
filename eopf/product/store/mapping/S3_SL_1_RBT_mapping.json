@@ -1,6 +1,7 @@
 {
     "recognition": {
         "filename_pattern": "S3._SL_1_RBT.*SEN3",
+        "product_type": "S3_SL_1_RBT",
         "product_type_pattern": "SL_1_RBT___",
         "version": "TODO"
     },
@@ -11087,17 +11088,6 @@
             }
         },
         {
-            "short_name": "anx_time",
-            "target_path": "/conditions/viscal/anx_time",
-            "source_path": "viscal.nc:ANX_time",
-            "item_format": "netcdf_string_to_time",
-            "parameters": {
-                "dimensions": [
-                    "one"
-                ]
-            }
-        },
-        {
             "short_name": "s1_bb1_sd",
             "target_path": "/conditions/viscal/s1_bb1_sd",
             "source_path": "viscal.nc:S1_BB1_SD",
@@ -11992,9 +11982,9 @@
             "short_name": "metadata",
             "target_path": "",
             "source_path": "xfdumanifest.xml",
-            "item_format": "xfdumetadata",
+            "item_format": "xmlmetadata",
             "accessor_config": {
-                "metadata_mapping": "metadata_mapping",
+                "mapping": "metadata_mapping",
                 "namespaces": "namespaces"
             }
         }

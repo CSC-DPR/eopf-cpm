@@ -1,0 +1,1220 @@
+{
+  "recognition": {
+    "filename_pattern": "S3._SL_2_LST.*SEN3",
+    "product_type": "S3_SL_2_LST",
+    "product_type_pattern": "SL_2_LST___",
+    "version": "004"
+  },
+  "data_mapping": [
+    {
+      "short_name": "x_in",
+      "target_path": "/coordinates/in/x_in",
+      "source_path": "cartesian_in.nc:x_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "y_in",
+      "target_path": "/coordinates/in/y_in",
+      "source_path": "cartesian_in.nc:y_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "elevation_in",
+      "target_path": "/conditions/geometry/elevation_in",
+      "source_path": "geodetic_in.nc:elevation_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "latitude_in",
+      "target_path": "/coordinates/in/latitude_in",
+      "source_path": "geodetic_in.nc:latitude_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "longitude_in",
+      "target_path": "/coordinates/in/longitude_in",
+      "source_path": "geodetic_in.nc:longitude_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "x_tx",
+      "target_path": "/coordinates/tx/x_tx",
+      "source_path": "cartesian_tx.nc:x_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "y_tx",
+      "target_path": "/coordinates/tx/y_tx",
+      "source_path": "cartesian_tx.nc:y_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "latitude_tx",
+      "target_path": "/coordinates/tx/latitude_tx",
+      "source_path": "geodetic_tx.nc:latitude_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "longitude_tx",
+      "target_path": "/coordinates/tx/longitude_tx",
+      "source_path": "geodetic_tx.nc:longitude_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "x_orphan_in",
+      "target_path": "/coordinates/orphan/x_orphan_in",
+      "source_path": "cartesian_in.nc:x_orphan_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "y_orphan_in",
+      "target_path": "/coordinates/orphan/y_orphan_in",
+      "source_path": "cartesian_in.nc:y_orphan_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "elevation_orphan_in",
+      "target_path": "/conditions/orphan/elevation_orphan_in",
+      "source_path": "geodetic_in.nc:elevation_orphan_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "latitude_orphan_in",
+      "target_path": "/coordinates/orphan/latitude_orphan_in",
+      "source_path": "geodetic_in.nc:latitude_orphan_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "longitude_orphan_in",
+      "target_path": "/coordinates/orphan/longitude_orphan_in",
+      "source_path": "geodetic_in.nc:longitude_orphan_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "bayes_in",
+      "target_path": "/quality/in/bayes_in",
+      "source_path": "flags_in.nc:bayes_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "cloud_in",
+      "target_path": "/quality/in/cloud_in",
+      "source_path": "flags_in.nc:cloud_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "confidence_in",
+      "target_path": "/quality/in/confidence_in",
+      "source_path": "flags_in.nc:confidence_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "pointing_in",
+      "target_path": "/quality/in/pointing_in",
+      "source_path": "flags_in.nc:pointing_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "probability_cloud_dual_in",
+      "target_path": "/quality/in/probability_cloud_dual_in",
+      "source_path": "flags_in.nc:probability_cloud_dual_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "probability_cloud_single_in",
+      "target_path": "/quality/in/probability_cloud_single_in",
+      "source_path": "flags_in.nc:probability_cloud_single_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "bayes_orphan_in",
+      "target_path": "/quality/orphan/bayes_orphan_in",
+      "source_path": "flags_in.nc:bayes_orphan_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "cloud_orphan_in",
+      "target_path": "/quality/orphan/cloud_orphan_in",
+      "source_path": "flags_in.nc:cloud_orphan_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "confidence_orphan_in",
+      "target_path": "/quality/orphan/confidence_orphan_in",
+      "source_path": "flags_in.nc:confidence_orphan_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "pointing_orphan_in",
+      "target_path": "/quality/orphan/pointing_orphan_in",
+      "source_path": "flags_in.nc:pointing_orphan_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "sat_azimuth_tn",
+      "target_path": "/conditions/geometry/sat_azimuth_tn",
+      "source_path": "geometry_tn.nc:sat_azimuth_tn",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_tn",
+          "columns_tn"
+        ]
+      }
+    },
+    {
+      "short_name": "sat_path_tn",
+      "target_path": "/conditions/geometry/sat_path_tn",
+      "source_path": "geometry_tn.nc:sat_path_tn",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_tn",
+          "columns_tn"
+        ]
+      }
+    },
+    {
+      "short_name": "sat_zenith_tn",
+      "target_path": "/conditions/geometry/sat_zenith_tn",
+      "source_path": "geometry_tn.nc:sat_zenith_tn",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_tn",
+          "columns_tn"
+        ]
+      }
+    },
+    {
+      "short_name": "solar_azimuth_tn",
+      "target_path": "/conditions/geometry/solar_azimuth_tn",
+      "source_path": "geometry_tn.nc:solar_azimuth_tn",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_tn",
+          "columns_tn"
+        ]
+      }
+    },
+    {
+      "short_name": "solar_path_tn",
+      "target_path": "/conditions/geometry/solar_path_tn",
+      "source_path": "geometry_tn.nc:solar_path_tn",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_tn",
+          "columns_tn"
+        ]
+      }
+    },
+    {
+      "short_name": "solar_zenith_tn",
+      "target_path": "/conditions/geometry/solar_zenith_tn",
+      "source_path": "geometry_tn.nc:solar_zenith_tn",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_tn",
+          "columns_tn"
+        ]
+      }
+    },
+    {
+      "short_name": "detector_in",
+      "target_path": "/conditions/processing/detector_in",
+      "source_path": "indices_in.nc:detector_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "l0_scan_offset_in",
+      "target_path": "/conditions/processing/l0_scan_offset_in",
+      "source_path": "indices_in.nc:l0_scan_offset_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "one"
+        ]
+      }
+    },
+    {
+      "short_name": "pixel_in",
+      "target_path": "/conditions/processing/pixel_in",
+      "source_path": "indices_in.nc:pixel_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "scan_in",
+      "target_path": "/conditions/processing/scan_in",
+      "source_path": "indices_in.nc:scan_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "detector_orphan_in",
+      "target_path": "/conditions/orphan/detector_orphan_in",
+      "source_path": "indices_in.nc:detector_orphan_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "pixel_orphan_in",
+      "target_path": "/conditions/orphan/pixel_orphan_in",
+      "source_path": "indices_in.nc:pixel_orphan_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "scan_orphan_in",
+      "target_path": "/conditions/orphan/scan_orphan_in",
+      "source_path": "indices_in.nc:scan_orphan_in",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "LST_uncertainty_locATM",
+      "target_path": "/quality/in/LST_uncertainty_locATM",
+      "source_path": "LST_ancillary_ds.nc:LST_uncertainty_locATM",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "LST_uncertainty_locGEO",
+      "target_path": "/quality/in/LST_uncertainty_locGEO",
+      "source_path": "LST_ancillary_ds.nc:LST_uncertainty_locGEO",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "LST_uncertainty_locSF",
+      "target_path": "/quality/in/LST_uncertainty_locSF",
+      "source_path": "LST_ancillary_ds.nc:LST_uncertainty_locSF",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "LST_uncertainty_locT",
+      "target_path": "/quality/in/LST_uncertainty_locT",
+      "source_path": "LST_ancillary_ds.nc:LST_uncertainty_locT",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "LST_uncertainty_random",
+      "target_path": "/quality/in/LST_uncertainty_random",
+      "source_path": "LST_ancillary_ds.nc:LST_uncertainty_random",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "LST_uncertainty_sys",
+      "target_path": "/quality/in/LST_uncertainty_sys",
+      "source_path": "LST_ancillary_ds.nc:LST_uncertainty_sys",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "LST_uncertainty_locATM_orphan",
+      "target_path": "/quality/orphan/LST_uncertainty_locATM_orphan",
+      "source_path": "LST_ancillary_ds.nc:LST_uncertainty_locATM_orphan",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "LST_uncertainty_locGEO_orphan",
+      "target_path": "/quality/orphan/LST_uncertainty_locGEO_orphan",
+      "source_path": "LST_ancillary_ds.nc:LST_uncertainty_locGEO_orphan",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "LST_uncertainty_locSF_orphan",
+      "target_path": "/quality/orphan/LST_uncertainty_locSF_orphan",
+      "source_path": "LST_ancillary_ds.nc:LST_uncertainty_locSF_orphan",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "LST_uncertainty_locT_orphan",
+      "target_path": "/quality/orphan/LST_uncertainty_locT_orphan",
+      "source_path": "LST_ancillary_ds.nc:LST_uncertainty_locT_orphan",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "LST_uncertainty_random_orphan",
+      "target_path": "/quality/orphan/LST_uncertainty_random_orphan",
+      "source_path": "LST_ancillary_ds.nc:LST_uncertainty_random_orphan",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "LST_uncertainty_sys_orphan",
+      "target_path": "/quality/orphan/LST_uncertainty_sys_orphan",
+      "source_path": "LST_ancillary_ds.nc:LST_uncertainty_sys_orphan",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "NDVI",
+      "target_path": "/conditions/ancilliary/NDVI",
+      "source_path": "LST_ancillary_ds.nc:NDVI",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "TCWV",
+      "target_path": "/conditions/ancilliary/TCWV",
+      "source_path": "LST_ancillary_ds.nc:TCWV",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "biome",
+      "target_path": "/conditions/ancilliary/biome",
+      "source_path": "LST_ancillary_ds.nc:biome",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "validation",
+      "target_path": "/conditions/ancilliary/validation",
+      "source_path": "LST_ancillary_ds.nc:validation",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "nval"
+        ]
+      }
+    },
+    {
+      "short_name": "fraction",
+      "target_path": "/conditions/ancilliary/fraction",
+      "source_path": "LST_ancillary_ds.nc:fraction",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "NDVI_orphan",
+      "target_path": "/conditions/orphan/NDVI_orphan",
+      "source_path": "LST_ancillary_ds.nc:NDVI_orphan",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "TCWV_orphan",
+      "target_path": "/conditions/orphan/TCWV_orphan",
+      "source_path": "LST_ancillary_ds.nc:TCWV_orphan",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "biome_orphan",
+      "target_path": "/conditions/orphan/biome_orphan",
+      "source_path": "LST_ancillary_ds.nc:biome_orphan",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "fraction_orphan",
+      "target_path": "/conditions/orphan/fraction_orphan",
+      "source_path": "LST_ancillary_ds.nc:fraction_orphan",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "cloud_fraction_tx",
+      "target_path": "/conditions/meteo/cloud_fraction_tx",
+      "source_path": "met_tx.nc:cloud_fraction_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "t_single",
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "dew_point_tx",
+      "target_path": "/conditions/meteo/dew_point_tx",
+      "source_path": "met_tx.nc:dew_point_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "t_single",
+          "z_atmos",
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "east_west_stress_tx",
+      "target_path": "/conditions/meteo/east_west_stress_tx",
+      "source_path": "met_tx.nc:east_west_stress_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "t_series",
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "latent_heat_tx",
+      "target_path": "/conditions/meteo/latent_heat_tx",
+      "source_path": "met_tx.nc:latent_heat_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "t_series",
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "north_south_stress_tx",
+      "target_path": "/conditions/meteo/north_south_stress_tx",
+      "source_path": "met_tx.nc:north_south_stress_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "t_series",
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "sea_ice_fraction_tx",
+      "target_path": "/conditions/meteo/sea_ice_fraction_tx",
+      "source_path": "met_tx.nc:sea_ice_fraction_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "t_single",
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "sea_surface_temperature_tx",
+      "target_path": "/conditions/meteo/sea_surface_temperature_tx",
+      "source_path": "met_tx.nc:sea_surface_temperature_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "t_single",
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "sensible_heat_tx",
+      "target_path": "/conditions/meteo/sensible_heat_tx",
+      "source_path": "met_tx.nc:sensible_heat_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "t_series",
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "skin_temperature_tx",
+      "target_path": "/conditions/meteo/skin_temperature_tx",
+      "source_path": "met_tx.nc:skin_temperature_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "t_single",
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "snow_albedo_tx",
+      "target_path": "/conditions/meteo/snow_albedo_tx",
+      "source_path": "met_tx.nc:snow_albedo_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "t_single",
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "snow_depth_tx",
+      "target_path": "/conditions/meteo/snow_depth_tx",
+      "source_path": "met_tx.nc:snow_depth_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "t_single",
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "soil_wetness_tx",
+      "target_path": "/conditions/meteo/soil_wetness_tx",
+      "source_path": "met_tx.nc:soil_wetness_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "t_single",
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "solar_radiation_tx",
+      "target_path": "/conditions/meteo/solar_radiation_tx",
+      "source_path": "met_tx.nc:solar_radiation_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "t_series",
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "specific_humidity_tx",
+      "target_path": "/conditions/meteo/specific_humidity_tx",
+      "source_path": "met_tx.nc:specific_humidity_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "t_single",
+          "p_atmos",
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "surface_pressure_tx",
+      "target_path": "/conditions/meteo/surface_pressure_tx",
+      "source_path": "met_tx.nc:surface_pressure_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "t_single",
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "temperature_profile_tx",
+      "target_path": "/conditions/meteo/temperature_profile_tx",
+      "source_path": "met_tx.nc:temperature_profile_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "t_single",
+          "p_atmos",
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "temperature_tx",
+      "target_path": "/conditions/meteo/temperature_tx",
+      "source_path": "met_tx.nc:temperature_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "t_single",
+          "z_atmos",
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "thermal_radiation_tx",
+      "target_path": "/conditions/meteo/thermal_radiation_tx",
+      "source_path": "met_tx.nc:thermal_radiation_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "t_series",
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "total_column_ozone_tx",
+      "target_path": "/conditions/meteo/total_column_ozone_tx",
+      "source_path": "met_tx.nc:total_column_ozone_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "t_single",
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },{
+      "short_name": "total_column_water_vapour_tx",
+      "target_path": "/conditions/meteo/total_column_water_vapour_tx",
+      "source_path": "met_tx.nc:total_column_water_vapour_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "t_single",
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "u_wind_tx",
+      "target_path": "/conditions/meteo/u_wind_tx",
+      "source_path": "met_tx.nc:u_wind_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "t_series",
+          "z_wind",
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "v_wind_tx",
+      "target_path": "/conditions/meteo/v_wind_tx",
+      "source_path": "met_tx.nc:v_wind_tx",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "t_series",
+          "z_wind",
+          "rows_tx",
+          "columns_tx"
+        ]
+      }
+    },
+    {
+      "short_name": "LST",
+      "target_path": "/measurements/in/LST",
+      "source_path": "LST_in.nc:LST",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "LST_uncertainty",
+      "target_path": "/quality/in/LST_uncertainty",
+      "source_path": "LST_in.nc:LST_uncertainty",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "exception",
+      "target_path": "/quality/in/exception",
+      "source_path": "LST_in.nc:exception",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "columns_in"
+        ]
+      }
+    },
+    {
+      "short_name": "LST_orphan",
+      "target_path": "/measurements/orphan/LST_orphan",
+      "source_path": "LST_in.nc:LST_orphan",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "LST_uncertainty_orphan",
+      "target_path": "/quality/orphan/LST_uncertainty_orphan",
+      "source_path": "LST_in.nc:LST_uncertainty_orphan",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "exception_orphan",
+      "target_path": "/quality/orphan/exception_orphan",
+      "source_path": "LST_in.nc:exception_orphan",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in",
+          "orphan_pixels_in"
+        ]
+      }
+    },
+    {
+      "short_name": "nadir_first_pixel_i",
+      "target_path": "/conditions/time/nadir_first_pixel_i",
+      "source_path": "time_in.nc:NADIR_FIRST_PIXEL_i",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "one"
+        ]
+      }
+    },
+    {
+      "short_name": "nadir_first_scan_i",
+      "target_path": "/conditions/time/nadir_first_scan_i",
+      "source_path": "time_in.nc:Nadir_First_scan_i",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in"
+        ]
+      }
+    },
+    {
+      "short_name": "nadir_last_scan_i",
+      "target_path": "/conditions/time/nadir_last_scan_i",
+      "source_path": "time_in.nc:Nadir_Last_scan_i",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in"
+        ]
+      }
+    },
+    {
+      "short_name": "nadir_maximal_ts_i",
+      "target_path": "/conditions/time/nadir_maximal_ts_i",
+      "source_path": "time_in.nc:Nadir_Maximal_ts_i",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in"
+        ]
+      }
+    },
+    {
+      "short_name": "nadir_minimal_ts_i",
+      "target_path": "/conditions/time/nadir_minimal_ts_i",
+      "source_path": "time_in.nc:Nadir_Minimal_ts_i",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in"
+        ]
+      }
+    },
+    {
+      "short_name": "oblique_first_pixel_i",
+      "target_path": "/conditions/time/oblique_first_pixel_i",
+      "source_path": "time_in.nc:OBLIQUE_FIRST_PIXEL_i",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "one"
+        ]
+      }
+    },
+    {
+      "short_name": "oblique_first_scan_i",
+      "target_path": "/conditions/time/oblique_first_scan_i",
+      "source_path": "time_in.nc:Oblique_First_scan_i",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in"
+        ]
+      }
+    },
+    {
+      "short_name": "oblique_last_scan_i",
+      "target_path": "/conditions/time/oblique_last_scan_i",
+      "source_path": "time_in.nc:Oblique_Last_scan_i",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in"
+        ]
+      }
+    },
+    {
+      "short_name": "oblique_maximal_ts_i",
+      "target_path": "/conditions/time/oblique_maximal_ts_i",
+      "source_path": "time_in.nc:Oblique_Maximal_ts_i",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in"
+        ]
+      }
+    },
+    {
+      "short_name": "oblique_minimal_ts_i",
+      "target_path": "/conditions/time/oblique_minimal_ts_i",
+      "source_path": "time_in.nc:Oblique_Minimal_ts_i",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in"
+        ]
+      }
+    },
+    {
+      "short_name": "pixsync_i",
+      "target_path": "/conditions/time/pixsync_i",
+      "source_path": "time_in.nc:PIXSYNC_i",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "one"
+        ]
+      }
+    },
+    {
+      "short_name": "scansync",
+      "target_path": "/conditions/time/scansync",
+      "source_path": "time_in.nc:SCANSYNC",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "one"
+        ]
+      }
+    },
+    {
+      "short_name": "time_stamp_i",
+      "target_path": "/conditions/time/time_stamp_i",
+      "source_path": "time_in.nc:time_stamp_i",
+      "item_format": "netcdf",
+      "parameters": {
+        "dimensions": [
+          "rows_in"
+        ]
+      }
+    }
+  ],
+  "metadata_mapping": {
+  },
+  "namespaces": {
+    "xfdu": "urn:ccsds:schema:xfdu:1",
+    "gml": "http://www.opengis.net/gml",
+    "safe": "http://www.esa.int/safe/sentinel/1.1",
+    "sentinel-safe": "http://www.esa.int/safe/sentinel/1.1",
+    "sentinel3": "http://www.esa.int/safe/sentinel/sentinel-3/1.0",
+    "slstr": "http://www.esa.int/safe/sentinel/sentinel-3/slstr/1.0"
+  }
+}

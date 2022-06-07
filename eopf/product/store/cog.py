@@ -423,7 +423,7 @@ class EOCogStoreLOCAL(EOProductStore):
         for item in os.listdir(iter_path):
             item_path = Path(iter_path / item)
             # check if item is directory or an accepted file (.cog, .nc)
-            if item_path.is_dir() or self.guess_can_read(item):
+            if item_path.is_dir() or self._guess_can_read_subfile(item):
                 # remove suffix to match variable name
                 yield item.removesuffix(item_path.suffix)
 
@@ -607,4 +607,8 @@ class EOCogStoreLOCAL(EOProductStore):
     # docstr-coverage: inherited
     @staticmethod
     def guess_can_read(file_path: str) -> bool:
+        return pathlib.Path(file_path).suffix in [".cogs"]
+
+    @staticmethod
+    def _guess_can_read_subfile(file_path: str) -> bool:
         return pathlib.Path(file_path).suffix in [".cog", ".nc"]

@@ -1,6 +1,7 @@
 {
     "recognition": {
         "filename_pattern": "S3._SY_2_SYN.*SEN3",
+        "product_type": "S3_SY_2_SYN",
         "product_type_pattern": "SY_2_SYN___",
         "version": "TODO"
     },
@@ -42,7 +43,7 @@
             "item_format": "netcdf"
         },
         {
-            "short_name": "latitude_tp_olci",
+            "short_name": "olci_tp_latitude",
             "target_path": "/coordinates/olci_tp_grid/latitude",
             "source_path": "tiepoints_olci.nc:OLC_TP_lat",
             "item_format": "netcdf"
@@ -84,98 +85,98 @@
             "item_format": "netcdf"
         },
         {
-            "short_name": "sdr_Oa01",
+            "short_name": "sdr_oa01",
             "target_path": "/measurements/olci/sdr_oa01",
             "source_path": "Syn_Oa01_reflectance.nc:SDR_Oa01",
             "item_format": "netcdf"
         },
         {
-            "short_name": "sdr_Oa02",
-            "target_path": "/measurements/olci/sdr_Oa02",
+            "short_name": "sdr_oa02",
+            "target_path": "/measurements/olci/sdr_oa02",
             "source_path": "Syn_Oa02_reflectance.nc:SDR_Oa02",
             "item_format": "netcdf"
         },
         {
-            "short_name": "sdr_Oa03",
-            "target_path": "/measurements/olci/sdr_Oa03",
+            "short_name": "sdr_oa03",
+            "target_path": "/measurements/olci/sdr_oa03",
             "source_path": "Syn_Oa03_reflectance.nc:SDR_Oa03",
             "item_format": "netcdf"
         },
         {
-            "short_name": "sdr_Oa04",
-            "target_path": "/measurements/olci/sdr_Oa04",
+            "short_name": "sdr_oa04",
+            "target_path": "/measurements/olci/sdr_oa04",
             "source_path": "Syn_Oa04_reflectance.nc:SDR_Oa04",
             "item_format": "netcdf"
         },
         {
-            "short_name": "sdr_Oa05",
-            "target_path": "/measurements/olci/sdr_Oa05",
+            "short_name": "sdr_oa05",
+            "target_path": "/measurements/olci/sdr_oa05",
             "source_path": "Syn_Oa05_reflectance.nc:SDR_Oa05",
             "item_format": "netcdf"
         },
         {
-            "short_name": "sdr_Oa06",
-            "target_path": "/measurements/olci/sdr_Oa06",
+            "short_name": "sdr_oa06",
+            "target_path": "/measurements/olci/sdr_oa06",
             "source_path": "Syn_Oa06_reflectance.nc:SDR_Oa06",
             "item_format": "netcdf"
         },
         {
-            "short_name": "sdr_Oa07",
-            "target_path": "/measurements/olci/sdr_Oa07",
+            "short_name": "sdr_oa07",
+            "target_path": "/measurements/olci/sdr_oa07",
             "source_path": "Syn_Oa07_reflectance.nc:SDR_Oa07",
             "item_format": "netcdf"
         },
         {
-            "short_name": "sdr_Oa08",
-            "target_path": "/measurements/olci/sdr_Oa08",
+            "short_name": "sdr_oa08",
+            "target_path": "/measurements/olci/sdr_oa08",
             "source_path": "Syn_Oa08_reflectance.nc:SDR_Oa08",
             "item_format": "netcdf"
         },
         {
-            "short_name": "sdr_Oa09",
-            "target_path": "/measurements/olci/sdr_Oa09",
+            "short_name": "sdr_oa09",
+            "target_path": "/measurements/olci/sdr_oa09",
             "source_path": "Syn_Oa09_reflectance.nc:SDR_Oa09",
             "item_format": "netcdf"
         },
         {
-            "short_name": "sdr_Oa10",
-            "target_path": "/measurements/olci/sdr_Oa10",
+            "short_name": "sdr_oa10",
+            "target_path": "/measurements/olci/sdr_oa10",
             "source_path": "Syn_Oa10_reflectance.nc:SDR_Oa10",
             "item_format": "netcdf"
         },
         {
-            "short_name": "sdr_Oa11",
-            "target_path": "/measurements/olci/sdr_Oa11",
+            "short_name": "sdr_oa11",
+            "target_path": "/measurements/olci/sdr_oa11",
             "source_path": "Syn_Oa11_reflectance.nc:SDR_Oa11",
             "item_format": "netcdf"
         },
         {
-            "short_name": "sdr_Oa12",
-            "target_path": "/measurements/olci/sdr_Oa12",
+            "short_name": "sdr_oa12",
+            "target_path": "/measurements/olci/sdr_oa12",
             "source_path": "Syn_Oa12_reflectance.nc:SDR_Oa12",
             "item_format": "netcdf"
         },
         {
-            "short_name": "sdr_Oa16",
-            "target_path": "/measurements/olci/sdr_Oa16",
+            "short_name": "sdr_oa16",
+            "target_path": "/measurements/olci/sdr_oa16",
             "source_path": "Syn_Oa16_reflectance.nc:SDR_Oa16",
             "item_format": "netcdf"
         },
         {
-            "short_name": "sdr_Oa17",
-            "target_path": "/measurements/olci/sdr_Oa17",
+            "short_name": "sdr_oa17",
+            "target_path": "/measurements/olci/sdr_oa17",
             "source_path": "Syn_Oa17_reflectance.nc:SDR_Oa17",
             "item_format": "netcdf"
         },
         {
-            "short_name": "sdr_Oa18",
-            "target_path": "/measurements/olci/sdr_Oa18",
+            "short_name": "sdr_oa18",
+            "target_path": "/measurements/olci/sdr_oa18",
             "source_path": "Syn_Oa18_reflectance.nc:SDR_Oa18",
             "item_format": "netcdf"
         },
         {
-            "short_name": "sdr_Oa21",
-            "target_path": "/measurements/olci/sdr_Oa21",
+            "short_name": "sdr_oa21",
+            "target_path": "/measurements/olci/sdr_oa21",
             "source_path": "Syn_Oa21_reflectance.nc:SDR_Oa21",
             "item_format": "netcdf"
         },
@@ -655,7 +656,7 @@
         },
         {
             "short_name": "sdr_oa01_err_orphan",
-            "target_path": "/quality/orphan/sdr_Oa01_err",
+            "target_path": "/quality/orphan/sdr_oa01_err",
             "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa01_err",
             "item_format": "netcdf"
         },
@@ -885,14 +886,17 @@
             "short_name": "metadata",
             "source_path": "xfdumanifest.xml",
             "target_path": "",
-            "item_format": "xfdumetadata",
+            "item_format": "xmlmetadata",
             "accessor_config": {
-                "metadata_mapping": "metadata_mapping",
+                "mapping": "metadata_mapping",
                 "namespaces": "namespaces"
             }
         }
     ],
     "metadata_mapping": {
+        "TBD": "concat('','TBD')"
+    },
+    "metadata_mapping2": {
         "CF": {
             "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName/text())",
             "history": "concat(metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/sentinel-safe:software/@name,' ',metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/sentinel-safe:software/@version,' ',metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/@stop)",

@@ -1,0 +1,303 @@
+{
+  "recognition": {
+    "filename_pattern": "S3._OL_2_L[FR]R.*SEN3",
+    "product_type": "S3_OL_2_LFR",
+    "product_type_pattern": "OL_2_L[FR]R___"
+  },
+  "data_mapping": [
+    {
+      "short_name": "latitude",
+      "target_path": "/coordinates/image_grid/latitude",
+      "source_path": "geo_coordinates.nc:latitude",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "longitude",
+      "target_path": "/coordinates/image_grid/longitude",
+      "source_path": "geo_coordinates.nc:longitude",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "detector_index",
+      "target_path": "/coordinates/image_grid/detector_index",
+      "source_path": "instrument_data.nc:detector_index",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "row_time",
+      "target_path": "/coordinates/image_grid/row_time",
+      "source_path": "time_coordinates.nc:time_stamp",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "tp_latitude",
+      "target_path": "/coordinates/tiepoint_grid/latitude",
+      "source_path": "tie_geo_coordinates.nc:latitude",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "tp_longitude",
+      "target_path": "/coordinates/tiepoint_grid/longitude",
+      "source_path": "tie_geo_coordinates.nc:longitude",
+      "item_format": "netcdf"
+    },
+
+    {
+      "short_name": " rc681",
+      "target_path": "/measurements/image/rc681",
+      "source_path": "rc_gifapar.nc:RC681",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": " rc865",
+      "target_path": "/measurements/image/rc865",
+      "source_path": "rc_gifapar.nc:RC865",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "gifapar",
+      "target_path": "/measurements/image/gifapar",
+      "source_path": "gifapar.nc:GIFAPAR",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "otci",
+      "target_path": "/measurements/image/otci",
+      "source_path": "otci.nc:OTCI",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "iwv",
+      "target_path": "/measurements/image/iwv",
+      "source_path": "iwv.nc:IWV",
+      "item_format": "netcdf"
+    },
+
+    {
+      "short_name": "lqsf",
+        "target_path": "/quality/image/lqsf",
+        "source_path": "lqsf.nc:LQSF",
+        "item_format": "netcdf"
+    },
+    {
+      "short_name": "otci_quality_flags",
+      "target_path": "/quality/image/otci_quality_flags",
+      "source_path": "otci.nc:OTCI_quality_flags",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "otci_err",
+      "target_path": "/quality/image/otci_err",
+      "source_path": "otci.nc:OTCI_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "gifapar_err",
+      "target_path": "/quality/image/gifapar_err",
+      "source_path": "gifapar.nc:GIFAPAR_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "rc681_err",
+      "target_path": "/quality/image/rc681_err",
+      "source_path": "rc_gifapar.nc:RC681_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "rc865_err",
+      "target_path": "/quality/image/rc865_err",
+      "source_path": "rc_gifapar.nc:RC865_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "iwv_err",
+      "target_path": "/quality/image/iwv_err",
+      "source_path": "iwv.nc:IWV_err",
+      "item_format": "netcdf"
+    },
+
+
+    {
+      "short_name": "geometry_oaa",
+      "target_path": "/conditions/geometry/oaa",
+      "source_path": "tie_geometries.nc:OAA",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "geometry_oza",
+      "target_path": "/conditions/geometry/oza",
+      "source_path": "tie_geometries.nc:OZA",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "geometry_saa",
+      "target_path": "/conditions/geometry/saa",
+      "source_path": "tie_geometries.nc:SAA",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "geometry_sza",
+      "target_path": "/conditions/geometry/sza",
+      "source_path": "tie_geometries.nc:SZA",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "geometry_altitude",
+      "target_path": "/conditions/geometry/altitude",
+      "source_path": "geo_coordinates.nc:altitude",
+      "item_format": "netcdf"
+    },
+
+    {
+      "short_name": "meteo_atmospheric_temperature_profile",
+      "target_path": "/conditions/meteo/atmospheric_temperature_profile",
+      "source_path": "tie_meteo.nc:atmospheric_temperature_profile",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "meteo_horizontal_wind",
+      "target_path": "/conditions/meteo/horizontal_wind",
+      "source_path": "tie_meteo.nc:horizontal_wind",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "meteo_humidity",
+      "target_path": "/conditions/meteo/humidity",
+      "source_path": "tie_meteo.nc:humidity",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "meteo_reference_pressure_level",
+      "target_path": "/conditions/meteo/reference_pressure_level",
+      "source_path": "tie_meteo.nc:reference_pressure_level",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "meteo_sea_level_pressure",
+      "target_path": "/conditions/meteo/sea_level_pressure",
+      "source_path": "tie_meteo.nc:sea_level_pressure",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "meteo_total_columnar_water_vapour",
+      "target_path": "/conditions/meteo/total_columnar_water_vapour",
+      "source_path": "tie_meteo.nc:total_columnar_water_vapour",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "meteo_total_ozone",
+      "target_path": "/conditions/meteo/total_ozone",
+      "source_path": "tie_meteo.nc:total_ozone",
+      "item_format": "netcdf"
+    },
+
+    {
+      "short_name": "instrument_fwhm",
+      "target_path": "/conditions/instrument/fwhm",
+      "source_path": "instrument_data.nc:FWHM",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "instrument_frame_offset",
+      "target_path": "/conditions/instrument/frame_offset",
+      "source_path": "instrument_data.nc:frame_offset",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "instrument_lambda0",
+      "target_path": "/conditions/instrument/lambda0",
+      "source_path": "instrument_data.nc:lambda0",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "instrument_relative_spectral_covariance",
+      "target_path": "/conditions/instrument/relative_spectral_covariance",
+      "source_path": "instrument_data.nc:relative_spectral_covariance",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "instrument_solar_flux",
+      "target_path": "/conditions/instrument/solar_flux",
+      "source_path": "instrument_data.nc:solar_flux",
+      "item_format": "netcdf"
+    },
+
+    {
+      "short_name": "metadata",
+      "target_path": "",
+      "source_path": "xfdumanifest.xml",
+      "item_format": "xmlmetadata",
+      "accessor_config": {
+        "mapping": "metadata_mapping",
+        "namespaces": "namespaces"
+      }
+    }
+  ],
+  "metadata_mapping": {
+    "type": "'Feature'",
+    "stac_version": "'1.0.0'",
+    "stac_extensions" : [
+      "'https://stac-extensions.github.io/processing/v1.1.0/schema.json'",
+      "'https://stac-extensions.github.io/sat/v1.0.0/schema.json'"
+    ],
+    "id": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName/text())",
+    "geometry": {
+      "type": "'Polygon'",
+      "coordinates": "concat('userfunction:gml2geojson(', metadataSection/metadataObject[@ID='measurementFrameSet']/metadataWrap/xmlData/sentinel-safe:frameSet/sentinel-safe:footPrint/gml:posList)"
+    },
+    "bbox" : "concat('userfunction:gml2bbox(',metadataSection/metadataObject[@ID='measurementFrameSet']/metadataWrap/xmlData/sentinel-safe:frameSet/sentinel-safe:footPrint/gml:posList)",
+    "properties": {
+      "datetime": null,
+      "start_datetime": "metadataSection/metadataObject[@ID='acquisitionPeriod']//sentinel-safe:acquisitionPeriod/sentinel-safe:startTime",
+      "end_datetime": "metadataSection/metadataObject[@ID='acquisitionPeriod']//sentinel-safe:acquisitionPeriod/sentinel-safe:stopTime",
+      "created": "concat('userfunction:toisodate(',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:creationTime)",
+      "updated": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/@stop",
+      "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName/text())",
+      "platform": "concat(metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:familyName, metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:number)",
+      "instrument": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/@abbreviation",
+      "mission": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:familyName",
+      "gsd": "metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:samplingParameters/olci:acSpatialSampling",
+      "providers": [
+        {
+          "name": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/@name",
+          "roles": [
+            "processor"
+          ]
+        },
+        {
+          "name": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/@organisation",
+          "roles": [
+            "producer"
+          ]
+        }
+      ],
+      "processing:level" : "'L2'",
+      "processing:facility" : "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:resource[@role='L2 Product']/sentinel-safe:processing/sentinel-safe:facility/@name",
+      "processing:software" : {
+          "name": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:resource[@role='L2 Product']/sentinel-safe:processing/sentinel-safe:facility/sentinel-safe:software/@name",
+          "version": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:resource[@role='L2 Product']/sentinel-safe:processing/sentinel-safe:facility/sentinel-safe:software/@version"
+      },
+      "sat:orbit_state": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber/@groundTrackDirection",
+      "sat:absolute_orbit": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber",
+      "sat:relative_orbit": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:relativeOrbitNumber"
+    },
+    "links": [
+      {
+        "rel": "'self'",
+        "href": "'./.zattrs.json'",
+        "type": "'application/json'"
+      }
+    ],
+    "assets": []
+  },
+  "namespaces": {
+    "xfdu": "urn:ccsds:schema:xfdu:1",
+    "gml": "http://www.opengis.net/gml",
+    "safe": "http://www.esa.int/safe/sentinel/1.1",
+    "sentinel-safe": "http://www.esa.int/safe/sentinel/1.1",
+    "sentinel3": "http://www.esa.int/safe/sentinel/sentinel-3/1.0",
+    "olci": "http://www.esa.int/safe/sentinel/sentinel-3/olci/1.0",
+    "n1": "https://psd-14.sentinel2.eo.esa.int/PSD/User_Product_Level-1C.xsd",
+    "xsi": "http://www.w3.org/2001/XMLSchema-instance"
+  }
+}

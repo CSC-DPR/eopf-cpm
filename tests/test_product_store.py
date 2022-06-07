@@ -62,7 +62,10 @@ def cleanup_files():
     yield
     for file in _FILES.values():
         if os.path.isfile(file):
-            os.remove(file)
+            try:
+                os.remove(file)
+            except PermissionError:
+                pass
         if os.path.isdir(file):
             shutil.rmtree(file)
 
@@ -117,12 +120,13 @@ def zarr_file(OUTPUT_DIR: str):
             "cartesian": xarray.DataArray([[25, 0, 11], [-5, 72, 44]], attrs={dims: ["rows", "columns"]}),
         },
     ).to_zarr(store=f"{file_name}/measurements/geo_position/longitude", mode="a")
+    zarr.consolidate_metadata(root.store)
     return file_name
 
 
 @pytest.mark.unit
 def test_load_product_from_zarr(dask_client_all, zarr_file: str):
-    product = EOProduct("a_product", store_or_path_url=zarr_file)
+    product = EOProduct("a_product", storage=zarr_file)
     with product.open(mode="r"):
         product.load()
 
@@ -492,7 +496,7 @@ def test_retrieve_from_manifest_store(
     assert datetime.strptime(returned_om_eop.get("resultTime", {}).get("timePosition", ""), "%Y%m%dT%H%M%S")
     assert (
         re.match(
-            r"POLYGON\(\((-?\d*\.\d* -?\d*\.\d*,?)*\)\)",
+            r"POLYGON\(\((-?\d*\.\d* -?\d*\.\d*(, )?)*\)\)",
             returned_om_eop.get("featureOfInterest", {}).get("multiExtentOf", ""),
         )
         is not None
@@ -581,10 +585,10 @@ def test_convert(dask_client_all, read_write_stores):
     read_store = cls_read_store(_FILES[f"{_FORMAT[cls_read_store]}0"])
     write_store = cls_write_store(_FILES[f"{_FORMAT[cls_write_store]}1"])
 
-    product = init_product("a_product", store_or_path_url=read_store)
+    product = init_product("a_product", storage=read_store)
     with open_store(product, mode="w"):
         product.write()
-    new_product = EOProduct("new_one", store_or_path_url=convert(read_store, write_store))
+    new_product = EOProduct("new_one", storage=convert(read_store, write_store))
     with open_store(new_product, mode="r"):
         new_product["measurements"]
         new_product["coordinates"]
@@ -667,9 +671,9 @@ def test_rasters(dask_client_all, store_cls: type[EORasterIOAccessor], format_fi
 @pytest.mark.parametrize(
     "product, fakefilename, open_kwargs",
     [
-        (EOProduct("", store_or_path_url="s3://a_simple_zarr.zarr"), lazy_fixture("zarr_file"), S3_CONFIG_FAKE),
+        (EOProduct("", storage="s3://a_simple_zarr.zarr"), lazy_fixture("zarr_file"), S3_CONFIG_FAKE),
         (
-            EOProduct("", store_or_path_url="zip::s3://a_simple_zarr.zarr"),
+            EOProduct("", storage="zip::s3://a_simple_zarr.zarr"),
             lazy_fixture("zarr_file"),
             dict(s3=S3_CONFIG_FAKE),
         ),
@@ -706,7 +710,7 @@ def test_zarr_open_on_different_fs(dask_client_all, product: EOProduct, fakefile
     ],
 )
 def test_read_real_s3(dask_client_all, store: type, path: str, open_kwargs: dict[str, Any]):
-    product = EOProduct("s3_test_product", store_or_path_url=store(path))
+    product = EOProduct("s3_test_product", storage=store(path))
     with product.open(storage_options=open_kwargs):
         product.load()
 
@@ -735,6 +739,8 @@ def test_write_real_s3(dask_client_all, w_store: type, w_path: str, w_kwargs: di
 def test_patch_cog_store(store_cls: type[EOCogStore], format_file: str):
     assert store_cls.guess_can_read("some_file.cog")
     assert not store_cls.guess_can_read("some_other_file.false")
+    assert not store_cls.guess_can_read("some_other_file.cog")
+    assert not store_cls.guess_can_read("some_other_file.nc")
     cog = store_cls(_FILES["cog"])
     with pytest.raises(ValueError):
         cog.open(mode="r+")

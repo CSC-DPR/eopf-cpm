@@ -115,7 +115,13 @@ def test_grib_store_get_item(
     grib_store = EOGribAccessor(os.path.join(EMBEDED_TEST_DATA_FOLDER, "AUX_ECMWFT.grib"))
     with open_store(grib_store, indexpath=""):
         assert grib_store[eo_path].shape == shape
-        assert grib_store[eo_path].attrs == attrs
+        assert (
+            dict(
+                (key, value.strip() if isinstance(value, str) else value)
+                for key, value in grib_store[eo_path].attrs.items()
+            )
+            == attrs
+        )
         for key, value in sampled_values.items():
             testing.assert_allclose(grib_store[eo_path]._data.to_numpy()[key], value)
 
@@ -261,7 +267,7 @@ def test_xml_manifest_accessor(path: str, mapping: str, tmp_path: pathlib.Path):
     assert datetime.strptime(returned_om_eop.get("resultTime", {}).get("timePosition", ""), "%Y%m%dT%H%M%S")
     assert (
         re.match(
-            r"POLYGON\(\((-?\d*\.\d* -?\d*\.\d*,?)*\)\)",
+            r"POLYGON\(\((-?\d*\.\d* -?\d*\.\d*(, )?)*\)\)",
             returned_om_eop.get("featureOfInterest", {}).get("multiExtentOf", ""),
         )
         is not None
