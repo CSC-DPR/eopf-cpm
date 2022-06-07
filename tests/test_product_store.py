@@ -838,7 +838,7 @@ def test_convert_cog_store(store, legacy_product_path, write_target):
     # Try to get an item when mode is set to write
     with pytest.raises(NotImplementedError):
         cog_store.open(mode="w")
-        data = cog_store[""] # noqa
+        data = cog_store[""]  # noqa
 
     # Test if returned output of getitem is EOGroup or EOVariable
     cog_store.open(mode="r")
@@ -865,7 +865,7 @@ def test_convert_cog_store(store, legacy_product_path, write_target):
     # Test len, when store is opened in writing mode
     with pytest.raises(NotImplementedError):
         cog_store.open(mode="w")
-        top_level_len = len(cog_store) # noqa
+        top_level_len = len(cog_store)  # noqa
         cog_store.close()
 
     cog_store.open(mode="r")
