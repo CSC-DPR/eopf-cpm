@@ -1,7 +1,6 @@
 from re import compile
 from typing import Any, Callable, Dict, Optional, Tuple, Union
 
-from eopf.exceptions import FormattingNoSuchFormatterRegistered
 from eopf.formatting.formatters import EOAbstractFormatter
 
 
@@ -90,14 +89,11 @@ class EOFormatterFactory(object):
             formatter_name = m[2]
             inner_path = m[3]
 
-            # check that the specified formatter is registered
-            if formatter_name in self.formatters:
-                if prefix:
-                    return self.formatters[formatter_name]().format, prefix + inner_path
-                else:
-                    return self.formatters[formatter_name]().format, inner_path
+            if prefix:
+                return self.formatters[formatter_name]().format, prefix + inner_path
             else:
-                raise FormattingNoSuchFormatterRegistered(f"{formatter_name} is not registered")
+                return self.formatters[formatter_name]().format, inner_path
+
         else:
             # no formatter pattern found
             return None, path
