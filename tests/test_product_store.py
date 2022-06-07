@@ -785,7 +785,7 @@ def test_patch_cog_store(store_cls: type[EOCogStore], format_file: str):
 )
 def test_s3_reading_cog_store(dask_client_all, store: type, path: str, open_kwargs: dict[str, Any]):
     cog_store = store(path)
-    product = EOProduct("s3_test_product", store_or_path_url=cog_store)
+    product = EOProduct("s3_test_product", storage=cog_store)
     with product.open(storage_options=open_kwargs):
         product.load()
         # Test getitem
@@ -820,7 +820,7 @@ def test_convert_cog_store(store, legacy_product_path, write_target):
     # Convert legacy product stored in safe_store to cog_store
     convert(safe_store, cog_store)
 
-    product = EOProduct("cog_product", store_or_path_url=cog_store)
+    product = EOProduct("cog_product", storage=cog_store)
     with product.open():
         product.load()
 

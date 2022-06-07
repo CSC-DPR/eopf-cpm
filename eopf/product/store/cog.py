@@ -123,7 +123,6 @@ class EOCogStore(EOProductStore):
             yield from self._sub_store.iter(path)
             return
         # Compose key for top level group (should work for zip also)
-        print(path)
         if self._is_zip:
             if path in ["", "/"]:
                 path = "*"
@@ -204,7 +203,7 @@ class EOCogStore(EOProductStore):
     @staticmethod
     def guess_can_read(file_path: str) -> bool:
         # To be added .ZIP
-        return pathlib.Path(file_path).suffix in [".cog", ".nc"]
+        return pathlib.Path(file_path).suffix in [".cogs"]
 
     def _read_attrs(self, path: str) -> dict[str, Any]:
         if self._sub_store is not None:
