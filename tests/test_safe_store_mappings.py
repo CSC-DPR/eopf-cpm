@@ -81,9 +81,9 @@ def test_load_product(dask_client_all, store_type):
             0,
         ),
         (
-            lazy_fixture("S2A_MSIL1C"),
-            lazy_fixture("S2A_MSIL1C_MAPPING"),
-            lambda name: f"{name.replace('.zip', '.zarr')}",
+            lazy_fixture("S3_SL_1_RBT"),
+            lazy_fixture("S3_SL_1_RBT_MAPPING"),
+            lambda name: f"{name.replace('.SEN3', '.zarr')}",
             EOZarrStore,
             52,
         ),

@@ -122,9 +122,9 @@ def S3_OLCI_L1_EFR(INPUT_DIR: str):
 @pytest.fixture
 def S3_SL_1_RBT(INPUT_DIR: str):
     """Path to a S3 SL 1 RBT product"""
-    file_name = "S3*_SL_1_RBT*.zip"
+    file_name = "S3*_SL_1_RBT*.SEN3"
     glob_path = os.path.join(INPUT_DIR, file_name)
-    return f"zip::file://{glob.glob(glob_path)[0]}"
+    return f"file://{glob.glob(glob_path)[0]}"
 
 
 @pytest.fixture
