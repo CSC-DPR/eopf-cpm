@@ -737,7 +737,7 @@ def test_write_real_s3(dask_client_all, w_store: type, w_path: str, w_kwargs: di
     ],
 )
 def test_patch_cog_store(store_cls: type[EOCogStore], format_file: str):
-    assert store_cls.guess_can_read("some_file.cog")
+    assert store_cls.guess_can_read("some_file.cogs")
     assert not store_cls.guess_can_read("some_other_file.false")
     assert not store_cls.guess_can_read("some_other_file.cog")
     assert not store_cls.guess_can_read("some_other_file.nc")
@@ -789,7 +789,7 @@ def test_s3_reading_cog_store(dask_client_all, store: type, path: str, open_kwar
     with product.open(storage_options=open_kwargs):
         product.load()
         # Test getitem
-        assert isinstance(product["conditions/geometry/altitude.cog"], EOVariable)
+        assert isinstance(product["conditions/geometry/altitude"], EOVariable)
         assert isinstance(product["conditions/geometry"], EOGroup)
         with pytest.raises(KeyError):
             product["invalid_key"]

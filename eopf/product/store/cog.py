@@ -135,7 +135,7 @@ class EOCogStore(EOProductStore):
                 path = f"{self.mapper.root}{path}/*"
 
         for item in self.mapper.fs.glob(path):
-            if self.mapper.fs.isdir(item) or self.guess_can_read(item):
+            if self.mapper.fs.isdir(item) or self._guess_can_read_files(item):
                 item = item.removesuffix(self.sep)
                 # Remove file extension
                 for extension in [".cog", ".nc"]:
@@ -168,7 +168,7 @@ class EOCogStore(EOProductStore):
             return EOGroup(attrs=self._read_attrs(key))
         # If key is path to .nc or .cog file, build data and return EOV
         # guess_can_read() is needed since key can be <<group/variable>> or <<group/variable.cog>>
-        if self.guess_can_read(key_path):
+        if self._guess_can_read_files(key_path):
             if self.is_variable(key):
                 var_name, var_data = self._read_eov(key)
                 return EOVariable(var_name, data=var_data)
@@ -205,6 +205,10 @@ class EOCogStore(EOProductStore):
         # To be added .ZIP
         return pathlib.Path(file_path).suffix in [".cogs"]
 
+    @staticmethod
+    def _guess_can_read_files(file_path: str) -> bool:
+        return pathlib.Path(file_path).suffix in [".nc", ".cog"]
+
     def _read_attrs(self, path: str) -> dict[str, Any]:
         if self._sub_store is not None:
             return self._sub_store._read_attrs(path)
@@ -219,7 +223,9 @@ class EOCogStore(EOProductStore):
 
     def _read_eov(self, path: str) -> tuple[str, Any]:
         # Create variable name by removing extension if exists
-        if self.guess_can_read(path):
+
+        variable_name: Optional[str] = None
+        if self._guess_can_read_files(path):
             variable_name = self.remove_extension(path.split("/")[-1])
         else:
             # Check if file is cog or netcdf, raise valueError otherwise
@@ -227,6 +233,9 @@ class EOCogStore(EOProductStore):
                 if self.mapper.fs.isfile(self.add_extension(path, extension)):
                     variable_name = path.split("/")[-1]
                     path = self.add_extension(path, extension)
+
+        if not variable_name:
+            raise ValueError(f"{path=} is not a valid one")
 
         # Compose fullpath scheme
         if not self._is_zip:
