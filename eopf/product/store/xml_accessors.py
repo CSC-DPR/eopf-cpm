@@ -1,9 +1,10 @@
-from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional, TextIO
+from typing import TYPE_CHECKING, Any, Iterator, List, MutableMapping, Optional, TextIO
 
 import lxml
 import xarray as xr
 
 from eopf.exceptions import StoreNotOpenError, XmlParsingError
+from eopf.formatting import EOFormatterFactory
 from eopf.product.store import EOProductStore
 from eopf.product.utils import (  # to be reviewed
     apply_xpath,
@@ -101,17 +102,15 @@ class XMLAnglesAccessor(EOProductStore):
 
     # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
-        if path.endswith("Values_List"):
+        if "Values_List" in path:
             return False
-        nodes_matched = self._root.xpath(path, namespaces=self._namespaces)
-        return len(nodes_matched) == 1
+        return len(self._root.xpath(path, namespaces=self._namespaces)[0].getchildren()) > 0
 
     # docstr-coverage: inherited
     def is_variable(self, path: str) -> bool:
-        if not path.endswith("Values_List"):
-            return False
-        nodes_matched = self._root.xpath(path, namespaces=self._namespaces)
-        return len(nodes_matched) == 1
+        if "Values_List" in path:
+            return True
+        return len(self._root.xpath(path, namespaces=self._namespaces)[0].getchildren()) == 0
 
     def iter(self, path: str) -> Iterator[str]:
         """Has no functionality within this store"""
@@ -207,7 +206,7 @@ class XMLTPAccessor(EOProductStore):
         return False
 
     def is_variable(self, path: str) -> bool:
-        return len(self._root.xpath(path, namespaces=self._namespaces)) == 1
+        return True
 
     def iter(self, path: str) -> Iterator[str]:
         """Has no functionality within this store"""
@@ -223,9 +222,7 @@ class XMLManifestAccessor(EOProductStore):
     def __init__(self, url: str, **kwargs: Any) -> None:
         super().__init__(url)
         self._attrs: MutableMapping[str, Any] = {}
-        for key in self.KEYS:
-            self._attrs[key] = {}
-        self._parsed_xml = None
+        self._parsed_xml: lxml.etree._ElementTree = None
         self._xml_fobj: Optional[TextIO] = None
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
@@ -274,17 +271,166 @@ class XMLManifestAccessor(EOProductStore):
         if self._xml_fobj is None:
             raise StoreNotOpenError("Store must be open before access to it")
 
-        # computes CF and OM_EOP
         if self._parsed_xml is None:
             self._parse_xml()
-        self._compute_om_eop()
-        self._compute_cf()
+
+        if set(self.KEYS).issubset(self._metada_mapping.keys()):
+            # computes CF and OM_EOP
+            self._compute_om_eop()
+            self._compute_cf()
+        else:
+            self._attrs = self.translate_attributes(self._metada_mapping)
 
         # create an EOGroup and set its attributes with a dictionary containing CF and OM_EOP
         from eopf.product.core import EOGroup
 
         eog: EOGroup = EOGroup("product_metadata", attrs=self._attrs)
         return eog
+
+    def translate_attributes(self, attributes_dict: Any) -> Any:
+        """Used to convert values from metadata mapping
+
+        Parameters
+        ----------
+        attributes_dict: dict
+            dictionary containing metadata
+
+        Returns
+        ----------
+        internal_dict: dict
+            dictionary containing converted values (using apply_xpath or conversion functions)
+        """
+        # This function is used to parse an convert each value from attributes dictionary
+        internal_dict = dict()
+        for key, value in attributes_dict.items():
+            # Recursive call for nested dictionaries
+            if isinstance(value, dict):
+                internal_dict[key] = self.translate_attributes(value)
+                continue
+            # Skip non-string formatted elements (list)
+            if isinstance(value, list):
+                internal_dict[key] = self.translate_list_attributes(value, key)
+                continue
+            # Directly convert value if xpath is valid
+            if self.is_valid_xpath(value):
+                internal_dict[key] = apply_xpath(self._parsed_xml, value, self._namespaces)
+                continue
+            else:
+                # If xpath is invalid, it may contain a conversion function reference <<to_float(xpath)>>
+                stac_conversion = self.stac_mapper(value)
+                if stac_conversion is not None:
+                    internal_dict[key] = stac_conversion
+                    continue
+                else:
+                    # If xpath is invalid, and doesn't containt a conversion function reference
+                    raise KeyError(f"{value} is an invalid xpath expression!")
+        return internal_dict
+
+    def translate_list_attributes(self, attributes_list: List[Any], global_key: str = None) -> Any:
+        """Used to convert values from metadata mapping
+
+        Parameters
+        ----------
+        attributes_list: list
+            list containing metadata
+
+        Returns
+        ----------
+        local_list_of_dicts: List[dict]
+            A list of dictionaries containing converted values in the same nesting as input list.
+        """
+        local_list_of_dicts = []
+        local_dict = dict()
+        # Iterate through input list
+        for idx in attributes_list:
+            if isinstance(idx, str):
+                converted_value = self.stac_mapper(idx)
+                return [converted_value] if converted_value is not None else [idx]
+            if isinstance(idx, list):
+                # Recursive call for nested lists
+                local_dict[global_key] = self.translate_list_attributes(idx)
+                continue
+            if isinstance(idx, dict):
+                # Iterate over a dictionary ## maybe use local_dict[global_key] = translate_attributes(idx)
+                # In order to cover nested dictionaries inside a list
+                for key, value in idx.items():
+                    if isinstance(value, list):
+                        local_dict[key] = self.translate_list_attributes(value)
+                        continue
+
+                    stac_conversion = self.stac_mapper(value)
+                    local_dict[key] = stac_conversion
+
+            local_list_of_dicts.append(local_dict)
+        return local_list_of_dicts
+
+    def _get_xml_data(self, xpath: Any):
+        from lxml.etree import _ElementUnicodeResult
+
+        if not self.is_valid_xpath(xpath):
+            raise KeyError(f"{xpath} is an invalid xpath expression!")
+
+        xml_data = self._parsed_xml.xpath(xpath, namespaces=self._namespaces)[0]
+
+        if isinstance(xml_data, _ElementUnicodeResult):
+            # Convert ElementUnicodeResult to string
+            return str(xml_data)
+        elif hasattr(xml_data, "text"):
+            if xml_data.text is None:
+                # Case where data is stored as attribute eg: <olci:invalidPixels value="749556" percentage="4.000000"/>
+                return xml_data.values()[0]
+            else:
+                # Nominal case, eg: <olci:alTimeSampling>44001</olci:alTimeSampling>
+                return xml_data.text
+        else:
+            return None
+
+    def stac_mapper(self, path: str) -> Any:
+        """Used to handle xpath's that request a conversion
+
+        Parameters
+        ----------
+        path: str
+            xpath that does/does not contain a conversion function
+
+        Returns
+        ----------
+        Any:
+            output of conversion functions, to_geoJSON(), to_bbox(), to_float() ..., None if there are no references
+        """
+
+        formatter_name, formatter, xpath = EOFormatterFactory().get_formatter(path)
+
+        if formatter_name is None:
+            ret_val = self._get_xml_data(xpath)
+        else:
+            if formatter_name == "Text":
+                ret_val = formatter(xpath)
+            else:
+                ret_val = formatter(self._get_xml_data(xpath))
+
+        return ret_val
+
+    def is_valid_xpath(self, path: str) -> bool:
+        """Used verify if a xpath is valid (output of querry contains any kind of data)
+
+        Parameters
+        ----------
+        path: str
+            xpath
+
+        Returns
+        ----------
+        Boolean:
+            False if xpath is incorrect or doesn't return any data, True otherwise
+        """
+        try:
+            result = apply_xpath(self._parsed_xml, path, namespaces=self._namespaces)
+        except lxml.etree.XPathEvalError:
+            # Return false for lxml parsing errors
+            return False
+        # Return true if output is not void
+        return True if result != "" else False
 
     def __iter__(self) -> Iterator[str]:
         """Iterator over the dict containing the CF and OM_EOP attributes of the EOProduct

@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import Any, List
 
-from lxml.etree import _ElementUnicodeResult
 from pandas import Timedelta, to_datetime
 from pytz import UTC
 
@@ -27,7 +26,7 @@ class EOAbstractFormatter(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def format(self, input: Any, **kwargs: Any) -> Any:
+    def format(self, input: Any) -> Any:
         """Function that returns the formmated input"""
         raise NotImplementedError()
 
@@ -36,7 +35,7 @@ class to_str(EOAbstractFormatter):
 
     name = "to_str"
 
-    def format(self, input: Any, **kwargs: Any) -> str:
+    def format(self, input: Any) -> str:
         try:
             return str(input)
         except Exception as e:
@@ -47,7 +46,7 @@ class Text(EOAbstractFormatter):
 
     name = "Text"
 
-    def format(self, input: Any, **kwargs: Any) -> str:
+    def format(self, input: Any) -> str:
         return input
 
 
@@ -55,7 +54,7 @@ class to_float(EOAbstractFormatter):
 
     name = "to_float"
 
-    def format(self, input: Any, **kwargs: Any) -> float:
+    def format(self, input: Any) -> float:
         try:
             return float(input)
         except Exception as e:
@@ -66,7 +65,7 @@ class to_int(EOAbstractFormatter):
 
     name = "to_int"
 
-    def format(self, input: Any, **kwargs: Any) -> float:
+    def format(self, input: Any) -> float:
         try:
             return int(input)
         except Exception as e:
@@ -77,7 +76,7 @@ class to_bool(EOAbstractFormatter):
 
     name = "to_bool"
 
-    def format(self, input: Any, **kwargs: Any) -> bool:
+    def format(self, input: Any) -> bool:
         try:
             return bool(input)
         except Exception as e:
@@ -88,7 +87,7 @@ class to_unix_time_slstr_l1(EOAbstractFormatter):
 
     name = "to_unix_time_slstr_l1"
 
-    def format(self, input: Any, **kwargs: Any) -> EOVariable:
+    def format(self, input: Any) -> EOVariable:
 
         start = to_datetime(datetime.fromtimestamp(0, tz=UTC))
         end = to_datetime(input[:])
@@ -114,7 +113,7 @@ class to_iso8601(EOAbstractFormatter):
 
     name = "to_ISO8601"
 
-    def format(self, input: str, **kwargs: Any) -> str:
+    def format(self, input: str) -> str:
         """Convert time to ISO8601 standard, E.g: 20220506T072719 -> 2022-05-06T07:27:19Z
 
         Parameters
@@ -137,7 +136,7 @@ class to_bbox(EOAbstractFormatter):
 
     name = "to_bbox"
 
-    def format(self, input: Any, **kwargs: Any) -> List[float]:
+    def format(self, input: Any) -> List[float]:
         """Computes coordinates of a polygon bounding box
 
         Parameters
@@ -165,10 +164,9 @@ class to_geojson(EOAbstractFormatter):
 
     name = "to_geoJson"
 
-    def format(self, input: Any, **kwargs: Any) -> Any:
+    def format(self, input: Any) -> Any:
 
-        #poly_coords_str = input.text
-        poly_coords_str = input.text
+        poly_coords_str = input
         poly_coords = poly_coords_parsing(poly_coords_str)
         # If polygon coordinates crosses any pole or antemeridian, split the polygon in a mulitpolygon
         if detect_pole_or_antemeridian(poly_coords):

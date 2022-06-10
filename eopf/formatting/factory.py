@@ -14,7 +14,7 @@ class EOFormatterFactory(object):
     Parameters
     ----------
     default_formatters: bool
-        ???
+        If True the default way of registering formatters are used
 
     Attributes
     ----------
@@ -34,7 +34,7 @@ class EOFormatterFactory(object):
     """
 
     def __init__(self, default_formatters: bool = True) -> None:
-        self.formatters: Dict[str, type[EOAbstractFormatter]] = dict()
+        self._formatters: Dict[str, type[EOAbstractFormatter]] = dict()
         if default_formatters:
             from eopf.formatting.formatters import (
                 Text,
@@ -71,11 +71,13 @@ class EOFormatterFactory(object):
             a formatter
         """
         formatter_name = str(formatter.name)
-        if formatter_name in self.formatters.keys():
+        if formatter_name in self._formatters.keys():
             raise FormatterAlreadyRegistered(f"{formatter_name} already registered")
-        self.formatters[formatter_name] = formatter
+        self._formatters[formatter_name] = formatter
 
-    def get_formatter(self, path: Any) -> Tuple[Union[str, None], Union[Callable[[EOAbstractFormatter], Any], None], Any]: # noqa
+    def get_formatter(
+        self, path: Any,
+    ) -> Tuple[Union[str, None], Union[Callable[[EOAbstractFormatter], Any], None], Any]:  # noqa
         """
         Function retrieve a formatter and path without the formatter pattern
 
@@ -93,7 +95,7 @@ class EOFormatterFactory(object):
             return None, None, path
 
         # build regex expression for formatters
-        registered_formaters = "|".join(self.formatters.keys())
+        registered_formaters = "|".join(self._formatters.keys())
         regex = compile("^(.+:/{2,})?(%s)\\((.+)\\)" % registered_formaters)
         # check if regex matches
         m = regex.match(str_repr)
@@ -103,9 +105,9 @@ class EOFormatterFactory(object):
             inner_path = m[3]
 
             if prefix:
-                return formatter_name, self.formatters[formatter_name]().format, prefix + inner_path
+                return formatter_name, self._formatters[formatter_name]().format, prefix + inner_path
             else:
-                return formatter_name, self.formatters[formatter_name]().format, inner_path
+                return formatter_name, self._formatters[formatter_name]().format, inner_path
 
         else:
             # no formatter pattern found
@@ -154,6 +156,33 @@ def formatable_func(fn: Callable[[Any], Any]) -> Any:
 
 
 class formatable_method(object):
+    """Decorator class to allow class methods to allow formating of the return\
+
+    Parameters
+    ----------
+    fn: Callable[[Any], Any]
+        a method of class which has a return
+
+    Attributes
+    ----------
+    fn: Callable[[Any], Any]
+        a method of class which has a return
+    parent_obj: Any
+        the object coresponding to the decorated method
+
+    Examples
+    ----------
+    class example(object):
+        def __init__(self, val:int):
+            self.d: Dict[str, int] = {"a_val": val}
+
+        @formatable_method
+        def get_val(self, url: str):
+            return self.d[url]
+
+    ex = example(2)
+    ex.get_val("to_str(a_val)")
+    """
 
     def __init__(self, fn: Callable[[Any], Any]) -> None:
         self.fn = fn
