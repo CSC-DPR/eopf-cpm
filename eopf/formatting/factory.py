@@ -1,6 +1,9 @@
+from functools import wraps
 from re import compile
-from typing import Any, Callable, Dict, Optional, Tuple, Union
+from typing import Any, Callable, Dict, Tuple, Union
 
+from eopf.exceptions import FormattingDecoratorMissingUri
+from eopf.exceptions.warnings import FormatterAlreadyRegistered
 from eopf.formatting.formatters import EOAbstractFormatter
 
 
@@ -34,7 +37,11 @@ class EOFormatterFactory(object):
         self.formatters: Dict[str, type[EOAbstractFormatter]] = dict()
         if default_formatters:
             from eopf.formatting.formatters import (
+                Text,
+                to_bbox,
+                to_bool,
                 to_float,
+                to_geojson,
                 to_int,
                 to_iso8601,
                 to_str,
@@ -43,9 +50,13 @@ class EOFormatterFactory(object):
 
             self.register_formatter(to_str)
             self.register_formatter(to_float)
-            self.register_formatter(to_int)
+            self.register_formatter(to_bool)
             self.register_formatter(to_unix_time_slstr_l1)
             self.register_formatter(to_iso8601)
+            self.register_formatter(to_bbox)
+            self.register_formatter(to_geojson)
+            self.register_formatter(to_int)
+            self.register_formatter(Text)
         else:
             # to implement another logic of importing formatters
             pass
@@ -59,10 +70,12 @@ class EOFormatterFactory(object):
         formatter: type[EOAbstractFormatter]
             a formatter
         """
-        key = str(formatter.name)
-        self.formatters[key] = formatter
+        formatter_name = str(formatter.name)
+        if formatter_name in self.formatters.keys():
+            raise FormatterAlreadyRegistered(f"{formatter_name} already registered")
+        self.formatters[formatter_name] = formatter
 
-    def get_formatter(self, path: Any) -> Tuple[Union[Callable[[EOAbstractFormatter], Any], None], Any]:
+    def get_formatter(self, path: Any) -> Tuple[Union[str, None], Union[Callable[[EOAbstractFormatter], Any], None], Any]: # noqa
         """
         Function retrieve a formatter and path without the formatter pattern
 
@@ -77,11 +90,11 @@ class EOFormatterFactory(object):
             str_repr = str(path)
         except:  # noqa
             # path can not be searched and is passed to the reader/accessor as is
-            return None, path
+            return None, None, path
 
         # build regex expression for formatters
         registered_formaters = "|".join(self.formatters.keys())
-        regex = compile("^(.+://)?(%s)\\((.+)\\)" % registered_formaters)
+        regex = compile("^(.+:/{2,})?(%s)\\((.+)\\)" % registered_formaters)
         # check if regex matches
         m = regex.match(str_repr)
         if m:
@@ -90,16 +103,16 @@ class EOFormatterFactory(object):
             inner_path = m[3]
 
             if prefix:
-                return self.formatters[formatter_name]().format, prefix + inner_path
+                return formatter_name, self.formatters[formatter_name]().format, prefix + inner_path
             else:
-                return self.formatters[formatter_name]().format, inner_path
+                return formatter_name, self.formatters[formatter_name]().format, inner_path
 
         else:
             # no formatter pattern found
-            return None, path
+            return None, None, path
 
 
-def formatable(fn: Callable[[Any], Any]) -> Any:
+def formatable_func(fn: Callable[[Any], Any]) -> Any:
     """Decorator function used to allow formating of the return
 
     Parameters
@@ -121,23 +134,46 @@ def formatable(fn: Callable[[Any], Any]) -> Any:
     >>> ret = get_data('to_float(/tmp/data.nc)', a_float=3.14)
     """
 
-    def wrap(path: Optional[Any] = None, url: Optional[Any] = None, key: Optional[Any] = None, **kwargs: Any) -> Any:
+    @wraps(fn)
+    def wrap(*args: Any, **kwargs: Any) -> Any:
         """Any function that received a path, url or key can be formatted"""
 
-        if path:
-            uri = path
-        elif url:
-            uri = url
-        elif key:
-            uri = key
-        else:
-            raise KeyError("No key provided")
+        if not len(args) >= 1:
+            raise FormattingDecoratorMissingUri("The decorated function does not contain a URI")
 
-        formatter, formatter_stripped_uri = EOFormatterFactory().get_formatter(uri)
-        print(formatter, formatter_stripped_uri)
-        the_data = fn(formatter_stripped_uri, **kwargs)
-        if formatter:
-            return formatter(the_data, **kwargs)
-        return the_data
+        _, formatter, formatter_stripped_uri = EOFormatterFactory().get_formatter(args[0])
+        lst_args = list(args)
+        lst_args[0] = formatter_stripped_uri
+        new_args = tuple(lst_args)
+        decorated_func_ret = fn(*new_args, **kwargs)
+        if formatter is not None:
+            return formatter(decorated_func_ret)
+        return decorated_func_ret
 
     return wrap
+
+
+class formatable_method(object):
+
+    def __init__(self, fn: Callable[[Any], Any]) -> None:
+        self.fn = fn
+        self.parent_obj: object = None
+
+    def __get__(self, obj: object, _: Any = None) -> "formatable_method":
+        self.parent_obj = obj
+        return self
+
+    def __call__(self, *args: Any, **kwargs: Any) -> Any:
+
+        if not len(args) >= 1:
+            raise FormattingDecoratorMissingUri("The decorated function does not contain a URI")
+
+        _, formatter, formatter_stripped_uri = EOFormatterFactory().get_formatter(args[0])
+        lst_args = list(args)
+        lst_args[0] = formatter_stripped_uri
+        new_args = tuple(lst_args)
+        decorated_method_ret = self.fn(self.parent_obj, *new_args, **kwargs)
+        if formatter is not None:
+            return formatter(decorated_method_ret)
+
+        return decorated_method_ret

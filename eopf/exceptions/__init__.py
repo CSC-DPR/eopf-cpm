@@ -57,3 +57,7 @@ class SingleThreadProfilerError(Exception):
 
 class FormattingError(Exception):
     """When a formatter raises exceptions"""
+
+
+class FormattingDecoratorMissingUri(Exception):
+    """When the decorated function does not contain an argument path, url or key"""

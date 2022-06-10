@@ -1,6 +1,7 @@
-from .factory import EOFormatterFactory, formatable
+from .factory import EOFormatterFactory, formatable_func, formatable_method
 
 __all__ = [
     "EOFormatterFactory",
-    "formatable",
+    "formatable_func",
+    "formatable_method",
 ]
