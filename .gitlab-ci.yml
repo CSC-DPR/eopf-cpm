@@ -82,7 +82,9 @@ unit-tests:
   artifacts:
     expire_in: 1h
     reports:
-      cobertura: $REPORTS/coverage.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: $REPORTS/coverage.xml
       junit:
         - $REPORTS/TEST-*.xml
     paths:
