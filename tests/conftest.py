@@ -79,9 +79,13 @@ def EMBEDED_TEST_DATA_FOLDER():
 # ------------ MAPPING -------------#
 # ----------------------------------#
 @pytest.fixture
-def S3_OLCI_L1_MAPPING(MAPPING_FOLDER: str):
+def S3_OLCI_1_MAPPING(MAPPING_FOLDER: str):
     """Path to a S3 OLCI LEVEL 1 mapping"""
     return os.path.join(MAPPING_FOLDER, "S3_OL_1_EFR_mapping.json")
+
+def S3_OLCI_2_MAPPING(MAPPING_FOLDER: str):
+    """Path to a S3 OLCI LEVEL 2 mapping"""
+    return os.path.join(MAPPING_FOLDER, "S3_OL_2_EFR_mapping.json")
 
 
 @pytest.fixture
@@ -89,6 +93,10 @@ def S3_SL_1_RBT_MAPPING(MAPPING_FOLDER: str):
     """Path to a S3 SL 1 RBT mapping"""
     return os.path.join(MAPPING_FOLDER, "S3_SL_1_RBT_mapping.json")
 
+@pytest.fixture
+def S3_SL_2_LST_MAPPING(MAPPING_FOLDER: str):
+    """Path to a S3 SL 2 LST mapping"""
+    return os.path.join(MAPPING_FOLDER, "S3_SL_2_LST_mapping.json")
 
 @pytest.fixture
 def S3_SY_2_SYN_MAPPING(MAPPING_FOLDER: str):
@@ -97,22 +105,29 @@ def S3_SY_2_SYN_MAPPING(MAPPING_FOLDER: str):
 
 
 @pytest.fixture
-def S1_IM_OCN_MAPPING(MAPPING_FOLDER: str):
-    """Path to a S1 OCN IW 1 mapping"""
-    return os.path.join(MAPPING_FOLDER, "S1_OCN_IW_mapping.json")
-
-
-@pytest.fixture
-def S2A_MSIL1C_MAPPING(MAPPING_FOLDER: str):
+def S2_MSIL1C_MAPPING(MAPPING_FOLDER: str):
     """Path to a S2A MSIL1C mapping"""
     return os.path.join(MAPPING_FOLDER, "S2_MSIL1C_mapping.json")
 
+
+@pytest.fixture
+def S1_IM_OCN_MAPPING(MAPPING_FOLDER: str):
+    """Path to a S1 OCN IW 1 mapping"""
+    return os.path.join(MAPPING_FOLDER, "S1_OCN_IW_mapping.json")
 
 # ----------------------------------#
 # ------------ PRODUCT -------------#
 # ----------------------------------#
 @pytest.fixture
-def S3_OLCI_L1_EFR(INPUT_DIR: str):
+def S3_OLCI_2_LFR_ZIP(INPUT_DIR: str):
+    """Path to a S3 OLCI LEVEL 2 product"""
+    file_name = "S3*_OL_2_L*R*.zip"
+    glob_path = os.path.join(INPUT_DIR, file_name)
+    return f"zip::file://{glob.glob(glob_path)[0]}"
+
+
+@pytest.fixture
+def S3_OLCI_1_EFR_ZIP(INPUT_DIR: str):
     """Path to a S3 OLCI LEVEL 1 product"""
     file_name = "S3*_OL_1_E*R*.zip"
     glob_path = os.path.join(INPUT_DIR, file_name)
@@ -120,7 +135,15 @@ def S3_OLCI_L1_EFR(INPUT_DIR: str):
 
 
 @pytest.fixture
-def S3_SL_1_RBT(INPUT_DIR: str):
+def S3_SL_2_LST_ZIP(INPUT_DIR: str):
+    """Path to a S3 SL 2 LST product"""
+    file_name = "S3*_SL_2_LST*.zip"
+    glob_path = os.path.join(INPUT_DIR, file_name)
+    return f"zip::file://{glob.glob(glob_path)[0]}"
+
+
+@pytest.fixture
+def S3_SL_1_RBT_ZIP(INPUT_DIR: str):
     """Path to a S3 SL 1 RBT product"""
     file_name = "S3*_SL_1_RBT*.zip"
     glob_path = os.path.join(INPUT_DIR, file_name)
@@ -128,7 +151,7 @@ def S3_SL_1_RBT(INPUT_DIR: str):
 
 
 @pytest.fixture
-def S3_SY_2_SYN(INPUT_DIR: str):
+def S3_SY_2_SYN_ZIP(INPUT_DIR: str):
     """Path to a S3 SY 2 SYN product"""
     file_name = "S3*_SY_2_SYN*.zip"
     glob_path = os.path.join(INPUT_DIR, file_name)
@@ -136,25 +159,25 @@ def S3_SY_2_SYN(INPUT_DIR: str):
 
 
 @pytest.fixture
-def S2A_MSIL1C_ZIP(INPUT_DIR: str):
+def S2_MSIL1C_ZIP(INPUT_DIR: str):
     """Path to a S2 MSIL1C LEVEL 1 product in zip format"""
-    file_name = "S2A_MSIL1C*.zip"
+    file_name = "S2*_MSIL1C*.zip"
     glob_path = os.path.join(INPUT_DIR, file_name)
     return f"zip::file://{glob.glob(glob_path)[0]}"
 
 
 @pytest.fixture
-def S2A_MSIL1C(INPUT_DIR: str):
+def S2_MSIL1C(INPUT_DIR: str):
     """Path to a S2 MSIL1C LEVEL 1 product"""
-    file_name = "S2A_MSIL1C*.SAFE"
+    file_name = "S2*_MSIL1C*.SAFE"
     glob_path = os.path.join(INPUT_DIR, file_name)
     return f"file://{glob.glob(glob_path)[0]}"
 
 
 @pytest.fixture
-def S1_IM_OCN(INPUT_DIR: str):
+def S1_IM_OCN_ZIP(INPUT_DIR: str):
     """Path to a S2 MSIL1C LEVEL 1 product"""
-    file_name = "S1A_IW_OCN*.zip"
+    file_name = "S1*_IW_OCN*.zip"
     glob_path = os.path.join(INPUT_DIR, file_name)
     return f"zip::file://{glob.glob(glob_path)[0]}"
 
