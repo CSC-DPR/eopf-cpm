@@ -706,7 +706,6 @@ def test_zarr_open_on_different_fs(dask_client_all, product: EOProduct, fakefile
             dict(s3=S3_CONFIG_REAL),
         ),
         (EOCogStore, "s3://eopf/cpm/test_data/OLCI_COG", S3_CONFIG_REAL),
-        (EOCogStore, "zip::s3://eopf/cpm/test_data/OLCI_ZIP.zip", S3_CONFIG_REAL),
     ],
 )
 def test_read_real_s3(dask_client_all, store: type, path: str, open_kwargs: dict[str, Any]):
