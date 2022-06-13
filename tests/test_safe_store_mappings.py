@@ -1,5 +1,6 @@
 import json
 import os
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -9,6 +10,7 @@ from eopf.product.conveniences import open_store
 from eopf.product.core import EOProduct, EOVariable
 from eopf.product.store import EOProductStore, EOZarrStore
 from eopf.product.store.conveniences import convert
+from eopf.product.store.mapping_factory import EOMappingFactory
 from eopf.product.store.safe import EOSafeStore
 from eopf.product.utils import conv
 from tests.utils import assert_eovariable_equal
@@ -58,6 +60,50 @@ def test_load_product(dask_client_all, store_type):
     assert len(product._groups) > 0
     assert isinstance(product.attrs, dict)
     product.store.close()
+
+
+@pytest.mark.need_files
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "input_path, mapping_filename, output_extension, output_store, expected_optional_miss",
+    [
+        (
+            lazy_fixture("TEST_PRODUCT"),
+            "data/test_safe_mapping.json",
+            ".zarr",
+            EOZarrStore,
+            1,
+        ),
+        (
+            lazy_fixture("TEST_PRODUCT_ZIP"),
+            "data/test_safe_mapping.json",
+            ".zarr",
+            EOZarrStore,
+            1,
+        ),
+    ],
+)
+def test_convert_test_mapping(
+    dask_client_all,
+    input_path: str,
+    mapping_filename: str,
+    output_extension: str,
+    output_store: type[EOProductStore],
+    expected_optional_miss: int,
+    OUTPUT_DIR: str,
+):
+    mapping_factory = EOMappingFactory(False)
+    mapping_filename = str(Path(__file__).parent / mapping_filename)
+    mapping_factory.register_mapping(mapping_filename)
+    impl_test_convert_safe_mapping(
+        input_path,
+        mapping_filename,
+        output_extension,
+        output_store,
+        expected_optional_miss,
+        OUTPUT_DIR,
+        mapping_factory,
+    )
 
 
 @pytest.mark.need_files
@@ -124,7 +170,7 @@ def test_load_product(dask_client_all, store_type):
     ],
 )
 def test_convert_safe_mapping(
-    dask_client_all,
+    client,  # dask client
     input_path: str,
     mapping_filename: str,
     output_extension: str,
@@ -132,15 +178,34 @@ def test_convert_safe_mapping(
     expected_optional_miss: int,
     OUTPUT_DIR: str,
 ):
-    source_store = EOSafeStore(input_path)
+    impl_test_convert_safe_mapping(
+        input_path,
+        mapping_filename,
+        output_extension,
+        output_store,
+        expected_optional_miss,
+        OUTPUT_DIR,
+    )
+
+
+def impl_test_convert_safe_mapping(
+    input_path: str,
+    mapping_filename: str,
+    output_extension: str,
+    output_store: type[EOProductStore],
+    expected_optional_miss: int,
+    OUTPUT_DIR: str,
+    mapping_factory=None,
+):
+    source_store = EOSafeStore(input_path, mapping_factory=mapping_factory)
     output_name = os.path.basename(input_path)
     # switch extension of output_name
     output_name, _ = os.path.splitext(output_name)
     output_name += output_extension
     target_store = output_store(os.path.join(OUTPUT_DIR, output_name))
     convert(source_store, target_store)
-    source_product = EOProduct("", storage=source_store)
-    target_product = EOProduct("", storage=target_store)
+    source_product = EOProduct("", storage=source_store, mapping_factory=mapping_factory)
+    target_product = EOProduct("", storage=target_store, mapping_factory=mapping_factory)
 
     with open(mapping_filename) as f:
         mappin_data = json.load(f)

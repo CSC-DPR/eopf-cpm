@@ -192,6 +192,18 @@ def S3_SY_2_SYN(INPUT_DIR):
     return _glob_to_url(INPUT_DIR, "S3*_SY_2_SYN*.SEN3")
 
 
+@pytest.fixture
+def TEST_PRODUCT(INPUT_DIR):
+    """Path to a S3 SY 2 SYN product"""
+    return _glob_to_url(INPUT_DIR, "test*test")
+
+
+@pytest.fixture
+def TEST_PRODUCT_ZIP(INPUT_DIR):
+    """Path to a S3 SY 2 SYN product"""
+    return _glob_to_url(INPUT_DIR, "test*zip", protocols=["zip"])
+
+
 # ----------------------------------#
 # --------- Dask Cluster  ----------#
 # ----------------------------------#
