@@ -42,11 +42,11 @@ class EOFormatterFactory(object):
                 to_bool,
                 to_float,
                 to_geojson,
+                to_imageSize,
                 to_int,
                 to_iso8601,
                 to_str,
                 to_unix_time_slstr_l1,
-                to_imageSize,
             )
 
             self.register_formatter(to_str)
@@ -78,8 +78,9 @@ class EOFormatterFactory(object):
         self._formatters[formatter_name] = formatter
 
     def get_formatter(
-        self, path: Any,
-    ) -> Tuple[Union[str, None], Union[Callable[[EOAbstractFormatter], Any], None], Any]:  # noqa
+        self,
+        path: Any,
+    ) -> Tuple[Union[str, None], Union[Callable[[EOAbstractFormatter], Any], None], Any]:
         """
         Function retrieve a formatter and path without the formatter pattern
 

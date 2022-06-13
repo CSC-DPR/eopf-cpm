@@ -46,9 +46,9 @@ class Text(EOAbstractFormatter):
 
     name = "Text"
 
-    def format(self, input: Any) -> str:
+    def format(self, input: Any) -> Any:
         # silent formmater, used only for parsing the path
-        # logic is present in stac_mapper method of XMLManiferStore 
+        # logic is present in stac_mapper method of XMLManifestAccessor
         return input
 
 
@@ -183,5 +183,5 @@ class to_imageSize(EOAbstractFormatter):
 
     def format(self, input: Any) -> Any:
         # silent formmater, used only for parsing the path
-        # logic is present in stac_mapper method of XMLManiferStore 
+        # logic is present in stac_mapper method of XMLManifestAccessor
         return input
