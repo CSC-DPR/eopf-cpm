@@ -123,6 +123,9 @@ class EOZarrStore(EOProductStore):
     def close(self) -> None:
         super().close()
 
+        if not isinstance(self._root, Group):
+            raise StoreNotOpenError("Store must be open before close it")
+
         if len(self._delayed_list) > 0:
             dask.compute(self._delayed_list)
         self._delayed_list = []
