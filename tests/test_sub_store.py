@@ -224,7 +224,7 @@ def test_xml_manifest_accessor(path: str, mapping: str, tmp_path: pathlib.Path):
     with open(mapping) as mapping_file:
         map_olci = json.load(mapping_file)
 
-    config = {"namespace": map_olci["namespaces"], "metadata_mapping": map_olci["metadata_mapping"]}
+    config = {"namespace": map_olci["namespaces"], "stac_discovery": map_olci["stac_discovery"]}
     with open_store(manifest_accessor, **config):
         eog = manifest_accessor[""]
         assert isinstance(eog, EOGroup)
