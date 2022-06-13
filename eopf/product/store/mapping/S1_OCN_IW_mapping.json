@@ -78,7 +78,7 @@
             "item_format": "netcdf"
         },
         {
-            "short_name": "polarisation",
+            "short_name": "polarisation_osw",
             "target_path": "/coordinates/osw/polarisation",
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_flag_variable",
@@ -193,7 +193,7 @@
             "item_format": "netcdf"
         },
         {
-            "short_name": "polarisation",
+            "short_name": "polarisation_rvl",
             "target_path": "/coordinates/rvl/polarisation",
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_flag_variable",
