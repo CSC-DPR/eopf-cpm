@@ -211,6 +211,7 @@ class EOSafeStore(EOProductStore):
     def __getitem__(self, key: str) -> "EOObject":
         from ..core import EOGroup
 
+        print(key)
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
 

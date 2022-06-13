@@ -140,10 +140,14 @@ class EONetCDFStore(EOProductStore):
             # It's obviously read only.
             try:
                 zarr_compatible_data = kerchunk.hdf.SingleHdf5ToZarr(open_file, self.url).translate()
-            except OSError:
-                # Kerchunk fail on small netcdf files (< 2Kio)
+            except (OSError, TypeError):
+                # Kerchunk fail on small netcdf files (< 2Kio) with OSError
                 # Seems to be caused by it always requesting the first 2kio to parse the matadata.
                 # We fall back to netcdf4py store.
+
+                # Kerchunk fail on file containing variable length strings with TypeError
+                # cf : https://github.com/fsspec/kerchunk/issues/167
+
                 return self._open_with_netcdf4py(mode, storage_options=storage_options, **kwargs)
             zarr_store_r = EOZarrStore("reference://")
             storage_options_zopen = storage_options.copy()  # fsspec async problems without.
@@ -392,11 +396,6 @@ class EONetcdfStringToTimeAccessor(EOProductStore):
         eov: EOVariable = EOVariable(data=np.array([time_delta[0]]), attrs=attributes)
         return eov
 
-    def __iter__(self) -> Iterator[str]:
-        if self._root is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        yield from ()
-
     def __len__(self) -> int:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
@@ -475,5 +474,6 @@ class EONetcdfStringToTimeAccessor(EOProductStore):
         """
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        # if key not in ["/", ""]:
-        #    raise KeyError(f"{key} does not exist")
+        #    if key not in ["/", ""]:
+
+    #        raise KeyError(f"{key} does not exist")
