@@ -155,3 +155,11 @@ depicted below.
 
         >> 4578411856
         >> 6198650624
+
+
+Dask logging
+------------------------------------------
+
+We recommend that you use the dask.yaml logging configuration file, placed in
+*eopf/logging/conf/dask.yaml*. To use this logging configuration copy it to
+*~/.config/dask*, or where your dask configuration files reside.
