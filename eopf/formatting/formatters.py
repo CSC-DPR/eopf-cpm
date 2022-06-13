@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Union
 
 from pandas import Timedelta, to_datetime
+from numpy import int64
 from pytz import UTC
 
 from eopf.exceptions import FormattingError
@@ -177,7 +178,8 @@ class to_unix_time_slstr_l1(EOAbstractFormatter):
             end = to_datetime(input[:])
 
             # compute and convert the time difference into microseconds
-            time_delta = (end - start) // Timedelta("1microsecond")
+            time_delta = int64((end - start) // Timedelta("1microsecond"))
+            print(type(time_delta))
 
             # create coresponding attributes
             attributes = {}
