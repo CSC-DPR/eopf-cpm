@@ -1,9 +1,8 @@
+from json import load
 from logging import CRITICAL, DEBUG, ERROR, INFO, NOTSET, WARNING, Logger, getLogger
-from logging.config import dictConfig, fileConfig
+from logging.config import dictConfig
 from pathlib import Path
 from typing import Union
-
-from yaml import safe_load
 
 from eopf.exceptions import (
     LoggingConfigurationAlreadyExists,
@@ -119,15 +118,11 @@ class EOLogFactory(object):
         # retrive  the cfg file path based on the name
         cfg_path = self.get_cfg_path(cfg_name)
 
-        # load configuration file
+        # load json configuration file
         try:
-            if cfg_path.suffix == ".conf":
-                fileConfig(cfg_path, disable_existing_loggers=False)
-            else:
-                # yaml configuration
-                with open(cfg_path, "r") as f:
-                    yaml_cfg = safe_load(f.read())
-                    dictConfig(yaml_cfg)
+            with open(cfg_path, "r") as f:
+                json_cfg = load(f)
+                dictConfig(json_cfg)
         except Exception as e:
             raise LoggingConfigurationFileIsNotValid(f"Invalid configuration file, reason: {e}")
 
@@ -159,7 +154,7 @@ class EOLogFactory(object):
         FileNotFoundError
             When a file is not found at given location
         LoggingConfigurationFileTypeNotSupported
-            When the logging file name does not have a .conf or .yaml extension
+            When the logging file name does not have a .json extension
         """
 
         if not isinstance(cfg_path, Path):
@@ -170,7 +165,7 @@ class EOLogFactory(object):
             raise LoggingConfigurationAlreadyExists(f"A configuration file name {cfg_name} is already registered")
         if not cfg_file_path.is_file():
             raise FileNotFoundError(f"File {cfg_file_path} can not be found")
-        if cfg_file_path.suffix not in [".conf", ".yaml"]:
+        if cfg_file_path.suffix not in [".json"]:
             raise LoggingConfigurationFileTypeNotSupported("Unsuported configuration file type")
         self._cfgs[cfg_name] = cfg_file_path
 
@@ -180,7 +175,7 @@ class EOLogFactory(object):
         Raises
         ----------
         NoLoggingConfigurationFile
-            When the preset/given logging configuration file does not contain any .conf or yaml file
+            When the preset/given logging configuration file does not contain .json files
         """
 
         # remove current configurations
@@ -189,9 +184,9 @@ class EOLogFactory(object):
         # register the configurations in the cfg_dir
         no_cofiguration_present = True
         for cfg_path in self.cfg_dir.iterdir():
-            if cfg_path.is_file() and cfg_path.suffix in [".conf", ".yaml"]:
+            if cfg_path.is_file() and cfg_path.suffix in [".json"]:
                 no_cofiguration_present = False
                 self.register_cfg(cfg_path.stem, cfg_path)
 
         if no_cofiguration_present:
-            raise NoLoggingConfigurationFile(f"No logging configuration file .conf/.yaml is present in {self.cfg_dir}")
+            raise NoLoggingConfigurationFile(f"No logging configuration file .json is present in {self.cfg_dir}")

@@ -10,7 +10,7 @@ Profiling
 ------------------------------------------
 
 For function profiling we provide the developpers two parametrisable
-decorators,  which are meant to give parralel processing feedback 
+decorators,  which are meant to give parralel processing feedback
 (through *dask*) and single thread profiling (through pstats):
 
 - dask_profiler()
@@ -47,21 +47,21 @@ report will be automatically loaded.
 
 By default the dask_profiler will run on a predefined dask cluster.
 However the developper can request a specific cluster configuration
-through the decorator's parameters, i.e. : n_workers and threads_per_worker; 
+through the decorator's parameters, i.e. : n_workers and threads_per_worker;
 see example below.
 
     .. code-block:: python
 
         @dask_profiler(
-            n_workers=4, 
-            threads_per_worker=2, 
+            n_workers=4,
+            threads_per_worker=2,
             report_name="user_defined_cluster.html")
         def s3_to_nc():
             ...
 
 It is possible to disable the displaying of the html report, even if
 the developper is working in an Ipython interactive console, by
-seeting the parameter *display_report* to False. 
+seeting the parameter *display_report* to False.
 
 The *report_name* parameter can be set such that the report can be
 written at any particular path.
@@ -76,7 +76,7 @@ single_thread_profiler()
 
 With single_thread_profiler the developper gets *cProfile*
 statistics (pstats.Stats) of the decorated function. Further more,
-these statistics can be written at a specific path through the 
+these statistics can be written at a specific path through the
 *report_name* parameter.
 
     .. code-block:: python
@@ -95,7 +95,7 @@ these statistics can be written at a specific path through the
 
 
 One can further manipulate the stats. For example, the code below
-strips the directory path from python functions, such that one can 
+strips the directory path from python functions, such that one can
 observe the functions more easily. Also, the statistics are ordered
 according to the total time spent in a function.
 
@@ -120,14 +120,12 @@ below. The single_thread_profiler must be the first one.
 System based continoous tracing
 ------------------------------------------
 
-For continous tracking we refer the developpers and users to 
+For continous tracking we refer the developpers and users to
 *dask dashboard*, usually located at <http://127.0.0.1:8787/status>.
-If the port or address is different, just change the url with your 
+If the port or address is different, just change the url with your
 specific dask running port and address.
 
 
 We also recommended using *Prometheus* for monitoring dask performace
-over time. We provide a default *Prometheus* 
+over time. We provide a default *Prometheus*
 configuration file, *prometheus-cpm.yml* , with the eopf.tracing module.
-
-    

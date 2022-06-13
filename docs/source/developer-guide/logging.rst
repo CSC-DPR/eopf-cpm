@@ -78,7 +78,7 @@ loggers as you any other python logger, as exemplified below.
 Loading other log configurations
 ------------------------------------------
 
-Two types of logging configuration files are supported: **.conf** and **.yaml**.
+One type of logging configuration files is supported: **.json**.
 The default logging configuration directory in located at **eopf/logging/conf/**. We
 recommend that any other log configurations to be added here.
 Keep in mind that the EOLogFactory is just a mapper of file configurations, it will
@@ -91,7 +91,7 @@ One can see the mapped logging configurations by looking in the
 
         EOLogFactory()._cfgs
 
-        >> {'default': PosixPath('eopf/logging/conf/default.conf')}
+        >> {'default': PosixPath('eopf/logging/conf/default.json')}
 
 
 There are two options available for mapping new logging configuration:
@@ -99,7 +99,7 @@ There are two options available for mapping new logging configuration:
 
         .. code-block:: python
 
-            EOLogFactory.register_cfg("log_cfg_name", "log_cfg_file_path.conf")
+            EOLogFactory.register_cfg("log_cfg_name", "log_cfg_file_path.json")
 
     - map all configurations from a dir and remove current ones, with **set_cfg_dir()**
 

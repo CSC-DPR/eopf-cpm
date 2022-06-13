@@ -26,19 +26,9 @@ def test_correct_init():
 
 @pytest.mark.unit
 def test_correct_return_conf():
-    """Test that the EOLogFactory returns a Logger object configured through a yaml file"""
+    """Test that the EOLogFactory returns a Logger object configured through a json file"""
     test_factory = EOLogFactory()
     test_log = test_factory.get_log()
-    assert isinstance(test_log, Logger)
-
-
-@pytest.mark.unit
-def test_correct_return_yaml():
-    """Test that the EOLogFactory returns a Logger object configured through a conf file"""
-    test_factory = EOLogFactory()
-    yaml_path = Path(__file__).parent / "data" / "a_yaml_log_conf.yaml"
-    test_factory.register_cfg("a_yaml", yaml_path)
-    test_log = test_factory.get_log("a_yaml")
     assert isinstance(test_log, Logger)
 
 
@@ -91,7 +81,7 @@ def test_register_cfg_with_incorrect_file_extension():
     """Test that when setting the cfg dir with a non-existent dir it raises LoggingConfigurationDirDoesNotExist"""
 
     test_factory = EOLogFactory()
-    test_file_path = Path(__file__).parent / "data" / "log_conf.yam"
+    test_file_path = Path(__file__).parent / "data" / "log_conf.jso"
     with pytest.raises(LoggingConfigurationFileTypeNotSupported):
         _ = test_factory.register_cfg("invalid", cfg_path=test_file_path)
 
@@ -115,7 +105,7 @@ def test_get_log_with_non_valid_configuration_file():
     """Test that when setting the cfg dir with a non-existent dir it raises LoggingConfigurationDirDoesNotExist"""
 
     test_factory = EOLogFactory()
-    test_file_path = Path(__file__).parent / "data" / "log_conf.conf"
+    test_file_path = Path(__file__).parent / "data" / "log_conf.json"
     test_factory.register_cfg("invalid", cfg_path=test_file_path)
     with pytest.raises(LoggingConfigurationFileIsNotValid):
         _ = test_factory.get_log("invalid")
