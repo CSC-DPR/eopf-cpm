@@ -464,7 +464,7 @@ def test_close_manifest_store():
 @pytest.mark.integration
 def test_retrieve_from_manifest_store(
     dask_client_all,
-    S3_OLCI_L1_EFR: str,
+    S3_OL_1_EFR,
     S3_OLCI_L1_MAPPING: str,
     tmp_path: pathlib.Path,
 ):
@@ -476,7 +476,7 @@ def test_retrieve_from_manifest_store(
     """
     import json
 
-    fsmap = fsspec.get_mapper(S3_OLCI_L1_EFR)
+    fsmap = fsspec.get_mapper(S3_OL_1_EFR)
     manifest_name = "xfdumanifest.xml"
     manifest_path = tmp_path / manifest_name
     for key in fsmap:
@@ -499,7 +499,7 @@ def test_retrieve_from_manifest_store(
     assert_issubdict(
         returned_cf,
         {
-            "title": S3_OLCI_L1_EFR.split("/")[-1].replace(".zip", ".SEN3"),
+            "title": S3_OL_1_EFR.split("/")[-1].replace(".zip", ".SEN3"),
             "institution": "European Space Agency, Land OLCI Processing and Archiving Centre [LN1]",
             "source": "Sentinel-3A OLCI Ocean Land Colour Instrument",
             "comment": "Operational",
@@ -587,7 +587,7 @@ def test_retrieve_from_manifest_store(
     assert_issubdict(
         metadata_property,
         {
-            "identifier": S3_OLCI_L1_EFR.split("/")[-1].replace(".zip", ".SEN3"),
+            "identifier": S3_OL_1_EFR.split("/")[-1].replace(".zip", ".SEN3"),
             "acquisitionType": "Operational",
             "productType": "OL_1_EFR___",
             "status": "ARCHIVED",
