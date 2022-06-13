@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
 
 import fsspec
 import kerchunk.hdf
+import numpy as np
 import pandas as pd
 import pytz
 import xarray as xr
@@ -115,12 +116,6 @@ class EONetCDFStore(EOProductStore):
 
     def _open_with_netcdf4py(self, mode: str = "r", **kwargs: Any) -> EOProductStore:
         url = self.url
-        if url.startswith("s3:"):
-            # Get a local url to a read only local cache of the s3 file.
-            if mode != "r":
-                raise OSError("Netcdf Accessor can't write to S3.")
-            storage_options = kwargs.pop("storage_options", dict())
-            url = fsspec.open_local("filecache::" + url, mode, s3=storage_options, filecache={"cache_storage": "TMP"})
 
         sub_store = EONetCDFStoreNCpy(url)
         sub_store.open(mode, **kwargs)
@@ -294,6 +289,17 @@ class EONetCDFStoreNCpy(EOProductStore):
     def open(self, mode: str = "r", **kwargs: Any) -> None:
 
         super().open()
+        if self.url.startswith("s3:"):
+            # Get a local url to a read only local cache of the s3 file.
+            if mode != "r":
+                raise OSError("Netcdf Store can't write to S3.")
+            storage_options = kwargs.pop("storage_options", dict())
+            self.url = fsspec.open_local(
+                "filecache::" + self.url,
+                mode,
+                s3=storage_options,
+                filecache={"cache_storage": "TMP"},
+            )
         # Overwrite compression / scale parameters if given by user
         self.zlib = bool(kwargs.pop("zlib", True))
         self.complevel = int(kwargs.pop("complevel", 4))
@@ -383,7 +389,7 @@ class EONetcdfStringToTimeAccessor(EOProductStore):
             attributes["long_name"] = "Time of calibration in UTC"
 
         # create an EOVariable and return it
-        eov: EOVariable = EOVariable(data=time_delta, attrs=attributes)
+        eov: EOVariable = EOVariable(data=np.array([time_delta[0]]), attrs=attributes)
         return eov
 
     def __iter__(self) -> Iterator[str]:
@@ -469,5 +475,5 @@ class EONetcdfStringToTimeAccessor(EOProductStore):
         """
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        if key not in ["/", ""]:
-            raise KeyError(f"{key} does not exist")
+        # if key not in ["/", ""]:
+        #    raise KeyError(f"{key} does not exist")
