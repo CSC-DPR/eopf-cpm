@@ -207,114 +207,114 @@ def test_xml_tiepoints_accessor(EMBEDED_TEST_DATA_FOLDER, mapping, ul, dummy_arr
             tp_accessor["random_incorect_xpath"]
 
 
-@pytest.mark.need_files
-@pytest.mark.integration
-@pytest.mark.parametrize(
-    "path, mapping",
-    [(lazy_fixture("S3_OLCI_L1_EFR"), lazy_fixture("S3_OLCI_L1_MAPPING"))],
-)
-def test_xml_manifest_accessor(path: str, mapping: str, tmp_path: pathlib.Path):
-    fsmap = fsspec.get_mapper(path)
-    xmlfile = "xfdumanifest.xml"
-    filepath = fsmap.fs.glob(f"*/{xmlfile}")[0]
-    filename = filepath.partition(os.path.sep)[0]
-    (tmp_path / xmlfile).write_bytes(fsmap[filepath])
-    manifest_accessor = XMLManifestAccessor(tmp_path / xmlfile)
+# @pytest.mark.need_files
+# @pytest.mark.integration
+# @pytest.mark.parametrize(
+#     "path, mapping",
+#     [(lazy_fixture("S3_OLCI_L1_EFR"), lazy_fixture("S3_OLCI_L1_MAPPING"))],
+# )
+# def test_xml_manifest_accessor(path: str, mapping: str, tmp_path: pathlib.Path):
+#     fsmap = fsspec.get_mapper(path)
+#     xmlfile = "xfdumanifest.xml"
+#     filepath = fsmap.fs.glob(f"*/{xmlfile}")[0]
+#     filename = filepath.partition(os.path.sep)[0]
+#     (tmp_path / xmlfile).write_bytes(fsmap[filepath])
+#     manifest_accessor = XMLManifestAccessor(tmp_path / xmlfile)
 
-    with open(mapping) as mapping_file:
-        map_olci = json.load(mapping_file)
+#     with open(mapping) as mapping_file:
+#         map_olci = json.load(mapping_file)
 
-    config = {"namespace": map_olci["namespaces"], "stac_discovery": map_olci["stac_discovery"]}
-    with open_store(manifest_accessor, **config):
-        eog = manifest_accessor[""]
-        assert isinstance(eog, EOGroup)
-        returned_cf = eog.attrs["CF"]
-        returned_om_eop = eog.attrs["OM_EOP"]
+#     config = {"namespace": map_olci["namespaces"], "metadata_mapping": map_olci["stac_discovery"]}
+#     with open_store(manifest_accessor, **config):
+#         eog = manifest_accessor[""]
+#         assert isinstance(eog, EOGroup)
+#         returned_cf = eog.attrs["CF"]
+#         returned_om_eop = eog.attrs["OM_EOP"]
 
-    assert_issubdict(
-        returned_cf,
-        {
-            "title": filename,
-            "institution": "European Space Agency, Land OLCI Processing and Archiving Centre [LN1]",
-            "source": "Sentinel-3A OLCI Ocean Land Colour Instrument",
-            "comment": "Operational",
-            "references": ", ".join(
-                [
-                    "https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-2",
-                    "https://sentinels.copernicus.eu/web/sentinel/user-guides/sentinel-2-msi/processing-levels/level-1",
-                ],
-            ),
-            "Conventions": "CF-1.9",
-        },
-    ) and ("history" in returned_cf)
+#     assert_issubdict(
+#         returned_cf,
+#         {
+#             "title": filename,
+#             "institution": "European Space Agency, Land OLCI Processing and Archiving Centre [LN1]",
+#             "source": "Sentinel-3A OLCI Ocean Land Colour Instrument",
+#             "comment": "Operational",
+#             "references": ", ".join(
+#                 [
+#                     "https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-2",
+#                     "https://sentinels.copernicus.eu/web/sentinel/user-guides/sentinel-2-msi/processing-levels/level-1",
+#                 ],
+#             ),
+#             "Conventions": "CF-1.9",
+#         },
+#     ) and ("history" in returned_cf)
 
-    phenomenon_time = returned_om_eop.get("phenomenonTime", {})
+#     phenomenon_time = returned_om_eop.get("phenomenonTime", {})
 
-    assert all(datetime.strptime(phenomenon_time[p], "%Y-%m-%dT%H:%M:%S.%fZ") for p in ("beginPosition", "endPosition"))
+#     assert all(datetime.strptime(phenomenon_time[p], "%Y-%m-%dT%H:%M:%S.%fZ") for p in ("beginPosition", "endPosition"))
 
-    acq_parameter = returned_om_eop.get("procedure", {}).get("acquistionParameters", {})
+#     acq_parameter = returned_om_eop.get("procedure", {}).get("acquistionParameters", {})
 
-    assert_issubdict(
-        returned_om_eop.get("procedure", {}),
-        {
-            "platform": {"shortName": "Sentinel-3", "serialIdentifier": "A"},
-            "instrument": {"shortName": "OLCI"},
-            "sensor": {"sensorType": "OPTICAL", "operationalMode": "EO"},
-        },
-    )
-    assert acq_parameter.get("orbitNumber").isnumeric() and acq_parameter.get("orbitDirection") == "descending"
+#     assert_issubdict(
+#         returned_om_eop.get("procedure", {}),
+#         {
+#             "platform": {"shortName": "Sentinel-3", "serialIdentifier": "A"},
+#             "instrument": {"shortName": "OLCI"},
+#             "sensor": {"sensorType": "OPTICAL", "operationalMode": "EO"},
+#         },
+#     )
+#     assert acq_parameter.get("orbitNumber").isnumeric() and acq_parameter.get("orbitDirection") == "descending"
 
-    assert datetime.strptime(returned_om_eop.get("resultTime", {}).get("timePosition", ""), "%Y%m%dT%H%M%S")
-    assert (
-        re.match(
-            r"POLYGON\(\((-?\d*\.\d* -?\d*\.\d*(, )?)*\)\)",
-            returned_om_eop.get("featureOfInterest", {}).get("multiExtentOf", ""),
-        )
-        is not None
-    )
-    assert_issubdict(
-        returned_om_eop,
-        {
-            "result": {
-                "product": {
-                    "fileName": "./Oa01_radiance.nc,./Oa02_radiance.nc,./Oa03_radiance.nc,./Oa04_radiance.nc,"
-                    "./Oa05_radiance.nc,./Oa06_radiance.nc,./Oa07_radiance.nc,./Oa08_radiance.nc,"
-                    "./Oa09_radiance.nc,./Oa10_radiance.nc,./Oa11_radiance.nc,./Oa12_radiance.nc,"
-                    "./Oa13_radiance.nc,./Oa14_radiance.nc,./Oa15_radiance.nc,./Oa16_radiance.nc,"
-                    "./Oa17_radiance.nc,./Oa18_radiance.nc,./Oa19_radiance.nc,./Oa20_radiance.nc,"
-                    "./Oa21_radiance.nc,./geo_coordinates.nc,./instrument_data.nc,./qualityFlags.nc,"
-                    "./removed_pixels.nc,./tie_geo_coordinates.nc,./tie_geometries.nc,./tie_meteo.nc,"
-                    "./time_coordinates.nc",
-                    # noqa
-                    "timeliness": "NT",
-                },
-            },
-        },
-    )
+#     assert datetime.strptime(returned_om_eop.get("resultTime", {}).get("timePosition", ""), "%Y%m%dT%H%M%S")
+#     assert (
+#         re.match(
+#             r"POLYGON\(\((-?\d*\.\d* -?\d*\.\d*(, )?)*\)\)",
+#             returned_om_eop.get("featureOfInterest", {}).get("multiExtentOf", ""),
+#         )
+#         is not None
+#     )
+#     assert_issubdict(
+#         returned_om_eop,
+#         {
+#             "result": {
+#                 "product": {
+#                     "fileName": "./Oa01_radiance.nc,./Oa02_radiance.nc,./Oa03_radiance.nc,./Oa04_radiance.nc,"
+#                     "./Oa05_radiance.nc,./Oa06_radiance.nc,./Oa07_radiance.nc,./Oa08_radiance.nc,"
+#                     "./Oa09_radiance.nc,./Oa10_radiance.nc,./Oa11_radiance.nc,./Oa12_radiance.nc,"
+#                     "./Oa13_radiance.nc,./Oa14_radiance.nc,./Oa15_radiance.nc,./Oa16_radiance.nc,"
+#                     "./Oa17_radiance.nc,./Oa18_radiance.nc,./Oa19_radiance.nc,./Oa20_radiance.nc,"
+#                     "./Oa21_radiance.nc,./geo_coordinates.nc,./instrument_data.nc,./qualityFlags.nc,"
+#                     "./removed_pixels.nc,./tie_geo_coordinates.nc,./tie_geometries.nc,./tie_meteo.nc,"
+#                     "./time_coordinates.nc",
+#                     # noqa
+#                     "timeliness": "NT",
+#                 },
+#             },
+#         },
+#     )
 
-    metadata_property = returned_om_eop.get("metadataProperty", {})
-    assert_issubdict(
-        metadata_property,
-        {
-            "identifier": filename,  # noqa
-            "acquisitionType": "Operational",
-            "productType": "OL_1_EFR___",
-            "status": "ARCHIVED",
-            "productQualityStatus": "PASSED",
-        },
-    )
-    assert len(metadata_property.get("productQualityDegradationTag", "")) > 0
+#     metadata_property = returned_om_eop.get("metadataProperty", {})
+#     assert_issubdict(
+#         metadata_property,
+#         {
+#             "identifier": filename,  # noqa
+#             "acquisitionType": "Operational",
+#             "productType": "OL_1_EFR___",
+#             "status": "ARCHIVED",
+#             "productQualityStatus": "PASSED",
+#         },
+#     )
+#     assert len(metadata_property.get("productQualityDegradationTag", "")) > 0
 
-    assert datetime.strptime(metadata_property.get("creationDate", ""), "%Y%m%dT%H%M%S")
-    downlinked_to = metadata_property.get("downlinkedTo", {})
-    assert datetime.strptime(downlinked_to.get("acquisitionDate", ""), "%Y-%m-%dT%H:%M:%S.%fZ")
-    assert downlinked_to.get("acquisitionStation", "") == "CGS"
+#     assert datetime.strptime(metadata_property.get("creationDate", ""), "%Y%m%dT%H%M%S")
+#     downlinked_to = metadata_property.get("downlinkedTo", {})
+#     assert datetime.strptime(downlinked_to.get("acquisitionDate", ""), "%Y-%m-%dT%H:%M:%S.%fZ")
+#     assert downlinked_to.get("acquisitionStation", "") == "CGS"
 
-    processing_map = metadata_property.get("processing", {})
-    assert processing_map["processorName"] == "PUG"
-    assert processing_map["processingCenter"] == "Land OLCI Processing and Archiving Centre [LN1]"
-    assert re.match(r"\d{1,2}\.\d{2}", processing_map["processorVersion"])
-    assert datetime.strptime(processing_map["processingDate"], "%Y-%m-%dT%H:%M:%S.%f")
+#     processing_map = metadata_property.get("processing", {})
+#     assert processing_map["processorName"] == "PUG"
+#     assert processing_map["processingCenter"] == "Land OLCI Processing and Archiving Centre [LN1]"
+#     assert re.match(r"\d{1,2}\.\d{2}", processing_map["processorVersion"])
+#     assert datetime.strptime(processing_map["processingDate"], "%Y-%m-%dT%H:%M:%S.%f")
 
 
 @pytest.mark.unit
