@@ -219,3 +219,32 @@ def single_thread_profiler(
         return wrap_inner
 
     return wrap_outer
+
+
+def local_progress(fn: Callable[[Any, Any], Any]) -> Any:
+    def wrap(*args: Any, **kwargs: Any) -> Any:
+
+        from dask.diagnostics import ProgressBar
+
+        pbar = ProgressBar()
+        pbar.register()
+        with ProgressBar():
+            ret = fn(*args, **kwargs)
+        pbar.unregister()
+
+        return ret
+
+    return wrap
+
+
+def distributed_progress(fn: Callable[[Any, Any], Any]) -> Any:
+    def wrap(*args: Any, **kwargs: Any) -> Any:
+
+        from dask.distributed import progress
+
+        ret = fn(*args, **kwargs)
+        progress(ret)
+
+        return ret
+
+    return wrap
