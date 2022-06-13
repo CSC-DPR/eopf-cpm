@@ -11704,7 +11704,7 @@
             }
         },
         {
-            "short_name": "scansync",
+            "short_name": "scansync_an",
             "target_path": "/conditions/time_an/scansync",
             "source_path": "time_an.nc:SCANSYNC",
             "item_format": "netcdf",
@@ -11836,7 +11836,7 @@
             }
         },
         {
-            "short_name": "scansync",
+            "short_name": "scansync_bn",
             "target_path": "/conditions/time_bn/scansync",
             "source_path": "time_bn.nc:SCANSYNC",
             "item_format": "netcdf",
@@ -11968,7 +11968,7 @@
             }
         },
         {
-            "short_name": "scansync",
+            "short_name": "scansync_in",
             "target_path": "/conditions/time_in/scansync",
             "source_path": "time_in.nc:SCANSYNC",
             "item_format": "netcdf",
