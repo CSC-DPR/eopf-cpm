@@ -88,6 +88,13 @@ class EOFormatterFactory(object):
         ----------
         path: Any
             a path to an object/file
+
+
+        Returns
+        ----------
+        Tuple[Union[str, None], Union[Callable[[EOAbstractFormatter], Any], None], Any]:
+            A tuple containing the formatter name, the formatting method and
+            a the path (without the formatter name)
         """
 
         # try to get a string representation of the path
@@ -146,10 +153,15 @@ def formatable_func(fn: Callable[[Any], Any]) -> Any:
         if not len(args) >= 1:
             raise FormattingDecoratorMissingUri("The decorated function does not contain a URI")
 
+        # parse the path, which should always be the first argument
         _, formatter, formatter_stripped_uri = EOFormatterFactory().get_formatter(args[0])
+
+        # replace the first argument with the formatter_stripped_uri
         lst_args = list(args)
         lst_args[0] = formatter_stripped_uri
         new_args = tuple(lst_args)
+
+        # call the decorated function
         decorated_func_ret = fn(*new_args, **kwargs)
         if formatter is not None:
             return formatter(decorated_func_ret)
@@ -200,10 +212,15 @@ class formatable_method(object):
         if not len(args) >= 1:
             raise FormattingDecoratorMissingUri("The decorated function does not contain a URI")
 
+        # parse the path, which should always be the first argument
         _, formatter, formatter_stripped_uri = EOFormatterFactory().get_formatter(args[0])
+
+        # replace the first argument with the formatter_stripped_uri
         lst_args = list(args)
         lst_args[0] = formatter_stripped_uri
         new_args = tuple(lst_args)
+
+        # call the decorated function
         decorated_method_ret = self.fn(self.parent_obj, *new_args, **kwargs)
         if formatter is not None:
             return formatter(decorated_method_ret)
