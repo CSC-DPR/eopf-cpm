@@ -46,6 +46,7 @@ class EOFormatterFactory(object):
                 to_iso8601,
                 to_str,
                 to_unix_time_slstr_l1,
+                to_imageSize,
             )
 
             self.register_formatter(to_str)
@@ -57,6 +58,7 @@ class EOFormatterFactory(object):
             self.register_formatter(to_geojson)
             self.register_formatter(to_int)
             self.register_formatter(Text)
+            self.register_formatter(to_imageSize)
         else:
             # to implement another logic of importing formatters
             pass

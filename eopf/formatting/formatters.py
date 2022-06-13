@@ -47,6 +47,8 @@ class Text(EOAbstractFormatter):
     name = "Text"
 
     def format(self, input: Any) -> str:
+        # silent formmater, used only for parsing the path
+        # logic is present in stac_mapper method of XMLManiferStore 
         return input
 
 
@@ -173,3 +175,13 @@ class to_geojson(EOAbstractFormatter):
             return dict(type="MultiPolygon", coordinates=split_poly(poly_coords))
         # Otherwise, just return computed coordinates
         return dict(type="Polygon", coordinates=[poly_coords])
+
+
+class to_imageSize(EOAbstractFormatter):
+
+    name = "to_imageSize"
+
+    def format(self, input: Any) -> Any:
+        # silent formmater, used only for parsing the path
+        # logic is present in stac_mapper method of XMLManiferStore 
+        return input

@@ -1,16 +1,20 @@
-from typing import TYPE_CHECKING, Any, Iterator, List, MutableMapping, Optional, TextIO
+from typing import TYPE_CHECKING, Any, Dict, Iterator, List, MutableMapping, Optional, TextIO
+from unicodedata import name
 
 import lxml
 import xarray as xr
 
 from eopf.exceptions import StoreNotOpenError, XmlParsingError
 from eopf.formatting import EOFormatterFactory
-from eopf.product.store import EOProductStore
+from eopf.product.store import EOProductStore, EONetCDFStore
+from pathlib import Path
 from eopf.product.utils import (  # to be reviewed
     apply_xpath,
     parse_xml,
     translate_structure,
 )
+
+from eopf.exceptions import XmlManifestNetCDFError
 
 if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_object import EOObject
@@ -385,6 +389,42 @@ class XMLManifestAccessor(EOProductStore):
         else:
             return None
 
+    def _get_nc_data(self, path_and_dims: str) -> Dict[str, int]:
+
+        # parse the input string for relative file path 
+        # and wanted dims, perform checks on them
+        rel_file_path, wanted_dims = path_and_dims.split(":")
+        file_path =  (Path(self.url).parent / rel_file_path).resolve()
+        if not file_path.is_file():
+            raise XmlManifestNetCDFError(f"NetCDF file {file_path} does NOT exist")
+        if len(wanted_dims) < 1:
+            raise XmlManifestNetCDFError(f"No dimensions are required")
+        
+        # create a dict with the requested dims
+        ret_dict = {w:None for w in wanted_dims.split(",")}
+
+        #open netcdf file and read the dims and shape of fist var
+        try:
+            ncs = EONetCDFStore(str(file_path))
+            ncs.open()
+            var = ncs[list(ncs.iter("/"))[0]]
+            var_dims = var.dims
+            var_shp = var.shape
+        finally:
+            ncs.close()
+
+        # iter over the the val dims and populate the requested dims
+        for i in range(len(var_dims)):
+            if var_dims[i] in ret_dict.keys():
+                ret_dict[var_dims[i]] = var_shp[i]
+
+        # check if all requested dims were populated
+        for k in ret_dict.keys():
+            if ret_dict[k] == None:
+                raise XmlManifestNetCDFError(f"Dim {k} not found")
+
+        return ret_dict
+
     def stac_mapper(self, path: str) -> Any:
         """Used to handle xpath's that request a conversion
 
@@ -399,13 +439,19 @@ class XMLManifestAccessor(EOProductStore):
             output of conversion functions, to_geoJSON(), to_bbox(), to_float() ..., None if there are no references
         """
 
+        from eopf.formatting.formatters import to_imageSize, Text
+        image_size_formatter_name = to_imageSize.name
+        text_formatter_name = Text.name
+
         formatter_name, formatter, xpath = EOFormatterFactory().get_formatter(path)
 
         if formatter_name is None:
             ret_val = self._get_xml_data(xpath)
         else:
-            if formatter_name == "Text":
+            if formatter_name == text_formatter_name:
                 ret_val = formatter(xpath)
+            elif formatter_name == image_size_formatter_name:
+                ret_val = formatter(self._get_nc_data(xpath))
             else:
                 ret_val = formatter(self._get_xml_data(xpath))
 
