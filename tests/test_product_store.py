@@ -378,12 +378,12 @@ def test_open_close_already(store, exceptions):
     "store, ok_formats",
     [
         (EOZarrStore, ("", ".zarr")),
-        (EONetCDFStore, (".nc")),
+        (EONetCDFStore, (".nc",)),
         (EOSafeStore, (".SAFE", ".SEN3")),
-        (EOCogStore, (".cogs")),
+        (EOCogStore, (".cogs",)),
         (ManifestStore, ()),
         (EORasterIOAccessor, (".jp2", ".tiff")),
-        (EOGribAccessor, (".grib")),
+        (EOGribAccessor, (".grib",)),
         (XMLAnglesAccessor, ()),
         (XMLTPAccessor, ()),
     ],
@@ -403,7 +403,8 @@ def test_guess_read_format(store, ok_formats):
         ".tiff",
         ".zarr",
     )
-    assert all(format in all_guessed_formats for format in ok_formats)
+    for format in ok_formats:
+        assert format in all_guessed_formats
     for format in all_guessed_formats:
         assert store.guess_can_read(f"file{format}") == (format in ok_formats)
 
