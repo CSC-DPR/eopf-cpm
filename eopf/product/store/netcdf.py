@@ -266,7 +266,7 @@ class EONetCDFStoreNCpy(EOProductStore):
         ------
         Boolean
         """
-        return pathlib.Path(file_path).suffix in [".nc"]
+        return False
 
     # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
