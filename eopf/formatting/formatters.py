@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import Any, Dict, List, Union
 
-from pandas import Timedelta, to_datetime
 from numpy import int64
+from pandas import Timedelta, to_datetime
 from pytz import UTC
 
 from eopf.exceptions import FormattingError
@@ -311,7 +311,7 @@ class to_imageSize(EOAbstractFormatter):
     name = "to_imageSize"
 
     def format(self, input: Any) -> Any:
-        """Silent formmater, used only for parsing the path
+        """Silent formatter, used only for parsing the path
         logic is present in stac_mapper method of XMLManifestAccessor
 
         Parameters

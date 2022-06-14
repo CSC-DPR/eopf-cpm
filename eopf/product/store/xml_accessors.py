@@ -486,8 +486,6 @@ class XMLManifestAccessor(EOProductStore):
                 ret_val = formatter(xpath)
             elif formatter_name == image_size_formatter_name:
                 ret_val = formatter(self._get_nc_data(xpath))
-            else:
-                ret_val = formatter(self._get_xml_data(xpath))
         else:
             ret_val = self._get_xml_data(xpath)
 
