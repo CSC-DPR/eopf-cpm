@@ -270,7 +270,8 @@ def test_extended_xml_manifest_accessor(path: str, mapping: str, tmp_path: pathl
         assert isinstance(stac_discovery["properties"]["eopf:resolutions "]["FR"], int)
         assert stac_discovery["properties"]["eopf:resolutions "]["FR"] == expected_FR_res
         assert isinstance(
-            stac_discovery["properties"]["eopf:product"]["data_information"]["classification"]["bright_percent"], float,
+            stac_discovery["properties"]["eopf:product"]["data_information"]["classification"]["bright_percent"],
+            float,
         )
         assert (
             stac_discovery["properties"]["eopf:product"]["data_information"]["classification"]["bright_percent"]
@@ -311,6 +312,7 @@ def test_extended_xml_manifest_accessor(path: str, mapping: str, tmp_path: pathl
         assert conditions_metadata["band_descriptions"]["orbit_reference"]["ephemeris"] == expected_ephemeris
         assert conditions_metadata
         from datetime import datetime
+
         assert datetime.strptime(
             conditions_metadata["band_descriptions"]["orbit_reference"]["ephemeris"]["start"]["TAI"],
             "%Y-%m-%dT%H:%M:%S.%f",
