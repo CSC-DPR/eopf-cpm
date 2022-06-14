@@ -742,6 +742,7 @@ def test_zarr_open_on_different_fs(dask_client_all, product: EOProduct, fakefile
             + "S3A_OL_1_EFR____20200101T101517_20200101T101817_20200102T141102_0179_053_179_2520_LN1_O_NT_002.zip",
             dict(s3=S3_CONFIG_REAL),
         ),
+        (EOCogStore, "s3://eopf/cpm/test_data/OLCI_COG", S3_CONFIG_REAL),
     ],
 )
 def test_read_real_s3(dask_client_all, store: type, path: str, open_kwargs: dict[str, Any]):
@@ -768,10 +769,10 @@ def test_write_real_s3(dask_client_all, w_store: type, w_path: str, w_kwargs: di
 @pytest.mark.parametrize(
     "store_cls, format_file",
     [
-        (EOCogStore, "jp2"),
+        (EOCogStore, "cog"),
     ],
 )
-def test_cog_store(store_cls: type[EOCogStore], format_file: str):
+def test_patch_cog_store(store_cls: type[EOCogStore], format_file: str):
     cog = store_cls(_FILES["cog"])
     with pytest.raises(ValueError):
         cog.open(mode="r+")
@@ -804,3 +805,154 @@ def test_cog_store(store_cls: type[EOCogStore], format_file: str):
     with pytest.raises(NotImplementedError):
         cog.open(mode="r")
         cog.write_attrs("", {})
+
+
+@pytest.mark.real_s3
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "store, path, open_kwargs",
+    [
+        (EOCogStore, "s3://eopf/cpm/test_data/OLCI_COG", S3_CONFIG_REAL),
+    ],
+)
+def test_s3_reading_cog_store(dask_client_all, store: type, path: str, open_kwargs: dict[str, Any]):
+    cog_store = store(path)
+    product = EOProduct("s3_test_product", storage=cog_store)
+    with product.open(storage_options=open_kwargs):
+        product.load()
+        # Test getitem
+        assert isinstance(product["conditions/geometry/altitude"], EOVariable)
+        assert isinstance(product["conditions/geometry"], EOGroup)
+        with pytest.raises(KeyError):
+            product["invalid_key"]
+        # Test iter
+        expected_top_level_groups = ["conditions", "coordinates", "measurements", "quality"]
+        actual_top_level_groups = [str(x) for x in cog_store.iter("")]
+        assert expected_top_level_groups == actual_top_level_groups
+
+        # Test len
+        assert len(product) == len(expected_top_level_groups)
+
+
+@pytest.mark.need_files
+@pytest.mark.integration
+@pytest.mark.parametrize(
+    "store, legacy_product_path, write_target",
+    [
+        (
+            EOCogStore,
+            lazy_fixture("S3_OLCI_L1_EFR"),
+            "data/test_cog",
+        ),
+    ],
+)
+def test_convert_cog_store(store, legacy_product_path, write_target):
+    safe_store = EOSafeStore(legacy_product_path)
+    cog_store = store(write_target)
+    # Convert legacy product stored in safe_store to cog_store
+    convert(safe_store, cog_store)
+
+    product = EOProduct("cog_product", storage=cog_store)
+    with product.open():
+        product.load()
+
+    with pytest.raises(ValueError):
+        cog_store.open(mode="incorrect_mode")
+
+    # Test is group, is variable
+    with product.open(mode="r"):
+        assert cog_store.is_group("conditions/geometry")
+        assert not cog_store.is_variable("conditions/geometry")
+        assert cog_store.is_variable("conditions/geometry/altitude.cog")
+        assert not cog_store.is_group("conditions/geometry/altitude.cog")
+
+    # Test getitem
+    # Try to get an item when mode is set to write
+    with pytest.raises(NotImplementedError):
+        cog_store.open(mode="w")
+        data = cog_store[""]  # noqa
+
+    # Test if returned output of getitem is EOGroup or EOVariable
+    cog_store.open(mode="r")
+    assert isinstance(cog_store[""], EOGroup)
+    assert isinstance(cog_store["conditions/geometry/altitude"], EOVariable)
+    cog_store.close()
+
+    # Try to get an item with an incorrect key
+    with pytest.raises(KeyError):
+        cog_store["some_incorrect_path"]
+
+    # Test iter, iterate over top level and check results
+    expected_top_level_groups = ["conditions", "measurements", "coordinates", "quality"]
+    actual_top_level_groups = [group_name for group_name in cog_store.iter("")]
+    assert set(expected_top_level_groups).issubset(actual_top_level_groups)
+    # Test iter, iterate over an directory, and check variables
+    expected_geometry_variables = ["saa", "oaa", "oza", "altitude", "sza"]
+    actual_geometry_variables = [variable for variable in cog_store.iter("conditions/geometry")]
+    assert set(expected_geometry_variables).issubset(actual_geometry_variables)
+    # Try to iterate over an incorrect path
+    with pytest.raises(FileNotFoundError):
+        incorrect_variables = [idx for idx in cog_store.iter("some_incorrect_path")]  # noqa
+
+    # Test len, when store is opened in writing mode
+    with pytest.raises(NotImplementedError):
+        cog_store.open(mode="w")
+        top_level_len = len(cog_store)  # noqa
+        cog_store.close()
+
+    cog_store.open(mode="r")
+    assert len(cog_store) == len(expected_top_level_groups)
+    cog_store.close()
+
+    # Test setitem
+
+    # Try to set an item when open mode is reading
+    with pytest.raises(NotImplementedError):
+        cog_store.open(mode="r")
+        cog_store["name"] = EOVariable("name", data=[])
+        cog_store.close()
+
+    # Try to set an item when item type is not EOV, EOG, DataArray
+    with pytest.raises(NotImplementedError):
+        cog_store.open(mode="w")
+        cog_store["name"] = "incorrect_data_type"
+
+    # Set an empty EOGroup and verify on disk
+    import os
+
+    cog_store.open(mode="w")
+    cog_store["empty_group"] = EOGroup("empty_group")
+    assert os.path.isdir(f"{write_target}/empty_group")
+    cog_store.close()
+
+    cog_store.open(mode="r")
+    assert cog_store.is_group("empty_group")
+    cog_store.close()
+    # Set EOV with data, open in write mode and use setitem to write them
+    cog_store.open(mode="w")
+    a_var, a_data = "a", EOVariable(data=[1, 2, 3])
+    b_var, b_data = "b", EOVariable(data=[4, 5, 6])
+    c_var, c_data = "c", EOVariable(data=[7, 8, 9])
+    cog_store["full_group"] = EOGroup("full_group", variables={a_var: a_data, b_var: b_data, c_var: c_data})
+    cog_store.close()
+    # Reopen in reading mode and check if groups are correctly written using os.path
+    cog_store.open(mode="r")
+    assert os.path.isdir(f"{write_target}/full_group")
+    assert cog_store.is_group("full_group")
+    # Check if variables are written as netcdf files on disk, and stored EOVariable(s)
+    for target in ["a", "b", "c"]:
+        path = f"full_group/{target}"
+        assert isinstance(cog_store[path], EOVariable)
+        assert os.path.isfile(f"{write_target}/{path}.nc")
+    # Check variables data using standard netcdf4 module, dataset["variable"][:] outputs variable dataarray
+    from netCDF4 import Dataset
+
+    var_a_ds = Dataset(f"{write_target}/full_group/a.nc")
+    assert (var_a_ds[a_var][:] == a_data._data).all()
+    var_b_ds = Dataset(f"{write_target}/full_group/b.nc")
+    assert (var_b_ds[b_var][:] == b_data._data).all()
+    var_c_ds = Dataset(f"{write_target}/full_group/c.nc")
+    assert (var_c_ds[c_var][:] == c_data._data).all()
+    cog_store.close()
+
+    # $write_target should be removed
