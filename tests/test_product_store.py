@@ -466,7 +466,7 @@ def test_close_manifest_store():
 def test_retrieve_from_manifest_store(
     dask_client_all,
     S3_OL_1_EFR,
-    S3_OLCI_L1_MAPPING: str,
+    S3_OL_1_EFR_MAPPING: str,
     tmp_path: pathlib.Path,
 ):
     """Tested on 24th of February on data coming from
@@ -486,7 +486,7 @@ def test_retrieve_from_manifest_store(
 
     manifest = ManifestStore(manifest_path)
 
-    mapping_file = open(S3_OLCI_L1_MAPPING)
+    mapping_file = open(S3_OL_1_EFR_MAPPING)
     map_olci = json.load(mapping_file)
     config = {"namespaces": map_olci["namespaces"], "mapping": map_olci["metadata_mapping"]}
     with open_store(manifest, **config):

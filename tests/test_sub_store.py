@@ -211,7 +211,7 @@ def test_xml_tiepoints_accessor(EMBEDED_TEST_DATA_FOLDER, mapping, ul, dummy_arr
 @pytest.mark.integration
 @pytest.mark.parametrize(
     "path, mapping",
-    [(lazy_fixture("S3_OLCI_L1_EFR"), lazy_fixture("S3_OLCI_L1_MAPPING"))],
+    [(lazy_fixture("S3_OL_1_EFR"), lazy_fixture("S3_OL_1_EFR_MAPPING"))],
 )
 def test_xml_manifest_accessor(path: str, mapping: str, tmp_path: pathlib.Path):
     fsmap = fsspec.get_mapper(path)
