@@ -83,6 +83,7 @@ def S3_OLCI_1_MAPPING(MAPPING_FOLDER: str):
     """Path to a S3 OLCI LEVEL 1 mapping"""
     return os.path.join(MAPPING_FOLDER, "S3_OL_1_EFR_mapping.json")
 
+
 def S3_OLCI_2_MAPPING(MAPPING_FOLDER: str):
     """Path to a S3 OLCI LEVEL 2 mapping"""
     return os.path.join(MAPPING_FOLDER, "S3_OL_2_EFR_mapping.json")
@@ -93,10 +94,12 @@ def S3_SL_1_RBT_MAPPING(MAPPING_FOLDER: str):
     """Path to a S3 SL 1 RBT mapping"""
     return os.path.join(MAPPING_FOLDER, "S3_SL_1_RBT_mapping.json")
 
+
 @pytest.fixture
 def S3_SL_2_LST_MAPPING(MAPPING_FOLDER: str):
     """Path to a S3 SL 2 LST mapping"""
     return os.path.join(MAPPING_FOLDER, "S3_SL_2_LST_mapping.json")
+
 
 @pytest.fixture
 def S3_SY_2_SYN_MAPPING(MAPPING_FOLDER: str):
@@ -114,6 +117,7 @@ def S2_MSIL1C_MAPPING(MAPPING_FOLDER: str):
 def S1_IM_OCN_MAPPING(MAPPING_FOLDER: str):
     """Path to a S1 OCN IW 1 mapping"""
     return os.path.join(MAPPING_FOLDER, "S1_OCN_IW_mapping.json")
+
 
 # ----------------------------------#
 # ------------ PRODUCT -------------#

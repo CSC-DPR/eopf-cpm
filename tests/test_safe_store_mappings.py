@@ -7,8 +7,8 @@ import pytest
 from pytest_lazyfixture import lazy_fixture
 
 from eopf.product.conveniences import open_store
-from eopf.product.core import EOProduct, EOVariable
-from eopf.product.store import EOProductStore, EOZarrStore
+from eopf.product.core import EOObject, EOProduct, EOVariable
+from eopf.product.store import EOCogStore, EONetCDFStore, EOProductStore, EOZarrStore
 from eopf.product.store.conveniences import convert
 from eopf.product.store.safe import EOSafeStore
 from eopf.product.utils import conv
@@ -19,7 +19,7 @@ from tests.utils import assert_eovariable_equal
 @pytest.mark.unit
 @pytest.mark.parametrize(
     "store_type, get_key",
-    [ 
+    [
         # At least One test per each product type and accessor used in the mapping file
 
         # "item_format": "filename_to_subswath",
@@ -68,15 +68,16 @@ from tests.utils import assert_eovariable_equal
         # "item_format": "netcdf"
         (lazy_fixture("S3_SL_2_LST_ZIP"), "/coordinates/in/latitude_in"),
         (lazy_fixture("S3_SL_2_LST_ZIP"), "/conditions/orphan/elevation_orphan_in"),
-        (lazy_fixture("S3_SL_2_LST_ZIP"), "/measurements/in/LST"),        
-        
+        (lazy_fixture("S3_SL_2_LST_ZIP"), "/measurements/in/LST"),
+
     ],
 )
 def test_read_product(dask_client_all, store_type, get_key):
     store = EOSafeStore(store_type)
     product = EOProduct("my_product", storage=store)
     product.open()
-    product[get_key]
+    eoval = product[get_key]
+    assert isinstance(eoval, EOObject)
     assert isinstance(product.attrs, dict)
     product.store.close()
 
@@ -93,7 +94,7 @@ def test_read_product(dask_client_all, store_type, get_key):
         lazy_fixture("S3_SY_2_SYN_ZIP"),
         lazy_fixture("S2_MSIL1C_ZIP"),
         lazy_fixture("S2_MSIL1C"),
-        lazy_fixture("S1_IM_OCN_ZIP")
+        lazy_fixture("S1_IM_OCN_ZIP"),
     ],
 )
 def test_load_product(dask_client_all, store_type):
@@ -112,6 +113,7 @@ def test_load_product(dask_client_all, store_type):
 @pytest.mark.parametrize(
     "input_path, mapping_filename, output_formatter, output_store, expected_optional_miss",
     [
+        # S3_OLCI_1 product type conversions
         (
             lazy_fixture("S3_OLCI_1_EFR_ZIP"),
             lazy_fixture("S3_OLCI_1_MAPPING"),
@@ -126,7 +128,22 @@ def test_load_product(dask_client_all, store_type):
             EOZarrStore,
             0,
         ),
+        (
+            lazy_fixture("S3_OLCI_1_EFR_ZIP"),
+            lazy_fixture("S3_OLCI_1_MAPPING"),
+            lambda name: f"{name.replace('.zip', '.cog')}",
+            EOCogStore,
+            0,
+        ),
+        (
+            lazy_fixture("S3_OLCI_1_EFR_ZIP"),
+            lazy_fixture("S3_OLCI_1_MAPPING"),
+            lambda name: f"{name.replace('.zip', '.nc')}",
+            EONetCDFStore,
+            0,
+        ),
 
+        # S3_OLCI_2 product type conversions
         (
             lazy_fixture("S3_OLCI_2_LFR_ZIP"),
             lazy_fixture("S3_OLCI_2_MAPPING"),
@@ -141,7 +158,22 @@ def test_load_product(dask_client_all, store_type):
             EOZarrStore,
             0,
         ),
+        (
+            lazy_fixture("S3_OLCI_2_LFR_ZIP"),
+            lazy_fixture("S3_OLCI_2_MAPPING"),
+            lambda name: f"{name.replace('.zip', '.cog')}",
+            EOCogStore,
+            0,
+        ),
+        (
+            lazy_fixture("S3_OLCI_2_LFR_ZIP"),
+            lazy_fixture("S3_OLCI_2_MAPPING"),
+            lambda name: f"{name.replace('.zip', '.nc')}",
+            EONetCDFStore,
+            0,
+        ),
 
+        # S3_SL_1_RBT product type conversions
         (
             lazy_fixture("S3_SL_1_RBT_ZIP"),
             lazy_fixture("S3_SL_1_RBT_MAPPING"),
@@ -156,7 +188,22 @@ def test_load_product(dask_client_all, store_type):
             EOZarrStore,
             0,
         ),
+        (
+            lazy_fixture("S3_SL_1_RBT_ZIP"),
+            lazy_fixture("S3_SL_1_RBT_MAPPING"),
+            lambda name: f"{name.replace('.zip', '.cog')}",
+            EOCogStore,
+            0,
+        ),
+        (
+            lazy_fixture("S3_SL_1_RBT_ZIP"),
+            lazy_fixture("S3_SL_1_RBT_MAPPING"),
+            lambda name: f"{name.replace('.zip', '.nc')}",
+            EONetCDFStore,
+            0,
+        ),
 
+        # S3_SL_2_LST product type conversions
         (
             lazy_fixture("S3_SL_2_LST_ZIP"),
             lazy_fixture("S3_SL_2_LST_MAPPING"),
@@ -171,7 +218,22 @@ def test_load_product(dask_client_all, store_type):
             EOZarrStore,
             0,
         ),
-        
+        (
+            lazy_fixture("S3_SL_2_LST_ZIP"),
+            lazy_fixture("S3_SL_2_LST_MAPPING"),
+            lambda name: f"{name.replace('.zip', '.cog')}",
+            EOCogStore,
+            0,
+        ),
+        (
+            lazy_fixture("S3_SL_2_LST_ZIP"),
+            lazy_fixture("S3_SL_2_LST_MAPPING"),
+            lambda name: f"{name.replace('.zip', '.nc')}",
+            EONetCDFStore,
+            0,
+        ),
+
+        # S3_SY_2_SYN product type conversions
         (
             lazy_fixture("S3_SY_2_SYN_ZIP"),
             lazy_fixture("S3_SY_2_SYN_MAPPING"),
@@ -186,12 +248,57 @@ def test_load_product(dask_client_all, store_type):
             EOZarrStore,
             0,
         ),
-        
+        (
+            lazy_fixture("S3_SY_2_SYN_ZIP"),
+            lazy_fixture("S3_SY_2_SYN_MAPPING"),
+            lambda name: f"{name.replace('.zip', '.cog')}",
+            EOCogStore,
+            0,
+        ),
+        (
+            lazy_fixture("S3_SY_2_SYN_ZIP"),
+            lazy_fixture("S3_SY_2_SYN_MAPPING"),
+            lambda name: f"{name.replace('.zip', '.nc')}",
+            EONetCDFStore,
+            0,
+        ),
+
+        # S2_MSIL1C - UNZIP Format -  product type conversions -
+        (
+            lazy_fixture("S2_MSIL1C"),
+            lazy_fixture("S2_MSIL1C_MAPPING"),
+            lambda name: f"{name.join('.SEN3')}",
+            EOSafeStore,
+            52,
+        ),
         (
             lazy_fixture("S2_MSIL1C"),
             lazy_fixture("S2_MSIL1C_MAPPING"),
             lambda name: f"{name.replace('.zip', '.zarr')}",
             EOZarrStore,
+            52,
+        ),
+        (
+            lazy_fixture("S2_MSIL1C"),
+            lazy_fixture("S2_MSIL1C_MAPPING"),
+            lambda name: f"{name.replace('.zip', '.cog')}",
+            EOCogStore,
+            0,
+        ),
+        (
+            lazy_fixture("S2_MSIL1C"),
+            lazy_fixture("S2_MSIL1C_MAPPING"),
+            lambda name: f"{name.replace('.zip', '.nc')}",
+            EONetCDFStore,
+            0,
+        ),
+
+        # S2_MSIL1C product type conversions - ZIP Format
+        (
+            lazy_fixture("S2_MSIL1C_ZIP"),
+            lazy_fixture("S2_MSIL1C_MAPPING"),
+            lambda name: f"{name.replace('.zip', '.SEN3')}",
+            EOSafeStore,
             52,
         ),
         (
@@ -202,14 +309,43 @@ def test_load_product(dask_client_all, store_type):
             52,
         ),
         (
+            lazy_fixture("S2_MSIL1C_ZIP"),
+            lazy_fixture("S2_MSIL1C_MAPPING"),
+            lambda name: f"{name.replace('.zip', '.cog')}",
+            EOCogStore,
+            0,
+        ),
+        (
+            lazy_fixture("S2_MSIL1C_ZIP"),
+            lazy_fixture("S2_MSIL1C_MAPPING"),
+            lambda name: f"{name.replace('.zip', '.nc')}",
+            EONetCDFStore,
+            0,
+        ),
+
+        # S1_IM_OCN product type conversions
+        (
             lazy_fixture("S1_IM_OCN_ZIP"),
             lazy_fixture("S1_IM_OCN_MAPPING"),
             lambda name: f"{name.replace('.zip', '.zarr')}",
             EOZarrStore,
             0,
         ),
+        (
+            lazy_fixture("S1_IM_OCN_ZIP"),
+            lazy_fixture("S1_IM_OCN_MAPPING"),
+            lambda name: f"{name.replace('.zip', '.cog')}",
+            EOCogStore,
+            0,
+        ),
+        (
+            lazy_fixture("S1_IM_OCN_ZIP"),
+            lazy_fixture("S1_IM_OCN_MAPPING"),
+            lambda name: f"{name.replace('.zip', '.nc')}",
+            EONetCDFStore,
+            0,
+        ),
 
-        #TODO: add cog and netcdf conversions
     ],
 )
 def test_convert_safe_mapping(
