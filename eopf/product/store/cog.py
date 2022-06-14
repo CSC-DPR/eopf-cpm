@@ -86,6 +86,8 @@ class EOCogStore(EOProductStore):
         self.mapper = self.url.fs.get_mapper(self.url.path)
 
     def is_group(self, path: str) -> bool:
+        if self.status == StorageStatus.CLOSE:
+            raise StoreNotOpenError("Store must be open before access to it")
         if self._sub_store is not None:
             return self._sub_store.is_group(path)
 
@@ -97,6 +99,8 @@ class EOCogStore(EOProductStore):
         return self.url.fs.isdir(group_path)
 
     def is_variable(self, path: str) -> bool:
+        if self.status == StorageStatus.CLOSE:
+            raise StoreNotOpenError("Store must be open before access to it")
         if self._sub_store is not None:
             return self._sub_store.is_variable(path)
 
@@ -112,12 +116,16 @@ class EOCogStore(EOProductStore):
         return self.url.fs.isfile(file_path)
 
     def __len__(self) -> int:
+        if self.status == StorageStatus.CLOSE:
+            raise StoreNotOpenError("Store must be open before access to it")
         if self._sub_store is not None:
             return len(self._sub_store)
         else:
             return sum(1 for _ in self.iter(""))
 
     def iter(self, path: str) -> Iterator[str]:
+        if self.status == StorageStatus.CLOSE:
+            raise StoreNotOpenError("Store must be open before access to it")
         # Return sub_store iter if it's set
         if self._sub_store is not None:
             yield from self._sub_store.iter(path)
@@ -143,9 +151,13 @@ class EOCogStore(EOProductStore):
                 yield item.split(self.sep)[-1]
 
     def write_attrs(self, group_path: str, attrs: Any = ...) -> None:
+        if self.status == StorageStatus.CLOSE:
+            raise StoreNotOpenError("Store must be open before access to it")
         return self._sub_store.write_attrs(group_path, attrs)
 
     def __getitem__(self, key: str) -> "EOObject":
+        if self.status == StorageStatus.CLOSE:
+            raise StoreNotOpenError("Store must be open before access to it")
         if self._sub_store is not None:
             return self._sub_store[key]
 
@@ -196,6 +208,8 @@ class EOCogStore(EOProductStore):
         raise KeyError(f"{key} not found!")
 
     def __setitem__(self, key: str, value: "EOObject") -> None:
+        if self.status == StorageStatus.CLOSE:
+            raise StoreNotOpenError("Store must be open before access to it")
         if self._sub_store is not None:
             self._sub_store[key] = value
 
