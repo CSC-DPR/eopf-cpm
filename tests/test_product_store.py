@@ -808,7 +808,7 @@ def test_s3_reading_cog_store(dask_client_all, store: type, path: str, open_kwar
     [
         (
             EOCogStore,
-            "data/S3A_OL_1_EFR____20220307T075105_20220307T075405_20220308T114654_0179_082_363_2160_LN1_O_NT_002.SEN3",
+            lazy_fixture("S3_OLCI_L1_EFR"),
             "data/test_cog",
         ),
     ],
