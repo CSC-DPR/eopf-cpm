@@ -841,7 +841,7 @@ def test_s3_reading_cog_store(dask_client_all, store: type, path: str, open_kwar
     [
         (
             EOCogStore,
-            lazy_fixture("S3_OLCI_L1_EFR"),
+            lazy_fixture("S3_OL_1_EFR"),
             "data/test_cog",
         ),
     ],
@@ -876,7 +876,6 @@ def test_convert_cog_store(store, legacy_product_path, write_target):
     cog_store.open(mode="r")
     assert isinstance(cog_store[""], EOGroup)
     assert isinstance(cog_store["conditions/geometry/altitude"], EOVariable)
-    cog_store.close()
 
     # Try to get an item with an incorrect key
     with pytest.raises(KeyError):
@@ -894,6 +893,7 @@ def test_convert_cog_store(store, legacy_product_path, write_target):
     with pytest.raises(FileNotFoundError):
         incorrect_variables = [idx for idx in cog_store.iter("some_incorrect_path")]  # noqa
 
+    cog_store.close()
     # Test len, when store is opened in writing mode
     with pytest.raises(NotImplementedError):
         cog_store.open(mode="w")
