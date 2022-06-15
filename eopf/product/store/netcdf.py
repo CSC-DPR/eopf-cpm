@@ -476,4 +476,4 @@ class EONetcdfStringToTimeAccessor(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         #    if key not in ["/", ""]:
 
-    #        raise KeyError(f"{key} does not exist")
+        #        raise KeyError(f"{key} does not exist")
