@@ -266,7 +266,7 @@ class EONetCDFStoreNCpy(EOProductStore):
         ------
         Boolean
         """
-        return False
+        return False # We don't want this store to be our default netcdf store.
 
     # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
