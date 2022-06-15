@@ -262,11 +262,6 @@ class XMLManifestAccessor(EOProductStore):
         super().open(mode=mode)
         self._xml_fobj = open(self.url, mode="r")
 
-        if self._metada_mapping:
-            self._attrs = self.translate_attributes(self._metada_mapping)
-        else:
-            self._attrs = {}
-
     def close(self) -> None:
         if self._xml_fobj is None:
             raise StoreNotOpenError()
@@ -292,14 +287,13 @@ class XMLManifestAccessor(EOProductStore):
         if self._parsed_xml is None:
             self._parse_xml()
 
-        # if set(self.KEYS).issubset(self._metada_mapping.keys()):
-        #     # computes CF and OM_EOP
-        #     self._compute_om_eop()
-        #     self._compute_cf()
-        # else:
-
         # create an EOGroup and set its attributes with a dictionary containing CF and OM_EOP
         from eopf.product.core import EOGroup
+
+        if self._metada_mapping:
+            self._attrs = self.translate_attributes(self._metada_mapping)
+        else:
+            self._attrs = {}
 
         eog: EOGroup = EOGroup("product_metadata", attrs=self._attrs)
         return eog
@@ -602,7 +596,7 @@ class XMLManifestAccessor(EOProductStore):
 
     def iter(self, path: str) -> Iterator[str]:
         """Has no functionality within this store"""
-        yield from self._attrs.keys()
+        yield from ()
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         raise NotImplementedError()

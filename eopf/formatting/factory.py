@@ -199,9 +199,14 @@ class formatable_method(object):
     ex.get_val("to_str(a_val)")
     """
 
-    def __init__(self, fn: Callable[[Any], Any]) -> None:
+    def __init__(self, fn: Callable[[Any], Any], decorator_factory: EOFormatterFactory = None) -> None:
         self.fn = fn
         self.parent_obj: object = None
+
+        if decorator_factory:
+            self.decorator_factory = decorator_factory
+        else:
+            self.decorator_factory = EOFormatterFactory()
 
     def __get__(self, obj: object, _: Any = None) -> "formatable_method":
         self.parent_obj = obj
@@ -213,16 +218,15 @@ class formatable_method(object):
             raise FormattingDecoratorMissingUri("The decorated function does not contain a URI")
 
         # parse the path, which should always be the first argument
-        _, formatter, formatter_stripped_uri = EOFormatterFactory().get_formatter(args[0])
-
+        _, self.formatter, self.formatter_stripped_uri = self.decorator_factory.get_formatter(args[0])
         # replace the first argument with the formatter_stripped_uri
         lst_args = list(args)
-        lst_args[0] = formatter_stripped_uri
+        lst_args[0] = self.formatter_stripped_uri
         new_args = tuple(lst_args)
 
         # call the decorated function
         decorated_method_ret = self.fn(self.parent_obj, *new_args, **kwargs)
-        if formatter is not None:
-            return formatter(decorated_method_ret)
+        if self.formatter is not None:
+            return self.formatter(decorated_method_ret)
 
         return decorated_method_ret

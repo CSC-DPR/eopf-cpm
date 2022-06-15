@@ -449,13 +449,23 @@
       "source_path": "xfdumanifest.xml",
       "item_format": "xmlmetadata",
       "accessor_config": {
-        "mapping": "metadata_mapping",
+        "mapping": "stac_discovery",
+        "namespaces": "namespaces"
+      }
+    },
+    {
+      "short_name": "metadata",
+      "target_path": "",
+      "source_path": "xfdumanifest.xml",
+      "item_format": "xmlmetadata",
+      "accessor_config": {
+        "mapping": "conditions_metadata",
         "namespaces": "namespaces"
       }
     }
   ],
   "stac_discovery": {
-    "type": "Text(Feature)",
+    "type_": "Text(Feature)",
     "stac_version": "Text(1.0.0)",
     "stac_extensions": [
       "Text(https://stac-extensions.github.io/eopf/v1.0.0/schema.json)"
