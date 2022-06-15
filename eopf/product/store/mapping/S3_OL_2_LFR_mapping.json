@@ -88,31 +88,31 @@
     {
       "short_name": "otci_err",
       "target_path": "/quality/image/otci_err",
-      "source_path": "otci.nc:OTCI_err",
+      "source_path": "otci.nc:OTCI_unc",
       "item_format": "netcdf"
     },
     {
       "short_name": "gifapar_err",
       "target_path": "/quality/image/gifapar_err",
-      "source_path": "gifapar.nc:GIFAPAR_err",
+      "source_path": "gifapar.nc:GIFAPAR_unc",
       "item_format": "netcdf"
     },
     {
       "short_name": "rc681_err",
       "target_path": "/quality/image/rc681_err",
-      "source_path": "rc_gifapar.nc:RC681_err",
+      "source_path": "rc_gifapar.nc:RC681_unc",
       "item_format": "netcdf"
     },
     {
       "short_name": "rc865_err",
       "target_path": "/quality/image/rc865_err",
-      "source_path": "rc_gifapar.nc:RC865_err",
+      "source_path": "rc_gifapar.nc:RC865_unc",
       "item_format": "netcdf"
     },
     {
       "short_name": "iwv_err",
       "target_path": "/quality/image/iwv_err",
-      "source_path": "iwv.nc:IWV_err",
+      "source_path": "iwv.nc:IWV_unc",
       "item_format": "netcdf"
     },
 
@@ -234,7 +234,7 @@
     }
   ],
   "metadata_mapping": {
-    "type": "'Feature'",
+    "type_": "'Feature'",
     "stac_version": "'1.0.0'",
     "stac_extensions" : [
       "'https://stac-extensions.github.io/processing/v1.1.0/schema.json'",

@@ -27,12 +27,14 @@ from eopf.product.store import (
     convert,
 )
 from eopf.product.store.cog import EOCogStore
+from eopf.product.store.grib import EOGribAccessor
 from eopf.product.store.manifest import ManifestStore
 from eopf.product.store.rasterio import EORasterIOAccessor
 from eopf.product.store.wrappers import (
     FromAttributesToFlagValueAccessor,
     FromAttributesToVariableAccessor,
 )
+from eopf.product.store.xml_accessors import XMLAnglesAccessor, XMLTPAccessor
 
 from .decoder import Netcdfdecoder
 from .utils import (
@@ -272,16 +274,24 @@ def test_abstract_store_cant_be_instantiate():
 
 @pytest.mark.unit
 @pytest.mark.parametrize(
-    "store",
+    "store_cls",
     [
-        EOZarrStore("a_product"),
-        EONetCDFStore(_FILES["netcdf"]),
-        EORasterIOAccessor("a.jp2"),
-        FromAttributesToVariableAccessor(""),
-        FromAttributesToFlagValueAccessor(""),
+        EOZarrStore,
+        EONetCDFStore,
+        EORasterIOAccessor,
+        EOSafeStore,
+        EOCogStore,
+        ManifestStore,
+        EORasterIOAccessor,
+        EOGribAccessor,
+        XMLAnglesAccessor,
+        XMLTPAccessor,
+        FromAttributesToVariableAccessor,
+        FromAttributesToFlagValueAccessor,
     ],
 )
-def test_store_must_be_open_read_method(store: EOProductStore):
+def test_store_must_be_open_read_method(store_cls):
+    store = store_cls("a_product")
     with pytest.raises(StoreNotOpenError):
         store["a_group"]
 
@@ -295,22 +305,28 @@ def test_store_must_be_open_read_method(store: EOProductStore):
         len(store)
 
     with pytest.raises(StoreNotOpenError):
-        store.iter("a_group")
+        set(store.iter("a_group"))
 
     with pytest.raises(StoreNotOpenError):
         for _ in store:
             continue
 
+    with pytest.raises(StoreNotOpenError):
+        store.close()
+
 
 @pytest.mark.unit
 @pytest.mark.parametrize(
-    "store",
+    "store_cls",
     [
-        EOZarrStore("a_product"),
-        EONetCDFStore(_FILES["netcdf"]),
+        EOZarrStore,
+        EONetCDFStore,
+        EOSafeStore,
+        EOCogStore,
     ],
 )
-def test_store_must_be_open_write_method(store):
+def test_store_must_be_open_write_method(store_cls):
+    store = store_cls("a_product")
     with pytest.raises(StoreNotOpenError):
         store["a_group"] = EOGroup(variables={})
 
@@ -359,17 +375,38 @@ def test_open_close_already(store, exceptions):
 
 @pytest.mark.unit
 @pytest.mark.parametrize(
-    "store, formats, results",
+    "store, ok_formats",
     [
-        (EOZarrStore(zarr.MemoryStore()), (".zarr", "", ".nc"), (True, True, False)),
-        (EONetCDFStore(_FILES["netcdf"]), (".nc", "", ".zarr"), (True, False, False)),
-        (ManifestStore(_FILES["json"]), (".nc", ".zarr", ""), (False, False, False)),
+        (EOZarrStore, ("", ".zarr")),
+        (EONetCDFStore, (".nc",)),
+        (EOSafeStore, (".SAFE", ".SEN3")),
+        (EOCogStore, (".cogs",)),
+        (ManifestStore, ()),
+        (EORasterIOAccessor, (".jp2", ".tiff")),
+        (EOGribAccessor, (".grib",)),
+        (XMLAnglesAccessor, ()),
+        (XMLTPAccessor, ()),
     ],
 )
-def test_guess_read_format(store, formats, results):
-    assert len(formats) == len(results)
-    for format, res in zip(formats, results):
-        assert store.guess_can_read(f"file{format}") == res
+def test_guess_read_format(store, ok_formats):
+    all_guessed_formats = (
+        "",
+        ".cog",
+        ".cogs",
+        ".false",
+        ".grib",
+        ".jp2",
+        ".json",
+        ".nc",
+        ".SAFE",
+        ".SEN3",
+        ".tiff",
+        ".zarr",
+    )
+    for format in ok_formats:
+        assert format in all_guessed_formats
+    for format in all_guessed_formats:
+        assert store.guess_can_read(f"file{format}") == (format in ok_formats)
 
 
 @pytest.mark.unit
@@ -428,8 +465,8 @@ def test_close_manifest_store():
 @pytest.mark.integration
 def test_retrieve_from_manifest_store(
     dask_client_all,
-    S3_OLCI_L1_EFR: str,
-    S3_OLCI_L1_MAPPING: str,
+    S3_OL_1_EFR,
+    S3_OL_1_EFR_MAPPING: str,
     tmp_path: pathlib.Path,
 ):
     """Tested on 24th of February on data coming from
@@ -440,7 +477,7 @@ def test_retrieve_from_manifest_store(
     """
     import json
 
-    fsmap = fsspec.get_mapper(S3_OLCI_L1_EFR)
+    fsmap = fsspec.get_mapper(S3_OL_1_EFR)
     manifest_name = "xfdumanifest.xml"
     manifest_path = tmp_path / manifest_name
     for key in fsmap:
@@ -449,11 +486,13 @@ def test_retrieve_from_manifest_store(
 
     manifest = ManifestStore(manifest_path)
 
-    mapping_file = open(S3_OLCI_L1_MAPPING)
+    mapping_file = open(S3_OL_1_EFR_MAPPING)
     map_olci = json.load(mapping_file)
     config = {"namespaces": map_olci["namespaces"], "mapping": map_olci["metadata_mapping"]}
     with open_store(manifest, **config):
         eog = manifest[""]
+        with pytest.raises(KeyError):
+            manifest["error"]
     assert isinstance(eog, EOGroup)
     returned_cf = eog.attrs["CF"]
     returned_om_eop = eog.attrs["OM_EOP"]
@@ -461,7 +500,7 @@ def test_retrieve_from_manifest_store(
     assert_issubdict(
         returned_cf,
         {
-            "title": S3_OLCI_L1_EFR.split("/")[-1].replace(".zip", ".SEN3"),
+            "title": S3_OL_1_EFR.split("/")[-1].replace(".zip", ".SEN3"),
             "institution": "European Space Agency, Land OLCI Processing and Archiving Centre [LN1]",
             "source": "Sentinel-3A OLCI Ocean Land Colour Instrument",
             "comment": "Operational",
@@ -549,7 +588,7 @@ def test_retrieve_from_manifest_store(
     assert_issubdict(
         metadata_property,
         {
-            "identifier": S3_OLCI_L1_EFR.split("/")[-1].replace(".zip", ".SEN3"),
+            "identifier": S3_OL_1_EFR.split("/")[-1].replace(".zip", ".SEN3"),
             "acquisitionType": "Operational",
             "productType": "OL_1_EFR___",
             "status": "ARCHIVED",
@@ -604,8 +643,6 @@ def test_convert(dask_client_all, read_write_stores):
 )
 def test_rasters(dask_client_all, store_cls: type[EORasterIOAccessor], format_file: str, params: dict[str, Any]):
     file_name = f"a_file.{format_file}"
-    assert store_cls.guess_can_read(file_name)
-    assert not store_cls.guess_can_read("false_format.false")
     raster = store_cls(file_name)
 
     with patch("rioxarray.open_rasterio") as mock_function:
@@ -736,10 +773,6 @@ def test_write_real_s3(dask_client_all, w_store: type, w_path: str, w_kwargs: di
     ],
 )
 def test_patch_cog_store(store_cls: type[EOCogStore], format_file: str):
-    assert store_cls.guess_can_read("some_file.cogs")
-    assert not store_cls.guess_can_read("some_other_file.false")
-    assert not store_cls.guess_can_read("some_other_file.cog")
-    assert not store_cls.guess_can_read("some_other_file.nc")
     cog = store_cls(_FILES["cog"])
     with pytest.raises(ValueError):
         cog.open(mode="r+")
@@ -808,7 +841,7 @@ def test_s3_reading_cog_store(dask_client_all, store: type, path: str, open_kwar
     [
         (
             EOCogStore,
-            lazy_fixture("S3_OLCI_L1_EFR"),
+            lazy_fixture("S3_OL_1_EFR"),
             "data/test_cog",
         ),
     ],
@@ -843,7 +876,6 @@ def test_convert_cog_store(store, legacy_product_path, write_target):
     cog_store.open(mode="r")
     assert isinstance(cog_store[""], EOGroup)
     assert isinstance(cog_store["conditions/geometry/altitude"], EOVariable)
-    cog_store.close()
 
     # Try to get an item with an incorrect key
     with pytest.raises(KeyError):
@@ -861,6 +893,7 @@ def test_convert_cog_store(store, legacy_product_path, write_target):
     with pytest.raises(FileNotFoundError):
         incorrect_variables = [idx for idx in cog_store.iter("some_incorrect_path")]  # noqa
 
+    cog_store.close()
     # Test len, when store is opened in writing mode
     with pytest.raises(NotImplementedError):
         cog_store.open(mode="w")
