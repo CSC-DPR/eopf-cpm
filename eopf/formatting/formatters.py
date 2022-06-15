@@ -178,7 +178,7 @@ class ToUNIXTimeSLSTRL1(EOAbstractFormatter):
             end = to_datetime(input[:])
 
             # compute and convert the time difference into microseconds
-            time_delta = numpy.array(numpy.int64((end - start) // Timedelta("1microsecond")))
+            time_delta = numpy.array([numpy.int64((end - start) // Timedelta("1microsecond"))])
 
             # create coresponding attributes
             attributes = {}
