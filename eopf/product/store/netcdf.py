@@ -266,7 +266,7 @@ class EONetCDFStoreNCpy(EOProductStore):
         ------
         Boolean
         """
-        return False # We don't want this store to be our default netcdf store.
+        return False  # We don't want this store to be our default netcdf store.
 
     # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
@@ -474,6 +474,6 @@ class EONetcdfStringToTimeAccessor(EOProductStore):
         """
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        #    if key not in ["/", ""]:
+        # if key not in ["/", ""]:
 
-        #        raise KeyError(f"{key} does not exist")
+        #     raise KeyError(f"{key} does not exist")
