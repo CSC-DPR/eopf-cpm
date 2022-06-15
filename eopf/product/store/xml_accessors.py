@@ -253,14 +253,19 @@ class XMLManifestAccessor(EOProductStore):
 
         # get configuration parameters
         try:
-            self._metada_mapping: MutableMapping[str, Any] = kwargs["metadata_mapping"]
-            self._namespaces: dict[str, str] = kwargs["namespace"]
+            self._metada_mapping: MutableMapping[str, Any] = kwargs["mapping"]
+            self._namespaces: dict[str, str] = kwargs["namespaces"]
         except KeyError as e:
             raise TypeError(f"Missing configuration parameter: {e}")
 
         # open the manifest xml
         super().open(mode=mode)
         self._xml_fobj = open(self.url, mode="r")
+
+        if self._metada_mapping:
+            self._attrs = self.translate_attributes(self._metada_mapping)
+        else:
+            self._attrs = {}
 
     def close(self) -> None:
         if self._xml_fobj is None:
@@ -287,12 +292,11 @@ class XMLManifestAccessor(EOProductStore):
         if self._parsed_xml is None:
             self._parse_xml()
 
-        if set(self.KEYS).issubset(self._metada_mapping.keys()):
-            # computes CF and OM_EOP
-            self._compute_om_eop()
-            self._compute_cf()
-        else:
-            self._attrs = self.translate_attributes(self._metada_mapping)
+        # if set(self.KEYS).issubset(self._metada_mapping.keys()):
+        #     # computes CF and OM_EOP
+        #     self._compute_om_eop()
+        #     self._compute_cf()
+        # else:
 
         # create an EOGroup and set its attributes with a dictionary containing CF and OM_EOP
         from eopf.product.core import EOGroup
@@ -519,7 +523,7 @@ class XMLManifestAccessor(EOProductStore):
         """
         if self._xml_fobj is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        yield from self.KEYS
+        return iter([])
 
     def _parse_xml(self) -> None:
         """Parses the manifest xml and saves it in _parsed_xml
@@ -598,7 +602,7 @@ class XMLManifestAccessor(EOProductStore):
 
     def iter(self, path: str) -> Iterator[str]:
         """Has no functionality within this store"""
-        raise NotImplementedError()
+        yield from self._attrs.keys()
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         raise NotImplementedError()

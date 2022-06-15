@@ -25,8 +25,8 @@ class EOStoreFactory:
             )
             from eopf.product.store.xml_accessors import (
                 XMLAnglesAccessor,
-                XMLTPAccessor,
                 XMLManifestAccessor,
+                XMLTPAccessor,
             )
             from eopf.product.store.zarr import EOZarrStore
 

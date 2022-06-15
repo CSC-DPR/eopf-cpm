@@ -444,22 +444,12 @@
       "item_format": "netcdf"
     },
     {
-      "short_name": "stac_discovery",
+      "short_name": "metadata",
       "target_path": "",
       "source_path": "xfdumanifest.xml",
       "item_format": "xmlmetadata",
       "accessor_config": {
-        "mapping": "stac_discovery",
-        "namespaces": "namespaces"
-      }
-    },
-    {
-      "short_name": "conditions_metadata",
-      "target_path": "conditions",
-      "source_path": "xfdumanifest.xml",
-      "item_format": "xmlmetadata",
-      "accessor_config": {
-        "mapping": "conditions_metadata",
+        "mapping": "metadata_mapping",
         "namespaces": "namespaces"
       }
     }
