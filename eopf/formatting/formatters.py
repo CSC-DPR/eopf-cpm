@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import Any, Dict, List, Union
 
-from numpy import int64
+import numpy
 from pandas import Timedelta, to_datetime
 from pytz import UTC
 
@@ -32,7 +32,7 @@ class EOAbstractFormatter(ABC):
         raise NotImplementedError()
 
 
-class to_str(EOAbstractFormatter):
+class ToStr(EOAbstractFormatter):
     """Formatter for string conversion"""
 
     # docstr-coverage: inherited
@@ -62,7 +62,7 @@ class to_str(EOAbstractFormatter):
             raise FormattingError(f"{e}")
 
 
-class to_float(EOAbstractFormatter):
+class ToFloat(EOAbstractFormatter):
     """Formatter for float conversion"""
 
     # docstr-coverage: inherited
@@ -91,7 +91,7 @@ class to_float(EOAbstractFormatter):
             raise FormattingError(f"{e}")
 
 
-class to_int(EOAbstractFormatter):
+class ToInt(EOAbstractFormatter):
     """Formatter for int conversion"""
 
     # docstr-coverage: inherited
@@ -120,7 +120,7 @@ class to_int(EOAbstractFormatter):
             raise FormattingError(f"{e}")
 
 
-class to_bool(EOAbstractFormatter):
+class ToBool(EOAbstractFormatter):
     """Formatter for bool conversion"""
 
     # docstr-coverage: inherited
@@ -149,7 +149,7 @@ class to_bool(EOAbstractFormatter):
             raise FormattingError(f"{e}")
 
 
-class to_unix_time_slstr_l1(EOAbstractFormatter):
+class ToUNIXTimeSLSTRL1(EOAbstractFormatter):
     """Formatter for unix time conversion for SLSTR L1 ANX_time and calibration_time variables"""
 
     # docstr-coverage: inherited
@@ -178,8 +178,7 @@ class to_unix_time_slstr_l1(EOAbstractFormatter):
             end = to_datetime(input[:])
 
             # compute and convert the time difference into microseconds
-            time_delta = int64((end - start) // Timedelta("1microsecond"))
-            print(type(time_delta))
+            time_delta = numpy.array(numpy.int64((end - start) // Timedelta("1microsecond")))
 
             # create coresponding attributes
             attributes = {}
@@ -197,7 +196,7 @@ class to_unix_time_slstr_l1(EOAbstractFormatter):
             raise FormattingError(f"{e}")
 
 
-class to_iso8601(EOAbstractFormatter):
+class ToISO8601(EOAbstractFormatter):
     """Formatter for ISO8601 (time) conversion"""
 
     # docstr-coverage: inherited
@@ -225,11 +224,11 @@ class to_iso8601(EOAbstractFormatter):
             dt_obj = datetime.strptime(input, "%Y%m%dT%H%M%S")
             date_string = dt_obj.strftime("%Y-%m-%dT%H:%M:%SZ")
             return date_string
-        except Exception as e:
-            raise FormattingError(f"{e}")
+        except ValueError:
+            raise FormattingError(f"Input {input} cannot be converted to ISO standard.")
 
 
-class to_bbox(EOAbstractFormatter):
+class ToBbox(EOAbstractFormatter):
     """Formatter for computing coordinates of a polygon bounding box"""
 
     # docstr-coverage: inherited
@@ -267,7 +266,7 @@ class to_bbox(EOAbstractFormatter):
             raise FormattingError(f"{e}")
 
 
-class to_geojson(EOAbstractFormatter):
+class ToGeoJson(EOAbstractFormatter):
     """Formatter for converting polygon coordinates to geoJson format"""
 
     # docstr-coverage: inherited
@@ -304,7 +303,7 @@ class to_geojson(EOAbstractFormatter):
             raise FormattingError(f"{e}")
 
 
-class to_imageSize(EOAbstractFormatter):
+class ToImageSize(EOAbstractFormatter):
     """Silent Formatter used to read medata files"""
 
     # docstr-coverage: inherited

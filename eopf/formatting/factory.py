@@ -38,27 +38,27 @@ class EOFormatterFactory(object):
         if default_formatters:
             from eopf.formatting.formatters import (
                 Text,
-                to_bbox,
-                to_bool,
-                to_float,
-                to_geojson,
-                to_imageSize,
-                to_int,
-                to_iso8601,
-                to_str,
-                to_unix_time_slstr_l1,
+                ToBbox,
+                ToBool,
+                ToFloat,
+                ToGeoJson,
+                ToImageSize,
+                ToInt,
+                ToISO8601,
+                ToStr,
+                ToUNIXTimeSLSTRL1,
             )
 
-            self.register_formatter(to_str)
-            self.register_formatter(to_float)
-            self.register_formatter(to_bool)
-            self.register_formatter(to_unix_time_slstr_l1)
-            self.register_formatter(to_iso8601)
-            self.register_formatter(to_bbox)
-            self.register_formatter(to_geojson)
-            self.register_formatter(to_int)
+            self.register_formatter(ToStr)
+            self.register_formatter(ToFloat)
+            self.register_formatter(ToBool)
+            self.register_formatter(ToUNIXTimeSLSTRL1)
+            self.register_formatter(ToISO8601)
+            self.register_formatter(ToBbox)
+            self.register_formatter(ToGeoJson)
+            self.register_formatter(ToInt)
             self.register_formatter(Text)
-            self.register_formatter(to_imageSize)
+            self.register_formatter(ToImageSize)
         else:
             # to implement another logic of importing formatters
             pass

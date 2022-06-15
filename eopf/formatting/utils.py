@@ -17,53 +17,13 @@ def poly_coords_parsing(a_string: str) -> List[List[float]]:
     List[List[float]]
         List containg pairs of coordinates casted to floating point representation (latitude, longitude)
     """
-    word_index = 0
-    coords_list = []
-    string_len = len(a_string)
-    cur_lat = ""
-    cur_lon = ""
-
-    # remove begining spaces
-    start = 0
-    while start < string_len - 1:
-        if a_string[start] == " ":
-            start += 1
-        else:
-            break
-
-    # remove ending spaces
-    stop = string_len
-    while stop >= 0:
-        if a_string[stop - 1] == " ":
-            stop -= 1
-        else:
-            break
-
-    for i in range(start, stop, 1):
-        if a_string[i] != " ":
-            # when you have spaces or digits, also other charecters are accepted but the conversion will fail
-            if word_index == 0:
-                cur_lat += a_string[i]
-            else:
-                cur_lon += a_string[i]
-        else:
-            # when you have spaces
-
-            # just in case you have multiple spaces
-            if a_string[i + 1] == " ":
-                continue
-
-            if word_index == 0:
-                word_index += 1
-            else:
-                coords_list.append([float(cur_lat), float(cur_lon)])
-                word_index = 0
-                cur_lat = ""
-                cur_lon = ""
-
-    # the last coordinates are appended here
-    coords_list.append([float(cur_lat), float(cur_lon)])
-    return coords_list
+    # remove begining and ending spaces
+    a_string.strip()
+    # remove inner empty spaces
+    clean_string = filter(None, a_string.split(" "))
+    iter_string = iter(clean_string)
+    # Create pairs [float, float] with latitudes and longitudes
+    return [[float(lat), float(lon)] for lat, lon in zip(iter_string, iter_string)]
 
 
 def detect_pole_or_antemeridian(coordinates: List[List[float]]) -> bool:

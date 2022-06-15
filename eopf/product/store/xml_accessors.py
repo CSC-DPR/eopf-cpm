@@ -17,7 +17,7 @@ from lxml.etree import _ElementUnicodeResult
 
 from eopf.exceptions import StoreNotOpenError, XmlManifestNetCDFError, XmlParsingError
 from eopf.formatting import EOFormatterFactory
-from eopf.formatting.formatters import Text, to_imageSize
+from eopf.formatting.formatters import Text, ToImageSize
 from eopf.product.core.eo_variable import EOVariable
 from eopf.product.store import EONetCDFStore, EOProductStore
 from eopf.product.utils import (  # to be reviewed
@@ -216,11 +216,10 @@ class XMLTPAccessor(EOProductStore):
         raise NotImplementedError()
 
     def is_group(self, path: str) -> bool:
-        # xmlTP accessors only returns variables
         return False
 
     def is_variable(self, path: str) -> bool:
-        return True
+        return len(self._root.xpath(path, namespaces=self._namespaces)) == 1
 
     def iter(self, path: str) -> Iterator[str]:
         """Has no functionality within this store"""
@@ -474,22 +473,20 @@ class XMLManifestAccessor(EOProductStore):
         Any:
             output of the data getters either xml, netCDF
         """
-        image_size_formatter_name = to_imageSize.name
+        image_size_formatter_name = ToImageSize.name
         text_formatter_name = Text.name
-
         # parse the path
         formatter_name, formatter, xpath = EOFormatterFactory().get_formatter(path)
-
-        # manage the data based on the formmaters
         if formatter_name is not None and formatter is not None:
+            # Handle special formatters parameters (text, netcdf)
             if formatter_name == text_formatter_name:
-                ret_val = formatter(xpath)
+                return formatter(xpath)
             elif formatter_name == image_size_formatter_name:
-                ret_val = formatter(self._get_nc_data(xpath))
-        else:
-            ret_val = self._get_xml_data(xpath)
-
-        return ret_val
+                return formatter(self._get_nc_data(xpath))
+            # if formatter is defined, return it
+            return formatter(self._get_xml_data(xpath))
+        # If formatter is not defined, just read xpath and return data
+        return self._get_xml_data(xpath)
 
     def is_valid_xpath(self, path: str) -> bool:
         """Used verify if a xpath is valid (output of querry contains any kind of data)
