@@ -259,8 +259,6 @@ class XMLManifestAccessor(EOProductStore):
         self._xml_fobj = open(self.url, mode="r")
 
     def close(self) -> None:
-        if self._xml_fobj is None:
-            raise StoreNotOpenError()
         super().close()
         self._xml_fobj.close()
         self._xml_fobj = None

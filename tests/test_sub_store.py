@@ -247,7 +247,7 @@ def test_extended_xml_manifest_accessor(path: str, mapping: str, tmp_path: pathl
     (tmp_path / xmlfile).write_bytes(fsmap[filepath])
     with open(mapping) as mapping_file:
         map_olci = json.load(mapping_file)
-    config = {"namespace": map_olci["namespaces"], "metadata_mapping": map_olci["stac_discovery"]}
+    config = {"namespaces": map_olci["namespaces"], "mapping": map_olci["stac_discovery"]}
     manifest_accessor = XMLManifestAccessor(tmp_path / xmlfile)
     with open_store(manifest_accessor, **config):
         eog = manifest_accessor[""]
