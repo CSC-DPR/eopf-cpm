@@ -37,6 +37,7 @@ class EOFormatterFactory(object):
         self._formatters: Dict[str, type[EOAbstractFormatter]] = dict()
         if default_formatters:
             from eopf.formatting.formatters import (
+                IsOptional,
                 Text,
                 ToBbox,
                 ToBool,
@@ -59,6 +60,7 @@ class EOFormatterFactory(object):
             self.register_formatter(ToInt)
             self.register_formatter(Text)
             self.register_formatter(ToImageSize)
+            self.register_formatter(IsOptional)
         else:
             # to implement another logic of importing formatters
             pass

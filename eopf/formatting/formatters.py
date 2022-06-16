@@ -347,3 +347,24 @@ class Text(EOAbstractFormatter):
             Returns the input
         """
         return input
+
+
+class IsOptional(EOAbstractFormatter):
+
+    name = "is_optional"
+
+    def format(self, input: Any) -> Any:
+        """Silent formmater, used only for parsing the path
+        logic is present in stac_mapper method of XMLManifestAccessor
+
+        Parameters
+        ----------
+        input: Any
+            input
+
+        Returns
+        ----------
+        Any:
+            Returns "Not found"
+        """
+        return "N/A"
