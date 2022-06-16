@@ -20,11 +20,7 @@ from eopf.formatting import EOFormatterFactory
 from eopf.formatting.formatters import Text, ToImageSize
 from eopf.product.core.eo_variable import EOVariable
 from eopf.product.store import EONetCDFStore, EOProductStore
-from eopf.product.utils import (  # to be reviewed
-    apply_xpath,
-    parse_xml,
-    translate_structure,
-)
+from eopf.product.utils import apply_xpath, parse_xml  # to be reviewed
 
 if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_object import EOObject
@@ -537,50 +533,6 @@ class XMLManifestAccessor(EOProductStore):
         except Exception as e:
             raise XmlParsingError(f"Exception while computing xfdu dom: {e}")
 
-    def _compute_cf(self) -> None:
-        """Computes the CF dictionary of attributes and saves it in _metada_mapping
-
-        Raises
-        ----------
-        StoreNotOpenError
-            Trying to compute CF from an opened that was not opened
-        XmlParsingError
-            Any error while applying xpath
-        """
-        if self._xml_fobj is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-
-        try:
-            cf = {
-                attr: apply_xpath(self._parsed_xml, self._metada_mapping["CF"][attr], self._namespaces)
-                for attr in self._metada_mapping["CF"]
-            }
-            self._attrs["CF"] = cf
-        except Exception as e:
-            raise XmlParsingError(f"Exception while computing CF: {e}")
-
-    def _compute_om_eop(self) -> None:
-        """Computes the OM_EOP dictionary of attributes and saves it in _metada_mapping
-
-        Raises
-        ----------
-        StoreNotOpenError
-            Trying to compute CF from an opened that was not opened
-        XmlParsingError
-            Any error while from translate_structure
-        """
-        if self._xml_fobj is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-
-        try:
-            eop = {
-                attr: translate_structure(self._metada_mapping["OM_EOP"][attr], self._parsed_xml, self._namespaces)
-                for attr in self._metada_mapping["OM_EOP"]
-            }
-            self._attrs["OM_EOP"] = eop
-        except Exception as e:
-            raise XmlParsingError(f"Exception while computing OM_EOP: {e}")
-
     def __len__(self) -> int:
         """Has no functionality within this store"""
         raise NotImplementedError()
@@ -589,13 +541,23 @@ class XMLManifestAccessor(EOProductStore):
         raise NotImplementedError()
 
     def is_group(self, path: str) -> bool:
+        if self._xml_fobj is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        if path in ["", "/"]:
+            return True
         raise NotImplementedError()
 
     def is_variable(self, path: str) -> bool:
+        if self._xml_fobj is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        if path in ["", "/"]:
+            return False
         raise NotImplementedError()
 
     def iter(self, path: str) -> Iterator[str]:
         """Has no functionality within this store"""
+        if self._xml_fobj is None:
+            raise StoreNotOpenError("Store must be open before access to it")
         yield from ()
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:

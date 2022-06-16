@@ -218,15 +218,15 @@ class formatable_method(object):
             raise FormattingDecoratorMissingUri("The decorated function does not contain a URI")
 
         # parse the path, which should always be the first argument
-        _, self.formatter, self.formatter_stripped_uri = self.decorator_factory.get_formatter(args[0])
+        _, formatter, formatter_stripped_uri = self.decorator_factory.get_formatter(args[0])
         # replace the first argument with the formatter_stripped_uri
         lst_args = list(args)
-        lst_args[0] = self.formatter_stripped_uri
+        lst_args[0] = formatter_stripped_uri
         new_args = tuple(lst_args)
 
         # call the decorated function
         decorated_method_ret = self.fn(self.parent_obj, *new_args, **kwargs)
-        if self.formatter is not None:
-            return self.formatter(decorated_method_ret)
+        if formatter is not None:
+            return formatter(decorated_method_ret)
 
         return decorated_method_ret
