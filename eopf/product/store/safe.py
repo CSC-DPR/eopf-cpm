@@ -213,12 +213,12 @@ class EOSafeStore(EOProductStore):
 
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
-
         eo_obj_list: list[EOObject] = list()
         if key in ["", "/"]:
             from eopf.product import EOProduct
 
             eo_obj_list.append(EOGroup(attrs={EOProduct._TYPE_ATTR_STR: self.product_type}))
+        last_error = None
         for safe_path, accessor_path in self._accessor_manager.split_target_path(key):
             mapping_match_list = self._accessor_manager.get_accessors_from_mapping(safe_path)
             for accessor, config_accessor_path, config in mapping_match_list:
@@ -228,10 +228,14 @@ class EOSafeStore(EOProductStore):
                     accessed_object = accessor[config_accessor_path]
                     processed_object = self._apply_mapping_properties(accessed_object, config)
                     eo_obj_list.append(processed_object)
-                except KeyError:
+                except KeyError as error:
+                    last_error = error
                     pass
         if not eo_obj_list:
-            raise KeyError(f"Invalid path :  {key}")
+            if last_error is None:
+                raise KeyError(f"Invalid path :  {key}")
+            else:
+                raise last_error
         return self._eo_object_merge(*eo_obj_list)
 
     def __len__(self) -> int:
