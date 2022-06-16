@@ -1,6 +1,5 @@
 import os
 import os.path
-import pathlib
 import shutil
 from typing import Any, Optional
 from unittest.mock import patch
@@ -40,7 +39,6 @@ from .utils import (
     S3_CONFIG_REAL,
     assert_contain,
     assert_has_coords,
-    assert_issubdict,
     couple_combinaison_from,
 )
 

@@ -260,7 +260,6 @@ class XMLManifestAccessor(EOProductStore):
 
     def close(self) -> None:
         super().close()
-        self._xml_fobj.close()
         self._xml_fobj = None
 
     def __getitem__(self, key: str) -> "EOObject":
