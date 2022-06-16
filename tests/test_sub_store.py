@@ -254,53 +254,51 @@ def test_extended_xml_manifest_accessor(path: str, mapping: str, tmp_path: pathl
         assert isinstance(eog, EOGroup)
         stac_discovery = eog.attrs
         expected_type = "Feature"
-        expected_instruments = [
-            {
-                "name": "Ocean Land Colour Instrument",
-                "short_name": "OLCI",
-                "mode": "Earth Observation",
-                "identifier": "EO",
-            },
-        ]
+        expected_instruments = {
+            "name": "Ocean Land Colour Instrument",
+            "short_name": "OLCI",
+            "mode": "Earth Observation",
+            "identifier": "EO",
+        }
         expected_FR_res = 270
-        expected_bright_percent = 74.0
+        expected_bright_percent = 3.586159
         expected_links = [{"rel": "self", "href": "./.zattrs.json", "type": "application/json"}]
-        assert stac_discovery["type"] == expected_type
-        assert stac_discovery["properties"]["eopf:instruments"] == expected_instruments
-        assert isinstance(stac_discovery["properties"]["eopf:resolutions "]["FR"], int)
-        assert stac_discovery["properties"]["eopf:resolutions "]["FR"] == expected_FR_res
+        assert stac_discovery["type_"] == expected_type
+        assert stac_discovery["properties"]["eopf:instrument"] == expected_instruments
+        assert isinstance(stac_discovery["properties"]["eopf:resolutions"]["FR"], int)
+        assert stac_discovery["properties"]["eopf:resolutions"]["FR"] == expected_FR_res
         assert isinstance(
-            stac_discovery["properties"]["eopf:product"]["data_information"]["classification"]["bright_percent"],
+            stac_discovery["properties"]["eopf:product"]["pixel_classification"]["bright"]["percent"],
             float,
         )
         assert (
-            stac_discovery["properties"]["eopf:product"]["data_information"]["classification"]["bright_percent"]
+            stac_discovery["properties"]["eopf:product"]["pixel_classification"]["bright"]["percent"]
             == expected_bright_percent
         )
         assert stac_discovery["links"] == expected_links
-    config = {"namespace": map_olci["namespaces"], "metadata_mapping": map_olci["conditions_metadata"]}
+    config = {"namespaces": map_olci["namespaces"], "mapping": map_olci["conditions_metadata"]}
     manifest_accessor = XMLManifestAccessor(tmp_path / xmlfile)
     with open_store(manifest_accessor, **config):
         eog = manifest_accessor[""]
         assert isinstance(eog, EOGroup)
         conditions_metadata = eog.attrs
-        expected_bands_number = 22
+        expected_bands_number = 21
         expected_band_7_name = "Oa07"
         expected_band_7_central_wavelength = 620.0
         expected_ephemeris = {
             "start": {
-                "TAI": "2022-03-07T07:15:41.523066",
-                "UTC": "2022-03-07T07:15:04.523066Z",
-                "UT1": "2022-03-07T07:15:04.419368",
-                "position": {"x": -5396834.096, "y": -4741170.17, "z": 0.0},
-                "velocity": {"x": -1075.667223, "y": 1237.401589, "z": 7366.677556},
+                "TAI": "2020-01-01T09:33:53.825486",
+                "UTC": "2020-01-01T09:33:16.825486Z",
+                "UT1": "2020-01-01T09:33:16.648568",
+                "position": {"x": -7134399.613, "y": -838641.089, "z": -0.004},
+                "velocity": {"x": -183.334412, "y": 1631.071145, "z": 7366.537065},
             },
             "stop": {
-                "TAI": "2022-03-07T08:56:40.713310",
-                "UTC": "2022-03-07T08:56:03.713310Z",
-                "UT1": "2022-03-07T08:56:03.609636",
-                "position": {"x": -6903519.101, "y": -1986399.421, "z": 0.001},
-                "velocity": {"x": -445.234142, "y": 1578.146909, "z": 7366.670704},
+                "TAI": "2020-01-01T11:14:52.990229",
+                "UTC": "2020-01-01T11:14:15.990229Z",
+                "UT1": "2020-01-01T11:14:15.813289",
+                "position": {"x": -6810629.029, "y": 2284455.415, "z": -0.001},
+                "velocity": {"x": 529.833647, "y": 1553.517139, "z": 7366.523391},
             },
         }
         assert len(conditions_metadata["band_descriptions"]) == expected_bands_number
@@ -309,11 +307,11 @@ def test_extended_xml_manifest_accessor(path: str, mapping: str, tmp_path: pathl
             == expected_band_7_central_wavelength
         )
         assert isinstance(conditions_metadata["band_descriptions"][expected_band_7_name]["central_wavelength"], float)
-        assert conditions_metadata["band_descriptions"]["orbit_reference"]["ephemeris"] == expected_ephemeris
+        assert conditions_metadata["orbit_reference"]["ephemeris"] == expected_ephemeris
         assert conditions_metadata
         from datetime import datetime
 
         assert datetime.strptime(
-            conditions_metadata["band_descriptions"]["orbit_reference"]["ephemeris"]["start"]["TAI"],
+            conditions_metadata["orbit_reference"]["ephemeris"]["start"]["TAI"],
             "%Y-%m-%dT%H:%M:%S.%f",
         )
