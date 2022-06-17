@@ -40,6 +40,8 @@ dependencies = [
     "uvicorn[standard] ==0.17.6",
     "requests ==2.27.1",
     "aiokafka ==0.7.2",
+    "pytz ==2021.03",
+    "Shapely ==1.8.2",
 ]
 license = {file = "LICENSE"}
 

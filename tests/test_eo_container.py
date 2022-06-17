@@ -534,7 +534,7 @@ def test_group_to_product(product):
     [
         #    (lazy_fixture("S1_IM_OCN_MAPPING"),2),
         (lazy_fixture("S2A_MSIL1C_MAPPING"), 3),
-        (lazy_fixture("S3_OL_1_EFR_MAPPING"), 1),
+        (lazy_fixture("S3_OL_1_EFR_MAPPING"), 2),  # invalid for conditions_metadata and stac_discovery
         #    (lazy_fixture("S3_SL_1_RBT_MAPPING"),1),
         (lazy_fixture("S3_SY_2_SYN_MAPPING"), 1),
     ],

@@ -1,6 +1,5 @@
 import os
 import os.path
-import pathlib
 import shutil
 from typing import Any, Optional
 from unittest.mock import patch
@@ -42,7 +41,6 @@ from .utils import (
     S3_CONFIG_REAL,
     assert_contain,
     assert_has_coords,
-    assert_issubdict,
     couple_combinaison_from,
 )
 
@@ -459,154 +457,6 @@ def test_close_manifest_store():
     store = ManifestStore(_FILES["json"])
     with pytest.raises(StoreNotOpenError):
         store.close()
-
-
-@pytest.mark.need_files
-@pytest.mark.integration
-def test_retrieve_from_manifest_store(
-    dask_client_all,
-    S3_OL_1_EFR,
-    S3_OL_1_EFR_MAPPING: str,
-    tmp_path: pathlib.Path,
-):
-    """Tested on 24th of February on data coming from
-    S3A_OL_1_EFR____20220116T092821_20220116T093121_20220117T134858_0179_081_036_2160_LN1_O_NT_002.SEN3
-    Given a manifest XML file from a Legacy product and a mapping file,
-    the CF and respectively OM_EOP attributes computed by the manifest store
-    must match the ones expected.
-    """
-    import json
-
-    fsmap = fsspec.get_mapper(S3_OL_1_EFR)
-    manifest_name = "xfdumanifest.xml"
-    manifest_path = tmp_path / manifest_name
-    for key in fsmap:
-        if key.endswith(manifest_name):
-            manifest_path.write_bytes(fsmap[key])
-
-    manifest = ManifestStore(manifest_path)
-
-    mapping_file = open(S3_OL_1_EFR_MAPPING)
-    map_olci = json.load(mapping_file)
-    config = {"namespaces": map_olci["namespaces"], "mapping": map_olci["metadata_mapping"]}
-    with open_store(manifest, **config):
-        eog = manifest[""]
-        with pytest.raises(KeyError):
-            manifest["error"]
-    assert isinstance(eog, EOGroup)
-    returned_cf = eog.attrs["CF"]
-    returned_om_eop = eog.attrs["OM_EOP"]
-
-    assert_issubdict(
-        returned_cf,
-        {
-            "title": S3_OL_1_EFR.split("/")[-1].replace(".zip", ".SEN3"),
-            "institution": "European Space Agency, Land OLCI Processing and Archiving Centre [LN1]",
-            "source": "Sentinel-3A OLCI Ocean Land Colour Instrument",
-            "comment": "Operational",
-            "references": ",".join(
-                [
-                    "https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-2",
-                    " https://sentinels.copernicus.eu/web/sentinel/user-guides/sentinel-2-msi/processing-levels/level-1",  # noqa
-                ],
-            ),
-            "Conventions": "CF-1.9",
-        },
-    ) and ("history" in returned_cf)
-
-    phenomenon_time = returned_om_eop.get("phenomenonTime", {})
-    import re
-    from datetime import datetime
-
-    assert all(datetime.strptime(phenomenon_time[p], "%Y-%m-%dT%H:%M:%S.%fZ") for p in ("beginPosition", "endPosition"))
-
-    acq_parameter = returned_om_eop.get("procedure", {}).get("acquistionParameters", {})
-
-    assert_issubdict(
-        returned_om_eop.get("procedure", {}),
-        {
-            "platform": {"shortName": "Sentinel-3", "serialIdentifier": "A"},
-            "instrument": {"shortName": "OLCI"},
-            "sensor": {"sensorType": "OPTICAL", "operationalMode": "EO"},
-        },
-    )
-    assert acq_parameter.get("orbitNumber").isnumeric() and acq_parameter.get("orbitDirection") == "descending"
-
-    assert datetime.strptime(returned_om_eop.get("resultTime", {}).get("timePosition", ""), "%Y%m%dT%H%M%S")
-    assert (
-        re.match(
-            r"POLYGON\(\((-?\d*\.\d* -?\d*\.\d*(, )?)*\)\)",
-            returned_om_eop.get("featureOfInterest", {}).get("multiExtentOf", ""),
-        )
-        is not None
-    )
-    assert_issubdict(
-        returned_om_eop,
-        {
-            "result": {
-                "product": {
-                    "fileName": ",".join(
-                        [
-                            "./Oa01_radiance.nc",
-                            "./Oa02_radiance.nc",
-                            "./Oa03_radiance.nc",
-                            "./Oa04_radiance.nc",
-                            "./Oa05_radiance.nc",
-                            "./Oa06_radiance.nc",
-                            "./Oa07_radiance.nc",
-                            "./Oa08_radiance.nc",
-                            "./Oa09_radiance.nc",
-                            "./Oa10_radiance.nc",
-                            "./Oa11_radiance.nc",
-                            "./Oa12_radiance.nc",
-                            "./Oa13_radiance.nc",
-                            "./Oa14_radiance.nc",
-                            "./Oa15_radiance.nc",
-                            "./Oa16_radiance.nc",
-                            "./Oa17_radiance.nc",
-                            "./Oa18_radiance.nc",
-                            "./Oa19_radiance.nc",
-                            "./Oa20_radiance.nc",
-                            "./Oa21_radiance.nc",
-                            "./geo_coordinates.nc",
-                            "./instrument_data.nc",
-                            "./qualityFlags.nc",
-                            "./removed_pixels.nc",
-                            "./tie_geo_coordinates.nc",
-                            "./tie_geometries.nc",
-                            "./tie_meteo.nc",
-                            "./time_coordinates.nc",
-                        ],
-                    ),
-                    "timeliness": "NT",
-                },
-            },
-        },
-    )
-
-    metadata_property = returned_om_eop.get("metadataProperty", {})
-    assert_issubdict(
-        metadata_property,
-        {
-            "identifier": S3_OL_1_EFR.split("/")[-1].replace(".zip", ".SEN3"),
-            "acquisitionType": "Operational",
-            "productType": "OL_1_EFR___",
-            "status": "ARCHIVED",
-            "productQualityStatus": "PASSED",
-        },
-    )
-    assert len(metadata_property.get("productQualityDegradationTag", "")) > 0
-
-    assert datetime.strptime(metadata_property.get("creationDate", ""), "%Y%m%dT%H%M%S")
-    downlinked_to = metadata_property.get("downlinkedTo", {})
-    assert datetime.strptime(downlinked_to.get("acquisitionDate", ""), "%Y-%m-%dT%H:%M:%S.%fZ")
-    assert downlinked_to.get("acquisitionStation", "") == "CGS"
-
-    processing_map = metadata_property.get("processing", {})
-    assert processing_map["processorName"] == "PUG"
-    assert processing_map["processingCenter"] == "Land OLCI Processing and Archiving Centre [LN1]"
-    assert re.match(r"\d{1,2}\.\d{2}", processing_map["processorVersion"])
-    assert datetime.strptime(processing_map["processingDate"], "%Y-%m-%dT%H:%M:%S.%f")
 
 
 _FORMAT = {
