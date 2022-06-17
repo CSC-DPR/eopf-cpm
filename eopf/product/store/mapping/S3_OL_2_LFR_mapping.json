@@ -41,22 +41,23 @@
       "source_path": "tie_geo_coordinates.nc:longitude",
       "item_format": "netcdf"
     },
+
     {
       "short_name": " rc681",
       "target_path": "/measurements/image/rc681",
-      "source_path": "rc_ogvi.nc:RC681",
+      "source_path": "rc_gifapar.nc:RC681",
       "item_format": "netcdf"
     },
     {
       "short_name": " rc865",
       "target_path": "/measurements/image/rc865",
-      "source_path": "rc_ogvi.nc:RC865",
+      "source_path": "rc_gifapar.nc:RC865",
       "item_format": "netcdf"
     },
     {
-      "short_name": "ogvi",
-      "target_path": "/measurements/image/ogvi",
-      "source_path": "ogvi.nc:OGVI",
+      "short_name": "gifapar",
+      "target_path": "/measurements/image/gifapar",
+      "source_path": "gifapar.nc:GIFAPAR",
       "item_format": "netcdf"
     },
     {
@@ -71,11 +72,12 @@
       "source_path": "iwv.nc:IWV",
       "item_format": "netcdf"
     },
+
     {
       "short_name": "lqsf",
-      "target_path": "/quality/image/lqsf",
-      "source_path": "lqsf.nc:LQSF",
-      "item_format": "netcdf"
+        "target_path": "/quality/image/lqsf",
+        "source_path": "lqsf.nc:LQSF",
+        "item_format": "netcdf"
     },
     {
       "short_name": "otci_quality_flags",
@@ -90,21 +92,21 @@
       "item_format": "netcdf"
     },
     {
-      "short_name": "ogvi_err",
-      "target_path": "/quality/image/ogvi_err",
-      "source_path": "ogvi.nc:OGVI_err",
+      "short_name": "gifapar_err",
+      "target_path": "/quality/image/gifapar_err",
+      "source_path": "gifapar.nc:GIFAPAR_unc",
       "item_format": "netcdf"
     },
     {
       "short_name": "rc681_err",
       "target_path": "/quality/image/rc681_err",
-      "source_path": "rc_ogvi.nc:RC681_err",
+      "source_path": "rc_gifapar.nc:RC681_unc",
       "item_format": "netcdf"
     },
     {
       "short_name": "rc865_err",
       "target_path": "/quality/image/rc865_err",
-      "source_path": "rc_ogvi.nc:RC865_err",
+      "source_path": "rc_gifapar.nc:RC865_unc",
       "item_format": "netcdf"
     },
     {
@@ -113,6 +115,8 @@
       "source_path": "iwv.nc:IWV_unc",
       "item_format": "netcdf"
     },
+
+
     {
       "short_name": "geometry_oaa",
       "target_path": "/conditions/geometry/oaa",
@@ -143,6 +147,7 @@
       "source_path": "geo_coordinates.nc:altitude",
       "item_format": "netcdf"
     },
+
     {
       "short_name": "meteo_atmospheric_temperature_profile",
       "target_path": "/conditions/meteo/atmospheric_temperature_profile",
@@ -185,6 +190,7 @@
       "source_path": "tie_meteo.nc:total_ozone",
       "item_format": "netcdf"
     },
+
     {
       "short_name": "instrument_fwhm",
       "target_path": "/conditions/instrument/fwhm",
@@ -215,6 +221,7 @@
       "source_path": "instrument_data.nc:solar_flux",
       "item_format": "netcdf"
     },
+
     {
       "short_name": "stac_discovery",
       "target_path": "",
