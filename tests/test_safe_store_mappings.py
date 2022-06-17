@@ -7,18 +7,32 @@ import pytest
 from pytest_lazyfixture import lazy_fixture
 
 from eopf.product.conveniences import open_store
-from eopf.product.core import EOObject, EOProduct, EOVariable
+from eopf.product.core import EOProduct, EOVariable
+from eopf.product.core.eo_object import EOObject
 from eopf.product.store import EOCogStore, EONetCDFStore, EOProductStore, EOZarrStore
 from eopf.product.store.conveniences import convert
 from eopf.product.store.safe import EOSafeStore
 from eopf.product.utils import conv
 from tests.utils import assert_eovariable_equal
 
+# ----------------------------------#
+# ---environment options          --#
+# ----------------------------------#
+def options_only_first_product():
+    """Check the environment variable that force running only one product per product type"""
+    only_first = os.environ.get("ONLY_FIRST_PRODUCT")
+    if only_first is None:
+        return False
+    return True
 
+##########################################################################################
+# run specific test using keyword search feature of pytest, with logical expresions, ex:
+# python3.9 -m pytest test_safe_store_mappings.py::test_convert_safe_mapping -k "S2 and zarr"
+##########################################################################################
 @pytest.mark.need_files
 @pytest.mark.unit
 @pytest.mark.parametrize(
-    "store_type, get_key",
+    "input_path_list, key_path",
     [
         # At least One test per each product type and accessor used in the mapping file
 
@@ -72,20 +86,29 @@ from tests.utils import assert_eovariable_equal
 
     ],
 )
-def test_read_product(dask_client_all, store_type, get_key):
-    store = EOSafeStore(store_type)
-    product = EOProduct("my_product", storage=store)
-    product.open()
-    eoval = product[get_key]
-    assert isinstance(eoval, EOObject)
-    assert isinstance(product.attrs, dict)
-    product.store.close()
+def test_read_product(dask_client_all, input_path_list, key_path):
+    if (not input_path_list):
+        print("Skipping read test, NO products found to test key : " + key_path)
+    
+    for input_path in input_path_list:
+        print("RUN load test for product: " + input_path + " and key " + key_path)
+        input_path = "file://" + input_path
+        if (input_path.find(".zip") != -1):
+            input_path = "zip::" + input_path
+        store = EOSafeStore(input_path)
+        product = EOProduct("my_product", storage=store)
+        product.open()
+        eoval = product[key_path]
+        assert isinstance(eoval, EOObject)
+        assert isinstance(product.attrs, dict)
+        product.store.close()
+        if options_only_first_product(): break
 
 
 @pytest.mark.need_files
 @pytest.mark.integration
 @pytest.mark.parametrize(
-    "store_type",
+    "input_path_list",
     [
         lazy_fixture("S3_OLCI_1_EFR_ZIP"),
         lazy_fixture("S3_OLCI_2_LFR_ZIP"),
@@ -97,21 +120,30 @@ def test_read_product(dask_client_all, store_type, get_key):
         lazy_fixture("S1_IM_OCN_ZIP"),
     ],
 )
-def test_load_product(dask_client_all, store_type):
-    store = EOSafeStore(store_type)
-    product = EOProduct("my_product", storage=store)
-    product.open()
-    assert isinstance(product.attrs, dict)
-    product.load()
-    assert len(product._groups) > 0
-    assert isinstance(product.attrs, dict)
-    product.store.close()
+def test_load_product(dask_client_all, input_path_list):
+    if (not input_path_list):
+        print("Skipping ONE load test, NO products found for specific product")
+    
+    for input_path in input_path_list:
+        print("RUN load test for product: " + input_path)
+        input_path = "file://" + input_path
+        if (input_path.find(".zip") != -1):
+            input_path = "zip::" + input_path
+        store = EOSafeStore(input_path)
+        product = EOProduct("my_product", storage=store)
+        product.open()
+        assert isinstance(product.attrs, dict)
+        product.load()
+        assert len(product._groups) > 0
+        assert isinstance(product.attrs, dict)
+        product.store.close()
+        if options_only_first_product(): break
 
 
 @pytest.mark.need_files
 @pytest.mark.integration
 @pytest.mark.parametrize(
-    "input_path, mapping_filename, output_formatter, output_store, expected_optional_miss",
+    "input_path_list, mapping_filename, output_formatter, output_store, expected_optional_miss",
     [
         # S3_OLCI_1 product type conversions
         (
@@ -350,49 +382,61 @@ def test_load_product(dask_client_all, store_type):
 )
 def test_convert_safe_mapping(
     dask_client_all,
-    input_path: str,
+    input_path_list: str,
     mapping_filename: str,
     output_formatter: Callable,
     output_store: type[EOProductStore],
     expected_optional_miss: int,
     OUTPUT_DIR: str,
 ):
-    source_store = EOSafeStore(input_path)
-    name = os.path.basename(input_path)
-    target_store = output_store(os.path.join(OUTPUT_DIR, output_formatter(name)))
-    convert(source_store, target_store)
-    source_product = EOProduct("", storage=source_store)
-    target_product = EOProduct("", storage=target_store)
+    if (not input_path_list):
+        print("\nSkipping load test, NO products found for the mapping  : " + mapping_filename)
+    print ("\nINPUT FILE LIST size: " + str(len(input_path_list)) + " CONTENTS : ")
+    print (input_path_list)
 
-    with open(mapping_filename) as f:
-        mappin_data = json.load(f)
-    optional_miss = 0
-    with (open_store(source_product), open_store(target_product)):
-        assert source_product.type == mappin_data["recognition"]["product_type"]
-        assert target_product.type == mappin_data["recognition"]["product_type"]
+    for input_path in input_path_list:
+        print("\nRUN conversion to: " + output_store.__name__ + " from product: " + input_path)
+        input_path = "file://" + input_path
+        if (input_path.find(".zip") != -1):
+            input_path = "zip::" + input_path
+        source_store = EOSafeStore(input_path)
+        name = os.path.basename(input_path)
+        target_store = output_store(os.path.join(OUTPUT_DIR, output_formatter(name)))
+        convert(source_store, target_store)
+        source_product = EOProduct("", storage=source_store)
+        target_product = EOProduct("", storage=target_store)
 
-        for item in mappin_data["data_mapping"]:
-            # TODO: should be removed after that misc was removed from mappings
-            if item["item_format"] == "misc":
-                continue
-            data_path = item["target_path"]
-            if data_path:
-                try:
-                    source_object = source_product[data_path]
-                except KeyError as error:
-                    if not item.get("is_optional", False):
-                        raise error
-                    optional_miss += 1
+        with open(mapping_filename) as f:
+            mappin_data = json.load(f)
+        optional_miss = 0
+        with (open_store(source_product), open_store(target_product)):
+            assert source_product.type == mappin_data["recognition"]["product_type"]
+            assert target_product.type == mappin_data["recognition"]["product_type"]
+
+            for item in mappin_data["data_mapping"]:
+                # TODO: should be removed after that misc was removed from mappings
+                if item["item_format"] == "misc":
                     continue
-                target_object = target_product[data_path]
-            else:
-                source_object = source_product
-                target_object = target_product
-            assert type(source_object) == type(target_object)
+                data_path = item["target_path"]
+                if data_path:
+                    try:
+                        source_object = source_product[data_path]
+                    except KeyError as error:
+                        if not item.get("is_optional", False):
+                            raise error
+                        optional_miss += 1
+                        continue
+                    target_object = target_product[data_path]
+                else:
+                    source_object = source_product
+                    target_object = target_product
+                assert type(source_object) == type(target_object)
 
-            if output_store != EOSafeStore or data_path not in ["", "/"]:
-                # Manifest accessor set item not yet implemented
-                np.testing.assert_equal(conv(source_object.attrs), conv(target_object.attrs))
-            if isinstance(source_object, EOVariable):
-                assert_eovariable_equal(source_object, target_object)
-    assert expected_optional_miss == optional_miss
+                if output_store != EOSafeStore or data_path not in ["", "/"]:
+                    # Manifest accessor set item not yet implemented
+                    np.testing.assert_equal(conv(source_object.attrs), conv(target_object.attrs))
+                if isinstance(source_object, EOVariable):
+                    assert_eovariable_equal(source_object, target_object)
+        assert expected_optional_miss == optional_miss
+
+        if options_only_first_product(): break
