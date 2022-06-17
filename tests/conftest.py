@@ -3,6 +3,7 @@ import json
 import os
 import shutil
 from datetime import timedelta
+from typing import Optional
 
 import pytest
 
@@ -78,22 +79,6 @@ def EMBEDED_TEST_DATA_FOLDER():
 # ----------------------------------#
 # ------------ MAPPING -------------#
 # ----------------------------------#
-@pytest.fixture
-def S3_OLCI_L1_MAPPING(MAPPING_FOLDER: str):
-    """Path to a S3 OLCI LEVEL 1 mapping"""
-    return os.path.join(MAPPING_FOLDER, "S3_OL_1_EFR_mapping.json")
-
-
-@pytest.fixture
-def S3_SL_1_RBT_MAPPING(MAPPING_FOLDER: str):
-    """Path to a S3 SL 1 RBT mapping"""
-    return os.path.join(MAPPING_FOLDER, "S3_SL_1_RBT_mapping.json")
-
-
-@pytest.fixture
-def S3_SY_2_SYN_MAPPING(MAPPING_FOLDER: str):
-    """Path to a S3 SY 2 SYN mapping"""
-    return os.path.join(MAPPING_FOLDER, "S3_SY_2_SYN_mapping.json")
 
 
 @pytest.fixture
@@ -108,55 +93,115 @@ def S2A_MSIL1C_MAPPING(MAPPING_FOLDER: str):
     return os.path.join(MAPPING_FOLDER, "S2_MSIL1C_mapping.json")
 
 
+@pytest.fixture
+def S3_OL_1_EFR_MAPPING(MAPPING_FOLDER: str):
+    """Path to a S3 OLCI LEVEL 1 mapping"""
+    return os.path.join(MAPPING_FOLDER, "S3_OL_1_EFR_mapping.json")
+
+
+@pytest.fixture
+def S3_OL_2_LFR_MAPPING(MAPPING_FOLDER: str):
+    """Path to a S3 OLCI LEVEL 1 mapping"""
+    return os.path.join(MAPPING_FOLDER, "S3_OL_2_LFR_mapping.json")
+
+
+@pytest.fixture
+def S3_SL_1_RBT_MAPPING(MAPPING_FOLDER: str):
+    """Path to a S3 SL 1 RBT mapping"""
+    return os.path.join(MAPPING_FOLDER, "S3_SL_1_RBT_mapping.json")
+
+
+@pytest.fixture
+def S3_SL_2_LST_MAPPING(MAPPING_FOLDER: str):
+    """Path to a S3 SL 1 RBT mapping"""
+    return os.path.join(MAPPING_FOLDER, "S3_SL_2_LST_mapping.json")
+
+
+@pytest.fixture
+def S3_SY_2_SYN_MAPPING(MAPPING_FOLDER: str):
+    """Path to a S3 SY 2 SYN mapping"""
+    return os.path.join(MAPPING_FOLDER, "S3_SY_2_SYN_mapping.json")
+
+
 # ----------------------------------#
 # ------------ PRODUCT -------------#
 # ----------------------------------#
-@pytest.fixture
-def S3_OLCI_L1_EFR(INPUT_DIR: str):
-    """Path to a S3 OLCI LEVEL 1 product"""
-    file_name = "S3*_OL_1_E*R*.zip"
-    glob_path = os.path.join(INPUT_DIR, file_name)
-    return f"zip::file://{glob.glob(glob_path)[0]}"
+
+
+def _glob_to_url(input_dir: str, file_name_pattern: str, protocols: Optional[list[str]] = None):
+    if protocols is None:
+        protocols = []
+    protocols.append("file")
+
+    glob_path = os.path.join(input_dir, file_name_pattern)
+    matched_files = glob.glob(glob_path)
+    if len(matched_files) != 1:
+        raise IOError(f"{len(matched_files)} files matched {glob_path} instead of 1.")
+    protocols_string = "::".join(protocols)
+    return f"{protocols_string}://{matched_files[0]}"
 
 
 @pytest.fixture
-def S3_SL_1_RBT(INPUT_DIR: str):
-    """Path to a S3 SL 1 RBT product"""
-    file_name = "S3*_SL_1_RBT*.zip"
-    glob_path = os.path.join(INPUT_DIR, file_name)
-    return f"zip::file://{glob.glob(glob_path)[0]}"
+def S1_IM_OCN(INPUT_DIR):
+    """Path to a S2 MSIL1C LEVEL 1 product"""
+    return _glob_to_url(INPUT_DIR, "S1A_IW_OCN*.zip", protocols=["zip"])
 
 
 @pytest.fixture
-def S3_SY_2_SYN(INPUT_DIR: str):
-    """Path to a S3 SY 2 SYN product"""
-    file_name = "S3*_SY_2_SYN*.zip"
-    glob_path = os.path.join(INPUT_DIR, file_name)
-    return f"zip::file://{glob.glob(glob_path)[0]}"
+def S2A_MSIL1C(INPUT_DIR):
+    """Path to a S2 MSIL1C LEVEL 1 product"""
+    return _glob_to_url(
+        INPUT_DIR,
+        "S2A_MSIL1C*.SAFE",
+    )
 
 
 @pytest.fixture
-def S2A_MSIL1C_ZIP(INPUT_DIR: str):
+def S2A_MSIL1C_ZIP(INPUT_DIR):
     """Path to a S2 MSIL1C LEVEL 1 product in zip format"""
-    file_name = "S2A_MSIL1C*.zip"
-    glob_path = os.path.join(INPUT_DIR, file_name)
-    return f"zip::file://{glob.glob(glob_path)[0]}"
+    return _glob_to_url(INPUT_DIR, "S2A_MSIL1C*.zip", protocols=["zip"])
 
 
 @pytest.fixture
-def S2A_MSIL1C(INPUT_DIR: str):
-    """Path to a S2 MSIL1C LEVEL 1 product"""
-    file_name = "S2A_MSIL1C*.SAFE"
-    glob_path = os.path.join(INPUT_DIR, file_name)
-    return f"file://{glob.glob(glob_path)[0]}"
+def S3_OL_1_EFR(INPUT_DIR):
+    """Path to a S3 OLCI LEVEL 1 product"""
+    return _glob_to_url(INPUT_DIR, "S3*_OL_1_E*R*.zip", protocols=["zip"])
 
 
 @pytest.fixture
-def S1_IM_OCN(INPUT_DIR: str):
-    """Path to a S2 MSIL1C LEVEL 1 product"""
-    file_name = "S1A_IW_OCN*.zip"
-    glob_path = os.path.join(INPUT_DIR, file_name)
-    return f"zip::file://{glob.glob(glob_path)[0]}"
+def S3_OL_2_LFR(INPUT_DIR):
+    """Path to a S3 OLCI LEVEL 2 product"""
+    return _glob_to_url(INPUT_DIR, "S3*_OL_2_LFR*.SEN3")
+
+
+@pytest.fixture
+def S3_SL_1_RBT(INPUT_DIR):
+    """Path to a S3 SL 1 RBT product"""
+    return _glob_to_url(INPUT_DIR, "S3*_SL_1_RBT*.SEN3")
+
+
+@pytest.fixture
+def S3_SL_2_LST(INPUT_DIR):
+    """Path to a S3 SL 2 LST product"""
+    return _glob_to_url(INPUT_DIR, "S3*_SL_2_LST*.SEN3")
+
+
+@pytest.fixture
+def S3_SY_2_SYN(INPUT_DIR):
+    """Path to a S3 SY 2 SYN product"""
+    return _glob_to_url(INPUT_DIR, "S3*_SY_2_SYN*.SEN3")
+
+
+@pytest.fixture
+def TEST_PRODUCT(INPUT_DIR):
+    """Path to a S3 SY 2 SYN product"""
+    return _glob_to_url(INPUT_DIR, "test*test")
+
+
+@pytest.fixture
+def TEST_PRODUCT_ZIP(INPUT_DIR):
+    """Path to a S3 SY 2 SYN product"""
+    return _glob_to_url(INPUT_DIR, "test*zip", protocols=["zip"])
 
 
 # ----------------------------------#
@@ -198,12 +243,12 @@ settings.load_profile("function_fixture_fast")
 
 
 @pytest.fixture
-def TRIGGER_JSON_FILE(dask_client_all, EMBEDED_TEST_DATA_FOLDER, OUTPUT_DIR, S3_OLCI_L1_EFR):
+def TRIGGER_JSON_FILE(dask_client_all, EMBEDED_TEST_DATA_FOLDER, OUTPUT_DIR, S3_OL_1_EFR):
     trigger_filename = "trigger.json"
     filepath = os.path.join(EMBEDED_TEST_DATA_FOLDER, trigger_filename)
     with open(filepath) as f:
         data = json.load(f)
-    data["input_product"]["path"] = S3_OLCI_L1_EFR
+    data["input_product"]["path"] = S3_OL_1_EFR
     data["output_product"]["path"] = os.path.join(OUTPUT_DIR, data["output_product"]["path"])
     if dask_client_all:
         data["dask_context"] = {"distributed": "processes"}

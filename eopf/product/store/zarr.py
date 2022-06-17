@@ -121,7 +121,9 @@ class EOZarrStore(EOProductStore):
 
     # docstr-coverage: inherited
     def close(self) -> None:
-        if self._root is None:
+        super().close()
+
+        if not isinstance(self._root, Group):
             raise StoreNotOpenError("Store must be open before close it")
 
         if len(self._delayed_list) > 0:
@@ -132,7 +134,6 @@ class EOZarrStore(EOProductStore):
         if any(self._mode.startswith(mode) for mode in ("w", "a")) or "+" in self._mode:
             zarr.consolidate_metadata(self._root.store)
 
-        super().close()
         self._root = None
         self._fs = None
 

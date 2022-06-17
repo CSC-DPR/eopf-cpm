@@ -1,4 +1,5 @@
 import os
+import pathlib
 import tempfile
 import warnings
 from functools import reduce
@@ -385,6 +386,10 @@ class EOSafeStore(EOProductStore):
             return EOVariable(data=data, attrs=attrs, dims=tuple(dims))
         return EOGroup(attrs=attrs, dims=tuple(dims))
 
+    @staticmethod
+    def guess_can_read(file_path: str) -> bool:
+        return pathlib.Path(file_path).suffix in [".SEN3", ".SAFE"]
+
 
 class SafeMappingManager:
     """Class managing reading the Safe store configuration and creating as needed the associated accessors."""
@@ -535,28 +540,30 @@ class SafeMappingManager:
         if accessor_id not in self._accessor_map:
             self._accessor_map[accessor_id] = dict()
 
-        if item_format == "SafeHierarchy":
-            mapped_store = SafeHierarchy()
-        else:
-            if self._is_compressed:
-                if self._temp_dir is None:
-                    self._temp_dir = tempfile.TemporaryDirectory()
-                accessor_file = os.path.join(self._temp_dir.name, file_path)
-                if not os.path.exists(accessor_file):
-                    # create parent directory (needed if the file is in a subfolder of the zip)
-                    os.makedirs(os.path.split(accessor_file)[0], exist_ok=True)
-                    if file_path in self._fs_map_access:  # For file
-                        with open(accessor_file, mode="wb") as file_:
-                            file_.write(self._fs_map_access[file_path])
-                    elif not any(path.startswith(file_path) for path in self._fs_map_access):  # check directory level
-                        raise FileNotFoundError()
-            else:
-                accessor_file = self._fs_map_access.fs.sep.join([self._fs_map_access.root, file_path])
-            mapped_store = self._store_factory.get_store(
-                accessor_file,
-                item_format,
-            )
         try:
+            if item_format == "SafeHierarchy":
+                mapped_store = SafeHierarchy()
+            else:
+                if self._is_compressed:
+                    if self._temp_dir is None:
+                        self._temp_dir = tempfile.TemporaryDirectory()
+                    accessor_file = os.path.join(self._temp_dir.name, file_path)
+                    if not os.path.exists(accessor_file):
+                        # create parent directory (needed if the file is in a subfolder of the zip)
+                        os.makedirs(os.path.split(accessor_file)[0], exist_ok=True)
+                        if file_path in self._fs_map_access:  # For file
+                            with open(accessor_file, mode="wb") as file_:
+                                file_.write(self._fs_map_access[file_path])
+                        elif not any(
+                            path.startswith(file_path) for path in self._fs_map_access
+                        ):  # check directory level
+                            raise FileNotFoundError()
+                else:
+                    accessor_file = self._fs_map_access.fs.sep.join([self._fs_map_access.root, file_path])
+                mapped_store = self._store_factory.get_store(
+                    accessor_file,
+                    item_format,
+                )
             mapped_store.open(mode=self._mode, **accessor_config, **self._open_kwargs)
         except NotImplementedError:
             mapped_store = None

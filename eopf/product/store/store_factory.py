@@ -1,6 +1,7 @@
 from typing import Any, Optional
 
 from eopf.product.store import EOProductStore
+from eopf.product.store.netcdf import EONetCDFStoreNCpy
 from eopf.product.store.rasterio import EORasterIOAccessor
 
 
@@ -36,6 +37,7 @@ class EOStoreFactory:
             self.register_store(EOCogStore, "cogs")
             self.register_store(FilenameToVariableAccessor, "filename_to_subswath")
             self.register_store(EONetCDFStore, "netcdf")
+            self.register_store(EONetCDFStoreNCpy, "netcdf-netCDF4py")
             self.register_store(EONetcdfStringToTimeAccessor, "netcdf_string_to_time")
             self.register_store(XMLManifestAccessor, "xmlmetadata")
             self.register_store(EOGribAccessor, "grib")

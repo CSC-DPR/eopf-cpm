@@ -31,7 +31,7 @@ def test_store_factory(filename, format, expected_type):
     [
         (
             "S3A_OL_1_EFR_____LN1_O_NT_002.SEN3",
-            lazy_fixture("S3_OLCI_L1_MAPPING"),
+            lazy_fixture("S3_OL_1_EFR_MAPPING"),
         ),
     ],
 )

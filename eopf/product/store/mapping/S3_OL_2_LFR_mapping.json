@@ -86,7 +86,7 @@
     {
       "short_name": "otci_err",
       "target_path": "/quality/image/otci_err",
-      "source_path": "otci.nc:OTCI_err",
+      "source_path": "otci.nc:OTCI_unc",
       "item_format": "netcdf"
     },
     {
@@ -110,7 +110,7 @@
     {
       "short_name": "iwv_err",
       "target_path": "/quality/image/iwv_err",
-      "source_path": "iwv.nc:IWV_err",
+      "source_path": "iwv.nc:IWV_unc",
       "item_format": "netcdf"
     },
     {
