@@ -226,7 +226,7 @@ class EOSafeStore(EOProductStore):
                 # We should catch Key Error, and throw if the object isn't found in any of the accessors
                 try:
                     accessed_object = accessor[config_accessor_path]
-                    processed_object = self._apply_mapping_properties(accessed_object, config)
+                    processed_object = self._apply_mapping_properties(accessed_object, config, key)
                     eo_obj_list.append(processed_object)
                 except KeyError as error:
                     last_error = error
@@ -332,7 +332,7 @@ class EOSafeStore(EOProductStore):
                 # We might want to catch Unimplemented/KeyError and throw one if none write_attrs suceed
                 accessor.write_attrs(config_accessor_path)
 
-    def _apply_mapping_properties(self, eo_obj: "EOObject", config: dict[str, Any]) -> "EOObject":
+    def _apply_mapping_properties(self, eo_obj: "EOObject", config: dict[str, Any], debug_key: str) -> "EOObject":
         """Modify the eo_object according to the json data_mapping config.
 
         Parameters
@@ -351,8 +351,11 @@ class EOSafeStore(EOProductStore):
             return eo_obj
         parameters = config["parameters"]
         for parameter_name, parameter_transformation in self._parameters_transformations:
-            if parameter_name in parameters:
-                eo_obj = parameter_transformation(eo_obj, parameters[parameter_name])
+            try:
+                if parameter_name in parameters:
+                    eo_obj = parameter_transformation(eo_obj, parameters[parameter_name])
+            except Exception as err:
+                raise type(err)(f"Applying parameter {parameter_name} on [{debug_key} failed.") from err
         # add a warning if a parameter is missing from _parameters_transformations ?
         return eo_obj
 
