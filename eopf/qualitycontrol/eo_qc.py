@@ -93,7 +93,7 @@ class EOQCValidRange(EOQC):
 
     # docstr-coverage: inherited
     def check(self, eoproduct: EOProduct) -> bool:
-        eovariable = eoproduct[eoproduct.short_names[self.eovariable_short_name]]
+        eovariable = eoproduct[self.eovariable_short_name]
         variable = eovariable.compute()
         if self.valid_min <= variable.data.min():
             self._status = variable.data.max() <= self.valid_max
@@ -146,7 +146,7 @@ class EOQCFormula(EOQC):
         local_var = locals()
         for variable in self.variables:
             if "short_name" in variable:
-                local_var[variable["name"]] = eoproduct[eoproduct.short_names[variable["short_name"]]]
+                local_var[variable["name"]] = eoproduct[variable["short_name"]]
             else:
                 local_var[variable["name"]] = variable["formula"]
         # Getting and defining thresholds

@@ -31,19 +31,28 @@ class EOQCProcessor(EOProcessor):
         The quality control configuration factory which contains the quality control configuration.
     """
 
-    def __init__(self, eoproduct: Optional[EOProduct] = None, qc_list: Optional[EOQCConfig] = []) -> None:
-        self.qc_config = None
+    def __init__(self, eoproduct: Optional[EOProduct] = None, config_path: Optional[str] = None) -> None:
         self.eoproduct = eoproduct
-        self.qc_configfactory = EOPCConfigFactory()
-        for qc in qc_list:
-            self.qc_configfactory.add_qc_config(qc)
+        self.qc_config = None
+        if config_path is not None:
+            self.set_config(config_path=config_path)
+
+    def set_config(self, config_path: str) -> None:
+        """A qc_config setter.
+
+        Parameters
+        ----------
+        config_path: str
+            The path to the configuration.
+        """
+        self.qc_config = EOQCConfig(config_path=config_path)
 
     def run(
         self,
-        eoproduct: EOProduct,
-        update_attrs: bool = True,
-        write_report: bool = False,
-        report_path: str = None,
+        eoproduct: Optional[EOProduct] = None,
+        update_attrs: Optional[bool] = True,
+        write_report: Optional[bool] = False,
+        report_path: Optional[str] = None,
         **kwargs: Any,
     ) -> EOProduct:
         """Execute all checks of the default configuration for a EOProduct.
@@ -66,12 +75,24 @@ class EOQCProcessor(EOProcessor):
         EOProduct
             The controlled product.
         """
-        self.eoproduct = eoproduct
-        self.qc_config = self.qc_configfactory.get_default(eoproduct.type)
+        # Update the product if not None.
+        if eoproduct is not None:
+            self.eoproduct = eoproduct
+        else:
+            # If not it check that the Processor have a product in parameter.
+            if self.eoproduct is None:
+                logger.exception("No product in entry")
+        # If no given configuration in Processor, it get the default one.
+        if self.qc_config is None:
+            self.qc_config = EOPCConfigFactory().get_default(self.eoproduct.type)
+        # Run check(s) of the configuration
+        print(self.eoproduct.type)
         for qc in self.qc_config.qclist().values():
             qc.check(self.eoproduct)
+        # If true it update the quality attribute of the product.
         if update_attrs:
             self.update_attributs()
+        # If the it write the quality control report in a .json file.
         if write_report:
             if report_path is not None:
                 if not self.write_report(report_path):
@@ -87,7 +108,18 @@ class EOQCProcessor(EOProcessor):
         if "qc" not in self.eoproduct.quality:
             self.eoproduct.quality.attrs["qc"] = {}
         for qc in self.qc_config.qclist().values():
-            self.eoproduct.quality.attrs["qc"][qc.id] = {"version": qc.version, "status": bool(qc.status)}
+            if qc.status:
+                self.eoproduct.quality.attrs["qc"][qc.id] = {
+                    "version": qc.version,
+                    "status": bool(qc.status),
+                    "message": qc.message_if_passed,
+                }
+            else:
+                self.eoproduct.quality.attrs["qc"][qc.id] = {
+                    "version": qc.version,
+                    "status": bool(qc.status),
+                    "message": qc.message_if_failed,
+                }
 
     def write_report(self, report_path: str) -> bool:
         """This method write the quality control report in json in given location.
@@ -106,8 +138,19 @@ class EOQCProcessor(EOProcessor):
         report = {}
         report["Product_name"] = self.eoproduct.name
         report["Product_type"] = self.eoproduct.type
+        report["Acquisition_station"] = "To be defined"
+        report["Processing_center"] = "To be defined"
+        report["Start_sensing_time"] = "To be defined"
+        report["Stop_sensing_time"] = "To be defined"
+        report["Relative_orbit_number"] = "To be defined"
+        report["Absolute_orbit_number"] = "To be defined"
+        report["Inspection_date"] = "To be defined"
+        report["Inspection_time"] = "To be defined"
         for qc in self.qc_config.qclist().values():
-            report[qc.id] = {"version": qc.version, "status": bool(qc.status)}
+            if qc.status:
+                report[qc.id] = {"version": qc.version, "status": bool(qc.status), "message": qc.message_if_passed}
+            else:
+                report[qc.id] = {"version": qc.version, "status": bool(qc.status), "message": qc.message_if_failed}
         try:
             with open(report_path, "w") as outfile:
                 json.dump(report, outfile, indent=4)

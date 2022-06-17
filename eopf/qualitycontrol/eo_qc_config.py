@@ -1,6 +1,7 @@
 import glob
 import json
 import os
+from asyncio.log import logger
 from collections import defaultdict
 from collections.abc import MutableMapping
 from typing import Iterator
@@ -37,9 +38,16 @@ class EOQCConfig(MutableMapping):
         self.default = False
         with open(config_path, "r") as f:
             qc_config = json.load(f)
+            self.id = qc_config["id"]
             self.default = qc_config["default"]
             self.product_type = qc_config["product_type"]
-            self.id = qc_config["id"]
+            if qc_config.get("common_qc", False) is not False:
+                common_qc_paths = os.path.join(os.path.dirname(os.path.realpath(__file__)), "configs/common_qc.json")
+                with open(common_qc_paths, "r") as w:
+                    common_qc = json.load(w)
+                    for qc_type in common_qc["quality_checks"]:
+                        for qc in common_qc["quality_checks"][qc_type]:
+                            self._qclist[qc["check_id"]] = self.quality_type[qc_type](qc)
             for qc_type in qc_config["quality_checks"]:
                 for qc in qc_config["quality_checks"][qc_type]:
                     self._qclist[qc["check_id"]] = self.quality_type[qc_type](qc)
@@ -88,8 +96,9 @@ class EOPCConfigFactory:
         dir_path = os.path.dirname(os.path.realpath(__file__))
         qc_configs_paths = glob.glob(f"{dir_path}/configs/*.json")
         for path_to_config in qc_configs_paths:
-            qc_config = EOQCConfig(path_to_config)
-            self.add_qc_config(qc_config.id, qc_config)
+            if not os.path.basename(path_to_config) == "common_qc.json":
+                qc_config = EOQCConfig(path_to_config)
+                self.add_qc_config(qc_config.id, qc_config)
 
     def add_qc_config(self, id: str, config: EOQCConfig) -> None:
         """Add a quality control configuration to the quality control configuration factory.
@@ -134,6 +143,9 @@ class EOPCConfigFactory:
         for config in self._configs.values():
             if config.default and config.product_type == product_type:
                 return config
+            else:
+                logger.error("No default configuration for this product type")
+                return False
 
     def get_config_by_id(self, id: str) -> EOQCConfig:
         """Get a quality control configuration with the id.
