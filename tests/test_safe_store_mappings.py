@@ -111,13 +111,13 @@ def test_convert_test_mapping(
 @pytest.mark.parametrize(
     "input_path, mapping_filename, output_extension, output_store, expected_optional_miss",
     [
-        # (
-        #     lazy_fixture("S1_IM_OCN"),
-        #     lazy_fixture("S1_IM_OCN_MAPPING"),
-        #     ".zarr",
-        #     EOZarrStore,
-        #     0,
-        # ),
+        (
+            lazy_fixture("S1_IM_OCN"),
+            lazy_fixture("S1_IM_OCN_MAPPING"),
+            ".zarr",
+            EOZarrStore,
+            0,
+        ),
         (
             lazy_fixture("S2A_MSIL1C"),
             lazy_fixture("S2A_MSIL1C_MAPPING"),
