@@ -19,6 +19,7 @@ from hypothesis import HealthCheck, settings
 
 from .utils import PARENT_DATA_PATH
 
+
 # ----------------------------------#
 # --- pytest command line options --#
 # ----------------------------------#
@@ -74,6 +75,18 @@ def MAPPING_FOLDER():
 def EMBEDED_TEST_DATA_FOLDER():
     """Path to test data folder"""
     return os.path.join(PARENT_DATA_PATH, "tests", "data")
+
+
+# ----------------------------------#
+# ---environment options          --#
+# ----------------------------------#
+@pytest.fixture
+def TEST_ONLY_ONE():
+    """Check the environment variable that force running only one product per product type"""
+    only_one = os.environ.get("TEST_ONLY_ONE_PRODUCT")
+    if only_one is None:
+        return False
+    return True
 
 
 # ----------------------------------#
@@ -151,104 +164,124 @@ def _glob_to_url(input_dir: str, file_name_pattern: str, protocols: Optional[lis
     return f"{protocols_string}://{matched_files[0]}"
 
 
+def _glob_to_url_list(input_dir: str, file_name_pattern: str, protocols: Optional[list[str]] = None):
+    if protocols is None:
+        protocols = []
+    protocols.append("file")
+
+    glob_path = os.path.join(input_dir, file_name_pattern)
+    matched_files = glob.glob(glob_path)
+
+    # to consider if this is mandatory or not: 
+    # an usage pattern to test just the existing files in the input directory might be more interesting
+    if len(matched_files) == 0:
+        raise IOError (f"No files for pattern {file_name_pattern} found in the {input_dir}")
+    
+    url_list = []
+    for mfile in matched_files:
+        protocols_string = "::".join(protocols)
+        url_list.append( f"{protocols_string}://{matched_files[0]}" )
+        if TEST_ONLY_ONE: break
+
+    return url_list
+
+
 @pytest.fixture
 def TEST_PRODUCT(INPUT_DIR):
     """Path to a S3 SY 2 SYN product"""
-    return _glob_to_url(INPUT_DIR, "test*test")
+    return _glob_to_url_list(INPUT_DIR, "test*test")
 
 
 @pytest.fixture
 def TEST_PRODUCT_ZIP(INPUT_DIR):
     """Path to a S3 SY 2 SYN product"""
-    return _glob_to_url(INPUT_DIR, "test*zip", protocols=["zip"])
+    return _glob_to_url_list(INPUT_DIR, "test*zip", protocols=["zip"])
 
 
 ############## S1 ##############
 @pytest.fixture
 def S1_IM_OCN(INPUT_DIR):
     """Path to a S1 OCN LEVEL 1 product"""
-    return _glob_to_url(INPUT_DIR, "S1*_IW_OCN*.zip", protocols=["zip"])
+    return _glob_to_url_list(INPUT_DIR, "S1*_IW_OCN*.zip", protocols=["zip"])
 
 
 @pytest.fixture
 def S1_IM_OCN_ZIP(INPUT_DIR):
     """Path to a S1 OCN LEVEL 1 product"""
-    return _glob_to_url(INPUT_DIR, "S1*_IW_OCN*.zip", protocols=["zip"])
+    return _glob_to_url_list(INPUT_DIR, "S1*_IW_OCN*.zip", protocols=["zip"])
 
 
 ############## S2 ##############
 @pytest.fixture
 def S2_MSIL1C(INPUT_DIR):
     """Path to a S2 MSIL1C LEVEL 1 product"""
-    return _glob_to_url(INPUT_DIR, "S2*_MSIL1C*.SAFE",)
+    return _glob_to_url_list(INPUT_DIR, "S2*_MSIL1C*.SAFE",)
 
 
 @pytest.fixture
 def S2_MSIL1C_ZIP(INPUT_DIR):
     """Path to a S2 MSIL1C LEVEL 1 product in zip format"""
-    return _glob_to_url(INPUT_DIR, "S2*_MSIL1C*.zip", protocols=["zip"])
+    return _glob_to_url_list(INPUT_DIR, "S2*_MSIL1C*.zip", protocols=["zip"])
 
 
 ############## S3 ##############
 @pytest.fixture
 def S3_OL_1_EFR_ZIP(INPUT_DIR: str):
     """Path to a S3 OL LEVEL 1 product"""
-    return _glob_to_url(INPUT_DIR, "S3*_OL_1_E*R*.zip", protocols=["zip"])
+    return _glob_to_url_list(INPUT_DIR, "S3*_OL_1_E*R*.zip", protocols=["zip"])
 
 
 @pytest.fixture
 def S3_OL_1_EFR(INPUT_DIR):
     """Path to a S3 OL LEVEL 2 product"""
-    return _glob_to_url(INPUT_DIR, "S3*_OL_1_E*R*.SEN3")
+    return _glob_to_url_list(INPUT_DIR, "S3*_OL_1_E*R*.SEN3")
 
 
 @pytest.fixture
 def S3_OL_2_LFR_ZIP(INPUT_DIR: str):
     """Path to a S3 OL LEVEL 2 product"""
-    return _glob_to_url(INPUT_DIR, "S3*_OL_2_L*R*.zip", protocols=["zip"])
+    return _glob_to_url_list(INPUT_DIR, "S3*_OL_2_L*R*.zip", protocols=["zip"])
 
 
 @pytest.fixture
 def S3_OL_2_LFR(INPUT_DIR):
     """Path to a S3 OL LEVEL 2 product"""
-    return _glob_to_url(INPUT_DIR, "S3*_OL_2_LFR*.SEN3")
+    return _glob_to_url_list(INPUT_DIR, "S3*_OL_2_LFR*.SEN3")
 
 
 @pytest.fixture
 def S3_SL_1_RBT(INPUT_DIR):
     """Path to a S3 SL 1 RBT product"""
-    return _glob_to_url(INPUT_DIR, "S3*_SL_1_RBT*.SEN3")
+    return _glob_to_url_list(INPUT_DIR, "S3*_SL_1_RBT*.SEN3")
 
 
 @pytest.fixture
 def S3_SL_1_RBT_ZIP(INPUT_DIR: str):
-    return _glob_to_url(INPUT_DIR, "S3*_SL_1_RBT*.zip", protocols=["zip"])
+    return _glob_to_url_list(INPUT_DIR, "S3*_SL_1_RBT*.zip", protocols=["zip"])
 
 
 @pytest.fixture
 def S3_SL_2_LST(INPUT_DIR):
     """Path to a S3 SL 2 LST product"""
-    return _glob_to_url(INPUT_DIR, "S3*_SL_2_LST*.SEN3")
+    return _glob_to_url_list(INPUT_DIR, "S3*_SL_2_LST*.SEN3")
 
 
 @pytest.fixture
 def S3_SL_2_LST_ZIP(INPUT_DIR: str):
     """Path to a S3 SL 2 LST product"""
-    return _glob_to_url(INPUT_DIR, "S3*_SL_2_LST*.zip", protocols=["zip"])
+    return _glob_to_url_list(INPUT_DIR, "S3*_SL_2_LST*.zip", protocols=["zip"])
 
 
 @pytest.fixture
 def S3_SY_2_SYN(INPUT_DIR):
     """Path to a S3 SY 2 SYN product"""
-    return _glob_to_url(INPUT_DIR, "S3*_SY_2_SYN*.SEN3")
+    return _glob_to_url_list(INPUT_DIR, "S3*_SY_2_SYN*.SEN3")
 
 
 @pytest.fixture
 def S3_SY_2_SYN_ZIP(INPUT_DIR):
     """Path to a S3 SY 2 SYN product"""
-    return _glob_to_url(INPUT_DIR, "S3*_SY_2_SYN*.zip", protocols=["zip"])
-
-
+    return _glob_to_url_list(INPUT_DIR, "S3*_SY_2_SYN*.zip", protocols=["zip"])
 
 
 # ----------------------------------#
