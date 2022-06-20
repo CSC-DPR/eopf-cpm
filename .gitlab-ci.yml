@@ -109,6 +109,7 @@ integration-tests:
     --cov-append
     --s3
     -m integration
+  coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
 
 security:
   stage: test
