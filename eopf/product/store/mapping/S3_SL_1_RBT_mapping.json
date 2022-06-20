@@ -1,6 +1,7 @@
 {
     "recognition": {
         "filename_pattern": "S3._SL_1_RBT.*SEN3",
+        "product_type": "S3_SL_1_RBT",
         "product_type_pattern": "SL_1_RBT___",
         "version": "TODO"
     },
@@ -11087,21 +11088,10 @@
             }
         },
         {
-            "short_name": "anx_time",
-            "target_path": "/conditions/viscal/anx_time",
-            "source_path": "viscal.nc:ANX_time",
-            "item_format": "netcdf_string_to_time",
-            "parameters": {
-                "dimensions": [
-                    "one"
-                ]
-            }
-        },
-        {
             "short_name": "s1_bb1_sd",
             "target_path": "/conditions/viscal/s1_bb1_sd",
             "source_path": "viscal.nc:S1_BB1_SD",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "visible_detectors",
@@ -11114,7 +11104,7 @@
             "short_name": "s1_bb1_means",
             "target_path": "/conditions/viscal/s1_bb1_means",
             "source_path": "viscal.nc:S1_BB1_means",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "visible_detectors",
@@ -11127,7 +11117,7 @@
             "short_name": "s1_viscal_sd",
             "target_path": "/conditions/viscal/s1_viscal_sd",
             "source_path": "viscal.nc:S1_VISCAL_SD",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "visible_detectors",
@@ -11140,7 +11130,7 @@
             "short_name": "s1_viscal_means",
             "target_path": "/conditions/viscal/s1_viscal_means",
             "source_path": "viscal.nc:S1_VISCAL_means",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "visible_detectors",
@@ -11153,7 +11143,7 @@
             "short_name": "s1_slopes",
             "target_path": "/conditions/viscal/s1_slopes",
             "source_path": "viscal.nc:S1_slopes",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "visible_detectors",
@@ -11166,7 +11156,7 @@
             "short_name": "s1_solar_irradiances",
             "target_path": "/conditions/viscal/s1_solar_irradiances",
             "source_path": "viscal.nc:S1_solar_irradiances",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "visible_detectors",
@@ -11178,7 +11168,7 @@
             "short_name": "s2_bb1_sd",
             "target_path": "/conditions/viscal/s2_bb1_sd",
             "source_path": "viscal.nc:S2_BB1_SD",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "visible_detectors",
@@ -11191,7 +11181,7 @@
             "short_name": "s2_bb1_means",
             "target_path": "/conditions/viscal/s2_bb1_means",
             "source_path": "viscal.nc:S2_BB1_means",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "visible_detectors",
@@ -11204,7 +11194,7 @@
             "short_name": "s2_viscal_sd",
             "target_path": "/conditions/viscal/s2_viscal_sd",
             "source_path": "viscal.nc:S2_VISCAL_SD",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "visible_detectors",
@@ -11217,7 +11207,7 @@
             "short_name": "s2_viscal_means",
             "target_path": "/conditions/viscal/s2_viscal_means",
             "source_path": "viscal.nc:S2_VISCAL_means",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "visible_detectors",
@@ -11230,7 +11220,7 @@
             "short_name": "s2_slopes",
             "target_path": "/conditions/viscal/s2_slopes",
             "source_path": "viscal.nc:S2_slopes",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "visible_detectors",
@@ -11243,7 +11233,7 @@
             "short_name": "s2_solar_irradiances",
             "target_path": "/conditions/viscal/s2_solar_irradiances",
             "source_path": "viscal.nc:S2_solar_irradiances",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "visible_detectors",
@@ -11255,7 +11245,7 @@
             "short_name": "s3_bb1_sd",
             "target_path": "/conditions/viscal/s3_bb1_sd",
             "source_path": "viscal.nc:S3_BB1_SD",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "visible_detectors",
@@ -11268,7 +11258,7 @@
             "short_name": "s3_bb1_means",
             "target_path": "/conditions/viscal/s3_bb1_means",
             "source_path": "viscal.nc:S3_BB1_means",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "visible_detectors",
@@ -11281,7 +11271,7 @@
             "short_name": "s3_viscal_sd",
             "target_path": "/conditions/viscal/s3_viscal_sd",
             "source_path": "viscal.nc:S3_VISCAL_SD",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "visible_detectors",
@@ -11294,7 +11284,7 @@
             "short_name": "s3_viscal_means",
             "target_path": "/conditions/viscal/s3_viscal_means",
             "source_path": "viscal.nc:S3_VISCAL_means",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "visible_detectors",
@@ -11307,7 +11297,7 @@
             "short_name": "s3_slopes",
             "target_path": "/conditions/viscal/s3_slopes",
             "source_path": "viscal.nc:S3_slopes",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "visible_detectors",
@@ -11320,7 +11310,7 @@
             "short_name": "s3_solar_irradiances",
             "target_path": "/conditions/viscal/s3_solar_irradiances",
             "source_path": "viscal.nc:S3_solar_irradiances",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "visible_detectors",
@@ -11332,7 +11322,7 @@
             "short_name": "s4_bb1_sd",
             "target_path": "/conditions/viscal/s4_bb1_sd",
             "source_path": "viscal.nc:S4_BB1_SD",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "swir_detectors",
@@ -11345,7 +11335,7 @@
             "short_name": "s4_bb1_means",
             "target_path": "/conditions/viscal/s4_bb1_means",
             "source_path": "viscal.nc:S4_BB1_means",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "swir_detectors",
@@ -11358,7 +11348,7 @@
             "short_name": "s4_viscal_sd",
             "target_path": "/conditions/viscal/s4_viscal_sd",
             "source_path": "viscal.nc:S4_VISCAL_SD",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "swir_detectors",
@@ -11371,7 +11361,7 @@
             "short_name": "s4_viscal_means",
             "target_path": "/conditions/viscal/s4_viscal_means",
             "source_path": "viscal.nc:S4_VISCAL_means",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "swir_detectors",
@@ -11384,7 +11374,7 @@
             "short_name": "s4_slopes",
             "target_path": "/conditions/viscal/s4_slopes",
             "source_path": "viscal.nc:S4_slopes",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "swir_detectors",
@@ -11397,7 +11387,7 @@
             "short_name": "s4_solar_irradiances",
             "target_path": "/conditions/viscal/s4_solar_irradiances",
             "source_path": "viscal.nc:S4_solar_irradiances",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "swir_detectors",
@@ -11409,7 +11399,7 @@
             "short_name": "s5_bb1_sd",
             "target_path": "/conditions/viscal/s5_bb1_sd",
             "source_path": "viscal.nc:S5_BB1_SD",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "swir_detectors",
@@ -11422,7 +11412,7 @@
             "short_name": "s5_bb1_means",
             "target_path": "/conditions/viscal/s5_bb1_means",
             "source_path": "viscal.nc:S5_BB1_means",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "swir_detectors",
@@ -11435,7 +11425,7 @@
             "short_name": "s5_viscal_sd",
             "target_path": "/conditions/viscal/s5_viscal_sd",
             "source_path": "viscal.nc:S5_VISCAL_SD",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "swir_detectors",
@@ -11448,7 +11438,7 @@
             "short_name": "s5_viscal_means",
             "target_path": "/conditions/viscal/s5_viscal_means",
             "source_path": "viscal.nc:S5_VISCAL_means",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "swir_detectors",
@@ -11461,7 +11451,7 @@
             "short_name": "s5_slopes",
             "target_path": "/conditions/viscal/s5_slopes",
             "source_path": "viscal.nc:S5_slopes",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "swir_detectors",
@@ -11474,7 +11464,7 @@
             "short_name": "s5_solar_irradiances",
             "target_path": "/conditions/viscal/s5_solar_irradiances",
             "source_path": "viscal.nc:S5_solar_irradiances",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "swir_detectors",
@@ -11486,7 +11476,7 @@
             "short_name": "s6_bb1_sd",
             "target_path": "/conditions/viscal/s6_bb1_sd",
             "source_path": "viscal.nc:S6_BB1_SD",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "swir_detectors",
@@ -11499,7 +11489,7 @@
             "short_name": "s6_bb1_means",
             "target_path": "/conditions/viscal/s6_bb1_means",
             "source_path": "viscal.nc:S6_BB1_means",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "swir_detectors",
@@ -11512,7 +11502,7 @@
             "short_name": "s6_viscal_sd",
             "target_path": "/conditions/viscal/s6_viscal_sd",
             "source_path": "viscal.nc:S6_VISCAL_SD",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "swir_detectors",
@@ -11525,7 +11515,7 @@
             "short_name": "s6_viscal_means",
             "target_path": "/conditions/viscal/s6_viscal_means",
             "source_path": "viscal.nc:S6_VISCAL_means",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "swir_detectors",
@@ -11538,7 +11528,7 @@
             "short_name": "s6_slopes",
             "target_path": "/conditions/viscal/s6_slopes",
             "source_path": "viscal.nc:S6_slopes",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "swir_detectors",
@@ -11551,7 +11541,7 @@
             "short_name": "s6_solar_irradiances",
             "target_path": "/conditions/viscal/s6_solar_irradiances",
             "source_path": "viscal.nc:S6_solar_irradiances",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "swir_detectors",
@@ -11574,7 +11564,7 @@
             "short_name": "monitor_sd",
             "target_path": "/conditions/viscal/monitor_sd",
             "source_path": "viscal.nc:monitor_SD",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "one"
@@ -11585,7 +11575,7 @@
             "short_name": "monitor_mean",
             "target_path": "/conditions/viscal/monitor_mean",
             "source_path": "viscal.nc:monitor_mean",
-            "item_format": "netcdf",
+            "item_format": "netcdf-netCDF4py",
             "parameters": {
                 "dimensions": [
                     "one"
@@ -11714,7 +11704,7 @@
             }
         },
         {
-            "short_name": "scansync",
+            "short_name": "scansync_an",
             "target_path": "/conditions/time_an/scansync",
             "source_path": "time_an.nc:SCANSYNC",
             "item_format": "netcdf",
@@ -11846,7 +11836,7 @@
             }
         },
         {
-            "short_name": "scansync",
+            "short_name": "scansync_bn",
             "target_path": "/conditions/time_bn/scansync",
             "source_path": "time_bn.nc:SCANSYNC",
             "item_format": "netcdf",
@@ -11978,7 +11968,7 @@
             }
         },
         {
-            "short_name": "scansync",
+            "short_name": "scansync_in",
             "target_path": "/conditions/time_in/scansync",
             "source_path": "time_in.nc:SCANSYNC",
             "item_format": "netcdf",

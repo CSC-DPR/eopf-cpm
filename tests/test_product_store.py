@@ -1,6 +1,5 @@
 import os
 import os.path
-import pathlib
 import shutil
 from typing import Any, Optional
 from unittest.mock import patch
@@ -27,12 +26,14 @@ from eopf.product.store import (
     convert,
 )
 from eopf.product.store.cog import EOCogStore
+from eopf.product.store.grib import EOGribAccessor
 from eopf.product.store.manifest import ManifestStore
 from eopf.product.store.rasterio import EORasterIOAccessor
 from eopf.product.store.wrappers import (
     FromAttributesToFlagValueAccessor,
     FromAttributesToVariableAccessor,
 )
+from eopf.product.store.xml_accessors import XMLAnglesAccessor, XMLTPAccessor
 
 from .decoder import Netcdfdecoder
 from .utils import (
@@ -40,7 +41,6 @@ from .utils import (
     S3_CONFIG_REAL,
     assert_contain,
     assert_has_coords,
-    assert_issubdict,
     couple_combinaison_from,
 )
 
@@ -126,7 +126,7 @@ def zarr_file(OUTPUT_DIR: str):
 
 @pytest.mark.unit
 def test_load_product_from_zarr(dask_client_all, zarr_file: str):
-    product = EOProduct("a_product", store_or_path_url=zarr_file)
+    product = EOProduct("a_product", storage=zarr_file)
     with product.open(mode="r"):
         product.load()
 
@@ -272,16 +272,24 @@ def test_abstract_store_cant_be_instantiate():
 
 @pytest.mark.unit
 @pytest.mark.parametrize(
-    "store",
+    "store_cls",
     [
-        EOZarrStore("a_product"),
-        EONetCDFStore(_FILES["netcdf"]),
-        EORasterIOAccessor("a.jp2"),
-        FromAttributesToVariableAccessor(""),
-        FromAttributesToFlagValueAccessor(""),
+        EOZarrStore,
+        EONetCDFStore,
+        EORasterIOAccessor,
+        EOSafeStore,
+        EOCogStore,
+        ManifestStore,
+        EORasterIOAccessor,
+        EOGribAccessor,
+        XMLAnglesAccessor,
+        XMLTPAccessor,
+        FromAttributesToVariableAccessor,
+        FromAttributesToFlagValueAccessor,
     ],
 )
-def test_store_must_be_open_read_method(store: EOProductStore):
+def test_store_must_be_open_read_method(store_cls):
+    store = store_cls("a_product")
     with pytest.raises(StoreNotOpenError):
         store["a_group"]
 
@@ -295,22 +303,28 @@ def test_store_must_be_open_read_method(store: EOProductStore):
         len(store)
 
     with pytest.raises(StoreNotOpenError):
-        store.iter("a_group")
+        set(store.iter("a_group"))
 
     with pytest.raises(StoreNotOpenError):
         for _ in store:
             continue
 
+    with pytest.raises(StoreNotOpenError):
+        store.close()
+
 
 @pytest.mark.unit
 @pytest.mark.parametrize(
-    "store",
+    "store_cls",
     [
-        EOZarrStore("a_product"),
-        EONetCDFStore(_FILES["netcdf"]),
+        EOZarrStore,
+        EONetCDFStore,
+        EOSafeStore,
+        EOCogStore,
     ],
 )
-def test_store_must_be_open_write_method(store):
+def test_store_must_be_open_write_method(store_cls):
+    store = store_cls("a_product")
     with pytest.raises(StoreNotOpenError):
         store["a_group"] = EOGroup(variables={})
 
@@ -359,17 +373,38 @@ def test_open_close_already(store, exceptions):
 
 @pytest.mark.unit
 @pytest.mark.parametrize(
-    "store, formats, results",
+    "store, ok_formats",
     [
-        (EOZarrStore(zarr.MemoryStore()), (".zarr", "", ".nc"), (True, True, False)),
-        (EONetCDFStore(_FILES["netcdf"]), (".nc", "", ".zarr"), (True, False, False)),
-        (ManifestStore(_FILES["json"]), (".nc", ".zarr", ""), (False, False, False)),
+        (EOZarrStore, ("", ".zarr")),
+        (EONetCDFStore, (".nc",)),
+        (EOSafeStore, (".SAFE", ".SEN3")),
+        (EOCogStore, (".cogs",)),
+        (ManifestStore, ()),
+        (EORasterIOAccessor, (".jp2", ".tiff")),
+        (EOGribAccessor, (".grib",)),
+        (XMLAnglesAccessor, ()),
+        (XMLTPAccessor, ()),
     ],
 )
-def test_guess_read_format(store, formats, results):
-    assert len(formats) == len(results)
-    for format, res in zip(formats, results):
-        assert store.guess_can_read(f"file{format}") == res
+def test_guess_read_format(store, ok_formats):
+    all_guessed_formats = (
+        "",
+        ".cog",
+        ".cogs",
+        ".false",
+        ".grib",
+        ".jp2",
+        ".json",
+        ".nc",
+        ".SAFE",
+        ".SEN3",
+        ".tiff",
+        ".zarr",
+    )
+    for format in ok_formats:
+        assert format in all_guessed_formats
+    for format in all_guessed_formats:
+        assert store.guess_can_read(f"file{format}") == (format in ok_formats)
 
 
 @pytest.mark.unit
@@ -424,152 +459,6 @@ def test_close_manifest_store():
         store.close()
 
 
-@pytest.mark.need_files
-@pytest.mark.integration
-def test_retrieve_from_manifest_store(
-    dask_client_all,
-    S3_OLCI_L1_EFR: str,
-    S3_OLCI_L1_MAPPING: str,
-    tmp_path: pathlib.Path,
-):
-    """Tested on 24th of February on data coming from
-    S3A_OL_1_EFR____20220116T092821_20220116T093121_20220117T134858_0179_081_036_2160_LN1_O_NT_002.SEN3
-    Given a manifest XML file from a Legacy product and a mapping file,
-    the CF and respectively OM_EOP attributes computed by the manifest store
-    must match the ones expected.
-    """
-    import json
-
-    fsmap = fsspec.get_mapper(S3_OLCI_L1_EFR)
-    manifest_name = "xfdumanifest.xml"
-    manifest_path = tmp_path / manifest_name
-    for key in fsmap:
-        if key.endswith(manifest_name):
-            manifest_path.write_bytes(fsmap[key])
-
-    manifest = ManifestStore(manifest_path)
-
-    mapping_file = open(S3_OLCI_L1_MAPPING)
-    map_olci = json.load(mapping_file)
-    config = {"namespaces": map_olci["namespaces"], "mapping": map_olci["metadata_mapping"]}
-    with open_store(manifest, **config):
-        eog = manifest[""]
-    assert isinstance(eog, EOGroup)
-    returned_cf = eog.attrs["CF"]
-    returned_om_eop = eog.attrs["OM_EOP"]
-
-    assert_issubdict(
-        returned_cf,
-        {
-            "title": S3_OLCI_L1_EFR.split("/")[-1].replace(".zip", ".SEN3"),
-            "institution": "European Space Agency, Land OLCI Processing and Archiving Centre [LN1]",
-            "source": "Sentinel-3A OLCI Ocean Land Colour Instrument",
-            "comment": "Operational",
-            "references": ",".join(
-                [
-                    "https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-2",
-                    " https://sentinels.copernicus.eu/web/sentinel/user-guides/sentinel-2-msi/processing-levels/level-1",  # noqa
-                ],
-            ),
-            "Conventions": "CF-1.9",
-        },
-    ) and ("history" in returned_cf)
-
-    phenomenon_time = returned_om_eop.get("phenomenonTime", {})
-    import re
-    from datetime import datetime
-
-    assert all(datetime.strptime(phenomenon_time[p], "%Y-%m-%dT%H:%M:%S.%fZ") for p in ("beginPosition", "endPosition"))
-
-    acq_parameter = returned_om_eop.get("procedure", {}).get("acquistionParameters", {})
-
-    assert_issubdict(
-        returned_om_eop.get("procedure", {}),
-        {
-            "platform": {"shortName": "Sentinel-3", "serialIdentifier": "A"},
-            "instrument": {"shortName": "OLCI"},
-            "sensor": {"sensorType": "OPTICAL", "operationalMode": "EO"},
-        },
-    )
-    assert acq_parameter.get("orbitNumber").isnumeric() and acq_parameter.get("orbitDirection") == "descending"
-
-    assert datetime.strptime(returned_om_eop.get("resultTime", {}).get("timePosition", ""), "%Y%m%dT%H%M%S")
-    assert (
-        re.match(
-            r"POLYGON\(\((-?\d*\.\d* -?\d*\.\d*,?)*\)\)",
-            returned_om_eop.get("featureOfInterest", {}).get("multiExtentOf", ""),
-        )
-        is not None
-    )
-    assert_issubdict(
-        returned_om_eop,
-        {
-            "result": {
-                "product": {
-                    "fileName": ",".join(
-                        [
-                            "./Oa01_radiance.nc",
-                            "./Oa02_radiance.nc",
-                            "./Oa03_radiance.nc",
-                            "./Oa04_radiance.nc",
-                            "./Oa05_radiance.nc",
-                            "./Oa06_radiance.nc",
-                            "./Oa07_radiance.nc",
-                            "./Oa08_radiance.nc",
-                            "./Oa09_radiance.nc",
-                            "./Oa10_radiance.nc",
-                            "./Oa11_radiance.nc",
-                            "./Oa12_radiance.nc",
-                            "./Oa13_radiance.nc",
-                            "./Oa14_radiance.nc",
-                            "./Oa15_radiance.nc",
-                            "./Oa16_radiance.nc",
-                            "./Oa17_radiance.nc",
-                            "./Oa18_radiance.nc",
-                            "./Oa19_radiance.nc",
-                            "./Oa20_radiance.nc",
-                            "./Oa21_radiance.nc",
-                            "./geo_coordinates.nc",
-                            "./instrument_data.nc",
-                            "./qualityFlags.nc",
-                            "./removed_pixels.nc",
-                            "./tie_geo_coordinates.nc",
-                            "./tie_geometries.nc",
-                            "./tie_meteo.nc",
-                            "./time_coordinates.nc",
-                        ],
-                    ),
-                    "timeliness": "NT",
-                },
-            },
-        },
-    )
-
-    metadata_property = returned_om_eop.get("metadataProperty", {})
-    assert_issubdict(
-        metadata_property,
-        {
-            "identifier": S3_OLCI_L1_EFR.split("/")[-1].replace(".zip", ".SEN3"),
-            "acquisitionType": "Operational",
-            "productType": "OL_1_EFR___",
-            "status": "ARCHIVED",
-            "productQualityStatus": "PASSED",
-        },
-    )
-    assert len(metadata_property.get("productQualityDegradationTag", "")) > 0
-
-    assert datetime.strptime(metadata_property.get("creationDate", ""), "%Y%m%dT%H%M%S")
-    downlinked_to = metadata_property.get("downlinkedTo", {})
-    assert datetime.strptime(downlinked_to.get("acquisitionDate", ""), "%Y-%m-%dT%H:%M:%S.%fZ")
-    assert downlinked_to.get("acquisitionStation", "") == "CGS"
-
-    processing_map = metadata_property.get("processing", {})
-    assert processing_map["processorName"] == "PUG"
-    assert processing_map["processingCenter"] == "Land OLCI Processing and Archiving Centre [LN1]"
-    assert re.match(r"\d{1,2}\.\d{2}", processing_map["processorVersion"])
-    assert datetime.strptime(processing_map["processingDate"], "%Y-%m-%dT%H:%M:%S.%f")
-
-
 _FORMAT = {
     EOZarrStore: "zarr",
     EONetCDFStore: "netcdf",
@@ -585,10 +474,10 @@ def test_convert(dask_client_all, read_write_stores):
     read_store = cls_read_store(_FILES[f"{_FORMAT[cls_read_store]}0"])
     write_store = cls_write_store(_FILES[f"{_FORMAT[cls_write_store]}1"])
 
-    product = init_product("a_product", store_or_path_url=read_store)
+    product = init_product("a_product", storage=read_store)
     with open_store(product, mode="w"):
         product.write()
-    new_product = EOProduct("new_one", store_or_path_url=convert(read_store, write_store))
+    new_product = EOProduct("new_one", storage=convert(read_store, write_store))
     with open_store(new_product, mode="r"):
         new_product["measurements"]
         new_product["coordinates"]
@@ -604,8 +493,6 @@ def test_convert(dask_client_all, read_write_stores):
 )
 def test_rasters(dask_client_all, store_cls: type[EORasterIOAccessor], format_file: str, params: dict[str, Any]):
     file_name = f"a_file.{format_file}"
-    assert store_cls.guess_can_read(file_name)
-    assert not store_cls.guess_can_read("false_format.false")
     raster = store_cls(file_name)
 
     with patch("rioxarray.open_rasterio") as mock_function:
@@ -671,9 +558,9 @@ def test_rasters(dask_client_all, store_cls: type[EORasterIOAccessor], format_fi
 @pytest.mark.parametrize(
     "product, fakefilename, open_kwargs",
     [
-        (EOProduct("", store_or_path_url="s3://a_simple_zarr.zarr"), lazy_fixture("zarr_file"), S3_CONFIG_FAKE),
+        (EOProduct("", storage="s3://a_simple_zarr.zarr"), lazy_fixture("zarr_file"), S3_CONFIG_FAKE),
         (
-            EOProduct("", store_or_path_url="zip::s3://a_simple_zarr.zarr"),
+            EOProduct("", storage="zip::s3://a_simple_zarr.zarr"),
             lazy_fixture("zarr_file"),
             dict(s3=S3_CONFIG_FAKE),
         ),
@@ -705,10 +592,11 @@ def test_zarr_open_on_different_fs(dask_client_all, product: EOProduct, fakefile
             + "S3A_OL_1_EFR____20200101T101517_20200101T101817_20200102T141102_0179_053_179_2520_LN1_O_NT_002.zip",
             dict(s3=S3_CONFIG_REAL),
         ),
+        (EOCogStore, "s3://eopf/cpm/test_data/OLCI_COG", S3_CONFIG_REAL),
     ],
 )
 def test_read_real_s3(dask_client_all, store: type, path: str, open_kwargs: dict[str, Any]):
-    product = EOProduct("s3_test_product", store_or_path_url=store(path))
+    product = EOProduct("s3_test_product", storage=store(path))
     with product.open(storage_options=open_kwargs):
         product.load()
 
@@ -731,14 +619,10 @@ def test_write_real_s3(dask_client_all, w_store: type, w_path: str, w_kwargs: di
 @pytest.mark.parametrize(
     "store_cls, format_file",
     [
-        (EOCogStore, "jp2"),
+        (EOCogStore, "cog"),
     ],
 )
-def test_cog_store(store_cls: type[EOCogStore], format_file: str):
-    assert store_cls.guess_can_read("some_file.cogs")
-    assert not store_cls.guess_can_read("some_other_file.false")
-    assert not store_cls.guess_can_read("some_other_file.cog")
-    assert not store_cls.guess_can_read("some_other_file.nc")
+def test_patch_cog_store(store_cls: type[EOCogStore], format_file: str):
     cog = store_cls(_FILES["cog"])
     with pytest.raises(ValueError):
         cog.open(mode="r+")
@@ -768,12 +652,157 @@ def test_cog_store(store_cls: type[EOCogStore], format_file: str):
             with pytest.raises(NotImplementedError):
                 cog["anything"] = "something"
 
-    with pytest.raises(StoreNotOpenError):
-        cog[""]
-    with pytest.raises(StoreNotOpenError):
-        cog.close()
-    with pytest.raises(StoreNotOpenError):
-        len(cog)
     with pytest.raises(NotImplementedError):
         cog.open(mode="r")
         cog.write_attrs("", {})
+
+
+@pytest.mark.real_s3
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "store, path, open_kwargs",
+    [
+        (EOCogStore, "s3://eopf/cpm/test_data/OLCI_COG", S3_CONFIG_REAL),
+    ],
+)
+def test_s3_reading_cog_store(dask_client_all, store: type, path: str, open_kwargs: dict[str, Any]):
+    cog_store = store(path)
+    product = EOProduct("s3_test_product", storage=cog_store)
+    with product.open(storage_options=open_kwargs):
+        product.load()
+        # Test getitem
+        assert isinstance(product["conditions/geometry/altitude"], EOVariable)
+        assert isinstance(product["conditions/geometry"], EOGroup)
+        with pytest.raises(KeyError):
+            product["invalid_key"]
+        # Test iter
+        expected_top_level_groups = ["conditions", "coordinates", "measurements", "quality"]
+        actual_top_level_groups = [str(x) for x in cog_store.iter("")]
+        assert expected_top_level_groups == actual_top_level_groups
+
+        # Test len
+        assert len(product) == len(expected_top_level_groups)
+
+
+@pytest.mark.need_files
+@pytest.mark.integration
+@pytest.mark.parametrize(
+    "store, legacy_product_path, write_target",
+    [
+        (
+            EOCogStore,
+            lazy_fixture("S3_OL_1_EFR"),
+            "data/test_cog",
+        ),
+    ],
+)
+def test_convert_cog_store(store, legacy_product_path, write_target):
+    safe_store = EOSafeStore(legacy_product_path)
+    cog_store = store(write_target)
+    # Convert legacy product stored in safe_store to cog_store
+    convert(safe_store, cog_store)
+
+    product = EOProduct("cog_product", storage=cog_store)
+    with product.open():
+        product.load()
+
+    with pytest.raises(ValueError):
+        cog_store.open(mode="incorrect_mode")
+
+    # Test is group, is variable
+    with product.open(mode="r"):
+        assert cog_store.is_group("conditions/geometry")
+        assert not cog_store.is_variable("conditions/geometry")
+        assert cog_store.is_variable("conditions/geometry/altitude.cog")
+        assert not cog_store.is_group("conditions/geometry/altitude.cog")
+
+    # Test getitem
+    # Try to get an item when mode is set to write
+    with pytest.raises(NotImplementedError):
+        cog_store.open(mode="w")
+        data = cog_store[""]  # noqa
+
+    # Test if returned output of getitem is EOGroup or EOVariable
+    cog_store.open(mode="r")
+    assert isinstance(cog_store[""], EOGroup)
+    assert isinstance(cog_store["conditions/geometry/altitude"], EOVariable)
+
+    # Try to get an item with an incorrect key
+    with pytest.raises(KeyError):
+        cog_store["some_incorrect_path"]
+
+    # Test iter, iterate over top level and check results
+    expected_top_level_groups = ["conditions", "measurements", "coordinates", "quality"]
+    actual_top_level_groups = [group_name for group_name in cog_store.iter("")]
+    assert set(expected_top_level_groups).issubset(actual_top_level_groups)
+    # Test iter, iterate over an directory, and check variables
+    expected_geometry_variables = ["saa", "oaa", "oza", "altitude", "sza"]
+    actual_geometry_variables = [variable for variable in cog_store.iter("conditions/geometry")]
+    assert set(expected_geometry_variables).issubset(actual_geometry_variables)
+    # Try to iterate over an incorrect path
+    with pytest.raises(FileNotFoundError):
+        incorrect_variables = [idx for idx in cog_store.iter("some_incorrect_path")]  # noqa
+
+    cog_store.close()
+    # Test len, when store is opened in writing mode
+    with pytest.raises(NotImplementedError):
+        cog_store.open(mode="w")
+        top_level_len = len(cog_store)  # noqa
+        cog_store.close()
+
+    cog_store.open(mode="r")
+    assert len(cog_store) == len(expected_top_level_groups)
+    cog_store.close()
+
+    # Test setitem
+
+    # Try to set an item when open mode is reading
+    with pytest.raises(NotImplementedError):
+        cog_store.open(mode="r")
+        cog_store["name"] = EOVariable("name", data=[])
+        cog_store.close()
+
+    # Try to set an item when item type is not EOV, EOG, DataArray
+    with pytest.raises(NotImplementedError):
+        cog_store.open(mode="w")
+        cog_store["name"] = "incorrect_data_type"
+
+    # Set an empty EOGroup and verify on disk
+    import os
+
+    cog_store.open(mode="w")
+    cog_store["empty_group"] = EOGroup("empty_group")
+    assert os.path.isdir(f"{write_target}/empty_group")
+    cog_store.close()
+
+    cog_store.open(mode="r")
+    assert cog_store.is_group("empty_group")
+    cog_store.close()
+    # Set EOV with data, open in write mode and use setitem to write them
+    cog_store.open(mode="w")
+    a_var, a_data = "a", EOVariable(data=[1, 2, 3])
+    b_var, b_data = "b", EOVariable(data=[4, 5, 6])
+    c_var, c_data = "c", EOVariable(data=[7, 8, 9])
+    cog_store["full_group"] = EOGroup("full_group", variables={a_var: a_data, b_var: b_data, c_var: c_data})
+    cog_store.close()
+    # Reopen in reading mode and check if groups are correctly written using os.path
+    cog_store.open(mode="r")
+    assert os.path.isdir(f"{write_target}/full_group")
+    assert cog_store.is_group("full_group")
+    # Check if variables are written as netcdf files on disk, and stored EOVariable(s)
+    for target in ["a", "b", "c"]:
+        path = f"full_group/{target}"
+        assert isinstance(cog_store[path], EOVariable)
+        assert os.path.isfile(f"{write_target}/{path}.nc")
+    # Check variables data using standard netcdf4 module, dataset["variable"][:] outputs variable dataarray
+    from netCDF4 import Dataset
+
+    var_a_ds = Dataset(f"{write_target}/full_group/a.nc")
+    assert (var_a_ds[a_var][:] == a_data._data).all()
+    var_b_ds = Dataset(f"{write_target}/full_group/b.nc")
+    assert (var_b_ds[b_var][:] == b_data._data).all()
+    var_c_ds = Dataset(f"{write_target}/full_group/c.nc")
+    assert (var_c_ds[c_var][:] == c_data._data).all()
+    cog_store.close()
+
+    # $write_target should be removed

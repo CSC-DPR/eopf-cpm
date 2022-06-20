@@ -1,3 +1,4 @@
+import json
 from typing import Any, Iterator, MutableMapping
 from unittest.mock import patch
 
@@ -5,6 +6,7 @@ import numpy as np
 import pytest
 import xarray
 from lxml import etree
+from pytest_lazyfixture import lazy_fixture
 
 from eopf.exceptions import (
     EOObjectExistError,
@@ -58,7 +60,7 @@ class EmptyTestStore(EOProductStore):
 
 @pytest.fixture
 def product() -> EOProduct:
-    product: EOProduct = init_product("product_name", store_or_path_url=EmptyTestStore(""))
+    product: EOProduct = init_product("product_name", storage=EmptyTestStore(""))
     with product.open(mode="w"):
         product.add_group(
             "measurements/group1",
@@ -97,7 +99,7 @@ def product() -> EOProduct:
 def test_product_store_is_valid():
     product = EOProduct("a_product")
     with pytest.raises(TypeError):
-        product.open(mode="r", store_or_path_url=1)
+        product.open(mode="r", storage=1)
 
 
 @pytest.mark.unit
@@ -505,7 +507,7 @@ def test_hierarchy_html(product: EOProduct):
             },
             "group0": {"dims": (), "attrs": {}, "coords": []},
             "dims": (),
-            "attrs": {},
+            "attrs": {"type": ""},
             "coords": [],
         },
     }
@@ -524,3 +526,38 @@ def test_eovariable_plot(product):
 def test_group_to_product(product):
     with pytest.raises(NotImplementedError):
         product.measurements.to_product()
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "mapping_filename, expected_invalid",
+    [
+        #    (lazy_fixture("S1_IM_OCN_MAPPING"),2),
+        (lazy_fixture("S2A_MSIL1C_MAPPING"), 3),
+        (lazy_fixture("S3_OL_1_EFR_MAPPING"), 2),  # invalid for conditions_metadata and stac_discovery
+        #    (lazy_fixture("S3_SL_1_RBT_MAPPING"),1),
+        (lazy_fixture("S3_SY_2_SYN_MAPPING"), 1),
+    ],
+)
+def test_short_name(product, mapping_filename, expected_invalid):
+    # "", "/" target_path , and single target multi mapping short name collision are expected_invalid.
+    # short name colision on different target_path  are the main other cause of real invalid short_names
+    assert len(product.short_names) == 0
+    type = ""
+    with open(mapping_filename) as f:
+        mappin_data = json.load(f)
+        mapping_count = len(mappin_data["data_mapping"])
+        type = mappin_data["recognition"]["product_type"]
+
+    product.set_type(type)
+    for short_name, path in product.short_names.items():
+        assert product.add_variable(short_name).path == path
+        assert product[short_name].path == path
+        with pytest.raises(EOObjectExistError):
+            assert product.add_group(short_name).path == path
+        del product[short_name]
+        assert product.add_group(short_name).path == path
+        del product[short_name]
+        product[short_name] = EOVariable()
+        assert product[short_name].path == path
+    assert len(product.short_names) == mapping_count - expected_invalid

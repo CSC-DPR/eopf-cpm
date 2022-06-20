@@ -1,6 +1,7 @@
 {
     "recognition": {
         "filename_pattern": "S1._[IE]W_OCN.*SAFE",
+        "product_type": "S1_OCN_IW",
         "product_type_pattern": "OCN",
         "version": "003.40"
     },
@@ -35,7 +36,7 @@
             }
         },
         {
-            "short_name": "time_start",
+            "short_name": "time_start_owi",
             "target_path": "/coordinates/owi/time_start",
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",
@@ -50,7 +51,7 @@
             }
         },
         {
-            "short_name": "time_stop",
+            "short_name": "time_stop_owi",
             "target_path": "/coordinates/owi/time_stop",
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",
@@ -77,7 +78,7 @@
             "item_format": "netcdf"
         },
         {
-            "short_name": "polarisation",
+            "short_name": "polarisation_osw",
             "target_path": "/coordinates/osw/polarisation",
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_flag_variable",
@@ -114,7 +115,7 @@
             }
         },
         {
-            "short_name": "time_start",
+            "short_name": "time_start_osw",
             "target_path": "/coordinates/osw/time_start",
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",
@@ -129,7 +130,7 @@
             }
         },
         {
-            "short_name": "time_stop",
+            "short_name": "time_stop_osw",
             "target_path": "/coordinates/osw/time_stop",
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",
@@ -192,7 +193,7 @@
             "item_format": "netcdf"
         },
         {
-            "short_name": "polarisation",
+            "short_name": "polarisation_rvl",
             "target_path": "/coordinates/rvl/polarisation",
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_flag_variable",
@@ -215,7 +216,7 @@
             "item_format": "netcdf"
         },
         {
-            "short_name": "time_start",
+            "short_name": "time_start_rvl",
             "target_path": "/coordinates/rvl/time_start",
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",
@@ -230,7 +231,7 @@
             }
         },
         {
-            "short_name": "time_stop",
+            "short_name": "time_stop_rvl",
             "target_path": "/coordinates/rvl/time_stop",
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",

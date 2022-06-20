@@ -1,15 +1,26 @@
-from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional, TextIO
+from pathlib import Path
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Dict,
+    Iterator,
+    List,
+    MutableMapping,
+    Optional,
+    TextIO,
+    Union,
+)
 
 import lxml
 import xarray as xr
+from lxml.etree import _ElementUnicodeResult
 
-from eopf.exceptions import StoreNotOpenError, XmlParsingError
-from eopf.product.store import EOProductStore
-from eopf.product.utils import (  # to be reviewed
-    apply_xpath,
-    parse_xml,
-    translate_structure,
-)
+from eopf.exceptions import StoreNotOpenError, XmlManifestNetCDFError, XmlParsingError
+from eopf.formatting import EOFormatterFactory
+from eopf.formatting.formatters import IsOptional, Text, ToImageSize
+from eopf.product.core.eo_variable import EOVariable
+from eopf.product.store import EONetCDFStore, EOProductStore, StorageStatus
+from eopf.product.utils import apply_xpath, parse_xml  # to be reviewed
 
 if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_object import EOObject
@@ -52,6 +63,8 @@ class XMLAnglesAccessor(EOProductStore):
         """
         from eopf.product.core import EOVariable
 
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         variable_data = self.create_eo_variable(key)
         return EOVariable(data=variable_data)
 
@@ -89,10 +102,14 @@ class XMLAnglesAccessor(EOProductStore):
 
     def __iter__(self) -> Iterator[str]:
         """Has no functionality within this store"""
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         yield from ()
 
     def __len__(self) -> int:
         """Has no functionality within this accessor"""
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         return 0
 
     def __setitem__(self, key: str, value: Any) -> None:
@@ -101,6 +118,8 @@ class XMLAnglesAccessor(EOProductStore):
 
     # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         if path.endswith("Values_List"):
             return False
         nodes_matched = self._root.xpath(path, namespaces=self._namespaces)
@@ -108,6 +127,8 @@ class XMLAnglesAccessor(EOProductStore):
 
     # docstr-coverage: inherited
     def is_variable(self, path: str) -> bool:
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         if not path.endswith("Values_List"):
             return False
         nodes_matched = self._root.xpath(path, namespaces=self._namespaces)
@@ -115,6 +136,8 @@ class XMLAnglesAccessor(EOProductStore):
 
     def iter(self, path: str) -> Iterator[str]:
         """Has no functionality within this store"""
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         yield from ()
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
@@ -186,15 +209,21 @@ class XMLTPAccessor(EOProductStore):
         """
         from eopf.product.core import EOVariable
 
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         if not len(self._root.xpath(key, namespaces=self._namespaces)):
             raise TypeError(f"Incorrect xpath {key}")
 
         return EOVariable(name=key, data=self.get_tie_points_data(key))
 
     def __iter__(self) -> Iterator[str]:
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         raise NotImplementedError()
 
     def __len__(self) -> int:
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         """Has no functionality within this store"""
         return 2
 
@@ -203,14 +232,20 @@ class XMLTPAccessor(EOProductStore):
         raise NotImplementedError()
 
     def is_group(self, path: str) -> bool:
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         # xmlTP accessors only returns variables
         return False
 
     def is_variable(self, path: str) -> bool:
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         return len(self._root.xpath(path, namespaces=self._namespaces)) == 1
 
     def iter(self, path: str) -> Iterator[str]:
         """Has no functionality within this store"""
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         yield from ()
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
@@ -223,9 +258,7 @@ class XMLManifestAccessor(EOProductStore):
     def __init__(self, url: str, **kwargs: Any) -> None:
         super().__init__(url)
         self._attrs: MutableMapping[str, Any] = {}
-        for key in self.KEYS:
-            self._attrs[key] = {}
-        self._parsed_xml = None
+        self._parsed_xml: lxml.etree._ElementTree = None
         self._xml_fobj: Optional[TextIO] = None
 
     def open(self, mode: str = "r", **kwargs: Any) -> None:
@@ -243,8 +276,8 @@ class XMLManifestAccessor(EOProductStore):
 
         # get configuration parameters
         try:
-            self._metada_mapping: MutableMapping[str, Any] = kwargs["metadata_mapping"]
-            self._namespaces: dict[str, str] = kwargs["namespace"]
+            self._metada_mapping: MutableMapping[str, Any] = kwargs["mapping"]
+            self._namespaces: dict[str, str] = kwargs["namespaces"]
         except KeyError as e:
             raise TypeError(f"Missing configuration parameter: {e}")
 
@@ -253,10 +286,7 @@ class XMLManifestAccessor(EOProductStore):
         self._xml_fobj = open(self.url, mode="r")
 
     def close(self) -> None:
-        if self._xml_fobj is None:
-            raise StoreNotOpenError()
         super().close()
-        self._xml_fobj.close()
         self._xml_fobj = None
 
     def __getitem__(self, key: str) -> "EOObject":
@@ -274,17 +304,230 @@ class XMLManifestAccessor(EOProductStore):
         if self._xml_fobj is None:
             raise StoreNotOpenError("Store must be open before access to it")
 
-        # computes CF and OM_EOP
         if self._parsed_xml is None:
             self._parse_xml()
-        self._compute_om_eop()
-        self._compute_cf()
 
         # create an EOGroup and set its attributes with a dictionary containing CF and OM_EOP
         from eopf.product.core import EOGroup
 
+        if self._metada_mapping:
+            self._attrs = self.translate_attributes(self._metada_mapping)
+        else:
+            self._attrs = {}
+
         eog: EOGroup = EOGroup("product_metadata", attrs=self._attrs)
         return eog
+
+    def translate_attributes(self, attributes_dict: Any) -> Any:
+        """Used to convert values from metadata mapping
+
+        Parameters
+        ----------
+        attributes_dict: dict
+            dictionary containing metadata
+
+        Returns
+        ----------
+        internal_dict: dict
+            dictionary containing converted values (using apply_xpath or conversion functions)
+        """
+        # This function is used to parse an convert each value from attributes dictionary
+        internal_dict = dict()
+        for key, value in attributes_dict.items():
+            # Recursive call for nested dictionaries
+            if isinstance(value, dict):
+                internal_dict[key] = self.translate_attributes(value)
+                continue
+            # Skip non-string formatted elements (list)
+            if isinstance(value, list):
+                internal_dict[key] = self.translate_list_attributes(value, key)
+                continue
+            # Directly convert value if xpath is valid
+            if self.is_valid_xpath(value):
+                internal_dict[key] = apply_xpath(self._parsed_xml, value, self._namespaces)
+                continue
+            else:
+                # If xpath is invalid, it may contain a conversion function reference <<to_float(xpath)>>
+                stac_conversion = self.stac_mapper(value)
+                if stac_conversion is not None:
+                    internal_dict[key] = stac_conversion
+                    continue
+                else:
+                    # If xpath is invalid, and doesn't containt a conversion function reference
+                    raise KeyError(f"{value} is an invalid xpath expression!")
+        return internal_dict
+
+    def translate_list_attributes(self, attributes_list: List[Any], global_key: str = None) -> Any:
+        """Used to convert values from metadata mapping
+
+        Parameters
+        ----------
+        attributes_list: list
+            list containing metadata
+
+        Returns
+        ----------
+        local_list_of_dicts: List[dict]
+            A list of dictionaries containing converted values in the same nesting as input list.
+        """
+        local_list_of_dicts = []
+        local_dict = dict()
+        # Iterate through input list
+        for idx in attributes_list:
+            if isinstance(idx, str):
+                converted_value = self.stac_mapper(idx)
+                return [converted_value] if converted_value is not None else [idx]
+            if isinstance(idx, list):
+                # Recursive call for nested lists
+                local_dict[global_key] = self.translate_list_attributes(idx)
+                continue
+            if isinstance(idx, dict):
+                # Iterate over a dictionary ## maybe use local_dict[global_key] = translate_attributes(idx)
+                # In order to cover nested dictionaries inside a list
+                for key, value in idx.items():
+                    if isinstance(value, list):
+                        local_dict[key] = self.translate_list_attributes(value)
+                        continue
+
+                    stac_conversion = self.stac_mapper(value)
+                    local_dict[key] = stac_conversion
+
+            local_list_of_dicts.append(local_dict)
+        return local_list_of_dicts
+
+    def _get_xml_data(self, xpath: str) -> Any:
+        """Used to get data from xml file
+
+        Parameters
+        ----------
+        xpath: str
+            xpath
+
+        Returns
+        ----------
+        Any
+            xml acquired data
+        """
+        if not self.is_valid_xpath(xpath):
+            return None
+
+        xml_data = self._parsed_xml.xpath(xpath, namespaces=self._namespaces)[0]
+
+        if isinstance(xml_data, _ElementUnicodeResult):
+            # Convert ElementUnicodeResult to string
+            return str(xml_data)
+        elif hasattr(xml_data, "text"):
+            if xml_data.text is None:
+                # Case where data is stored as attribute eg: <olci:invalidPixels value="749556" percentage="4.000000"/>
+                return xml_data.values()[0]
+            else:
+                # Nominal case, eg: <olci:alTimeSampling>44001</olci:alTimeSampling>
+                return xml_data.text
+        else:
+            return None
+
+    def _get_nc_data(self, path_and_dims: str) -> Any:
+        """Used to get data from netCDF file
+
+        Parameters
+        ----------
+        path_and_dims: str
+            a path to a netCDF file followed by requested dims
+
+        Returns
+        ----------
+        Any
+            netCDF acquired data
+        """
+
+        # parse the input string for relative file path
+        # and wanted dims, perform checks on them
+        rel_file_path, wanted_dims = path_and_dims.split(":")
+        file_path = (Path(self.url).parent / rel_file_path).resolve()
+        if not file_path.is_file():
+            raise XmlManifestNetCDFError(f"NetCDF file {file_path} does NOT exist")
+        if len(wanted_dims) < 1:
+            raise XmlManifestNetCDFError("No dimensions are required")
+
+        # create a dict with the requested dims
+        ret_dict: Dict[str, Union[None, int]] = {w: None for w in wanted_dims.split(",")}
+
+        # open netcdf file and read the dims and shape of fist var
+        try:
+            ncs = EONetCDFStore(str(file_path))
+            ncs.open()
+            var = ncs[list(ncs.iter("/"))[0]]
+            if isinstance(var, EOVariable):
+                var_dims = var.dims
+                var_shp = var.data.shape
+            else:
+                # practically not possible
+                raise XmlManifestNetCDFError(f"Expected EOVariable not {type(var)}")
+        finally:
+            ncs.close()
+
+        # iter over the the val dims and populate the requested dims
+        for i in range(len(var_dims)):
+            if var_dims[i] in ret_dict.keys():
+                ret_dict[var_dims[i]] = var_shp[i]
+
+        # check if all requested dims were populated
+        for k in ret_dict.keys():
+            if ret_dict[k] is None:
+                raise XmlManifestNetCDFError(f"Dim {k} not found")
+
+        return ret_dict
+
+    def stac_mapper(self, path: str) -> Any:
+        """Used to handle xpath's that request a conversion
+
+        Parameters
+        ----------
+        path: str
+            xpath which may contain formatters
+
+        Returns
+        ----------
+        Any:
+            output of the data getters either xml, netCDF
+        """
+        image_size_formatter_name = ToImageSize.name
+        text_formatter_name = Text.name
+        optional_formatter_name = IsOptional.name
+        # parse the path
+        formatter_name, formatter, xpath = EOFormatterFactory().get_formatter(path)
+
+        if formatter_name is not None and formatter is not None:
+            # Handle special formatters parameters (text, netcdf)
+            if formatter_name in [text_formatter_name, optional_formatter_name] or not self._get_xml_data(xpath):
+                return formatter(xpath)
+            elif formatter_name == image_size_formatter_name:
+                return formatter(self._get_nc_data(xpath))
+            # if formatter is defined, return it
+            return formatter(self._get_xml_data(xpath))
+        # If formatter is not defined, just read xpath and return data
+        return self._get_xml_data(xpath)
+
+    def is_valid_xpath(self, path: str) -> bool:
+        """Used verify if a xpath is valid (output of querry contains any kind of data)
+
+        Parameters
+        ----------
+        path: str
+            xpath
+
+        Returns
+        ----------
+        Boolean:
+            False if xpath is incorrect or doesn't return any data, True otherwise
+        """
+        try:
+            result = apply_xpath(self._parsed_xml, path, namespaces=self._namespaces)
+        except lxml.etree.XPathEvalError:
+            # Return false for lxml parsing errors
+            return False
+        # Return true if output is not void
+        return True if result != "" else False
 
     def __iter__(self) -> Iterator[str]:
         """Iterator over the dict containing the CF and OM_EOP attributes of the EOProduct
@@ -296,7 +539,7 @@ class XMLManifestAccessor(EOProductStore):
         """
         if self._xml_fobj is None:
             raise StoreNotOpenError("Store must be open before access to it")
-        yield from self.KEYS
+        return iter([])
 
     def _parse_xml(self) -> None:
         """Parses the manifest xml and saves it in _parsed_xml
@@ -316,50 +559,6 @@ class XMLManifestAccessor(EOProductStore):
         except Exception as e:
             raise XmlParsingError(f"Exception while computing xfdu dom: {e}")
 
-    def _compute_cf(self) -> None:
-        """Computes the CF dictionary of attributes and saves it in _metada_mapping
-
-        Raises
-        ----------
-        StoreNotOpenError
-            Trying to compute CF from an opened that was not opened
-        XmlParsingError
-            Any error while applying xpath
-        """
-        if self._xml_fobj is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-
-        try:
-            cf = {
-                attr: apply_xpath(self._parsed_xml, self._metada_mapping["CF"][attr], self._namespaces)
-                for attr in self._metada_mapping["CF"]
-            }
-            self._attrs["CF"] = cf
-        except Exception as e:
-            raise XmlParsingError(f"Exception while computing CF: {e}")
-
-    def _compute_om_eop(self) -> None:
-        """Computes the OM_EOP dictionary of attributes and saves it in _metada_mapping
-
-        Raises
-        ----------
-        StoreNotOpenError
-            Trying to compute CF from an opened that was not opened
-        XmlParsingError
-            Any error while from translate_structure
-        """
-        if self._xml_fobj is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-
-        try:
-            eop = {
-                attr: translate_structure(self._metada_mapping["OM_EOP"][attr], self._parsed_xml, self._namespaces)
-                for attr in self._metada_mapping["OM_EOP"]
-            }
-            self._attrs["OM_EOP"] = eop
-        except Exception as e:
-            raise XmlParsingError(f"Exception while computing OM_EOP: {e}")
-
     def __len__(self) -> int:
         """Has no functionality within this store"""
         raise NotImplementedError()
@@ -368,14 +567,24 @@ class XMLManifestAccessor(EOProductStore):
         raise NotImplementedError()
 
     def is_group(self, path: str) -> bool:
+        if self._xml_fobj is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        if path in ["", "/"]:
+            return True
         raise NotImplementedError()
 
     def is_variable(self, path: str) -> bool:
+        if self._xml_fobj is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        if path in ["", "/"]:
+            return False
         raise NotImplementedError()
 
     def iter(self, path: str) -> Iterator[str]:
         """Has no functionality within this store"""
-        raise NotImplementedError()
+        if self._xml_fobj is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        yield from ()
 
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         raise NotImplementedError()

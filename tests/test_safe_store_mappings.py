@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Callable
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -10,6 +10,7 @@ from eopf.product.conveniences import open_store
 from eopf.product.core import EOProduct, EOVariable
 from eopf.product.store import EOProductStore, EOZarrStore
 from eopf.product.store.conveniences import convert
+from eopf.product.store.mapping_factory import EOMappingFactory
 from eopf.product.store.safe import EOSafeStore
 from eopf.product.utils import conv
 from tests.utils import assert_eovariable_equal
@@ -20,7 +21,7 @@ from tests.utils import assert_eovariable_equal
 @pytest.mark.parametrize(
     "store_type, get_key",
     [
-        (lazy_fixture("S3_OLCI_L1_EFR"), "/coordinates/image_grid/longitude"),
+        (lazy_fixture("S3_OL_1_EFR"), "/coordinates/image_grid/longitude"),
         (lazy_fixture("S1_IM_OCN"), "/coordinates/osw/sub_swath"),
         (lazy_fixture("S1_IM_OCN"), "/coordinates/owi/owiLon"),
         (lazy_fixture("S1_IM_OCN"), "/coordinates/owi/owiPolarisationName"),
@@ -37,7 +38,7 @@ from tests.utils import assert_eovariable_equal
 )
 def test_read_product(dask_client_all, store_type, get_key):
     store = EOSafeStore(store_type)
-    product = EOProduct("my_product", store_or_path_url=store)
+    product = EOProduct("my_product", storage=store)
     product.open()
     product[get_key]
     assert isinstance(product.attrs, dict)
@@ -48,11 +49,11 @@ def test_read_product(dask_client_all, store_type, get_key):
 @pytest.mark.integration
 @pytest.mark.parametrize(
     "store_type",
-    [lazy_fixture("S3_OLCI_L1_EFR")],
+    [lazy_fixture("S3_OL_1_EFR")],
 )
 def test_load_product(dask_client_all, store_type):
     store = EOSafeStore(store_type)
-    product = EOProduct("my_product", store_or_path_url=store)
+    product = EOProduct("my_product", storage=store)
     product.open()
     assert isinstance(product.attrs, dict)
     product.load()
@@ -62,67 +63,157 @@ def test_load_product(dask_client_all, store_type):
 
 
 @pytest.mark.need_files
-@pytest.mark.integration
+@pytest.mark.unit
 @pytest.mark.parametrize(
-    "input_path, mapping_filename, output_formatter, output_store, expected_optional_miss",
+    "input_path, mapping_filename, output_extension, output_store, expected_optional_miss",
     [
         (
-            lazy_fixture("S3_OLCI_L1_EFR"),
-            lazy_fixture("S3_OLCI_L1_MAPPING"),
-            lambda name: f"{name.replace('.zip', '.SEN3')}",
-            EOSafeStore,
-            0,
+            lazy_fixture("TEST_PRODUCT"),
+            "data/test_safe_mapping.json",
+            ".zarr",
+            EOZarrStore,
+            1,
         ),
         (
-            lazy_fixture("S3_OLCI_L1_EFR"),
-            lazy_fixture("S3_OLCI_L1_MAPPING"),
-            lambda name: f"{name.replace('.zip', '.zarr')}",
+            lazy_fixture("TEST_PRODUCT_ZIP"),
+            "data/test_safe_mapping.json",
+            ".zarr",
             EOZarrStore,
-            0,
+            1,
         ),
-        (
-            lazy_fixture("S2A_MSIL1C"),
-            lazy_fixture("S2A_MSIL1C_MAPPING"),
-            lambda name: f"{name.replace('.zip', '.zarr')}",
-            EOZarrStore,
-            52,
-        ),
-        (
-            lazy_fixture("S2A_MSIL1C_ZIP"),
-            lazy_fixture("S2A_MSIL1C_MAPPING"),
-            lambda name: f"{name.replace('.zip', '.zarr')}",
-            EOZarrStore,
-            52,
-        ),
-        # (
-        #     lazy_fixture("S1_IM_OCN"),
-        #     lazy_fixture("S1_IM_OCN_MAPPING"),
-        #     lambda name: f"{name.replace('.zip', '.zarr')}",
-        #     EOZarrStore,
-        #     0,
-        # ),
     ],
 )
-def test_convert_safe_mapping(
+def test_convert_test_mapping(
     dask_client_all,
     input_path: str,
     mapping_filename: str,
-    output_formatter: Callable,
+    output_extension: str,
     output_store: type[EOProductStore],
     expected_optional_miss: int,
     OUTPUT_DIR: str,
 ):
-    source_store = EOSafeStore(input_path)
-    name = os.path.basename(input_path)
-    target_store = output_store(os.path.join(OUTPUT_DIR, output_formatter(name)))
+    mapping_factory = EOMappingFactory(False)
+    mapping_filename = str(Path(__file__).parent / mapping_filename)
+    mapping_factory.register_mapping(mapping_filename)
+    impl_test_convert_safe_mapping(
+        input_path,
+        mapping_filename,
+        output_extension,
+        output_store,
+        expected_optional_miss,
+        OUTPUT_DIR,
+        mapping_factory,
+    )
+
+
+@pytest.mark.need_files
+@pytest.mark.integration
+@pytest.mark.parametrize(
+    "input_path, mapping_filename, output_extension, output_store, expected_optional_miss",
+    [
+        # (
+        #     lazy_fixture("S1_IM_OCN"),
+        #     lazy_fixture("S1_IM_OCN_MAPPING"),
+        #     ".zarr",
+        #     EOZarrStore,
+        #     0,
+        # ),
+        (
+            lazy_fixture("S2A_MSIL1C"),
+            lazy_fixture("S2A_MSIL1C_MAPPING"),
+            ".zarr",
+            EOZarrStore,
+            52,
+        ),
+        (
+            lazy_fixture("S3_OL_1_EFR"),
+            lazy_fixture("S3_OL_1_EFR_MAPPING"),
+            ".SEN3",
+            EOSafeStore,
+            0,
+        ),
+        (
+            lazy_fixture("S3_OL_1_EFR"),
+            lazy_fixture("S3_OL_1_EFR_MAPPING"),
+            ".zarr",
+            EOZarrStore,
+            0,
+        ),
+        (
+            lazy_fixture("S3_OL_2_LFR"),
+            lazy_fixture("S3_OL_2_LFR_MAPPING"),
+            ".zarr",
+            EOZarrStore,
+            0,
+        ),
+        (
+            lazy_fixture("S3_SL_1_RBT"),
+            lazy_fixture("S3_SL_1_RBT_MAPPING"),
+            ".zarr",
+            EOZarrStore,
+            0,
+        ),
+        (
+            lazy_fixture("S3_SL_2_LST"),
+            lazy_fixture("S3_SL_2_LST_MAPPING"),
+            ".zarr",
+            EOZarrStore,
+            0,
+        ),
+        (
+            lazy_fixture("S3_SY_2_SYN"),
+            lazy_fixture("S3_SY_2_SYN_MAPPING"),
+            ".zarr",
+            EOZarrStore,
+            0,
+        ),
+    ],
+)
+def test_convert_safe_mapping(
+    client,  # dask client
+    input_path: str,
+    mapping_filename: str,
+    output_extension: str,
+    output_store: type[EOProductStore],
+    expected_optional_miss: int,
+    OUTPUT_DIR: str,
+):
+    impl_test_convert_safe_mapping(
+        input_path,
+        mapping_filename,
+        output_extension,
+        output_store,
+        expected_optional_miss,
+        OUTPUT_DIR,
+    )
+
+
+def impl_test_convert_safe_mapping(
+    input_path: str,
+    mapping_filename: str,
+    output_extension: str,
+    output_store: type[EOProductStore],
+    expected_optional_miss: int,
+    OUTPUT_DIR: str,
+    mapping_factory=None,
+):
+    source_store = EOSafeStore(input_path, mapping_factory=mapping_factory)
+    output_name = os.path.basename(input_path)
+    # switch extension of output_name
+    output_name, _ = os.path.splitext(output_name)
+    output_name += output_extension
+    target_store = output_store(os.path.join(OUTPUT_DIR, output_name))
     convert(source_store, target_store)
-    source_product = EOProduct("", store_or_path_url=source_store)
-    target_product = EOProduct("", store_or_path_url=target_store)
+    source_product = EOProduct("", storage=source_store, mapping_factory=mapping_factory)
+    target_product = EOProduct("", storage=target_store, mapping_factory=mapping_factory)
 
     with open(mapping_filename) as f:
         mappin_data = json.load(f)
     optional_miss = 0
     with (open_store(source_product), open_store(target_product)):
+        assert source_product.type == mappin_data["recognition"]["product_type"]
+        assert target_product.type == mappin_data["recognition"]["product_type"]
+
         for item in mappin_data["data_mapping"]:
             # TODO: should be removed after that misc was removed from mappings
             if item["item_format"] == "misc":
@@ -141,7 +232,39 @@ def test_convert_safe_mapping(
                 source_object = source_product
                 target_object = target_product
             assert type(source_object) == type(target_object)
-            np.testing.assert_equal(conv(source_object.attrs), conv(target_object.attrs))
+
+            if output_store != EOSafeStore or data_path not in ["", "/"]:
+                # Manifest accessor set item not yet implemented
+                np.testing.assert_equal(conv(source_object.attrs), conv(target_object.attrs))
             if isinstance(source_object, EOVariable):
                 assert_eovariable_equal(source_object, target_object)
     assert expected_optional_miss == optional_miss
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "mapping_filename",
+    [
+        lazy_fixture("S1_IM_OCN_MAPPING"),
+        lazy_fixture("S2A_MSIL1C_MAPPING"),
+        lazy_fixture("S3_OL_1_EFR_MAPPING"),
+        lazy_fixture("S3_OL_1_EFR_MAPPING"),
+        lazy_fixture("S3_OL_2_LFR_MAPPING"),
+        lazy_fixture("S3_SL_1_RBT_MAPPING"),
+        lazy_fixture("S3_SL_2_LST_MAPPING"),
+        lazy_fixture("S3_SY_2_SYN_MAPPING"),
+    ],
+)
+def test_short_name_conflict(mapping_filename):
+    short_names_dict = dict()
+    with open(mapping_filename) as f:
+        mapping_json = json.load(f)
+        for mapping in mapping_json["data_mapping"]:
+            if "short_name" not in mapping:
+                continue
+            assert "target_path" in mapping
+            short_name = mapping["short_name"]
+            if mapping["short_name"] in short_names_dict:
+                assert mapping["target_path"] == short_names_dict[short_name]
+            else:
+                short_names_dict[short_name] = mapping["target_path"]

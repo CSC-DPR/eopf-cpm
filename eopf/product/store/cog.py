@@ -5,9 +5,12 @@ from json import loads
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Iterator, Optional
 
+import boto3
+import fsspec
 import rasterio
 import rioxarray
 import xarray
+from rasterio.session import AWSSession
 
 from eopf.exceptions import StoreNotOpenError
 from eopf.product.store import StorageStatus
@@ -21,6 +24,266 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class EOCogStore(EOProductStore):
+    # Wrapper class
+    attributes_file_name = "attrs.json"
+    sep = "/"
+
+    def __init__(self, url: str) -> None:
+        super().__init__(url)
+        self.url: fsspec.core.OpenFile = url
+        self._ds = None
+        self._sub_store: Any = None
+        self._is_zip = False
+        self.mapper: fsspec.mapping.FSMap = None
+
+    def open(self, mode: str = "r", **kwargs: Any) -> None:
+        self._mode: str = mode
+        # Use wrapper-class if target path is an S3, otherwise, use normal CogStore
+        if self.url.startswith("s3:") or self.url.startswith("zip::s3:"):
+            self._open_cloud(mode, **kwargs)
+        else:
+            self._sub_store = self._open_local(mode, **kwargs)
+        super().open(mode)
+
+    def _open_local(self, mode: str = "r", **kwargs: Any) -> "EOCogStoreLOCAL":
+        sub_store = EOCogStoreLOCAL(self.url)
+        sub_store.open(mode, **kwargs)
+        return sub_store
+
+    def _open_cloud(self, mode: str = "r", **kwargs: Any) -> None:
+        self.storage_options = kwargs.pop("storage_options", dict())
+        # To be fixed, bypass to eop.load() error when endpoint does not contain https
+        new_endpoint = self.storage_options["client_kwargs"]["endpoint_url"].replace("https://", "")
+        local_cfg = dict(
+            key=self.storage_options["key"],
+            secret=self.storage_options["secret"],
+            client_kwargs=dict(
+                endpoint_url=new_endpoint,
+                region_name=self.storage_options["client_kwargs"]["region_name"],
+            ),
+        )
+
+        # Initialize s3 session
+        self._session = boto3.Session(
+            aws_access_key_id=local_cfg["key"],
+            aws_secret_access_key=local_cfg["secret"],
+            region_name=local_cfg["client_kwargs"]["region_name"],
+        )
+        self._raster_env = rasterio.Env(
+            AWSSession(self._session, endpoint_url=local_cfg["client_kwargs"]["endpoint_url"]),
+            AWS_VIRTUAL_HOSTING="False",
+        )
+        # Load URL, according to target, Standard or ZIP
+        if self.url.startswith("zip"):
+            # for ZIP, opened with a dict(s3=credentials)
+            self._url_name = self.url.replace("zip::", "")
+            self.url = fsspec.open(self.url, mode, s3=self.storage_options)
+            self._is_zip = True
+        else:
+            # For standard storage, opened with a hasable dict.
+            self.url = fsspec.open(self.url, mode, **self.storage_options)
+        # Get mapper
+        self.mapper = self.url.fs.get_mapper(self.url.path)
+
+    def is_group(self, path: str) -> bool:
+        if self.status == StorageStatus.CLOSE:
+            raise StoreNotOpenError("Store must be open before access to it")
+        if self._sub_store is not None:
+            return self._sub_store.is_group(path)
+
+        if self._is_zip:
+            # Check if path is a directory inside ZIP
+            return self.mapper.fs.isdir(path)
+        # Compose ful path and check if it is a directory
+        group_path = self.url.path + self.sep + path
+        return self.url.fs.isdir(group_path)
+
+    def is_variable(self, path: str) -> bool:
+        if self.status == StorageStatus.CLOSE:
+            raise StoreNotOpenError("Store must be open before access to it")
+        if self._sub_store is not None:
+            return self._sub_store.is_variable(path)
+
+        if self._is_zip:
+            # Check if (non composed) key is found inside ZIP file
+            # tbd? return path in self.mapper.keys()
+            for extension in [".cog", ".nc"]:
+                if self.mapper.fs.isfile(self.add_extension(path, extension)):
+                    return True
+            return False
+        # For standard S3, compose full path, and check if it's a file
+        file_path = self.url.path + self.sep + path
+        return self.url.fs.isfile(file_path)
+
+    def __len__(self) -> int:
+        if self.status == StorageStatus.CLOSE:
+            raise StoreNotOpenError("Store must be open before access to it")
+        if self._sub_store is not None:
+            return len(self._sub_store)
+        else:
+            return sum(1 for _ in self.iter(""))
+
+    def iter(self, path: str) -> Iterator[str]:
+        if self.status == StorageStatus.CLOSE:
+            raise StoreNotOpenError("Store must be open before access to it")
+        # Return sub_store iter if it's set
+        if self._sub_store is not None:
+            yield from self._sub_store.iter(path)
+            return
+        # Compose key for top level group (should work for zip also)
+        if self._is_zip:
+            if path in ["", "/"]:
+                path = "*"
+            else:
+                path = f"{path}/*"
+        else:
+            if path in ["", "/"]:
+                path = f"{self.mapper.root}/*"
+            else:
+                path = f"{self.mapper.root}{path}/*"
+
+        for item in self.mapper.fs.glob(path):
+            if self.mapper.fs.isdir(item) or self._guess_can_read_files(item):
+                item = item.removesuffix(self.sep)
+                # Remove file extension
+                for extension in [".cog", ".nc"]:
+                    item = item.removesuffix(extension)
+                yield item.split(self.sep)[-1]
+
+    def write_attrs(self, group_path: str, attrs: Any = ...) -> None:
+        if self.status == StorageStatus.CLOSE:
+            raise StoreNotOpenError("Store must be open before access to it")
+        return self._sub_store.write_attrs(group_path, attrs)
+
+    def __getitem__(self, key: str) -> "EOObject":
+        if self.status == StorageStatus.CLOSE:
+            raise StoreNotOpenError("Store must be open before access to it")
+        if self._sub_store is not None:
+            return self._sub_store[key]
+
+        if not self._is_zip:
+            return self._standard_getitem(key)
+        else:
+            return self._zip_getitem(key)
+
+    def _standard_getitem(self, key: str) -> "EOObject":
+        # Standard S3 Storage, directory hierarchy
+        from eopf.product.core import EOGroup, EOVariable
+
+        if key in ["", "/"]:
+            return EOGroup(attrs=self._read_attrs(key))
+        # Remove // if needed and compose full path (mapper.root + key)
+        key = key.removeprefix("//")
+        key_path = f"{self.mapper.root}/{key}"
+        # Return attributes if key is path to directory (group)
+        if self.is_group(key):
+            return EOGroup(attrs=self._read_attrs(key))
+        # If key is path to .nc or .cog file, build data and return EOV
+        # guess_can_read() is needed since key can be <<group/variable>> or <<group/variable.cog>>
+        if self._guess_can_read_files(key_path):
+            if self.is_variable(key):
+                var_name, var_data = self._read_eov(key)
+                return EOVariable(var_name, data=var_data)
+        else:
+            # If cannot be read, try to append a accepted extension, and check if file exist
+            for suffix in [".nc", ".cog"]:
+                if self.is_variable(key + suffix):
+                    # If composed variable path is found, build data and return EOV
+                    var_name, var_data = self._read_eov(key + suffix)
+                    return EOVariable(var_name, data=var_data)
+        raise KeyError(f"{key_path} not found!")
+
+    def _zip_getitem(self, key: str) -> "EOObject":
+        from eopf.product.core import EOGroup, EOVariable
+
+        # ZIPed target
+        # For top level or directories, return attributes
+        if key in ["", "/"] or self.mapper.fs.isdir(key):
+            return EOGroup(attrs=self._read_attrs(key))
+        # if key is in mapper, build data and return EOV
+        for suffix in [".nc", ".cog"]:
+            if key + suffix in self.mapper.keys():
+                var_name, var_data = self._read_eov(key + suffix)
+                return EOVariable(var_name, data=var_data)
+        raise KeyError(f"{key} not found!")
+
+    def __setitem__(self, key: str, value: "EOObject") -> None:
+        if self.status == StorageStatus.CLOSE:
+            raise StoreNotOpenError("Store must be open before access to it")
+        if self._sub_store is not None:
+            self._sub_store[key] = value
+
+    # docstr-coverage: inherited
+    @staticmethod
+    def guess_can_read(file_path: str) -> bool:
+        # To be added .ZIP
+        return pathlib.Path(file_path).suffix in [".cogs"]
+
+    @staticmethod
+    def _guess_can_read_files(file_path: str) -> bool:
+        return pathlib.Path(file_path).suffix in [".nc", ".cog"]
+
+    def _read_attrs(self, path: str) -> dict[str, Any]:
+        if self._sub_store is not None:
+            return self._sub_store._read_attrs(path)
+
+        import json
+
+        # if path/attrs.json is file, read and return it as a dict, else return an empty dict
+        if self.mapper.fs.isfile(os.path.join(path, self.attributes_file_name)):
+            return json.loads(self.mapper[self.attributes_file_name])
+        else:
+            return {}
+
+    def _read_eov(self, path: str) -> tuple[str, Any]:
+        # Create variable name by removing extension if exists
+
+        variable_name: Optional[str] = None
+        if self._guess_can_read_files(path):
+            variable_name = self.remove_extension(path.split("/")[-1])
+        else:
+            # Check if file is cog or netcdf, raise valueError otherwise
+            for extension in [".cog", ".nc"]:
+                if self.mapper.fs.isfile(self.add_extension(path, extension)):
+                    variable_name = path.split("/")[-1]
+                    path = self.add_extension(path, extension)
+
+        if not variable_name:
+            raise ValueError(f"{path=} is not a valid one")
+
+        # Compose fullpath scheme
+        if not self._is_zip:
+            full_file_path = f"s3://{self.mapper.root}/{path}"
+        else:
+            full_file_path = f"zip+{self._url_name}!{path}"
+
+        with self._raster_env:
+            try:
+                variable_data = xarray.open_dataset(full_file_path, engine="rasterio", chunks="auto")
+                return variable_name, variable_data["band_data"]
+            except ValueError:
+                # Use netcdf for files that cannot be read with xarray
+                if not self._is_zip:
+                    data = EONetCDFStore(full_file_path)
+                    data.open(storage_options=self.storage_options)
+                    variable_data = data[variable_name]
+                    return variable_name, variable_data
+                else:
+                    # To be added for zips
+                    raise NotImplementedError()
+
+    @staticmethod
+    def remove_extension(path: str) -> str:
+        for suffix in [".cog", ".nc"]:
+            path = path.removesuffix(suffix)
+        return path
+
+    @staticmethod
+    def add_extension(path: str, extension: str) -> str:
+        return path + extension
+
+
+class EOCogStoreLOCAL(EOProductStore):
     """
     Accessor representation to access Raster like jpg2000 or tiff.
 
@@ -34,7 +297,7 @@ class EOCogStore(EOProductStore):
     expected_raster_dims = [("band", "x", "y"), ("band", "y", "x"), ("x", "y"), ("y", "x"), ("rows", "columns")]
     attributes_file_name = "attrs.json"
 
-    def __init__(self, url: str) -> None:
+    def __init__(self, url: str, **kwargs: Any) -> None:
         super().__init__(url)
         self._mode: Optional[str] = None
         self._lock: Optional[Lock] = None
@@ -70,7 +333,7 @@ class EOCogStore(EOProductStore):
         else:
             # Temporary solution, to be updated / improved with fsspec
             # key_path = Path(self.url).resolve()  /  key.removeprefix(self.sep)
-            key_path = Path(self.url + "/" + key).resolve()
+            key_path = Path(f"{self.url}/{key}").resolve()
 
         # check if key with extension (nc or cog) is file, and return EOV
         # Try EOV and both extensions
@@ -142,8 +405,6 @@ class EOCogStore(EOProductStore):
 
     # docstr-coverage: inherited
     def close(self) -> None:
-        if self.status == StorageStatus.CLOSE:
-            raise StoreNotOpenError("Store must be open before access to it")
         super().close()
         self._mode = None
         self._lock = None
@@ -156,6 +417,8 @@ class EOCogStore(EOProductStore):
 
     # docstr-coverage: inherited
     def is_group(self, path: str) -> bool:
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         if self._mode == "w":
             raise NotImplementedError("Only available in reading mode")
         path = path.removeprefix(self.sep)
@@ -166,6 +429,8 @@ class EOCogStore(EOProductStore):
 
     # docstr-coverage: inherited
     def is_variable(self, path: str) -> bool:
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         # check if it is a file or not
         if self._mode == "w":
             raise NotImplementedError("Only available in reading mode")
@@ -177,6 +442,8 @@ class EOCogStore(EOProductStore):
 
     # docstr-coverage: inherited
     def iter(self, path: str) -> Iterator[str]:
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         if self._mode == "w":
             raise NotImplementedError("Only available in reading mode")
         # Get the full path of requested iterator
@@ -198,11 +465,19 @@ class EOCogStore(EOProductStore):
             self._opened = True
         else:
             raise ValueError("Unsuported mode, only (r)ead or (w)rite")
+        # Make sure that URL is path to a dir
+        if os.path.isfile(self.url):
+            raise ValueError(f"{self.url} should be path to a directory")
+        # Create output folder hierarchy if it doesn't exist (Only on write mode)
+        if mode == "w" and not os.path.isdir(self.url):
+            os.makedirs(self.url, exist_ok=True)
 
     # docstr-coverage: inherited
     def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
         from json import dump
 
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         if self._mode == "r":
             raise NotImplementedError("Only available in writing mode")
 
@@ -317,10 +592,11 @@ class EOCogStore(EOProductStore):
         """
         try:
             # Return rasterio dataset for .cog and .nc files.
-            return rioxarray.open_rasterio(file)
+            return rioxarray.open_rasterio(file, lock=False, chunks="auto")
         except rasterio.errors.RasterioIOError:
             # try to reopen using netcdf scheme identifier
-            return rioxarray.open_rasterio(f"netcdf:{file}:{eov_name}")
+            # Maybe try use netcdfstore
+            return rioxarray.open_rasterio(f"netcdf:{file}:{eov_name}", lock=False, chunks="auto")
         except Exception as e:
             # this should be another error type
             raise TypeError(f"Can NOT read: {file}", e)

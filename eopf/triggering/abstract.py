@@ -46,7 +46,7 @@ class EOTrigger(ABC):
                 output = processing_unit.run_validating(input_product, **parameters)
             else:
                 output = processing_unit.run(input_product, **parameters)
-            with output.open(mode="w", store_or_path_url=output_store, **output_product_parameter):
+            with output.open(mode="w", storage=output_store, **output_product_parameter):
                 output.write()
 
     @staticmethod
@@ -180,7 +180,7 @@ class EOTrigger(ABC):
         eopf.product.EOProduct
         """
         store = EOTrigger.instanciate_store(path, store_type=store_type)
-        return EOProduct(id, store_or_path_url=store)
+        return EOProduct(id, storage=store)
 
     @staticmethod
     def parse_dask_context(dask_context: dict[str, str]) -> tuple[str, str]:

@@ -21,27 +21,27 @@
 {% endblock %}
 
 {% block sections %}
-    <li class="eopf-section-item">
-        {% if product.attributes %}
-            <li class="eopf-section-item">
-                <input type="checkbox" class="eopf-section-summary-in" id="{{ obj|string }}_{{ unique_id }}_attrs" hidden>
-                <label for="{{ obj|string }}_{{ unique_id }}_attrs" class="eopf-section-summary eopf-header" >
-                    {% include "static/images/icons-svg-attributes.svg" %}
-                    Attributes
-                </label>
-                <div class='eopf-section-details'>
-                    <dl class='eopf-attrs'>
-                        <dd>{{obj.attrs|human_readable_attrs}}</dd>
-                    </dl>
-                </div>
-            </li>
-        {% endif %}
-        {% if "coordinates" in product %}
+    {% if product.attributes %}
+        <li class="eopf-section-item">
+            <input type="checkbox" class="eopf-section-summary-in" id="{{ obj|string }}_{{ unique_id }}_attrs" hidden>
+            <label for="{{ obj|string }}_{{ unique_id }}_attrs" class="eopf-section-summary eopf-header" >
+                {% include "static/images/icons-svg-attributes.svg" %}
+                Attributes
+            </label>
+            <div class='eopf-section-details'>
+                <dl class='eopf-attrs'>
+                    <dd>{{obj.attrs|human_readable_attrs}}</dd>
+                </dl>
+            </div>
+        </li>
+    {% endif %}
+    {% if "coordinates" in product %}
+        <li class="eopf-section-item">
             {% with group=product.coordinates, class_name="coords" %}
                 {% include "group.html" %}
             {% endwith %}
-        {%endif%}
-    </li>
+        </li>
+    {%endif%}
 
     {% for group in product.values() %}
         {% if group.name != "coordinates" %}

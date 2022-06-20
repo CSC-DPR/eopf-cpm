@@ -12,3 +12,7 @@ class NoLoggingConfigurationFile(Warning):
 
 class DaskProfilerHtmlDisplayNotWorking(Warning):
     """When the report display of the dask_profiler is not working"""
+
+
+class FormatterAlreadyRegistered(Warning):
+    """When a formatter with the same name was already registered"""

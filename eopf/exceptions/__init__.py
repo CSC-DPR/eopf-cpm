@@ -53,3 +53,15 @@ class DaskProfilerError(Exception):
 
 class SingleThreadProfilerError(Exception):
     """When the single_thread_profiler raises any error"""
+
+
+class FormattingError(Exception):
+    """When a formatter raises exceptions"""
+
+
+class FormattingDecoratorMissingUri(Exception):
+    """When the decorated function does not contain an argument path, url or key"""
+
+
+class XmlManifestNetCDFError(Exception):
+    """When trying to compile the manifest from NetCDF data (s3)"""
