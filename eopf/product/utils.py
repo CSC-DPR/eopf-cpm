@@ -33,6 +33,10 @@ def apply_xpath(dom: Any, xpath: str, namespaces: dict[str, str]) -> str:
     -------
     str
         The result of the XPath
+
+    Raises
+    ------
+        KeyError: invalid xpath
     """
     try:
         target = dom.xpath(xpath, namespaces=namespaces)
