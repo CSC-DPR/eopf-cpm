@@ -1,15 +1,98 @@
 {% if versions %}
-<div>{{ _('Versions') }}</div>
-<select name="versions" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
-  {%- for item in versions.branches %}
-  <option value="{{item.url}}" {% if current_version == item %}selected{%endif%}>
-    {{ item.name }}
-  </option>
-  {%- endfor %}
-  {%- for item in versions.tags %}
-  <option value="{{item.url}}" {% if current_version == item %}selected{%endif%}>
-    {{ item.name }}
-  </option>
-  {%- endfor %}
-</select>
+<div class="injected">
+  <div class="rst-versions rst-badge shift-up" data-toggle="rst-versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-code-fork">&nbsp;</span>
+      {{ _('Versions') }}: {{current_version.name}}
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt></dt>
+        {%- for item in versions.branches %}
+        <dd>
+          <a href="{{item.url}}">{{item.name}}</a>
+        </dd>
+        {%- endfor %}
+        {%- for item in versions.tags %}
+        <dd>
+          <a href="{{item.url}}">{{item.name}}</a>
+        </dd>
+        {%- endfor %}
+      </dl>
+    </div>
+  </div>
+</div>
 {%endif%}
+
+<style>
+.bd-sidebar .rst-versions.rst-badge .rst-other-versions dt {
+  color: black;
+}
+.rst-versions.rst-badge {
+    display: block;
+    bottom: 50px;
+    /* Workaround for mkdocs which set a specific height for this element */
+    height: auto;
+}
+.rst-other-versions {
+    text-align: left;
+}
+.rst-other-versions a {
+    border: 0;
+}
+.rst-other-versions dl {
+    margin: 0;
+}
+.rst-versions.shift-up {
+ height:auto;
+ max-height:100%
+}
+.rst-versions.shift-up .rst-other-versions {
+ display:block
+}
+.rst-versions .rst-other-versions {
+ font-size:90%;
+ padding:12px;
+ color:black;
+ display:none
+}
+.rst-versions .rst-other-versions dd {
+ display:inline-block;
+ margin:0
+}
+.rst-versions .rst-other-versions dd a {
+ display:inline-block;
+ padding:6px;
+ color:gray;
+ font-weight: bold;
+}
+.rst-versions.rst-badge {
+ width:auto;
+ bottom:20px;
+ right:20px;
+ left:auto;
+ border:none;
+ max-width:300px
+}
+.rst-versions.rst-badge.shift-up .rst-current-version {
+ text-align:right;
+ background-color: #b4b2b284;
+}
+.rst-versions.rst-badge .rst-current-version {
+ width:auto;
+ height:30px;
+ line-height:30px;
+ padding:0 6px;
+ display:block;
+ text-align:center;
+}
+@media screen and (max-width: 768px) {
+ .rst-versions {
+  width:85%;
+  display:none
+ }
+ .rst-versions.shift {
+  display:block
+ }
+}
+</style>
