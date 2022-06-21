@@ -11,12 +11,12 @@ Profiling
 
 For function profiling we provide the developpers two parametrisable
 decorators,  which are meant to give parralel processing feedback
-(through *dask*) and single thread profiling (through pstats):
+(through `dask`_) and single thread profiling (through pstats):
 
-- dask_profiler()
-- single_thread_profiler()
+- :py:func:`~eopf.tracing.profiler.dask_profiler`
+- :py:func:`~eopf.tracing.profiler.single_thread_profiler`
 
-Both profilers are available in the eopf.tracing module.
+Both profilers are available in the :py:mod:`eopf.tracing module`.
 
     .. code-block:: python
 
@@ -26,9 +26,9 @@ dask_profiler()
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Below we present a realistic example of a developper's defined function.
-As you can see the function has been decorated with the *dask_profiler*.
+As you can see the function has been decorated with the :py:func:`~eopf.tracing.profiler.dask_profiler`.
 Thus after the execution of the actual function, the developper will
-get a *dask* generated report in html format. In case the developper
+get a `dask`_ generated report in html format. In case the developper
 is runnig the code in an interactive Ipython console, then the html
 report will be automatically loaded.
 
@@ -45,7 +45,7 @@ report will be automatically loaded.
             nc_store = EONetCDFStore("data/olci.nc")
             convert(safe_store, nc_store)
 
-By default the dask_profiler will run on a predefined dask cluster.
+By default the :py:func:`~eopf.tracing.profiler.dask_profiler` will run on a predefined dask cluster.
 However the developper can request a specific cluster configuration
 through the decorator's parameters, i.e. : n_workers and threads_per_worker;
 see example below.
@@ -126,6 +126,10 @@ If the port or address is different, just change the url with your
 specific dask running port and address.
 
 
-We also recommended using *Prometheus* for monitoring dask performace
-over time. We provide a default *Prometheus*
-configuration file, *prometheus-cpm.yml* , with the eopf.tracing module.
+We also recommended using `Prometheus`_ for monitoring dask performace
+over time. We provide a default `Prometheus`_
+configuration file, *prometheus-cpm.yml* , with the :py:mod:`eopf.tracing` module.
+
+
+.. _dask: https://www.dask.org/
+.. _Prometheus: https://prometheus.io/
