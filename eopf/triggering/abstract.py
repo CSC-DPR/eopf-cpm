@@ -64,9 +64,13 @@ class EOTrigger(ABC):
             * 'module': that provide the module python path
             * 'processing_unit': corresponding to the name of the target processing unit
             * 'parameters': kwargs for the processing unit 'run' method
-            * 'input_product': key value pair of data to retrieve input data
-            * 'output_product': key value pair of data to find where to write the
-                output product
+            * 'I/O':
+
+                - 'modification_mode': one of "newproduct", "inplace", "readonly"
+                - 'input_product': key value pair of data to retrieve input data
+                - 'output_product': key value pair of data to find where to write the
+                  output product
+
             * 'dask_context': dask client information
 
         Examples
@@ -81,15 +85,18 @@ class EOTrigger(ABC):
         ...        ],
         ...        "dest_path": "/measurements/variable"
         ...    },
-        ...    "input_product": {
-        ...        "id": "OLCI",
-        ...        "path": "",
-        ...        "store_type": "safe"
-        ...    },
-        ...    "output_product": {
-        ...        "id": "output",
-        ...        "path": "output.zarr",
-        ...        "store_type": "zarr"
+        ...    "I/O":{
+        ...        "modification_mode": "newproduct",
+        ...        "input_product": {
+        ...            "id": "OLCI",
+        ...            "path": "",
+        ...            "store_type": "safe"
+        ...        },
+        ...        "output_product": {
+        ...            "id": "output",
+        ...            "path": "output.zarr",
+        ...            "store_type": "zarr"
+        ...        }
         ...    },
         ...    "dask_context":{"local": "processes"}
         ...}
