@@ -18,15 +18,18 @@ the payload data is a dictionary that follow the following pattern::
         "parameters": {
             "kwargs_name": ""
         },
-        "input_product": {
-            "id": "",
-            "path": "",
-            "store_type": ""
-        },
-        "output_product": {
-            "id": "",
-            "path": "",
-            "store_type": ""
+        "I/O": {
+            "modification_mode": "newproduct",
+            "input_product": {
+                "id": "OLCI",
+                "path": "",
+                "store_type": "safe"
+            },
+            "output_product": {
+                "id": "output",
+                "path": "output.zarr",
+                "store_type": "zarr"
+            }
         },
         "dask_context":{}
     }
@@ -37,11 +40,19 @@ and the component respect the following rules:
 * **"module"**: string corresponding to the python path of the module (ex: "eopf.computing")
 * **"processing_unit"**: EOProcessingUnit class name (ex: "SumProcessor")
 * **"parameters"**: kwargs parameters to pass to the :py:meth:`~eopf.triggering.abstract.EOTrigger.run` method
-* **"input_product"** and **"output_product"**: dictionary used to identify input (or output) product to use
+* **"I/O"**: configuration for inputs and outputs
 
-    - **"id"**: name to give to :py:class:`~eopf.product.core.eo_product.EOProduct`
-    - **"path"**: uri or path (relative to the runner) to the product (ex: "data/S3A_OL_1_EFR____NT_002.SEN3")
-    - **"store_type"**: :py:class:`~eopf.product.store.store_factory.EOStoreFactory` identifier of the store for the given product
+    - **"modification_mode"**: one of the following value:
+
+        - **"newproduct"**: Create a new product on **output_product** config path ("w" file mode)
+        - **"readonly"**: Read just the input without writting ("r" file mode)
+        - **"inplace"**: Update the input ("r+" file mode)
+
+    - **"input_product"** and **"output_product"** (only for "newproduct" mode): dictionary used to identify input (or output) product to use
+
+        - **"id"**: name to give to :py:class:`~eopf.product.core.eo_product.EOProduct`
+        - **"path"**: uri or path (relative to the runner) to the product (ex: "data/S3A_OL_1_EFR____NT_002.SEN3")
+        - **"store_type"**: :py:class:`~eopf.product.store.store_factory.EOStoreFactory` identifier of the store for the given product
 
 * **"dask_context"**: dictionary that contain one of those possible keys
 

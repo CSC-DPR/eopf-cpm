@@ -16,15 +16,18 @@
         ],
         "dest_path": "/measurements/variable"
     },
-    "input_product": {
-        "id": "OLCI",
-        "path": "",
-        "store_type": "safe"
-    },
-    "output_product": {
-        "id": "output",
-        "path": "output.zarr",
-        "store_type": "zarr"
+    "I/O": {
+        "modification_mode": "newproduct",
+        "input_product": {
+            "id": "OLCI",
+            "path": "",
+            "store_type": "safe"
+        },
+        "output_product": {
+            "id": "output",
+            "path": "output.zarr",
+            "store_type": "zarr"
+        }
     },
     "dask_context":{"local": "processes"}
 }

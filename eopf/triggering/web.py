@@ -77,8 +77,12 @@ class EOWebTrigger(EOTrigger, FastAPI, EOPFPluginCommandCLI):
             logger.info(f"Triggered with {payload}")
             EOWebTrigger.run(payload)
         except Exception as e:
-            logger.error(f"An error occur: {e}")
-            return JSONResponse(content={"err": str(e)}, status_code=200)
+            logger.exception(e)
+            import sys
+            import traceback
+
+            *_, exc_traceback = sys.exc_info()
+            return JSONResponse(content={"err": "\n".join(traceback.format_tb(exc_traceback))}, status_code=200)
         return JSONResponse(content={}, status_code=200)
 
     @staticmethod
