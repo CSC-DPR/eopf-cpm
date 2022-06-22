@@ -52,9 +52,10 @@ class EOQC(ABC):
         """
         return False
 
-    def status(self):
+    @property
+    def status(self) -> bool:
         """The status of the quality check"""
-        return self._status
+        return bool(self._status)
 
 
 class EOQCValidRange(EOQC):
@@ -97,7 +98,7 @@ class EOQCValidRange(EOQC):
         variable = eovariable.compute()
         if self.valid_min <= variable.data.min():
             self._status = variable.data.max() <= self.valid_max
-        return self._status
+        return self.status
 
 
 class EOQCFormula(EOQC):
@@ -155,8 +156,8 @@ class EOQCFormula(EOQC):
             threshold_value = thershold["value"]
             local_var[threshold_name] = threshold_value
         # Applying the formula
-        self.status = eval(self.formula)  # nosec
-        return self._status
+        exec(f"self._status = bool({self.formula})")  # nosec
+        return self.status
 
 
 class EOQCProcessingUnit(EOQC):
@@ -203,4 +204,4 @@ class EOQCProcessingUnit(EOQC):
         pu = punit_class()
         output = pu.run({"input": eoproduct, "aux_data": self.aux_data}, {"parameters": self.parameters})
         self._status = output.attrs[self.processing_unit]["status"]
-        return self._status
+        return self.status

@@ -86,7 +86,6 @@ class EOQCProcessor(EOProcessor):
         if self.qc_config is None:
             self.qc_config = EOPCConfigFactory().get_default(self.eoproduct.type)
         # Run check(s) of the configuration
-        print(self.eoproduct.type)
         for qc in self.qc_config.qclist().values():
             qc.check(self.eoproduct)
         # If true it update the quality attribute of the product.
@@ -111,13 +110,13 @@ class EOQCProcessor(EOProcessor):
             if qc.status:
                 self.eoproduct.quality.attrs["qc"][qc.id] = {
                     "version": qc.version,
-                    "status": bool(qc.status),
+                    "status": qc.status,
                     "message": qc.message_if_passed,
                 }
             else:
                 self.eoproduct.quality.attrs["qc"][qc.id] = {
                     "version": qc.version,
-                    "status": bool(qc.status),
+                    "status": qc.status,
                     "message": qc.message_if_failed,
                 }
 
@@ -148,9 +147,9 @@ class EOQCProcessor(EOProcessor):
         report["Inspection_time"] = "To be defined"
         for qc in self.qc_config.qclist().values():
             if qc.status:
-                report[qc.id] = {"version": qc.version, "status": bool(qc.status), "message": qc.message_if_passed}
+                report[qc.id] = {"version": qc.version, "status": qc.status, "message": qc.message_if_passed}
             else:
-                report[qc.id] = {"version": qc.version, "status": bool(qc.status), "message": qc.message_if_failed}
+                report[qc.id] = {"version": qc.version, "status": qc.status, "message": qc.message_if_failed}
         try:
             with open(report_path, "w") as outfile:
                 json.dump(report, outfile, indent=4)
