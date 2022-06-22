@@ -1,6 +1,8 @@
+import contextlib
+import enum
 import importlib
 from abc import ABC
-from typing import Any, Union
+from typing import Any
 
 import dask
 
@@ -8,6 +10,12 @@ from eopf.computing.abstract import EOProcessingUnit, EOProcessor
 from eopf.product.core.eo_product import EOProduct
 from eopf.product.store.abstract import EOProductStore
 from eopf.product.store.store_factory import EOStoreFactory
+
+
+class ModificationMode(enum.Enum):
+    NEWPRODUCT = "newproduct"
+    INPLACE = "inplace"
+    READONLY = "readonly"
 
 
 class EOTrigger(ABC):
@@ -27,41 +35,28 @@ class EOTrigger(ABC):
             dict of metadata to find and run the processing unit, create the ouput product
             and write it.
         """
-        (
-            processing_unit,
-            input_product,
-            output_store,
-            scheduler_mode,
-            scheduler_info,
-            parameters,
-            input_product_parameter,
-            output_product_parameter,
-        ) = EOTrigger.extract_from_payload(
+        (processing_unit, io_config, scheduler_mode, scheduler_info, parameters) = EOTrigger.extract_from_payload(
             payload,
         )
-
         dask.config.set(scheduler=scheduler_info)
-        with input_product.open(mode="r", **input_product_parameter):
+        input_product = io_config["input"]
+        mode = io_config["file_mode"]
+        modif_mode = io_config["modification_mode"]
+        with (input_product["product"].open(mode=mode, **input_product["parameters"]), contextlib.ExitStack() as stack):
             if isinstance(processing_unit, EOProcessor):
                 output = processing_unit.run_validating(input_product, **parameters)
             else:
                 output = processing_unit.run(input_product, **parameters)
-            with output.open(mode="w", storage=output_store, **output_product_parameter):
+            if modif_mode == ModificationMode.NEWPRODUCT:
+                output_store = io_config["output"]
+                stack.enter_context(output.open(mode="w", storage=output_store["store"], **output_store["parameters"]))
+            if modif_mode in [ModificationMode.INPLACE, ModificationMode.NEWPRODUCT]:
                 output.write()
 
     @staticmethod
     def extract_from_payload(
         payload: dict[str, Any],
-    ) -> tuple[
-        EOProcessingUnit,
-        EOProduct,
-        Union[EOProductStore, str],
-        str,
-        str,
-        dict[str, Any],
-        dict[str, Any],
-        dict[str, Any],
-    ]:
+    ) -> tuple[EOProcessingUnit, dict[str, Any], str, str, dict[str, Any]]:
         """Retrieve all the information from the given payload
 
         the payload should have this keys:
@@ -108,31 +103,46 @@ class EOTrigger(ABC):
         tuple:
             All component corresponding to the metadata
         """
-
-        input_product_payload = payload.get("input_product", {})
-        output_product_payload = payload.get("output_product", {})
         dask_context = payload.get("dask_context", {})
         processing_unit = EOTrigger.get_processing_unit(payload["module"], payload["processing_unit"])
-        input_product = EOTrigger.instanciate_product(
-            input_product_payload.get("id"),
-            input_product_payload.get("path"),
-            input_product_payload.get("store_type", "zarr"),
-        )
-        ouput_store = EOTrigger.instanciate_store(
-            output_product_payload.get("path"),
-            output_product_payload.get("store_type", "zarr"),
-        )
+        io_config = EOTrigger.get_io_config(payload["I/O"])
         scheduler_mode, scheduler_info = EOTrigger.parse_dask_context(dask_context)
         return (
             processing_unit,
-            input_product,
-            ouput_store,
+            io_config,
             scheduler_mode,
             scheduler_info,
             payload.get("parameters", {}),
-            input_product_payload.get("parameters", {}),
-            output_product_payload.get("parameters", {}),
         )
+
+    @staticmethod
+    def get_io_config(io_config: dict) -> dict:
+        loaded_io_config = {}
+        modif_mode_mapping = {
+            ModificationMode.INPLACE: "r+",
+            ModificationMode.READONLY: "r",
+            ModificationMode.NEWPRODUCT: "r",
+        }
+        modification_mode = ModificationMode(io_config.get("modification_mode", "newproduct"))
+        loaded_io_config["file_mode"] = modif_mode_mapping[modification_mode]
+        loaded_io_config["modification_mode"] = modification_mode
+        if modification_mode == ModificationMode.NEWPRODUCT:
+            product_info = io_config["output_product"]
+            path = product_info.get("path")
+            store_type = product_info.get("store_type")
+            params = product_info.get("parameters", {})
+            output_store = EOTrigger.instanciate_store(path, store_type=store_type)
+            loaded_io_config["output"] = {"store": output_store, "parameters": params}
+
+        product_info = io_config["input_product"]
+        params = product_info.get("parameters", {})
+        input_product = EOTrigger.instanciate_product(
+            product_info.get("id", ""),
+            product_info["path"],
+            product_info.get("store_type", "zarr"),
+        )
+        loaded_io_config["input"] = {"product": input_product, "parameters": params}
+        return loaded_io_config
 
     @staticmethod
     def instanciate_store(path: str, store_type: str = "zarr") -> EOProductStore:

@@ -62,6 +62,9 @@ class EOEventTrigger(EOTrigger, EOPFPluginCommandCLI):
         try:
             async for msg in consumer:
                 logger.info(f"Consume message {msg} for {kafka_server}/{kafka_topic}")
-                EOEventTrigger.run(json.loads(msg.value))
+                try:
+                    EOEventTrigger.run(json.loads(msg.value))
+                except Exception as e:
+                    logger.exception(e)
         finally:
             await consumer.stop()
