@@ -123,8 +123,8 @@ class EOTrigger(ABC):
         )
 
     @staticmethod
-    def get_io_config(io_config: dict) -> dict:
-        loaded_io_config = {}
+    def get_io_config(io_config: dict[str, Any]) -> dict[str, Any]:
+        loaded_io_config: dict[str, Any] = {}
         modif_mode_mapping = {
             ModificationMode.INPLACE: "r+",
             ModificationMode.READONLY: "r",
