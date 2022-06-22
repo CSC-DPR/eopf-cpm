@@ -3,6 +3,12 @@
 # This file only contains a selection of the most common options. For a full
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
+import itertools
+
+import git
+
+# -- Project information -----------------------------------------------------
+from eopf import __version__
 
 # -- Path setup --------------------------------------------------------------
 
@@ -14,9 +20,6 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
-
-# -- Project information -----------------------------------------------------
-from eopf import __version__
 
 project = "EOPF Core Python Modules"
 copyright = "2022, ESA"
@@ -71,8 +74,24 @@ html_static_path = ["_static"]
 html_sidebars = {"**": ["sidebar-logo.html", "search-field.html", "sbt-sidebar-nav.html", "versioning.html"]}
 
 # multiple versions options
+git_repo = git.Repo("../..")
+tags = sorted(
+    map(lambda x: x.name[1:], git_repo.tags),
+    key=lambda x: x.split("."),
+    reverse=True,
+)  # order tags for filtering
+
+tags_filter = []
+for version, group in itertools.islice(
+    itertools.groupby(tags, key=lambda x: x.split(".")[0]),
+    3,
+):  # iter over last 3 majeurs
+    for v, g in itertools.islice(itertools.groupby(group, key=lambda x: x.split(".")[1]), 5):  # iter over last 5 mineur
+        first, *_ = g  # get last patch version
+        tags_filter.append(first)
+
+smv_tag_whitelist = f'^v({"|".join(tags_filter)}).*$'
 smv_remote_whitelist = r"^.*$"
-smv_tag_whitelist = r"^v\d+\.\d+\.\d+$"
 smv_branch_whitelist = r"^(main|develop).*$"
 
 intersphinx_mapping = {
