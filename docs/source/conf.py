@@ -4,6 +4,7 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 import itertools
+import os
 
 import git
 
@@ -74,7 +75,9 @@ html_static_path = ["_static"]
 html_sidebars = {"**": ["sidebar-logo.html", "search-field.html", "sbt-sidebar-nav.html", "versioning.html"]}
 
 # multiple versions options
-git_repo = git.Repo("../..")
+parent_path_git_repo = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "..")
+git_repo = git.Repo(parent_path_git_repo)
+
 tags = sorted(
     map(lambda x: x.name[1:], git_repo.tags),
     key=lambda x: x.split("."),
@@ -90,7 +93,7 @@ for version, group in itertools.islice(
         first, *_ = g  # get last patch version
         tags_filter.append(first)
 
-smv_tag_whitelist = f'^v({"|".join(tags_filter)}).*$'
+smv_tag_whitelist = rf'^v({"|".join(tags_filter)}).*$'
 smv_remote_whitelist = r"^.*$"
 smv_branch_whitelist = r"^(main|develop).*$"
 
