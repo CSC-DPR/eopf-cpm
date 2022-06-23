@@ -4,6 +4,7 @@ import os
 from typing import Any, Optional
 
 from eopf.computing.abstract import EOProcessor
+from eopf.exceptions import InvalidProductError
 from eopf.product.core.eo_product import EOProduct
 from eopf.qualitycontrol.eo_qc_config import EOPCConfigFactory, EOQCConfig
 
@@ -15,24 +16,19 @@ class EOQCProcessor(EOProcessor):
 
     Parameters
     ----------
-    eoproduct: Optional[EOProduct]
-        The product to control, by default it's None.
-    qc_list: Optional[EOQCConfig]
-        A list of configuration to execute.
-
+    identifier: int
+        The identifier.
+    config_path: str
+        The quality control configuration to run. By default it's None.
 
     Attributes
     ----------
     qc_config: EOQCConfig
         The quality control configuration who will be executed.
-    eoproduct: EOProduct
-        The eoproduct who will be controled.
-    qc_configfactory : EOPCConfigFactory
-        The quality control configuration factory which contains the quality control configuration.
     """
 
-    def __init__(self, eoproduct: Optional[EOProduct] = None, config_path: Optional[str] = None) -> None:
-        self.eoproduct = eoproduct
+    def __init__(self, identifier: Optional[int] = None, config_path: Optional[str] = None) -> None:
+        super().__init__(identifier=identifier)
         self.qc_config = None
         if config_path is not None:
             self.set_config(config_path=config_path)
@@ -49,10 +45,11 @@ class EOQCProcessor(EOProcessor):
 
     def run(
         self,
-        eoproduct: Optional[EOProduct] = None,
-        update_attrs: Optional[bool] = True,
-        write_report: Optional[bool] = False,
+        eoproduct: EOProduct,
+        update_attrs: bool = True,
+        write_report: bool = False,
         report_path: Optional[str] = None,
+        config_path: Optional[str] = None,
         **kwargs: Any,
     ) -> EOProduct:
         """Execute all checks of the default configuration for a EOProduct.
@@ -67,6 +64,8 @@ class EOQCProcessor(EOProcessor):
             To write the report of the quality control processor. By default it's False.
         report_path: str = None
             The path where to write the quality control report. By default it's None.
+        config_path: Optional[str] = None
+            The quality control configuration to run. By default it's None and it load the default configuration.
         **kwargs: any
             any needed kwargs
 
@@ -75,68 +74,79 @@ class EOQCProcessor(EOProcessor):
         EOProduct
             The controlled product.
         """
-        # Update the product if not None.
-        if eoproduct is not None:
-            self.eoproduct = eoproduct
-        else:
-            # If not it check that the Processor have a product in parameter.
-            if self.eoproduct is None:
-                logger.exception("No product in entry")
         # If no given configuration in Processor, it get the default one.
-        if self.qc_config is None:
-            self.qc_config = EOPCConfigFactory().get_default(self.eoproduct.type)
+        if not eoproduct.type:
+            raise InvalidProductError(f"Missing product type for {eoproduct.name} in {self}")
+        qc_config = EOQCConfig(config_path) if config_path else self.qc_config
+        if qc_config is None:
+            qc_config = EOPCConfigFactory().get_default(eoproduct.type)
         # Run check(s) of the configuration
-        for qc in self.qc_config.qclist().values():
-            qc.check(self.eoproduct)
+        for qc in qc_config.qclist().values():
+            try:
+                qc.check(eoproduct)
+            except Exception as e:
+                logger.exception(f"An erreur ocurred in : {qc.id}", e)
+                raise e
         # If true it update the quality attribute of the product.
         if update_attrs:
-            self.update_attributs()
+            self.update_attributs(eoproduct, qc_config)
         # If the it write the quality control report in a .json file.
         if write_report:
             if report_path is not None:
-                if not self.write_report(report_path):
+                if not self.write_report(eoproduct, report_path, qc_config):
                     logger.error("Error while writing report")
             else:
                 logger.error("Can't write report no path given")
-        return self.eoproduct
+        return eoproduct
 
-    def update_attributs(self) -> None:
-        """This method update the EOProduct quality group attributes with the result of quality control."""
-        if "quality" not in self.eoproduct:
-            self.eoproduct.add_group("quality")
-        if "qc" not in self.eoproduct.quality:
-            self.eoproduct.quality.attrs["qc"] = {}
-        for qc in self.qc_config.qclist().values():
+    def update_attributs(self, eoproduct: EOProduct, qc_config: EOQCConfig) -> None:
+        """This method update the EOProduct quality group attributes with the result of quality control.
+        Parameters
+        ----------
+        eoproduct: EOProduct
+            EOProduct to check
+        config_path: EOQCConfig
+            The quality control configuration which was used.
+        """
+        if "quality" not in eoproduct:
+            eoproduct.add_group("quality")
+        if "qc" not in eoproduct.quality:
+            eoproduct.quality.attrs["qc"] = {}
+        for qc in qc_config.qclist().values():
             if qc.status:
-                self.eoproduct.quality.attrs["qc"][qc.id] = {
+                eoproduct.quality.attrs["qc"][qc.id] = {
                     "version": qc.version,
                     "status": qc.status,
                     "message": qc.message_if_passed,
                 }
             else:
-                self.eoproduct.quality.attrs["qc"][qc.id] = {
+                eoproduct.quality.attrs["qc"][qc.id] = {
                     "version": qc.version,
                     "status": qc.status,
                     "message": qc.message_if_failed,
                 }
 
-    def write_report(self, report_path: str) -> bool:
+    def write_report(self, eoproduct: EOProduct, report_path: str, qc_config: EOQCConfig) -> bool:
         """This method write the quality control report in json in given location.
 
         Parameters
         ----------
+        eoproduct: EOProduct
+            EOProduct to check
         report_path: str = None
             The path where to write the qc report.
+        config_path: EOQCConfig
+            The quality control configuration which was used.
 
         Returns
         -------
         bool
             Has the quality control report been successfully written, true is ok, false if not.
         """
-        report_path = os.path.join(report_path, "QC_report_" + self.eoproduct.name + ".json")
+        report_path = os.path.join(report_path, f"QC_report_{eoproduct.name}.json")
         report = {}
-        report["Product_name"] = self.eoproduct.name
-        report["Product_type"] = self.eoproduct.type
+        report["Product_name"] = eoproduct.name
+        report["Product_type"] = eoproduct.type
         report["Acquisition_station"] = "To be defined"
         report["Processing_center"] = "To be defined"
         report["Start_sensing_time"] = "To be defined"
@@ -145,7 +155,7 @@ class EOQCProcessor(EOProcessor):
         report["Absolute_orbit_number"] = "To be defined"
         report["Inspection_date"] = "To be defined"
         report["Inspection_time"] = "To be defined"
-        for qc in self.qc_config.qclist().values():
+        for qc in qc_config.qclist().values():
             if qc.status:
                 report[qc.id] = {"version": qc.version, "status": qc.status, "message": qc.message_if_passed}
             else:

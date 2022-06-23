@@ -156,7 +156,7 @@ class EOQCFormula(EOQC):
             threshold_value = thershold["value"]
             local_var[threshold_name] = threshold_value
         # Applying the formula
-        exec(f"self._status = bool({self.formula})")  # nosec
+        self._status = eval(f"{self.formula}")  # nosec
         return self.status
 
 
