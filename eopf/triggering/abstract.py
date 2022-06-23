@@ -28,7 +28,6 @@ class EOTrigger(ABC):
         """Generic method that apply the algortihm of the processing unit
         from the payload and write the result product.
 
-
         Parameters
         ----------
         payload: dict[str, Any]

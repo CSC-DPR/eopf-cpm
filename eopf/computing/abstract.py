@@ -22,10 +22,6 @@ class EOProcessingStep(ABC):
     identifier: str, optional
         a string to identify this processing step (usefull for logging)
 
-    Attributes
-    ----------
-    identifier: str
-
     See Also
     --------
     dask.array.Array
@@ -73,10 +69,6 @@ class EOBlockProcessingStep(EOProcessingStep):
     ----------
     identifier: str, optional
         a string to identify this processing step (usefull for logging and tracing)
-
-    Attributes
-    ----------
-    identifier: str
 
     See Also
     --------
@@ -137,10 +129,6 @@ class EOOverlapProcessingStep(EOProcessingStep):
     identifier: str, optional
         a string to identify this processing step (usefull for logging and tracing)
 
-    Attributes
-    ----------
-    identifier: str
-
     See Also
     --------
     dask.array.map_overlap
@@ -199,10 +187,6 @@ class EOProcessingUnit(ABC):
     identifier: str, optional
         a string to identify this processing unit (usefull for logging and tracing)
 
-    Attributes
-    ----------
-    identifier: str
-
     See Also
     --------
     eopf.product.EOProduct
@@ -245,10 +229,6 @@ class EOProcessor(EOProcessingUnit):
     ----------
     identifier: str, optional
         a string to identify this processing unit (usefull for logging and tracing)
-
-    Attributes
-    ----------
-    identifier: str
 
     See Also
     --------
