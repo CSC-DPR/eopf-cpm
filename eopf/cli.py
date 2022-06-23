@@ -1,7 +1,7 @@
 import asyncio
 from abc import ABC, abstractmethod
 from functools import wraps
-from typing import Any, Callable, Coroutine, Optional, Sequence
+from typing import Any, Callable, Coroutine, Optional
 
 import click
 import pkg_resources
@@ -21,7 +21,7 @@ class EOPFPluginCommandCLI(ABC, click.Command):
     """
 
     name: str
-    cli_params: Sequence[click.Parameter] = []
+    cli_params: list[click.Parameter] = []
     """all argument and option associated to this command"""
     help: str = ""
     """text use to specified to the user what this command is made for"""
@@ -80,7 +80,7 @@ class EOPFPluginGroupCLI(click.Group):
     """
 
     name: str
-    cli_commands: Sequence[click.Command] = []
+    cli_commands: list[click.Command] = []
     """Sequence of command aggregate here"""
     help: str = ""
     """text use to specified to the user what this command is made for"""
