@@ -123,7 +123,7 @@ To build it, we use `sphinx`_ with many plugins:
 For the code documentation, our code follow the `numpydoc`_ style
 
 Coverage
-~~~~~~~~
+--------
 
 To check documentation coverage, we use `docstr-coverage`_.
 It provide a way to specify inherited documentation for classes: ``# docstr-coverage: inherited``
@@ -189,3 +189,5 @@ Must be one of the following:
 .. _docstr-coverage: https://github.com/HunterMcGushion/docstr_coverage
 .. _pytest-cov: https://github.com/pytest-dev/pytest-cov
 .. _hypothesis: https://hypothesis.readthedocs.io/en/latest/
+.. _black: https://pypi.org/project/black/
+.. _isort: https://pypi.org/project/isort/
