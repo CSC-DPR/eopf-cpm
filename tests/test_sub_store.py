@@ -263,7 +263,7 @@ def test_extended_xml_manifest_accessor(path: str, mapping: str, tmp_path: pathl
         expected_FR_res = 270
         expected_bright_percent = 3.586159
         expected_links = [{"rel": "self", "href": "./.zattrs.json", "type": "application/json"}]
-        assert stac_discovery["type_"] == expected_type
+        assert stac_discovery["type"] == expected_type
         assert stac_discovery["properties"]["eopf:instrument"] == expected_instruments
         assert isinstance(stac_discovery["properties"]["eopf:resolutions"]["FR"], int)
         assert stac_discovery["properties"]["eopf:resolutions"]["FR"] == expected_FR_res
