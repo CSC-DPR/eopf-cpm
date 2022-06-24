@@ -1345,40 +1345,40 @@
   "conditions_metadata": {
     "detector_temperatures": {
       "S1_Detector": {
-        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S1 Detector']/slstr:min)",
-        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S1 Detector']/slstr:max)"
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S1 Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S1 Detector']/slstr:max)"
       },
       "S2_Detector": {
-        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S2 Detector']/slstr:min)",
-        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S2 Detector']/slstr:max)"
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S2 Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S2 Detector']/slstr:max)"
       },
       "S3_Detector": {
-        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S3 Detector']/slstr:min)",
-        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S3 Detector']/slstr:max)"
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S3 Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S3 Detector']/slstr:max)"
       },
       "S4_Detector": {
-        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S4 Detector']/slstr:min)",
-        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S4 Detector']/slstr:max)"
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S4 Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S4 Detector']/slstr:max)"
       },
       "S5_Detector": {
-        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S5 Detector']/slstr:min)",
-        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S5 Detector']/slstr:max)"
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S5 Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S5 Detector']/slstr:max)"
       },
       "S6_Detector": {
-        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S6 Detector']/slstr:min)",
-        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S6 Detector']/slstr:max)"
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S6 Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S6 Detector']/slstr:max)"
       },
       "S7_Detector": {
-        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S7 Detector']/slstr:min)",
-        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S7 Detector']/slstr:max)"
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S7 Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S7 Detector']/slstr:max)"
       },
       "S8_Detector": {
-        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S8 Detector']/slstr:min)",
-        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S8 Detector']/slstr:max)"
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S8 Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S8 Detector']/slstr:max)"
       },
       "S9_Detector": {
-        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S9 Detector']/slstr:min)",
-        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S9 Detector']/slstr:max)"
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S9 Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S9 Detector']/slstr:max)"
       }
     },
     "orbit_reference": {
