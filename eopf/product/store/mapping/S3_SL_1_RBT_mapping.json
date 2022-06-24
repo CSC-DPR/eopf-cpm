@@ -12289,57 +12289,57 @@
     "conditions_metadata": {
       "band_descriptions": {
         "S1": {
-          "units": "nm",
+          "units": "Text(nm)",
           "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S1']/sentinel3:centralWavelength)",
           "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S1']/sentinel3:bandwidth)"
         },
         "S2": {
-          "units": "nm",
+          "units": "Text(nm)",
           "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S2']/sentinel3:centralWavelength)",
           "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S2']/sentinel3:bandwidth)"
         },
         "S3": {
-          "units": "nm",
+          "units": "Text(nm)",
           "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S3']/sentinel3:centralWavelength)",
           "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S3']/sentinel3:bandwidth)"
         },
         "S4": {
-          "units": "nm",
+          "units": "Text(nm)",
           "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S4']/sentinel3:centralWavelength)",
           "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S4']/sentinel3:bandwidth)"
         },
         "S5": {
-          "units": "nm",
+          "units": "Text(nm)",
           "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S5']/sentinel3:centralWavelength)",
           "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S5']/sentinel3:bandwidth)"
         },
         "S6": {
-          "units": "nm",
+          "units": "Text(nm)",
           "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S6']/sentinel3:centralWavelength)",
           "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S6']/sentinel3:bandwidth)"
         },
         "S7": {
-          "units": "nm",
+          "units": "Text(nm)",
           "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S7']/sentinel3:centralWavelength)",
           "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S7']/sentinel3:bandwidth)"
         },
         "S8": {
-          "units": "nm",
+          "units": "Text(nm)",
           "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S8']/sentinel3:centralWavelength)",
           "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S8']/sentinel3:bandwidth)"
         },
         "S9": {
-          "units": "nm",
+          "units": "Text(nm)",
           "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S9']/sentinel3:centralWavelength)",
           "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S9']/sentinel3:bandwidth)"
         },
         "F1": {
-          "units": "nm",
+          "units": "Text(nm)",
           "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='F1']/sentinel3:centralWavelength)",
           "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='F1']/sentinel3:bandwidth)"
         },
         "F2": {
-          "units": "nm",
+          "units": "Text(nm)",
           "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='F2']/sentinel3:centralWavelength)",
           "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='F2']/sentinel3:bandwidth)"
         }

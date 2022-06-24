@@ -992,132 +992,132 @@
   "conditions_metadata": {
     "band_descriptions": {
       "SYN01": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN01']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN01']/sentinel3:bandwidth)"
       },
       "SYN02": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN02']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN02']/sentinel3:bandwidth)"
       },
       "SYN03": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN03']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN03']/sentinel3:bandwidth)"
       },
       "SYN04": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN04']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN04']/sentinel3:bandwidth)"
       },
       "SYN05": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN05']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN05']/sentinel3:bandwidth)"
       },
       "SYN06": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN06']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN06']/sentinel3:bandwidth)"
       },
       "SYN07": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN07']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN07']/sentinel3:bandwidth)"
       },
       "SYN08": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN08']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN08']/sentinel3:bandwidth)"
       },
       "SYN09": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN09']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN09']/sentinel3:bandwidth)"
       },
       "SYN10": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN10']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN10']/sentinel3:bandwidth)"
       },
       "SYN11": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN11']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN11']/sentinel3:bandwidth)"
       },
       "SYN12": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN12']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN12']/sentinel3:bandwidth)"
       },
       "SYN13": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN13']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN13']/sentinel3:bandwidth)"
       },
       "SYN14": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN14']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN14']/sentinel3:bandwidth)"
       },
       "SYN15": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN15']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN15']/sentinel3:bandwidth)"
       },
       "SYN16": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN16']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN16']/sentinel3:bandwidth)"
       },
       "SYN17": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN17']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN17']/sentinel3:bandwidth)"
       },
       "SYN18": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN18']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN18']/sentinel3:bandwidth)"
       },
       "SYN19": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN19']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN19']/sentinel3:bandwidth)"
       },
       "SYN20": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN20']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN20']/sentinel3:bandwidth)"
       },
       "SYN21": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN21']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN21']/sentinel3:bandwidth)"
       },
       "SYN22": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN22']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN22']/sentinel3:bandwidth)"
       },
       "SYN23": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN23']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN23']/sentinel3:bandwidth)"
       },
       "SYN24": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN24']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN24']/sentinel3:bandwidth)"
       },
       "SYN25": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN25']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN25']/sentinel3:bandwidth)"
       },
       "SYN26": {
-        "units": "nm",
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN26']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN26']/sentinel3:bandwidth)"
       }
