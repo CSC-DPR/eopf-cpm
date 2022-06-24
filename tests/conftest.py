@@ -19,7 +19,6 @@ from hypothesis import HealthCheck, settings
 
 from .utils import PARENT_DATA_PATH
 
-
 # ----------------------------------#
 # --- pytest command line options --#
 # ----------------------------------#
@@ -135,21 +134,11 @@ def S3_SY_2_SYN_MAPPING(MAPPING_FOLDER: str):
     """Path to a S3 SY 2 SYN mapping"""
     return os.path.join(MAPPING_FOLDER, "S3_SY_2_SYN_mapping.json")
 
-@pytest.fixture
-def S2_MSIL1C_MAPPING(MAPPING_FOLDER: str):
-    """Path to a S2 MSIL1C mapping"""
-    return os.path.join(MAPPING_FOLDER, "S2_MSIL1C_mapping.json")
-
-
-@pytest.fixture
-def S1_IM_OCN_MAPPING(MAPPING_FOLDER: str):
-    """Path to a S1 OCN IW 1 mapping"""
-    return os.path.join(MAPPING_FOLDER, "S1_OCN_IW_mapping.json")
-
 
 # ----------------------------------#
 # ------------ PRODUCT -------------#
 # ----------------------------------#
+
 
 def _glob_to_url(input_dir: str, file_name_pattern: str, protocols: Optional[list[str]] = None):
     if protocols is None:
@@ -172,16 +161,17 @@ def _glob_to_url_list(input_dir: str, file_name_pattern: str, protocols: Optiona
     glob_path = os.path.join(input_dir, file_name_pattern)
     matched_files = glob.glob(glob_path)
 
-    # to consider if this is mandatory or not: 
+    # to consider if this is mandatory or not:
     # an usage pattern to test just the existing files in the input directory might be more interesting
     if len(matched_files) == 0:
-        raise IOError (f"No files for pattern {file_name_pattern} found in the {input_dir}")
-    
+        raise IOError(f"No files for pattern {file_name_pattern} found in the {input_dir}")
+
     url_list = []
     for mfile in matched_files:
         protocols_string = "::".join(protocols)
-        url_list.append( f"{protocols_string}://{matched_files[0]}" )
-        if TEST_ONLY_ONE: break
+        url_list.append(f"{protocols_string}://{matched_files[0]}")
+        if TEST_ONLY_ONE:
+            break
 
     return url_list
 
@@ -198,7 +188,7 @@ def TEST_PRODUCT_ZIP(INPUT_DIR):
     return _glob_to_url_list(INPUT_DIR, "test*zip", protocols=["zip"])
 
 
-############## S1 ##############
+# ############# S1 ##############
 @pytest.fixture
 def S1_IM_OCN(INPUT_DIR):
     """Path to a S1 OCN LEVEL 1 product"""
@@ -211,11 +201,14 @@ def S1_IM_OCN_ZIP(INPUT_DIR):
     return _glob_to_url_list(INPUT_DIR, "S1*_IW_OCN*.zip", protocols=["zip"])
 
 
-############## S2 ##############
+# ############# S2 ##############
 @pytest.fixture
 def S2_MSIL1C(INPUT_DIR):
     """Path to a S2 MSIL1C LEVEL 1 product"""
-    return _glob_to_url_list(INPUT_DIR, "S2*_MSIL1C*.SAFE",)
+    return _glob_to_url_list(
+        INPUT_DIR,
+        "S2*_MSIL1C*.SAFE",
+    )
 
 
 @pytest.fixture
@@ -224,7 +217,7 @@ def S2_MSIL1C_ZIP(INPUT_DIR):
     return _glob_to_url_list(INPUT_DIR, "S2*_MSIL1C*.zip", protocols=["zip"])
 
 
-############## S3 ##############
+# ############# S3 ##############
 @pytest.fixture
 def S3_OL_1_EFR_ZIP(INPUT_DIR: str):
     """Path to a S3 OL LEVEL 1 product"""
