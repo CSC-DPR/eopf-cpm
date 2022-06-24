@@ -523,7 +523,7 @@ class XMLManifestAccessor(EOProductStore):
         """
         try:
             result = apply_xpath(self._parsed_xml, path, namespaces=self._namespaces)
-        except lxml.etree.XPathEvalError:
+        except KeyError:
             # Return false for lxml parsing errors
             return False
         # Return true if output is not void

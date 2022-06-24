@@ -20,25 +20,6 @@ class EOWebTrigger(EOTrigger, FastAPI, EOPFPluginCommandCLI):
     context_settings: dict, optional
         default values provide to click
 
-    Attributes
-    ----------
-    name: str
-        name of this command
-    cli_params: Sequence[click.Parameter]
-        all argument and option associated to this command
-    help: str
-        text use to specified to the user what this command is made for
-    short_help: str
-        shortter version of the help part
-    epilog: str
-        like help, but only provide at the end of the help command
-    enable_help_option: bool
-        indicate if the help option is provide automatically (default True)
-    hidden: bool
-        indicate if this command is hidden when it's search (default False)
-    deprecated: bool
-        indicate if this command is deprecated or not (default False)
-
     See Also
     --------
     click.Command
@@ -77,8 +58,12 @@ class EOWebTrigger(EOTrigger, FastAPI, EOPFPluginCommandCLI):
             logger.info(f"Triggered with {payload}")
             EOWebTrigger.run(payload)
         except Exception as e:
-            logger.error(f"An error occur: {e}")
-            return JSONResponse(content={"err": str(e)}, status_code=200)
+            logger.exception(e)
+            import sys
+            import traceback
+
+            *_, exc_traceback = sys.exc_info()
+            return JSONResponse(content={"err": "\n".join(traceback.format_tb(exc_traceback))}, status_code=200)
         return JSONResponse(content={}, status_code=200)
 
     @staticmethod

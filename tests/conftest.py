@@ -328,8 +328,8 @@ def TRIGGER_JSON_FILE(dask_client_all, EMBEDED_TEST_DATA_FOLDER, OUTPUT_DIR, S3_
     filepath = os.path.join(EMBEDED_TEST_DATA_FOLDER, trigger_filename)
     with open(filepath) as f:
         data = json.load(f)
-    data["input_product"]["path"] = S3_OL_1_EFR
-    data["output_product"]["path"] = os.path.join(OUTPUT_DIR, data["output_product"]["path"])
+    data["I/O"]["input_product"]["path"] = S3_OL_1_EFR
+    data["I/O"]["output_product"]["path"] = os.path.join(OUTPUT_DIR, data["I/O"]["output_product"]["path"])
     if dask_client_all:
         data["dask_context"] = {"distributed": "processes"}
     output_name = os.path.join(OUTPUT_DIR, trigger_filename)

@@ -10,6 +10,7 @@ from typing import Any, Callable, Optional, Sequence, Union
 import dask.array as da
 import dateutil.parser as date_parser
 import fsspec
+import lxml
 import numpy as np
 import pytz
 import xarray
@@ -32,8 +33,16 @@ def apply_xpath(dom: Any, xpath: str, namespaces: dict[str, str]) -> str:
     -------
     str
         The result of the XPath
+
+    Raises
+    ------
+        KeyError: invalid xpath
     """
-    target = dom.xpath(xpath, namespaces=namespaces)
+    try:
+        target = dom.xpath(xpath, namespaces=namespaces)
+    except lxml.etree.XPathEvalError:
+        raise KeyError("Invalid path " + xpath)
+
     if isinstance(target, list):
         # Check if it's a list of Element and not text.
         if len(target) >= 1 and isinstance(target[0], etree._Element):
