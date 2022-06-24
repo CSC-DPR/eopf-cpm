@@ -138,13 +138,23 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
             return self[attr]
         raise AttributeError(attr)
 
-    def __contains__(self, key: object) -> bool:
+    def __contains__(self, key: Any) -> bool:
         if self.store is not None and self.store.status == StorageStatus.CLOSE:
             warnings.warn("`in` statement can't check store")
-        return (key in self._groups) or (
+        if is_absolute_eo_path(key):
+            raise KeyError("__contains__ can't take an absolute path as argument")
+        direct_key, subkey = downsplit_eo_path(key)
+
+        if direct_key in self._groups:
+            if subkey is None:
+                return True
+            else:
+                return subkey in self._groups[direct_key]
+
+        return (
             self.store is not None
             and self.store.status == StorageStatus.OPEN
-            and any(key == store_key for store_key in self.store.iter(self.path))
+            and (self.store.is_group(key) or self.store.is_variable(key))
         )
 
     def _store_key(self, key: str) -> str:

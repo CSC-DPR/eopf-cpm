@@ -6,6 +6,7 @@ from eopf.exceptions import InvalidProductError, StoreNotDefinedError, StoreNotO
 from ..store.abstract import EOProductStore, StorageStatus
 from ..store.mapping_factory import EOMappingFactory
 from ..store.store_factory import EOStoreFactory
+from ..utils import is_absolute_eo_path, product_relative_path
 from .eo_container import EOContainer
 from .eo_group import EOGroup
 from .eo_variable import EOVariable
@@ -60,6 +61,12 @@ class EOProduct(EOContainer):
         self.__type = ""
         self.__short_names: dict[str, str] = dict()
         self.set_type(type)
+
+    def __contains__(self, key: Any) -> bool:
+        key = self.short_names.get(key, key)
+        if is_absolute_eo_path(key):
+            key = product_relative_path(self.path, key)
+        return super().__contains__(key)
 
     def __delitem__(self, key: str) -> None:
         # Support short name to path conversion
