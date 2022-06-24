@@ -119,7 +119,7 @@ def test_load_product(dask_client_all, input_path_list):
 @pytest.mark.need_files
 @pytest.mark.unit
 @pytest.mark.parametrize(
-    "input_path_list, mapping_filename, output_extension, output_store, expected_optional_miss",
+    "input_path_list, mapping_filename, output_extension, output_store, max_optional_miss",
     [
         ( [lazy_fixture("TEST_PRODUCT")], "data/test_safe_mapping.json", ".zarr", EOZarrStore, 1,),
         ( [lazy_fixture("TEST_PRODUCT_ZIP")], "data/test_safe_mapping.json", ".zarr", EOZarrStore,1,),
@@ -131,7 +131,7 @@ def test_convert_test_mapping(
     mapping_filename: str,
     output_extension: str,
     output_store: type[EOProductStore],
-    expected_optional_miss: int,
+    max_optional_miss: int,
     OUTPUT_DIR: str,
 ):
     mapping_factory = EOMappingFactory(False)
@@ -142,7 +142,7 @@ def test_convert_test_mapping(
         mapping_filename,
         output_extension,
         output_store,
-        expected_optional_miss,
+        max_optional_miss,
         OUTPUT_DIR,
         mapping_factory,
     )
@@ -151,7 +151,7 @@ def test_convert_test_mapping(
 @pytest.mark.need_files
 @pytest.mark.integration
 @pytest.mark.parametrize(
-    "input_path_list, mapping_filename, output_extension, output_store, expected_optional_miss",
+    "input_path_list, mapping_filename, output_extension, output_store, max_optional_miss",
     [
         # Target: convert safe to zarr for all level , netcdf ( for L1/L2 ), cog( for L1/L2 )
         # S1 (L0 / L1 / OCN L2) , S2 L1C / L2, S3 ( L0, OLCI L1/L2, SLSTR L1/L2, SRAL L1/L2 , SYN L2 )
@@ -181,15 +181,15 @@ def test_convert_test_mapping(
         # ---> S2/Level 0 - tests -> NO PRODUCTS AVAILABLE
         # ---> S2/Level 1 - tests 
         # S2_MSIL1C - UNZIP Format -  product type conversions 
-        ( lazy_fixture("S2_MSIL1C"), lazy_fixture("S2_MSIL1C_MAPPING"), ".SEN3", EOSafeStore, 52,),
-        ( lazy_fixture("S2_MSIL1C"), lazy_fixture("S2_MSIL1C_MAPPING"), ".zarr", EOZarrStore, 52,),
-        ( lazy_fixture("S2_MSIL1C"), lazy_fixture("S2_MSIL1C_MAPPING"), ".cog", EOCogStore, 0,),
-        ( lazy_fixture("S2_MSIL1C"), lazy_fixture("S2_MSIL1C_MAPPING"), ".nc", EONetCDFStore, 0,),
+        ( lazy_fixture("S2_MSIL1C"), lazy_fixture("S2_MSIL1C_MAPPING"), ".SEN3", EOSafeStore, 156,),
+        ( lazy_fixture("S2_MSIL1C"), lazy_fixture("S2_MSIL1C_MAPPING"), ".zarr", EOZarrStore, 156,),
+        ( lazy_fixture("S2_MSIL1C"), lazy_fixture("S2_MSIL1C_MAPPING"), ".cog", EOCogStore, 156,),
+        ( lazy_fixture("S2_MSIL1C"), lazy_fixture("S2_MSIL1C_MAPPING"), ".nc", EONetCDFStore, 156,),
         # S2_MSIL1C - ZIP Format - product type conversions 
-        ( lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".SEN3", EOSafeStore, 52,),
-        ( lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".zarr", EOZarrStore, 52,),
-        ( lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".cog", EOCogStore, 0,),
-        ( lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".nc", EONetCDFStore, 0,),
+        ( lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".SEN3", EOSafeStore, 156,),
+        ( lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".zarr", EOZarrStore, 156,),
+        ( lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".cog", EOCogStore, 156,),
+        ( lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".nc", EONetCDFStore, 156,),
 
         # ---> S2/Level 2 - tests -> MAPPING not available 
         # S2_MSIL2A - ZIP Format - product type conversions 
@@ -203,10 +203,10 @@ def test_convert_test_mapping(
         # ---> S3/Level 0 - tests -> NO PRODUCTS AVAILABLE
         # ---> S2/Level 1/2 - tests 
         # S3_OL_1 product type conversions
-        ( lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("S3_OL_1_EFR_MAPPING"), ".SEN3", EOSafeStore, 0,),
-        ( lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("S3_OL_1_EFR_MAPPING"), ".zarr", EOZarrStore, 0,),
-        ( lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("S3_OL_1_EFR_MAPPING"), ".cog", EOCogStore, 0,),
-        ( lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("S3_OL_1_EFR_MAPPING"), ".nc", EONetCDFStore, 0,),
+        ( lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("S3_OL_1_EFR_MAPPING"), ".SEN3", EOSafeStore, 1,),
+        ( lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("S3_OL_1_EFR_MAPPING"), ".zarr", EOZarrStore, 1,),
+        ( lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("S3_OL_1_EFR_MAPPING"), ".cog", EOCogStore, 1,),
+        ( lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("S3_OL_1_EFR_MAPPING"), ".nc", EONetCDFStore, 1,),
 
         # S3_OL_2 product type conversions
         ( lazy_fixture("S3_OL_2_LFR_ZIP"), lazy_fixture("S3_OL_2_LFR_MAPPING"), ".SEN3", EOSafeStore, 0,),
@@ -253,7 +253,7 @@ def test_convert_safe_mapping(
     mapping_filename: str,
     output_extension: str,
     output_store: type[EOProductStore],
-    expected_optional_miss: int,
+    max_optional_miss: int,
     OUTPUT_DIR: str,
 ):
     impl_test_convert_safe_mapping(
@@ -261,7 +261,7 @@ def test_convert_safe_mapping(
         mapping_filename,
         output_extension,
         output_store,
-        expected_optional_miss,
+        max_optional_miss,
         OUTPUT_DIR,
     )
 
@@ -271,7 +271,7 @@ def impl_test_convert_safe_mapping(
     mapping_filename: str,
     output_extension: str,
     output_store: type[EOProductStore],
-    expected_optional_miss: int,
+    max_optional_miss: int,
     OUTPUT_DIR: str,
     mapping_factory=None,
 ):
@@ -318,7 +318,7 @@ def impl_test_convert_safe_mapping(
                     np.testing.assert_equal(conv(source_object.attrs), conv(target_object.attrs))
                 if isinstance(source_object, EOVariable):
                     assert_eovariable_equal(source_object, target_object)
-        assert expected_optional_miss == optional_miss
+        assert max_optional_miss >= optional_miss
 
 
 @pytest.mark.unit
