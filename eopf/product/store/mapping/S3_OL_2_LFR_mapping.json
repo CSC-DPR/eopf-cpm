@@ -41,7 +41,6 @@
       "source_path": "tie_geo_coordinates.nc:longitude",
       "item_format": "netcdf"
     },
-
     {
       "short_name": " rc681",
       "target_path": "/measurements/image/rc681",
@@ -72,7 +71,6 @@
       "source_path": "iwv.nc:IWV",
       "item_format": "netcdf"
     },
-
     {
       "short_name": "lqsf",
         "target_path": "/quality/image/lqsf",
@@ -86,14 +84,14 @@
       "item_format": "netcdf"
     },
     {
-      "short_name": "otci_err",
-      "target_path": "/quality/image/otci_err",
+      "short_name": "otci_unc",
+      "target_path": "/quality/image/otci_unc",
       "source_path": "otci.nc:OTCI_unc",
       "item_format": "netcdf"
     },
     {
-      "short_name": "gifapar_err",
-      "target_path": "/quality/image/gifapar_err",
+      "short_name": "gifapar_unc",
+      "target_path": "/quality/image/gifapar_unc",
       "source_path": "gifapar.nc:GIFAPAR_unc",
       "item_format": "netcdf"
     },
@@ -104,14 +102,14 @@
       "item_format": "netcdf"
     },
     {
-      "short_name": "rc865_err",
-      "target_path": "/quality/image/rc865_err",
+      "short_name": "rc865_unc",
+      "target_path": "/quality/image/rc865_unc",
       "source_path": "rc_gifapar.nc:RC865_unc",
       "item_format": "netcdf"
     },
     {
-      "short_name": "iwv_err",
-      "target_path": "/quality/image/iwv_err",
+      "short_name": "iwv_unc",
+      "target_path": "/quality/image/iwv_unc",
       "source_path": "iwv.nc:IWV_unc",
       "item_format": "netcdf"
     },
@@ -147,7 +145,6 @@
       "source_path": "geo_coordinates.nc:altitude",
       "item_format": "netcdf"
     },
-
     {
       "short_name": "meteo_atmospheric_temperature_profile",
       "target_path": "/conditions/meteo/atmospheric_temperature_profile",
@@ -190,7 +187,6 @@
       "source_path": "tie_meteo.nc:total_ozone",
       "item_format": "netcdf"
     },
-
     {
       "short_name": "instrument_fwhm",
       "target_path": "/conditions/instrument/fwhm",
@@ -221,7 +217,6 @@
       "source_path": "instrument_data.nc:solar_flux",
       "item_format": "netcdf"
     },
-
     {
       "short_name": "stac_discovery",
       "target_path": "",
@@ -234,7 +229,7 @@
     },
     {
       "short_name": "conditions_metadata",
-      "target_path": "",
+      "target_path": "conditions",
       "source_path": "xfdumanifest.xml",
       "item_format": "xmlmetadata",
       "accessor_config": {
@@ -244,7 +239,7 @@
     }
   ],
   "stac_discovery": {
-    "type_": "Text(Feature)",
+    "type": "Text(Feature)",
     "stac_version": "Text(1.0.0)",
     "stac_extensions": [
       "Text(https://stac-extensions.github.io/eopf/v1.0.0/schema.json)"
@@ -373,7 +368,7 @@
   },
   "conditions_metadata": {
     "orbit_reference": {
-      "pass_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:passNumber)",
+      "absolute_pass_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:passNumber)",
       "relative_pass_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:relativePassNumber)",
       "cycle_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:cycleNumber)",
       "phase_identifier": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:phaseIdentifier)",

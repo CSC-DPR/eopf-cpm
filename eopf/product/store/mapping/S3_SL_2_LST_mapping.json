@@ -950,7 +950,8 @@
           "columns_tx"
         ]
       }
-    },{
+    },
+    {
       "short_name": "total_column_water_vapour_tx",
       "target_path": "/conditions/meteo/total_column_water_vapour_tx",
       "source_path": "met_tx.nc:total_column_water_vapour_tx",
@@ -1205,9 +1206,230 @@
           "rows_in"
         ]
       }
+    },
+    {
+      "short_name": "stac_discovery",
+      "target_path": "",
+      "source_path": "xfdumanifest.xml",
+      "item_format": "xmlmetadata",
+      "accessor_config": {
+        "mapping": "stac_discovery",
+        "namespaces": "namespaces"
+      }
+    },
+    {
+      "short_name": "conditions_metadata",
+      "target_path": "conditions",
+      "source_path": "xfdumanifest.xml",
+      "item_format": "xmlmetadata",
+      "accessor_config": {
+        "mapping": "conditions_metadata",
+        "namespaces": "namespaces"
+      }
     }
   ],
-  "metadata_mapping": {
+  "stac_discovery": {
+    "type": "Text(Feature)",
+    "stac_version": "Text(1.0.0)",
+    "stac_extensions": [
+      "Text(https://stac-extensions.github.io/eopf/v1.0.0/schema.json)"
+    ],
+    "id": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName",
+    "geometry": "to_geoJson(metadataSection/metadataObject[@ID='measurementFrameSet']/metadataWrap/xmlData/sentinel-safe:frameSet/sentinel-safe:footPrint/gml:posList)",
+    "bbox": "to_bbox(metadataSection/metadataObject[@ID='measurementFrameSet']/metadataWrap/xmlData/sentinel-safe:frameSet/sentinel-safe:footPrint/gml:posList)",
+    "properties": {
+      "datetime": "Text(null)",
+      "start_datetime": "metadataSection/metadataObject[@ID='acquisitionPeriod']/metadataWrap/xmlData/sentinel-safe:acquisitionPeriod/sentinel-safe:startTime",
+      "end_datetime": "metadataSection/metadataObject[@ID='acquisitionPeriod']/metadataWrap/xmlData/sentinel-safe:acquisitionPeriod/sentinel-safe:stopTime",
+      "created": "to_ISO8601(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:creationTime)",
+      "eopf:platform": {
+        "nssdc_identifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:nssdcIdentifier",
+        "family": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:familyName",
+        "number": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:number"
+      },
+      "eopf:instrument": {
+        "name": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName",
+        "short_name": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/@abbreviation",
+        "mode": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode",
+        "identifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode/@identifier"
+      },
+      "providers": [
+        {
+          "name": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:resource[@role='L2 Product']/sentinel-safe:processing/sentinel-safe:facility/@name",
+          "roles": [
+            "Text(processor)"
+          ]
+        },
+        {
+          "name": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:resource[@role='L2 Product']/sentinel-safe:processing/sentinel-safe:facility/@organisation",
+          "roles": [
+            "Text(producer)"
+          ]
+        }
+      ],
+      "eopf:resolutions": {
+        "RR": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:resolution/slstr:spatialResolution)"
+      },
+      "eopf:product": {
+        "name": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName",
+        "type": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productType",
+        "timeliness": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:timeliness",
+        "collection": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:baselineCollection",
+        "disposition": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dispositionMode",
+        "orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber)",
+        "relative_orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:relativeOrbitNumber)",
+        "ground_track_direction": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber/@groundTrackDirection",
+        "downlink_information": {
+          "granule_number": "to_int(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:granuleNumber)",
+          "granule_position": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:granulePosition",
+          "dump_start": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:dumpStart",
+          "receiving_station": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingGroundStation",
+          "receiving_start": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingStartTime",
+          "receiving_stop": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingStopTime"
+        },
+        "pixel_classification": {
+          "cosmetic": {
+            "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary/slstr:cosmeticPixels/@value)",
+            "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary/slstr:cosmeticPixels/@percentage)"
+          },
+          "duplicated": {
+            "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary/slstr:duplicatedPixels/@value)",
+            "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary/slstr:duplicatedPixels/@percentage)"
+          },
+          "saturated": {
+            "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary/slstr:saturatedPixels/@value)",
+            "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary/slstr:saturatedPixels/@percentage)"
+          },
+          "out_of_range": {
+            "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary/slstr:outOfRangePixels/@value)",
+            "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary/slstr:outOfRangePixels/@percentage)"
+          },
+          "saline_water": {
+            "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary/sentinel3:salineWaterPixels/@percentage)"
+          },
+          "land": {
+            "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary/sentinel3:landPixels/@percentage)"
+          },
+          "coastal": {
+            "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary/sentinel3:coastalPixels/@percentage)"
+          },
+          "inland_water": {
+            "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary/sentinel3:freshInlandWaterPixels/@percentage)"
+          },
+          "tidal": {
+            "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary/sentinel3:tidalRegionPixels/@percentage)"
+          },
+          "cloud": {
+            "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary/sentinel3:cloudyPixels/@percentage)"
+          }
+        },
+        "data_information": {
+          "measurement_accuracy": "metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:measurementAccuracy",
+          "accuracy_reference": "metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:accuracyReference",
+          "nadir_image_size": {
+            "start_offset": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:startOffset)",
+            "track_offset": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:trackOffset)",
+            "rows": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:rows)",
+            "columns": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:columns)"
+          },
+          "oblique_image_size": {
+            "start_offset": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:obliqueImageSize/sentinel3:startOffset)",
+            "track_offset": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:obliqueImageSize/sentinel3:trackOffset)",
+            "rows": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:obliqueImageSize/sentinel3:rows)",
+            "columns": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:obliqueImageSize/sentinel3:columns)"
+          }
+        }
+      }
+    }
+  },
+  "conditions_metadata": {
+    "detector_temperatures": {
+      "S1_Detector": {
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S1 Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S1 Detector']/slstr:max)"
+      },
+      "S2_Detector": {
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S2 Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S2 Detector']/slstr:max)"
+      },
+      "S3_Detector": {
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S3 Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S3 Detector']/slstr:max)"
+      },
+      "S4_Detector": {
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S4 Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S4 Detector']/slstr:max)"
+      },
+      "S5_Detector": {
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S5 Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S5 Detector']/slstr:max)"
+      },
+      "S6_Detector": {
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S6 Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S6 Detector']/slstr:max)"
+      },
+      "S7_Detector": {
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S7 Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S7 Detector']/slstr:max)"
+      },
+      "S8_Detector": {
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S8 Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S8 Detector']/slstr:max)"
+      },
+      "S9_Detector": {
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S9 Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/sentinel3:temperature[@element='S9 Detector']/slstr:max)"
+      }
+    },
+    "orbit_reference": {
+      "absolute_pass_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:passNumber)",
+      "relative_pass_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:relativePassNumber)",
+      "cycle_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:cycleNumber)",
+      "phase_identifier": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:phaseIdentifier)",
+      "type": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber/@type",
+      "ephemeris": {
+        "start": {
+          "TAI": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:epoch[@type='TAI']",
+          "UTC": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:epoch[@type='UTC']",
+          "UT1": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:epoch[@type='UT1']",
+          "position": {
+            "x": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:position/sentinel-safe:x)",
+            "y": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:position/sentinel-safe:y)",
+            "z": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:position/sentinel-safe:z)"
+          },
+          "velocity": {
+            "x": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:velocity/sentinel-safe:x)",
+            "y": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:velocity/sentinel-safe:y)",
+            "z": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:velocity/sentinel-safe:z)"
+          }
+        },
+        "stop": {
+          "TAI": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:epoch[@type='TAI']",
+          "UTC": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:epoch[@type='UTC']",
+          "UT1": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:epoch[@type='UT1']",
+          "position": {
+            "x": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:position/sentinel-safe:x)",
+            "y": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:position/sentinel-safe:y)",
+            "z": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:position/sentinel-safe:z)"
+          },
+          "velocity": {
+            "x": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:velocity/sentinel-safe:x)",
+            "y": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:velocity/sentinel-safe:y)",
+            "z": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:velocity/sentinel-safe:z)"
+          }
+        }
+      }
+    },
+    "product_unit": {
+      "type": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productUnit/sentinel3:type",
+      "duration": "to_int(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productUnit/sentinel3:duration)",
+      "alongtrack_coordinate": "to_int(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productUnit/sentinel3:alongtrackCoordinate)"
+    },
+    "meteo": {
+      "source": "Text(ECMWF)",
+      "type": "metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:ecmwfType",
+      "time_relevance": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:ecmwfType/@timeRelevance)"
+    }
   },
   "namespaces": {
     "xfdu": "urn:ccsds:schema:xfdu:1",

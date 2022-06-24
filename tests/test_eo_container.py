@@ -507,7 +507,7 @@ def test_hierarchy_html(product: EOProduct):
             },
             "group0": {"dims": (), "attrs": {}, "coords": []},
             "dims": (),
-            "attrs": {"type": ""},
+            "attrs": {"product_type": ""},
             "coords": [],
         },
     }

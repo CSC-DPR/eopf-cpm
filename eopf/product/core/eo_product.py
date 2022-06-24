@@ -36,7 +36,7 @@ class EOProduct(EOContainer):
     """
 
     MANDATORY_FIELD = ("measurements", "coordinates")
-    _TYPE_ATTR_STR = "type"
+    _TYPE_ATTR_STR = "product_type"
 
     def __init__(
         self,
@@ -205,7 +205,7 @@ class EOProduct(EOContainer):
 
     @property
     def short_names(self) -> dict[str, str]:
-        self.type  # check type consistency
+        self.product_type  # check type consistency
         return self.__short_names
 
     # docstr-coverage: inherited
@@ -243,7 +243,7 @@ class EOProduct(EOContainer):
         return
 
     @property
-    def type(self) -> str:
+    def product_type(self) -> str:
         if self.__type is not self.attrs[self._TYPE_ATTR_STR]:
             self.set_type(self.attrs[self._TYPE_ATTR_STR])
         return self.__type

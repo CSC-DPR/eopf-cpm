@@ -211,8 +211,8 @@ def impl_test_convert_safe_mapping(
         mappin_data = json.load(f)
     optional_miss = 0
     with (open_store(source_product), open_store(target_product)):
-        assert source_product.type == mappin_data["recognition"]["product_type"]
-        assert target_product.type == mappin_data["recognition"]["product_type"]
+        assert source_product.product_type == mappin_data["recognition"]["product_type"]
+        assert target_product.product_type == mappin_data["recognition"]["product_type"]
 
         for item in mappin_data["data_mapping"]:
             # TODO: should be removed after that misc was removed from mappings
