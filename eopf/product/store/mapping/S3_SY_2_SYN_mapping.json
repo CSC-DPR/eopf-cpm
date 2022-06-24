@@ -895,7 +895,7 @@
     {
       "short_name": "conditions_metadata",
       "source_path": "xfdumanifest.xml",
-      "target_path": "",
+      "target_path": "conditions",
       "item_format": "xmlmetadata",
       "accessor_config": {
         "mapping": "conditions_metadata",
