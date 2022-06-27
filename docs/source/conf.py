@@ -74,28 +74,34 @@ html_title = "EOPF - Core Python Modules"
 html_static_path = ["_static"]
 html_sidebars = {"**": ["sidebar-logo.html", "search-field.html", "sbt-sidebar-nav.html", "versioning.html"]}
 
+
 # multiple versions options
 parent_path_git_repo = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "..")
-git_repo = git.Repo(parent_path_git_repo)
+if ".git" in os.listdir(parent_path_git_repo):
+    git_repo = git.Repo(parent_path_git_repo)
 
-tags = sorted(
-    map(lambda x: x.name[1:], git_repo.tags),
-    key=lambda x: x.split("."),
-    reverse=True,
-)  # order tags for filtering
+    tags = sorted(
+        map(lambda x: x.name[1:], git_repo.tags),
+        key=lambda x: x.split("."),
+        reverse=True,
+    )  # order tags for filtering
 
-tags_filter = []
-for version, group in itertools.islice(
-    itertools.groupby(tags, key=lambda x: x.split(".")[0]),
-    3,
-):  # iter over last 3 majeurs
-    for v, g in itertools.islice(itertools.groupby(group, key=lambda x: x.split(".")[1]), 5):  # iter over last 5 mineur
-        first, *_ = g  # get last patch version
-        tags_filter.append(first)
+    tags_filter = []
+    for version, group in itertools.islice(
+        itertools.groupby(tags, key=lambda x: x.split(".")[0]),
+        3,
+    ):  # iter over last 3 majeurs
+        for v, g in itertools.islice(
+            itertools.groupby(group, key=lambda x: x.split(".")[1]),
+            5,
+        ):  # iter over last 5 mineur
+            first, *_ = g  # get last patch version
+            tags_filter.append(first)
 
-smv_tag_whitelist = rf'^v({"|".join(tags_filter)}).*$'
-smv_remote_whitelist = r"^.*$"
-smv_branch_whitelist = r"^(main|develop).*$"
+    smv_tag_whitelist = rf'^v({"|".join(tags_filter)}).*$'
+    smv_remote_whitelist = "^.*$"
+    smv_branch_whitelist = r"^(main|develop).*$"
+
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3/", None),
@@ -117,4 +123,5 @@ apidoc_separate_modules = False
 
 autodoc_default_options = {
     "ignore-module-all": True,
+    "undoc-members": False,
 }

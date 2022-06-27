@@ -54,25 +54,6 @@ class EOLocalCLITrigger(EOTrigger, EOPFPluginCommandCLI):
     context_settings: dict, optional
         default values provide to click
 
-    Attributes
-    ----------
-    name: str
-        name of this command
-    cli_params: Sequence[click.Parameter]
-        all argument and option associated to this command
-    help: str
-        text use to specified to the user what this command is made for
-    short_help: str
-        shortter version of the help part
-    epilog: str
-        like help, but only provide at the end of the help command
-    enable_help_option: bool
-        indicate if the help option is provide automatically (default True)
-    hidden: bool
-        indicate if this command is hidden when it's search (default False)
-    deprecated: bool
-        indicate if this command is deprecated or not (default False)
-
     See Also
     --------
     click.Command
@@ -108,25 +89,6 @@ class EORequestCLITrigger(EOTrigger, EOPFPluginCommandCLI):
     ----------
     context_settings: dict, optional
         default values provide to click
-
-    Attributes
-    ----------
-    name: str
-        name of this command
-    cli_params: Sequence[click.Parameter]
-        all argument and option associated to this command
-    help: str
-        text use to specified to the user what this command is made for
-    short_help: str
-        shortter version of the help part
-    epilog: str
-        like help, but only provide at the end of the help command
-    enable_help_option: bool
-        indicate if the help option is provide automatically (default True)
-    hidden: bool
-        indicate if this command is hidden when it's search (default False)
-    deprecated: bool
-        indicate if this command is deprecated or not (default False)
 
     See Also
     --------
@@ -171,25 +133,6 @@ class EOKafkaCLITrigger(EOTrigger, EOPFPluginCommandCLI):
     ----------
     context_settings: dict, optional
         default values provide to click
-
-    Attributes
-    ----------
-    name: str
-        name of this command
-    cli_params: Sequence[click.Parameter]
-        all argument and option associated to this command
-    help: str
-        text use to specified to the user what this command is made for
-    short_help: str
-        shortter version of the help part
-    epilog: str
-        like help, but only provide at the end of the help command
-    enable_help_option: bool
-        indicate if the help option is provide automatically (default True)
-    hidden: bool
-        indicate if this command is hidden when it's search (default False)
-    deprecated: bool
-        indicate if this command is deprecated or not (default False)
 
     See Also
     --------
@@ -239,25 +182,6 @@ class EOKafkaCLITrigger(EOTrigger, EOPFPluginCommandCLI):
 
 class EOCLITrigger(EOTrigger, EOPFPluginGroupCLI):
     """EOTrigger cli command aggregator to trigger other services
-
-    Attributes
-    ----------
-    name: str
-        name of this group of command
-    cli_commands: Sequence[click.Command]
-        Sequence of command aggregate here
-    help: str
-        text use to specified to the user what this command is made for
-    short_help: str
-        shortter version of the help part
-    epilog: str
-        like help, but only provide at the end of the help command
-    enable_help_option: bool
-        indicate if the help option is provide automatically (default True)
-    hidden: bool
-        indicate if this command is hidden when it's search (default False)
-    deprecated: bool
-        indicate if this command is deprecated or not (default False)
 
     Parameters
     ----------

@@ -28,7 +28,6 @@ class EOTrigger(ABC):
         """Generic method that apply the algortihm of the processing unit
         from the payload and write the result product.
 
-
         Parameters
         ----------
         payload: dict[str, Any]
@@ -44,9 +43,9 @@ class EOTrigger(ABC):
         modif_mode = io_config["modification_mode"]
         with (input_product["product"].open(mode=mode, **input_product["parameters"]), contextlib.ExitStack() as stack):
             if isinstance(processing_unit, EOProcessor):
-                output = processing_unit.run_validating(input_product, **parameters)
+                output = processing_unit.run_validating(input_product["product"], **parameters)
             else:
-                output = processing_unit.run(input_product, **parameters)
+                output = processing_unit.run(input_product["product"], **parameters)
             if modif_mode == ModificationMode.NEWPRODUCT:
                 output_store = io_config["output"]
                 stack.enter_context(output.open(mode="w", storage=output_store["store"], **output_store["parameters"]))
