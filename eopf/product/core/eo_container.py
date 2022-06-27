@@ -429,9 +429,8 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
 
         if self.store is None:  # pragma: no cover
             raise StoreNotDefinedError("Store must be defined")
-        for key in self.store.iter(self.path):
-            eo_object = self.store[self._store_key(key)]
-            self[key] = eo_object
+        for key in self:
+            eo_object = self[key]
             if isinstance(eo_object, EOGroup):
                 eo_object.load()
 
