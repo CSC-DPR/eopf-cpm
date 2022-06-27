@@ -37,7 +37,7 @@ class EOQC(ABC):
         self._status = False
 
     @abstractmethod
-    def check(self, eoproduct: EOProduct) -> bool:
+    def check(self, eoproduct: EOProduct) -> bool:  # pragma: no cover
         """Check method for a quality check.
 
         Parameters

@@ -163,5 +163,5 @@ class EOQCProcessor(EOProcessor):
             with open(report_path, "w") as outfile:
                 json.dump(report, outfile, indent=4)
                 return True
-        except ValueError:
-            raise ValueError("Error while writing report")
+        except Exception as e:
+            raise e
