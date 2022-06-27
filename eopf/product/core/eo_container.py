@@ -108,7 +108,10 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
             item = self._groups[key]
         elif self.store is not None:
             item = self.store[self._store_key(key)]
-            self[key] = item
+            if isinstance(item, EOGroup):
+                self._add_local_group(key, item)
+            else:
+                self._add_local_variable(key, item, new_eo=False)
 
         if subkey is not None:
             if not isinstance(item, EOGroup):
@@ -260,7 +263,7 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
         return group
 
     def _add_local_variable(
-        self, name: str = "", data: Optional[Any] = None, **kwargs: Any
+        self, name: str = "", data: Optional[Any] = None, new_eo=True, **kwargs: Any
     ) -> "EOVariable":  # pragma: no cover
         """Add a variable local to the EOVariable. Does not support paths and recursively adding subgroups.
 
@@ -293,7 +296,10 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
             name = getattr(data, "name", "")
         if name == "":
             raise ValueError("variable name can't be empty")
-        variable = EOVariable(name, data, self, **kwargs)
+        if new_eo:
+            variable = EOVariable(name, data, self, **kwargs)
+        else:
+            variable = data
         self._variables[name] = variable
 
         return variable
