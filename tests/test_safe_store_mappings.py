@@ -235,7 +235,6 @@ def impl_test_convert_safe_mapping(
 
             if output_store != EOSafeStore or data_path not in ["", "/"]:
                 # Manifest accessor set item not yet implemented
-                print(target_object.name)
                 np.testing.assert_equal(conv(source_object.attrs), conv(target_object.attrs))
             if isinstance(source_object, EOVariable):
                 assert_eovariable_equal(source_object, target_object)
