@@ -660,15 +660,16 @@ def test_patch_cog_store(store_cls: type[EOCogStore], format_file: str):
 @pytest.mark.real_s3
 @pytest.mark.unit
 @pytest.mark.parametrize(
-    "store, path, open_kwargs",
+    "store, path, storage_options",
     [
         (EOCogStore, "s3://eopf/cpm/test_data/OLCI_COG", S3_CONFIG_REAL),
     ],
 )
-def test_s3_reading_cog_store(dask_client_all, store: type, path: str, open_kwargs: dict[str, Any]):
+def test_s3_reading_cog_store(dask_client_all, store: type, path: str, storage_options: dict[str, Any]):
+    print(storage_options)
     cog_store = store(path)
     product = EOProduct("s3_test_product", storage=cog_store)
-    with product.open(storage_options=open_kwargs):
+    with product.open(storage_options=storage_options):
         product.load()
         # Test getitem
         assert isinstance(product["conditions/geometry/altitude"], EOVariable)

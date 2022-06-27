@@ -294,7 +294,7 @@ class EOProduct(EOContainer):
         else:
             return super()._add_local_variable(name, data, **kwargs)
 
-    def _create_structure(self, group: Union[EOGroup, tuple[str, EOGroup]], level: int) -> None:
+    def _create_structure(self, group: Union["EOContainer", tuple[str, "EOContainer"]], level: int) -> None:
         if isinstance(group, tuple):
             group = group[1]
         if level > 0:
