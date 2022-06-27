@@ -485,7 +485,10 @@ class EOCogStoreLOCAL(EOProductStore):
         if attrs:
             init_path = pathlib.Path(self.url).resolve()
             # # the file should be written in the directory representing the group
-            attrs_file_path = init_path / group_path / self.attributes_file_name
+            if group_path in ["", "/"]:
+                attrs_file_path = init_path / self.attributes_file_name
+            else:
+                attrs_file_path = init_path / group_path.split(self.sep)[-1] / self.attributes_file_name
             # remove file if it already exists
             if attrs_file_path.is_file():
                 attrs_file_path.unlink()
