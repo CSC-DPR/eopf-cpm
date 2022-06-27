@@ -144,7 +144,7 @@ def _glob_to_url(input_dir: str, file_name_pattern: str, protocols: Optional[lis
 @pytest.fixture
 def S1_IM_OCN(INPUT_DIR):
     """Path to a S2 MSIL1C LEVEL 1 product"""
-    return _glob_to_url(INPUT_DIR, "S1A_IW_OCN*.zip", protocols=["zip"])
+    return _glob_to_url(INPUT_DIR, "S1A_IW_OCN*[!.zarr].zip", protocols=["zip"])
 
 
 @pytest.fixture
@@ -159,13 +159,13 @@ def S2A_MSIL1C(INPUT_DIR):
 @pytest.fixture
 def S2A_MSIL1C_ZIP(INPUT_DIR):
     """Path to a S2 MSIL1C LEVEL 1 product in zip format"""
-    return _glob_to_url(INPUT_DIR, "S2A_MSIL1C*.zip", protocols=["zip"])
+    return _glob_to_url(INPUT_DIR, "S2A_MSIL1C*[!.zarr].zip", protocols=["zip"])
 
 
 @pytest.fixture
 def S3_OL_1_EFR(INPUT_DIR):
     """Path to a S3 OLCI LEVEL 1 product"""
-    return _glob_to_url(INPUT_DIR, "S3*_OL_1_E*R*.zip", protocols=["zip"])
+    return _glob_to_url(INPUT_DIR, "S3*_OL_1_E*R*[!.zarr].zip", protocols=["zip"])
 
 
 @pytest.fixture
