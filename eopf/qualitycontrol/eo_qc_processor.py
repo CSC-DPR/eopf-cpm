@@ -93,10 +93,9 @@ class EOQCProcessor(EOProcessor):
         # If the it write the quality control report in a .json file.
         if write_report:
             if report_path is not None:
-                if not self.write_report(eoproduct, report_path, qc_config):
-                    logger.error("Error while writing report")
+                self.write_report(eoproduct, report_path, qc_config)
             else:
-                logger.error("Can't write report no path given")
+                raise ValueError("Can't write report no path given")
         return eoproduct
 
     def update_attributs(self, eoproduct: EOProduct, qc_config: EOQCConfig) -> None:
@@ -165,4 +164,4 @@ class EOQCProcessor(EOProcessor):
                 json.dump(report, outfile, indent=4)
                 return True
         except ValueError:
-            return False
+            raise ValueError("Error while writing report")

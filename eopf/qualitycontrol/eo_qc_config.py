@@ -1,7 +1,6 @@
 import glob
 import json
 import os
-from asyncio.log import logger
 from collections import defaultdict
 from collections.abc import MutableMapping
 from typing import Iterator
@@ -63,7 +62,7 @@ class EOQCConfig(MutableMapping):
         self._qclist[check_id] = qc
 
     def __delitem__(self, check_id: str) -> None:
-        return super().__delitem__(check_id)
+        return self._qclist.__delitem__(check_id)
 
     def __iter__(self) -> Iterator[EOQC]:
         return iter(self._qclist)
@@ -143,9 +142,6 @@ class EOPCConfigFactory:
         for config in self._configs.values():
             if config.default and config.product_type == product_type:
                 return config
-            else:
-                logger.error("No default configuration for this product type")
-                return False
 
     def get_config_by_id(self, id: str) -> EOQCConfig:
         """Get a quality control configuration with the id.

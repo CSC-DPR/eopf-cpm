@@ -146,10 +146,7 @@ class EOQCFormula(EOQC):
         # Getting and defining variables
         local_var = locals()
         for variable in self.variables:
-            if "short_name" in variable:
-                local_var[variable["name"]] = eoproduct[variable["short_name"]]
-            else:
-                local_var[variable["name"]] = variable["formula"]
+            local_var[variable["name"]] = eoproduct[variable["short_name"]]
         # Getting and defining thresholds
         for thershold in self.thresholds:
             threshold_name = thershold["name"]
