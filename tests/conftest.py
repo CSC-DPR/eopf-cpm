@@ -3,6 +3,7 @@ import os
 import shutil
 from datetime import timedelta
 
+import fsspec
 import pytest
 
 # import required dask fixtures :
@@ -15,7 +16,14 @@ from distributed.utils_test import (  # noqa # pylint: disable=unused-import
 )
 from hypothesis import HealthCheck, settings
 
-from .utils import EMBEDED_TEST_DATA_PATH, MAPPING_PATH, TEST_DATA_PATH, glob_fixture
+from .utils import (
+    EMBEDED_TEST_DATA_PATH,
+    MAPPING_PATH,
+    S3_CONFIG_REAL,
+    TEST_DATA_PATH,
+    TEST_DATA_PROTOCOL,
+    glob_fixture,
+)
 
 # ----------------------------------#
 # --- pytest command line options --#
@@ -278,3 +286,17 @@ def TRIGGER_JSON_FILE(dask_client_all, EMBEDED_TEST_DATA_FOLDER, OUTPUT_DIR, S3_
         json.dump(data, f)
 
     return output_name
+
+
+@pytest.fixture(scope="session", autouse=True)
+def load_data():
+    if TEST_DATA_PROTOCOL == "s3":
+        data_mapper = fsspec.get_mapper(f"{TEST_DATA_PROTOCOL}://{TEST_DATA_PATH}", **S3_CONFIG_REAL)
+        os.makedirs(TEST_DATA_PATH, exist_ok=True)
+        for file, data in data_mapper.items():
+            dir_file_name = os.path.dirname(file)
+            os.makedirs(os.path.join(TEST_DATA_PATH, dir_file_name), exist_ok=True)
+            with open(os.path.join(TEST_DATA_PATH, file), mode="wb") as f:
+                f.write(data)
+        yield
+        shutil.rmtree(TEST_DATA_PATH)

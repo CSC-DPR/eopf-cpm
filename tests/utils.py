@@ -3,6 +3,7 @@ import logging
 import os
 from typing import TYPE_CHECKING, Any, Optional, Union
 
+import fsspec
 import numpy as np
 import pytest
 from hypothesis import strategies as st
@@ -169,7 +170,9 @@ def _glob_to_url(input_dir: str, file_name_pattern: str, protocols: Optional[lis
 
 
 PARENT_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..")
-TEST_DATA_PATH = os.environ.get("TEST_DATA_FOLDER", os.path.join(PARENT_DATA_PATH, "data"))
+TEST_DATA_PROTOCOL, TEST_DATA_PATH = fsspec.core.split_protocol(
+    os.environ.get("TEST_DATA_FOLDER", os.path.join(PARENT_DATA_PATH, "data")),
+)
 EMBEDED_TEST_DATA_PATH = os.path.join(PARENT_DATA_PATH, "tests", "data")
 MAPPING_PATH = os.path.join(PARENT_DATA_PATH, "eopf", "product", "store", "mapping")
 TEST_ONLY_ONE_PRODUCT = os.environ.get("TEST_ONLY_ONE_PRODUCT") in [True, "True", "true", 1, "1"]
