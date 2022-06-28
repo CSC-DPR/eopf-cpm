@@ -52,7 +52,7 @@ from tests.utils import assert_eovariable_equal
         # "item_format": "netcdf"
         (lazy_fixture("S3_SY_2_SYN_ZIP"), "/coordinates/image_grid/longitude"),
         (lazy_fixture("S3_SY_2_SYN_ZIP"), "/conditions/geometry/saa"),
-        (lazy_fixture("S3_SY_2_SYN_ZIP"), "/measurements/OL/sdr_oa01"),
+        (lazy_fixture("S3_SY_2_SYN_ZIP"), "/measurements/olci/sdr_oa01"),
         # "item_format": "netcdf"
         (lazy_fixture("S3_OL_1_EFR_ZIP"), "/coordinates/image_grid/longitude"),
         (lazy_fixture("S3_OL_1_EFR_ZIP"), "/conditions/geometry/oza"),
