@@ -48,6 +48,9 @@ class EOFormatterFactory(object):
                 ToISO8601,
                 ToStr,
                 ToUNIXTimeSLSTRL1,
+                ToBands,
+                ToDetectors,
+                ToMean
             )
 
             self.register_formatter(ToStr)
@@ -61,6 +64,9 @@ class EOFormatterFactory(object):
             self.register_formatter(Text)
             self.register_formatter(ToImageSize)
             self.register_formatter(IsOptional)
+            self.register_formatter(ToBands)
+            self.register_formatter(ToMean)
+            self.register_formatter(ToDetectors)
         else:
             # to implement another logic of importing formatters
             pass

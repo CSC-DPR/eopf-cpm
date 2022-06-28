@@ -368,3 +368,38 @@ class IsOptional(EOAbstractFormatter):
             Returns "Not found"
         """
         return "N/A"
+
+class ToBands(EOAbstractFormatter):
+
+    name = "to_bands"
+
+    def format(self, xpath_input: List) -> Any:
+        bands_array = numpy.zeros(13) # To be changed
+        for element in xpath_input:
+            band_id = int(element.attrib["bandId"])
+            bands_array[band_id] = 1
+        return bands_array
+
+class ToDetectors(EOAbstractFormatter):
+
+    name = "to_detectors"
+
+    def format(self, xpath_input: List) -> Any:
+        detectors_set = set()
+        detectors_array = numpy.zeros(13)
+        for element in xpath_input:
+            detector_id = int(element.attrib["detectorId"])
+            detectors_set.add(detector_id)
+        for detector_id, detector in enumerate(sorted(detectors_set)):
+            detectors_array[detector_id] = detector
+        return detectors_array
+
+class ToMean(EOAbstractFormatter):
+
+    name = "to_mean"
+
+    def format(self, input) -> Any:
+        print("MEAN")
+        print(dir(self))
+        return 0
+
