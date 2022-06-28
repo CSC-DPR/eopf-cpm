@@ -62,8 +62,9 @@ class XMLAnglesAccessor(EOProductStore):
         ----------
         EOVariable
         """
-        from eopf.product.core import EOVariable
         from eopf.formatting import EOFormatterFactory
+        from eopf.product.core import EOVariable
+
         if self.status != StorageStatus.OPEN:
             raise StoreNotOpenError()
         formatter_name, formatter, xpath = EOFormatterFactory().get_formatter(key)

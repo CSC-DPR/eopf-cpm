@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import Any, Dict, List, Union
 
+import lxml
 import numpy
 from pandas import Timedelta, to_datetime
 from pytz import UTC
@@ -369,37 +370,37 @@ class IsOptional(EOAbstractFormatter):
         """
         return "N/A"
 
+
 class ToBands(EOAbstractFormatter):
 
     name = "to_bands"
 
-    def format(self, xpath_input: List) -> Any:
-        bands_array = numpy.zeros(13) # To be changed
+    def format(self, xpath_input: List[lxml.etree._Element]) -> List[int]:
+        bands_set = set()
         for element in xpath_input:
             band_id = int(element.attrib["bandId"])
-            bands_array[band_id] = 1
-        return bands_array
+            bands_set.add(band_id)
+        return sorted(bands_set)
+
 
 class ToDetectors(EOAbstractFormatter):
 
     name = "to_detectors"
 
-    def format(self, xpath_input: List) -> Any:
+    def format(self, xpath_input: List[lxml.etree._Element]) -> List[int]:
         detectors_set = set()
-        detectors_array = numpy.zeros(13)
         for element in xpath_input:
             detector_id = int(element.attrib["detectorId"])
             detectors_set.add(detector_id)
-        for detector_id, detector in enumerate(sorted(detectors_set)):
-            detectors_array[detector_id] = detector
-        return detectors_array
+
+        return sorted(detectors_set)
+
 
 class ToMean(EOAbstractFormatter):
 
     name = "to_mean"
 
-    def format(self, input) -> Any:
+    def format(self, input: Any) -> Any:
         print("MEAN")
         print(dir(self))
         return 0
-

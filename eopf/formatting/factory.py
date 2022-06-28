@@ -39,18 +39,18 @@ class EOFormatterFactory(object):
             from eopf.formatting.formatters import (
                 IsOptional,
                 Text,
+                ToBands,
                 ToBbox,
                 ToBool,
+                ToDetectors,
                 ToFloat,
                 ToGeoJson,
                 ToImageSize,
                 ToInt,
                 ToISO8601,
+                ToMean,
                 ToStr,
                 ToUNIXTimeSLSTRL1,
-                ToBands,
-                ToDetectors,
-                ToMean
             )
 
             self.register_formatter(ToStr)
