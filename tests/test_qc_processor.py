@@ -12,8 +12,8 @@ from eopf.qualitycontrol.eo_qc import EOQCFormula, EOQCProcessingUnit, EOQCValid
 from eopf.qualitycontrol.eo_qc_config import EOPCConfigFactory, EOQCConfig
 from eopf.qualitycontrol.eo_qc_processor import EOQCProcessor
 
-sample_config_path = "/home/alexandre/eopf-cpm/eopf/qualitycontrol/configs/qc.json"
-quality_report_path = "/home/alexandre/eopf-cpm/data/"
+quality_report_path = os.path.dirname(os.path.realpath(__file__))
+sample_config_path = f"{os.path.dirname(quality_report_path)}/eopf/qualitycontrol/configs/test_qc.json"
 
 
 def check_data(id):
