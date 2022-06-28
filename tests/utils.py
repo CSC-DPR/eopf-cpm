@@ -1,4 +1,5 @@
 import glob
+import logging
 import os
 from typing import TYPE_CHECKING, Any, Optional, Union
 
@@ -158,7 +159,7 @@ def _glob_to_url(input_dir: str, file_name_pattern: str, protocols: Optional[lis
     glob_path = os.path.join(input_dir, file_name_pattern)
     matched_files = glob.glob(glob_path)
     if len(matched_files) == 0:
-        raise IOError(f"No files for pattern {file_name_pattern} found in the {input_dir}")
+        logging.exception(f"No files for pattern {file_name_pattern} found in the {input_dir}")
     protocols_string = "::".join(protocols)
     if TEST_ONLY_ONE_PRODUCT:
         return [f"{protocols_string}://{matched_files[0]}"]

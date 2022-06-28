@@ -24,7 +24,7 @@ from tests.utils import assert_eovariable_equal
 @pytest.mark.need_files
 @pytest.mark.unit
 @pytest.mark.parametrize(
-    "input_path_list, key_path",
+    "input_path, key_path",
     [
         # fmt: off
         # At least One test per each product type and accessor used in the mapping file
@@ -72,21 +72,20 @@ from tests.utils import assert_eovariable_equal
         # fmt: on
     ],
 )
-def test_read_product(dask_client_all, input_path_list, key_path):
-    for input_path in input_path_list:
-        store = EOSafeStore(input_path)
-        product = EOProduct("my_product", storage=store)
-        product.open()
-        eoval = product[key_path]
-        assert isinstance(eoval, EOObject)
-        assert isinstance(product.attrs, dict)
-        product.store.close()
+def test_read_product(dask_client_all, input_path, key_path):
+    store = EOSafeStore(input_path)
+    product = EOProduct("my_product", storage=store)
+    product.open()
+    eoval = product[key_path]
+    assert isinstance(eoval, EOObject)
+    assert isinstance(product.attrs, dict)
+    product.store.close()
 
 
 @pytest.mark.need_files
 @pytest.mark.integration
 @pytest.mark.parametrize(
-    "input_path_list",
+    "input_path",
     [
         lazy_fixture("S3_OL_1_EFR_ZIP"),
         lazy_fixture("S3_OL_2_LFR_ZIP"),
@@ -98,32 +97,31 @@ def test_read_product(dask_client_all, input_path_list, key_path):
         lazy_fixture("S1_IM_OCN_ZIP"),
     ],
 )
-def test_load_product(dask_client_all, input_path_list):
-    for input_path in input_path_list:
-        store = EOSafeStore(input_path)
-        product = EOProduct("my_product", storage=store)
-        product.open()
-        assert isinstance(product.attrs, dict)
-        product.load()
-        assert len(product._groups) > 0
-        assert isinstance(product.attrs, dict)
-        product.store.close()
+def test_load_product(dask_client_all, input_path):
+    store = EOSafeStore(input_path)
+    product = EOProduct("my_product", storage=store)
+    product.open()
+    assert isinstance(product.attrs, dict)
+    product.load()
+    assert len(product._groups) > 0
+    assert isinstance(product.attrs, dict)
+    product.store.close()
 
 
 @pytest.mark.need_files
 @pytest.mark.unit
 @pytest.mark.parametrize(
-    "input_path_list, mapping_filename, output_extension, output_store, max_optional_miss",
+    "input_path, mapping_filename, output_extension, output_store, max_optional_miss",
     [
         # fmt: off
-        ([lazy_fixture("TEST_PRODUCT")], "data/test_safe_mapping.json", ".zarr", EOZarrStore, 1),
-        ([lazy_fixture("TEST_PRODUCT_ZIP")], "data/test_safe_mapping.json", ".zarr", EOZarrStore, 1),
+        (lazy_fixture("TEST_PRODUCT"), "data/test_safe_mapping.json", ".zarr", EOZarrStore, 1),
+        (lazy_fixture("TEST_PRODUCT_ZIP"), "data/test_safe_mapping.json", ".zarr", EOZarrStore, 1),
         # fmt: on
     ],
 )
 def test_convert_test_mapping(
     dask_client_all,
-    input_path_list: list,
+    input_path: str,
     mapping_filename: str,
     output_extension: str,
     output_store: type[EOProductStore],
@@ -134,7 +132,7 @@ def test_convert_test_mapping(
     mapping_filename = str(Path(__file__).parent / mapping_filename)
     mapping_factory.register_mapping(mapping_filename)
     impl_test_convert_safe_mapping(
-        input_path_list,
+        input_path,
         mapping_filename,
         output_extension,
         output_store,
@@ -147,7 +145,7 @@ def test_convert_test_mapping(
 @pytest.mark.need_files
 @pytest.mark.integration
 @pytest.mark.parametrize(
-    "input_path_list, mapping_filename, output_extension, output_store, max_optional_miss",
+    "input_path, mapping_filename, output_extension, output_store, max_optional_miss",
     [
         # fmt: off
 
@@ -239,7 +237,7 @@ def test_convert_test_mapping(
 )
 def test_convert_safe_mapping(
     client,  # dask client
-    input_path_list: list,
+    input_path: str,
     mapping_filename: str,
     output_extension: str,
     output_store: type[EOProductStore],
@@ -247,7 +245,7 @@ def test_convert_safe_mapping(
     OUTPUT_DIR: str,
 ):
     impl_test_convert_safe_mapping(
-        input_path_list,
+        input_path,
         mapping_filename,
         output_extension,
         output_store,
@@ -257,7 +255,7 @@ def test_convert_safe_mapping(
 
 
 def impl_test_convert_safe_mapping(
-    input_path_list: list,
+    input_path: str,
     mapping_filename: str,
     output_extension: str,
     output_store: type[EOProductStore],
@@ -265,49 +263,48 @@ def impl_test_convert_safe_mapping(
     OUTPUT_DIR: str,
     mapping_factory=None,
 ):
-    for input_path in input_path_list:
-        source_store = EOSafeStore(input_path, mapping_factory=mapping_factory)
-        output_name = os.path.basename(input_path)
-        # switch extension of output_name
-        output_name, _ = os.path.splitext(output_name)
-        output_name += output_extension
-        target_store = output_store(os.path.join(OUTPUT_DIR, output_name))
-        convert(source_store, target_store)
-        source_product = EOProduct("", storage=source_store, mapping_factory=mapping_factory)
-        target_product = EOProduct("", storage=target_store, mapping_factory=mapping_factory)
+    source_store = EOSafeStore(input_path, mapping_factory=mapping_factory)
+    output_name = os.path.basename(input_path)
+    # switch extension of output_name
+    output_name, _ = os.path.splitext(output_name)
+    output_name += output_extension
+    target_store = output_store(os.path.join(OUTPUT_DIR, output_name))
+    convert(source_store, target_store)
+    source_product = EOProduct("", storage=source_store, mapping_factory=mapping_factory)
+    target_product = EOProduct("", storage=target_store, mapping_factory=mapping_factory)
 
-        with open(mapping_filename) as f:
-            mappin_data = json.load(f)
-        optional_miss = 0
-        with (open_store(source_product), open_store(target_product)):
-            assert source_product.type == mappin_data["recognition"]["product_type"]
-            assert target_product.type == mappin_data["recognition"]["product_type"]
+    with open(mapping_filename) as f:
+        mappin_data = json.load(f)
+    optional_miss = 0
+    with (open_store(source_product), open_store(target_product)):
+        assert source_product.type == mappin_data["recognition"]["product_type"]
+        assert target_product.type == mappin_data["recognition"]["product_type"]
 
-            for item in mappin_data["data_mapping"]:
-                # TODO: should be removed after that misc was removed from mappings
-                if item["item_format"] == "misc":
+        for item in mappin_data["data_mapping"]:
+            # TODO: should be removed after that misc was removed from mappings
+            if item["item_format"] == "misc":
+                continue
+            data_path = item["target_path"]
+            if data_path:
+                try:
+                    source_object = source_product[data_path]
+                except KeyError as error:
+                    if not item.get("is_optional", False):
+                        raise error
+                    optional_miss += 1
                     continue
-                data_path = item["target_path"]
-                if data_path:
-                    try:
-                        source_object = source_product[data_path]
-                    except KeyError as error:
-                        if not item.get("is_optional", False):
-                            raise error
-                        optional_miss += 1
-                        continue
-                    target_object = target_product[data_path]
-                else:
-                    source_object = source_product
-                    target_object = target_product
-                assert type(source_object) == type(target_object)
+                target_object = target_product[data_path]
+            else:
+                source_object = source_product
+                target_object = target_product
+            assert type(source_object) == type(target_object)
 
-                if output_store != EOSafeStore or data_path not in ["", "/"]:
-                    # Manifest accessor set item not yet implemented
-                    np.testing.assert_equal(conv(source_object.attrs), conv(target_object.attrs))
-                if isinstance(source_object, EOVariable):
-                    assert_eovariable_equal(source_object, target_object)
-        assert max_optional_miss >= optional_miss
+            if output_store != EOSafeStore or data_path not in ["", "/"]:
+                # Manifest accessor set item not yet implemented
+                np.testing.assert_equal(conv(source_object.attrs), conv(target_object.attrs))
+            if isinstance(source_object, EOVariable):
+                assert_eovariable_equal(source_object, target_object)
+    assert max_optional_miss >= optional_miss
 
 
 @pytest.mark.unit
