@@ -67,22 +67,22 @@ class XMLAnglesAccessor(EOProductStore):
 
         if self.status != StorageStatus.OPEN:
             raise StoreNotOpenError()
+
         formatter_name, formatter, xpath = EOFormatterFactory().get_formatter(key)
+        xpath_result = self._root.xpath(xpath, namespaces=self._namespaces)
+        if len(xpath_result) == 0:
+            raise KeyError(f"invalid xml xpath : {key}")
         if formatter_name is not None and formatter is not None:
-            xpath_result = self._root.xpath(xpath, namespaces=self._namespaces)
             return EOVariable(data=formatter(xpath_result))
         else:
-            return EOVariable(data=self.create_eo_variable(key))
+            return EOVariable(data=self.create_eo_variable(xpath_result))
 
-    def create_eo_variable(self, xpath: str) -> xr.DataArray:
+    def create_eo_variable(self, xpath_result: List[lxml.etree._Element]) -> xr.DataArray:
         """
         This method is used to recover and create datasets with angles values stored under
         <<VALUES>> tag.
 
         """
-        xpath_result = self._root.xpath(xpath, namespaces=self._namespaces)
-        if len(xpath_result) == 0:
-            raise KeyError(f"invalid xml xpath : {xpath}")
         if len(xpath_result) == 1:
             return self.get_values(f"{self._root.getpath(xpath_result[0])}/VALUES")
         else:
