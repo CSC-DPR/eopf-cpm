@@ -41,6 +41,10 @@ class EOProductStore(MutableMapping[str, "EOObject"]):
         self.url = url
         self._status = StorageStatus.CLOSE
 
+    def __del__(self):
+        if self.status != StorageStatus.CLOSE:
+            self.close()
+
     def __delitem__(self, key: str) -> None:  # pragma: no cover
         raise NotImplementedError()
 
