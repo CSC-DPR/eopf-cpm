@@ -170,22 +170,12 @@ def _glob_to_url(input_dir: str, file_name_pattern: str, protocols: Optional[lis
 
 
 PARENT_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..")
-TEST_DATA_PROTOCOL, TEST_DATA_PATH = fsspec.core.split_protocol(
-    os.environ.get("TEST_DATA_FOLDER", os.path.join(PARENT_DATA_PATH, "data")),
-)
+TEST_DATA_PATH = os.environ.get("TEST_DATA_FOLDER", os.path.join(PARENT_DATA_PATH, "data"))
 EMBEDED_TEST_DATA_PATH = os.path.join(PARENT_DATA_PATH, "tests", "data")
 MAPPING_PATH = os.path.join(PARENT_DATA_PATH, "eopf", "product", "store", "mapping")
 TEST_ONLY_ONE_PRODUCT = os.environ.get("TEST_ONLY_ONE_PRODUCT") in [True, "True", "true", 1, "1"]
 
-
-def glob_fixture(
-    glob_pattern: str, input_dir: str = TEST_DATA_PATH, protocols: Optional[list[str]] = None, **kwargs: Any
-):
-    params = kwargs.setdefault("params", [])
-    params.extend(_glob_to_url(input_dir, glob_pattern, protocols=protocols))
-    return pytest.fixture(**kwargs)
-
-
+S3_TEST_DATA_PROTOCOL, S3_TEST_DATA_PATH = fsspec.core.split_protocol(os.environ.get("S3_TEST_DATA_FOLDER", ""))
 S3_CONFIG_FAKE = dict(
     key="aaaa",
     secret="bbbbb",
@@ -196,3 +186,11 @@ S3_CONFIG_REAL = dict(
     secret=os.environ.get("S3_SECRET"),
     client_kwargs=dict(endpoint_url=os.environ.get("S3_URL"), region_name=os.environ.get("S3_REGION")),
 )
+
+
+def glob_fixture(
+    glob_pattern: str, input_dir: str = TEST_DATA_PATH, protocols: Optional[list[str]] = None, **kwargs: Any
+):
+    params = kwargs.setdefault("params", [])
+    params.extend(_glob_to_url(input_dir, glob_pattern, protocols=protocols))
+    return pytest.fixture(**kwargs)

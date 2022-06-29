@@ -1,4 +1,6 @@
+import concurrent.futures
 import json
+import logging
 import os
 import shutil
 from datetime import timedelta
@@ -20,8 +22,9 @@ from .utils import (
     EMBEDED_TEST_DATA_PATH,
     MAPPING_PATH,
     S3_CONFIG_REAL,
+    S3_TEST_DATA_PATH,
+    S3_TEST_DATA_PROTOCOL,
     TEST_DATA_PATH,
-    TEST_DATA_PROTOCOL,
     glob_fixture,
 )
 
@@ -288,15 +291,22 @@ def TRIGGER_JSON_FILE(dask_client_all, EMBEDED_TEST_DATA_FOLDER, OUTPUT_DIR, S3_
     return output_name
 
 
+def load_file_from_s3(filename, data_mapper, dest_path):
+    real_path = os.path.join(data_mapper.root, filename)
+    real_dest_path = os.path.join(dest_path, filename)
+    dir_file_name = os.path.dirname(real_path)
+    if not os.path.isfile(real_dest_path):
+        os.makedirs(dir_file_name, exist_ok=True)
+        data_mapper.fs.get(real_path, real_dest_path)
+        logging.debug(f"COPY {S3_TEST_DATA_PROTOCOL}://{real_path} IN {real_dest_path}")
+
+
 @pytest.fixture(scope="session", autouse=True)
 def load_data():
-    if TEST_DATA_PROTOCOL == "s3":
-        data_mapper = fsspec.get_mapper(f"{TEST_DATA_PROTOCOL}://{TEST_DATA_PATH}", **S3_CONFIG_REAL)
+    if S3_TEST_DATA_PROTOCOL == "s3":
+        data_mapper = fsspec.get_mapper(f"{S3_TEST_DATA_PROTOCOL}://{S3_TEST_DATA_PATH}", **S3_CONFIG_REAL)
         os.makedirs(TEST_DATA_PATH, exist_ok=True)
-        for file, data in data_mapper.items():
-            dir_file_name = os.path.dirname(file)
-            os.makedirs(os.path.join(TEST_DATA_PATH, dir_file_name), exist_ok=True)
-            with open(os.path.join(TEST_DATA_PATH, file), mode="wb") as f:
-                f.write(data)
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            pool = [executor.submit(load_file_from_s3, file, data_mapper, TEST_DATA_PATH) for file in data_mapper]
+            concurrent.futures.wait(pool)
         yield
-        shutil.rmtree(TEST_DATA_PATH)
