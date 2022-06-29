@@ -29,7 +29,7 @@ class EOQCProcessor(EOProcessor):
 
     def __init__(self, identifier: Optional[int] = None, config_path: Optional[str] = None) -> None:
         super().__init__(identifier=identifier)
-        self.qc_config = None
+        self.qc_config: Optional[EOQCConfig] = None
         if config_path is not None:
             self.set_config(config_path=config_path)
 
@@ -43,7 +43,7 @@ class EOQCProcessor(EOProcessor):
         """
         self.qc_config = EOQCConfig(config_path=config_path)
 
-    def run(
+    def run(  # type: ignore[override]
         self,
         eoproduct: EOProduct,
         update_attrs: bool = True,
@@ -81,7 +81,7 @@ class EOQCProcessor(EOProcessor):
         if qc_config is None:
             qc_config = EOPCConfigFactory().get_default(eoproduct.type)
         # Run check(s) of the configuration
-        for qc in qc_config.qclist().values():
+        for qc in qc_config.qclist.values():
             try:
                 qc.check(eoproduct)
             except Exception as e:
@@ -109,9 +109,9 @@ class EOQCProcessor(EOProcessor):
         """
         if "quality" not in eoproduct:
             eoproduct.add_group("quality")
-        if "qc" not in eoproduct.quality:
+        if "qc" not in eoproduct.quality:  # type: ignore[operator]  # Quality is a EOGroup
             eoproduct.quality.attrs["qc"] = {}
-        for qc in qc_config.qclist().values():
+        for qc in qc_config.qclist.values():
             if qc.status:
                 eoproduct.quality.attrs["qc"][qc.id] = {
                     "version": qc.version,
@@ -143,7 +143,7 @@ class EOQCProcessor(EOProcessor):
             Has the quality control report been successfully written, true is ok, false if not.
         """
         report_path = os.path.join(report_path, f"QC_report_{eoproduct.name}.json")
-        report = {}
+        report: dict[str, Any] = {}
         report["Product_name"] = eoproduct.name
         report["Product_type"] = eoproduct.type
         report["Acquisition_station"] = "To be defined"
@@ -154,7 +154,7 @@ class EOQCProcessor(EOProcessor):
         report["Absolute_orbit_number"] = "To be defined"
         report["Inspection_date"] = "To be defined"
         report["Inspection_time"] = "To be defined"
-        for qc in qc_config.qclist().values():
+        for qc in qc_config.qclist.values():
             if qc.status:
                 report[qc.id] = {"version": qc.version, "status": qc.status, "message": qc.message_if_passed}
             else:

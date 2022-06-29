@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 from eopf.product import EOProduct
+from eopf.product.core.eo_variable import EOVariable
 
 
 class EOQC(ABC):
@@ -94,7 +95,7 @@ class EOQCValidRange(EOQC):
 
     # docstr-coverage: inherited
     def check(self, eoproduct: EOProduct) -> bool:
-        eovariable = eoproduct[self.eovariable_short_name]
+        eovariable: EOVariable = eoproduct[self.eovariable_short_name]  # type: ignore[assignment]
         variable = eovariable.compute()
         if self.valid_min <= variable.data.min():
             self._status = variable.data.max() <= self.valid_max

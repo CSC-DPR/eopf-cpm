@@ -5,6 +5,7 @@ from collections import defaultdict
 from collections.abc import MutableMapping
 from typing import Iterator
 
+from eopf.exceptions import EOPCConfigFactoryNoDefaultConfiguration
 from eopf.qualitycontrol.eo_qc import (
     EOQC,
     EOQCFormula,
@@ -13,7 +14,7 @@ from eopf.qualitycontrol.eo_qc import (
 )
 
 
-class EOQCConfig(MutableMapping):
+class EOQCConfig(MutableMapping[str, EOQC]):
     """Quality control configuration. It contain one or multiple quality check.
 
     Parameters
@@ -51,7 +52,8 @@ class EOQCConfig(MutableMapping):
                 for qc in qc_config["quality_checks"][qc_type]:
                     self._qclist[qc["check_id"]] = self.quality_type[qc_type](qc)
 
-    def qclist(self):
+    @property
+    def qclist(self) -> dict[str, EOQC]:
         """quality check list"""
         return self._qclist
 
@@ -64,7 +66,7 @@ class EOQCConfig(MutableMapping):
     def __delitem__(self, check_id: str) -> None:
         return self._qclist.__delitem__(check_id)
 
-    def __iter__(self) -> Iterator[EOQC]:
+    def __iter__(self) -> Iterator[str]:
         return iter(self._qclist)
 
     def rm_qc(self, check_id: str) -> None:
@@ -91,7 +93,7 @@ class EOPCConfigFactory:
     """
 
     def __init__(self) -> None:
-        self._configs = {}
+        self._configs: dict[str, EOQCConfig] = {}
         dir_path = os.path.dirname(os.path.realpath(__file__))
         qc_configs_paths = glob.glob(f"{dir_path}/configs/*.json")
         for path_to_config in qc_configs_paths:
@@ -138,10 +140,18 @@ class EOPCConfigFactory:
         -------
         EOQCConfig
             The default quality control configuration for the parameter product type.
+
+        Raises
+        ------
+        ...
+            ...
         """
         for config in self._configs.values():
             if config.default and config.product_type == product_type:
                 return config
+        raise EOPCConfigFactoryNoDefaultConfiguration(
+            f"No default configuration found for product type : {product_type}",
+        )
 
     def get_config_by_id(self, id: str) -> EOQCConfig:
         """Get a quality control configuration with the id.

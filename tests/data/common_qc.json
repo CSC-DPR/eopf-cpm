@@ -40,7 +40,7 @@
             {
                 "check_id": "commun_check_2",
                 "check_version": "0.0.1",
-                "module": "eopf.qualitycontrol.configs.olci",
+                "module": "tests.test_qc_processor",
                 "processing_unit": "QC01Unit",
                 "parameters": {
                     "threshold": 23,

@@ -1,10 +1,12 @@
 import os
 import shutil
+from typing import Any
 from unittest import mock
 
 import pytest
 from pytest_lazyfixture import lazy_fixture
 
+from eopf.computing.abstract import EOProcessingUnit
 from eopf.exceptions import InvalidProductError
 from eopf.product.conveniences import open_store
 from eopf.product.core.eo_product import EOProduct
@@ -15,6 +17,13 @@ from eopf.qualitycontrol.eo_qc_processor import EOQCProcessor
 from tests.utils import PARENT_DATA_PATH
 
 test_config_files = ["common_qc.json", "test_qc.json"]
+
+
+class QC01Unit(EOProcessingUnit):
+    def run(self, inputs: dict[str, EOProduct], parameters: dict[str, Any]) -> EOProduct:
+        eoproduct = inputs["input"]
+        eoproduct.attrs["QC01Unit"] = {"status": True}
+        return eoproduct
 
 
 @pytest.fixture
@@ -96,7 +105,7 @@ def check_data(id):
         "qc_unit": {
             "check_id": "check_3",
             "check_version": "0.0.1",
-            "module": "eopf.qualitycontrol.configs.olci",
+            "module": "tests.test_qc_processor",
             "processing_unit": "QC01Unit",
             "parameters": {"threshold": 23, "param_2": 65},
             "aux_data": [
@@ -143,7 +152,7 @@ def test_eoqcstatus(qc):
 
 @pytest.mark.unit
 def test_eoqcConfig_qclist(eoqcConfig):
-    assert eoqcConfig.qclist() == eoqcConfig._qclist
+    assert eoqcConfig.qclist == eoqcConfig._qclist
 
 
 @pytest.mark.unit
@@ -158,12 +167,12 @@ def test_eoqcConfig_rm_qc(eoqcConfig):
     config = eoqcConfig
     config["TestCheck"] = EOQCValidRange(check_data("valid_valid_range"))
     config.rm_qc(check_id="TestCheck")
-    assert "TestCheck" not in config.qclist()
+    assert "TestCheck" not in config.qclist
 
 
 @pytest.mark.unit
 def test_eoqcConfig_len(eoqcConfig):
-    assert len(eoqcConfig) == len(eoqcConfig.qclist())
+    assert len(eoqcConfig) == len(eoqcConfig.qclist)
 
 
 @pytest.mark.unit
