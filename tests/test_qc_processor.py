@@ -1,4 +1,5 @@
 import os
+import shutil
 from unittest import mock
 
 import pytest
@@ -11,9 +12,32 @@ from eopf.product.store.safe import EOSafeStore
 from eopf.qualitycontrol.eo_qc import EOQCFormula, EOQCProcessingUnit, EOQCValidRange
 from eopf.qualitycontrol.eo_qc_config import EOPCConfigFactory, EOQCConfig
 from eopf.qualitycontrol.eo_qc_processor import EOQCProcessor
+from tests.utils import PARENT_DATA_PATH
 
-quality_report_path = os.path.dirname(os.path.realpath(__file__))
-sample_config_path = f"{os.path.dirname(quality_report_path)}/eopf/qualitycontrol/configs/test_qc.json"
+test_config_files = ["common_qc.json", "test_qc.json"]
+
+
+@pytest.fixture
+def output_report_path(OUTPUT_DIR):
+    return OUTPUT_DIR
+
+
+@pytest.fixture()
+def sample_config_path(EMBEDED_TEST_DATA_FOLDER):
+    for config_file in test_config_files:
+        config_file_path = os.path.join(PARENT_DATA_PATH, f"eopf/qualitycontrol/configs/{config_file}")
+        if not os.path.isfile(config_file_path):
+            shutil.copyfile(os.path.join(EMBEDED_TEST_DATA_FOLDER, config_file), config_file_path)
+    yield os.path.join(PARENT_DATA_PATH, "eopf/qualitycontrol/configs/test_qc.json")
+
+
+@pytest.fixture(scope="session", autouse=True)
+def clean_config_path():
+    yield
+    for config_file in test_config_files:
+        config_file_path = os.path.join(PARENT_DATA_PATH, f"eopf/qualitycontrol/configs/{config_file}")
+        if os.path.isfile(config_file_path):
+            os.remove(config_file_path)
 
 
 def check_data(id):
@@ -93,7 +117,7 @@ def eoqcProcessor():
 
 
 @pytest.fixture
-def eoqcConfig():
+def eoqcConfig(sample_config_path):
     qc_config = EOQCConfig(sample_config_path)
     return qc_config
 
@@ -123,24 +147,23 @@ def test_eoqcConfig_qclist(eoqcConfig):
 
 
 @pytest.mark.unit
-def test_eoqcConfig__set_getitem__(eoqcConfig):
+def test_eoqcConfig_set_get_item(eoqcConfig):
     test_check = EOQCValidRange(check_data("valid_valid_range"))
-    eoqcConfig.__setitem__(check_id="TestCheck", qc=test_check)
-    assert eoqcConfig.__getitem__(check_id="TestCheck") == test_check
+    eoqcConfig["TestCheck"] = test_check
+    assert eoqcConfig["TestCheck"] == test_check
 
 
 @pytest.mark.unit
 def test_eoqcConfig_rm_qc(eoqcConfig):
     config = eoqcConfig
-    config.__setitem__(check_id="TestCheck", qc=EOQCValidRange(check_data("valid_valid_range")))
+    config["TestCheck"] = EOQCValidRange(check_data("valid_valid_range"))
     config.rm_qc(check_id="TestCheck")
-    ret = "TestCheck" not in config.qclist()
-    assert ret is True
+    assert "TestCheck" not in config.qclist()
 
 
 @pytest.mark.unit
-def test_eoqcConfig__len(eoqcConfig):
-    assert eoqcConfig.__len__() == len(eoqcConfig.qclist())
+def test_eoqcConfig_len(eoqcConfig):
+    assert len(eoqcConfig) == len(eoqcConfig.qclist())
 
 
 @pytest.mark.unit
@@ -171,7 +194,7 @@ def test_eoqcConfigFactory_add_get_config(eoqcConfigFactory, eoqcConfig):
 
 
 @pytest.mark.unit
-def test_EOQCProcessor_init():
+def test_EOQCProcessor_init(sample_config_path):
     eoqc = EOQCProcessor(config_path=sample_config_path)
     assert eoqc.qc_config is not None
 
@@ -194,7 +217,7 @@ def test_EOQCProcessor_productType(store_type, eoqcProcessor):
     "store_type",
     [(lazy_fixture("S3_OL_1_EFR"))],
 )
-def test_create_quality_group(store_type):
+def test_create_quality_group(store_type, sample_config_path):
     eoqcProcessor = EOQCProcessor(config_path=sample_config_path)
     store = EOSafeStore(store_type)
     product = EOProduct("my_product", storage=store)
@@ -231,17 +254,22 @@ def test_update_attribute(store_type, eoqcProcessor, update_attrs):
 def test_qc_exception(store_type, eoqcProcessor):
     store = EOSafeStore(store_type)
     product = EOProduct("my_product", storage=store)
-    with open_store(product):
-        with mock.patch("eopf.qualitycontrol.eo_qc.EOQCValidRange.check", side_effect=Exception()):
-            with pytest.raises(Exception):
-                eoqcProcessor.run(eoproduct=product, update_attrs=False, write_report=False)
+    with (
+        open_store(product),
+        mock.patch("eopf.qualitycontrol.eo_qc.EOQCValidRange.check", side_effect=Exception()),
+        pytest.raises(Exception),
+    ):
+        eoqcProcessor.run(eoproduct=product, update_attrs=False, write_report=False)
 
 
 @pytest.mark.need_files
 @pytest.mark.unit
 @pytest.mark.parametrize(
     "store_type, write_report, report_path",
-    [(lazy_fixture("S3_OL_1_EFR"), True, quality_report_path), (lazy_fixture("S3_OL_1_EFR"), True, None)],
+    [
+        (lazy_fixture("S3_OL_1_EFR"), True, lazy_fixture("output_report_path")),
+        (lazy_fixture("S3_OL_1_EFR"), True, None),
+    ],
 )
 def test_write_report(store_type, eoqcProcessor, write_report, report_path):
     store = EOSafeStore(store_type)
@@ -265,9 +293,9 @@ def test_write_report(store_type, eoqcProcessor, write_report, report_path):
 @pytest.mark.unit
 @pytest.mark.parametrize(
     "store_type, report_path",
-    [(lazy_fixture("S3_OL_1_EFR"), quality_report_path)],
+    [(lazy_fixture("S3_OL_1_EFR"), lazy_fixture("output_report_path"))],
 )
-def test_error_writing_report(store_type, report_path):
+def test_error_writing_report(store_type, report_path, sample_config_path):
     # Initialisation of a qcprocessor with a configuration
     broken_eoqcProcessor = EOQCProcessor(config_path=sample_config_path)
     # Creation of a new qcCheck
@@ -275,7 +303,7 @@ def test_error_writing_report(store_type, report_path):
     # Make it unserializable
     modified_check.message_if_failed = EOQCValidRange(check_data("unvalid_valid_range"))
     # Change it in the config
-    broken_eoqcProcessor.qc_config.__setitem__("crash_test", modified_check)
+    broken_eoqcProcessor.qc_config["crash_test"] = modified_check
     store = EOSafeStore(store_type)
     product = EOProduct("my_product", storage=store)
     with open_store(product):
