@@ -39,13 +39,16 @@ class EOFormatterFactory(object):
             from eopf.formatting.formatters import (
                 IsOptional,
                 Text,
+                ToBands,
                 ToBbox,
                 ToBool,
+                ToDetectors,
                 ToFloat,
                 ToGeoJson,
                 ToImageSize,
                 ToInt,
                 ToISO8601,
+                ToMean,
                 ToStr,
                 ToUNIXTimeSLSTRL1,
             )
@@ -61,6 +64,9 @@ class EOFormatterFactory(object):
             self.register_formatter(Text)
             self.register_formatter(ToImageSize)
             self.register_formatter(IsOptional)
+            self.register_formatter(ToBands)
+            self.register_formatter(ToMean)
+            self.register_formatter(ToDetectors)
         else:
             # to implement another logic of importing formatters
             pass
