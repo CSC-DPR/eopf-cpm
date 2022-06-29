@@ -122,7 +122,7 @@ def assert_eovariable_equal(variable1, variable2):
     elif source_data.dtype == np.dtype("S1") or target_data.dtype == np.dtype("S1"):
         assert np.array_equal(source_data, target_data)
     else:
-        assert np.array_equal(source_data, target_data, equal_nan=True)
+        assert np.array_equal(source_data, target_data, equal_nan=False)
 
 
 def assert_is_subeocontainer(container1, container2):
