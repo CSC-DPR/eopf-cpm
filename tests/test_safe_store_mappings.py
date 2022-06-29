@@ -197,27 +197,27 @@ def test_convert_test_mapping(
         # ---> S3/Level 0 - tests -> NO PRODUCTS AVAILABLE
         # ---> S2/Level 1/2 - tests
         # S3_OL_1 product type conversions
-        (lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("S3_OL_1_EFR_MAPPING"), ".SAFE", EOSafeStore, 1),
+        (lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("S3_OL_1_EFR_MAPPING"), ".SEN3", EOSafeStore, 1),
         (lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("S3_OL_1_EFR_MAPPING"), ".zarr", EOZarrStore, 1),
         (lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("S3_OL_1_EFR_MAPPING"), ".cog", EOCogStore, 1),
         (lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("S3_OL_1_EFR_MAPPING"), ".nc", EONetCDFStore, 1),
         # S3_OL_2 product type conversions
-        (lazy_fixture("S3_OL_2_LFR_ZIP"), lazy_fixture("S3_OL_2_LFR_MAPPING"), ".SAFE", EOSafeStore, 0),
+        (lazy_fixture("S3_OL_2_LFR_ZIP"), lazy_fixture("S3_OL_2_LFR_MAPPING"), ".SEN3", EOSafeStore, 0),
         (lazy_fixture("S3_OL_2_LFR_ZIP"), lazy_fixture("S3_OL_2_LFR_MAPPING"), ".zarr", EOZarrStore, 0),
         (lazy_fixture("S3_OL_2_LFR_ZIP"), lazy_fixture("S3_OL_2_LFR_MAPPING"), ".cog", EOCogStore, 0),
         (lazy_fixture("S3_OL_2_LFR_ZIP"), lazy_fixture("S3_OL_2_LFR_MAPPING"), ".nc", EONetCDFStore, 0),
         # S3_SL_1_RBT product type conversions
-        (lazy_fixture("S3_SL_1_RBT_ZIP"), lazy_fixture("S3_SL_1_RBT_MAPPING"), ".SAFE", EOSafeStore, 0),
+        (lazy_fixture("S3_SL_1_RBT_ZIP"), lazy_fixture("S3_SL_1_RBT_MAPPING"), ".SEN3", EOSafeStore, 0),
         (lazy_fixture("S3_SL_1_RBT_ZIP"), lazy_fixture("S3_SL_1_RBT_MAPPING"), ".zarr", EOZarrStore, 0),
         (lazy_fixture("S3_SL_1_RBT_ZIP"), lazy_fixture("S3_SL_1_RBT_MAPPING"), ".cog", EOCogStore, 0),
         (lazy_fixture("S3_SL_1_RBT_ZIP"), lazy_fixture("S3_SL_1_RBT_MAPPING"), ".nc", EONetCDFStore, 0),
         # S3_SL_2_LST product type conversions
-        (lazy_fixture("S3_SL_2_LST_ZIP"), lazy_fixture("S3_SL_2_LST_MAPPING"), ".SAFE", EOSafeStore, 0),
+        (lazy_fixture("S3_SL_2_LST_ZIP"), lazy_fixture("S3_SL_2_LST_MAPPING"), ".SEN3", EOSafeStore, 0),
         (lazy_fixture("S3_SL_2_LST_ZIP"), lazy_fixture("S3_SL_2_LST_MAPPING"), ".zarr", EOZarrStore, 0),
         (lazy_fixture("S3_SL_2_LST_ZIP"), lazy_fixture("S3_SL_2_LST_MAPPING"), ".cog", EOCogStore, 0),
         (lazy_fixture("S3_SL_2_LST_ZIP"), lazy_fixture("S3_SL_2_LST_MAPPING"), ".nc", EONetCDFStore, 0),
         # S3_SY_2_SYN product type conversions
-        (lazy_fixture("S3_SY_2_SYN_ZIP"), lazy_fixture("S3_SY_2_SYN_MAPPING"), ".SAFE", EOSafeStore, 0),
+        (lazy_fixture("S3_SY_2_SYN_ZIP"), lazy_fixture("S3_SY_2_SYN_MAPPING"), ".SEN3", EOSafeStore, 0),
         (lazy_fixture("S3_SY_2_SYN_ZIP"), lazy_fixture("S3_SY_2_SYN_MAPPING"), ".zarr", EOZarrStore, 0),
         (lazy_fixture("S3_SY_2_SYN_ZIP"), lazy_fixture("S3_SY_2_SYN_MAPPING"), ".cog", EOCogStore, 0),
         (lazy_fixture("S3_SY_2_SYN_ZIP"), lazy_fixture("S3_SY_2_SYN_MAPPING"), ".nc", EONetCDFStore, 0),

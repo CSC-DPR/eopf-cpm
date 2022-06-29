@@ -122,7 +122,7 @@ def assert_eovariable_equal(variable1, variable2):
     elif source_data.dtype == np.dtype("S1") or target_data.dtype == np.dtype("S1"):
         assert np.array_equal(source_data, target_data)
     else:
-        assert np.array_equal(source_data, target_data, equal_nan=True)
+        assert np.array_equal(source_data, target_data, equal_nan=False)
 
 
 def assert_is_subeocontainer(container1, container2):
@@ -160,6 +160,8 @@ def _glob_to_url(input_dir: str, file_name_pattern: str, protocols: Optional[lis
     matched_files = glob.glob(glob_path)
     if len(matched_files) == 0:
         logging.exception(f"No files for pattern {file_name_pattern} found in the {input_dir}")
+        return ""
+        
     protocols_string = "::".join(protocols)
     if TEST_ONLY_ONE_PRODUCT:
         return [f"{protocols_string}://{matched_files[0]}"]
