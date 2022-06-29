@@ -143,8 +143,8 @@ class EOPCConfigFactory:
 
         Raises
         ------
-        ...
-            ...
+        EOPCConfigFactoryNoDefaultConfiguration
+            Raise this error when their is no default configuration for this product type.
         """
         for config in self._configs.values():
             if config.default and config.product_type == product_type:
