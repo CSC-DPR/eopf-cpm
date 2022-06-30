@@ -300,6 +300,7 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
             variable = EOVariable(name, data, self, **kwargs)
         else:
             variable = data
+            variable._repath(name, self)
         self._variables[name] = variable
 
         return variable

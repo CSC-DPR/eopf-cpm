@@ -566,7 +566,7 @@ def test_rasters(dask_client_all, store_cls: type[EORasterIOAccessor], format_fi
         ),
     ],
 )
-def test_zarr_open_on_different_fs(dask_client_all, product: EOProduct, fakefilename: str, open_kwargs: dict[str, Any]):
+def test_zarr_open_on_different_fs(client, product: EOProduct, fakefilename: str, open_kwargs: dict[str, Any]):
     with patch("dask.array.core.get_mapper") as mock_dask:
         with patch("fsspec.get_mapper") as mock_zarr:
             mock_dask.return_value = fsspec.FSMap(fakefilename, LocalFileSystem())
