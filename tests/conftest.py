@@ -150,13 +150,13 @@ def TEST_PRODUCT_ZIP(request):
 
 
 # ############# S1 ##############
-@glob_fixture("S1*_IW_OCN*[!.zarr].zip", protocols=["zip"])
+@glob_fixture("S1*_IW_OCN*[!.zarr][!.SAFE].zip", protocols=["zip"])
 def S1_IM_OCN(request):
     """Path to a S1 OCN LEVEL 1 product"""
     return request.param
 
 
-@glob_fixture("S1*_IW_OCN*[!.zarr].zip", protocols=["zip"])
+@glob_fixture("S1*_IW_OCN*[!.zarr][!.SAFE].zip", protocols=["zip"])
 def S1_IM_OCN_ZIP(request):
     """Path to a S1 OCN LEVEL 1 product"""
     return request.param
@@ -169,14 +169,14 @@ def S2_MSIL1C(request):
     return request.param
 
 
-@glob_fixture("S2*_MSIL1C*[!.zarr].zip", protocols=["zip"])
+@glob_fixture("S2*_MSIL1C*[!.zarr][!.SAFE].zip", protocols=["zip"])
 def S2_MSIL1C_ZIP(request):
     """Path to a S2 MSIL1C LEVEL 1 product in zip format"""
     return request.param
 
 
 # ############# S3 ##############
-@glob_fixture("S3*_OL_1_E*R*[!.zarr].zip", protocols=["zip"])
+@glob_fixture("S3*_OL_1_E*R*[!.zarr][!.SAFE].zip", protocols=["zip"])
 def S3_OL_1_EFR_ZIP(request):
     """Path to a S3 OL LEVEL 1 product"""
     return request.param
@@ -188,7 +188,7 @@ def S3_OL_1_EFR(request):
     return request.param
 
 
-@glob_fixture("S3*_OL_2_L*R*[!.zarr].zip", protocols=["zip"])
+@glob_fixture("S3*_OL_2_L*R*[!.zarr][!.SAFE].zip", protocols=["zip"])
 def S3_OL_2_LFR_ZIP(request):
     """Path to a S3 OL LEVEL 2 product"""
     return request.param
@@ -206,7 +206,7 @@ def S3_SL_1_RBT(request):
     return request.param
 
 
-@glob_fixture("S3*_SL_1_RBT*[!.zarr].zip", protocols=["zip"])
+@glob_fixture("S3*_SL_1_RBT*[!.zarr][!.SAFE].zip", protocols=["zip"])
 def S3_SL_1_RBT_ZIP(request):
     """"""
     return request.param
@@ -218,7 +218,7 @@ def S3_SL_2_LST(request):
     return request.param
 
 
-@glob_fixture("S3*_SL_2_LST*[!.zarr].zip", protocols=["zip"])
+@glob_fixture("S3*_SL_2_LST*[!.zarr][!.SAFE].zip", protocols=["zip"])
 def S3_SL_2_LST_ZIP(request):
     """Path to a S3 SL 2 LST product"""
     return request.param
@@ -230,7 +230,7 @@ def S3_SY_2_SYN(request):
     return request.param
 
 
-@glob_fixture("S3*_SY_2_SYN*[!.zarr].zip", protocols=["zip"])
+@glob_fixture("S3*_SY_2_SYN*[!.zarr][!.SAFE].zip", protocols=["zip"])
 def S3_SY_2_SYN_ZIP(request):
     """Path to a S3 SY 2 SYN product"""
     return request.param
