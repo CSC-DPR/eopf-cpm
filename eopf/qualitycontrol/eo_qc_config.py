@@ -5,7 +5,10 @@ from collections import defaultdict
 from collections.abc import MutableMapping
 from typing import Iterator
 
-from eopf.exceptions import EOPCConfigFactoryNoDefaultConfiguration
+from eopf.exceptions import (
+    EOPCConfigFactoryAlreadyDefaultConfiguration,
+    EOPCConfigFactoryNoDefaultConfiguration,
+)
 from eopf.qualitycontrol.eo_qc import (
     EOQC,
     EOQCFormula,
@@ -47,10 +50,10 @@ class EOQCConfig(MutableMapping[str, EOQC]):
                     common_qc = json.load(w)
                     for qc_type in common_qc["quality_checks"]:
                         for qc in common_qc["quality_checks"][qc_type]:
-                            self._qclist[qc["check_id"]] = self.quality_type[qc_type](qc)
+                            self._qclist[qc["check_id"]] = self.quality_type[qc_type](**qc)
             for qc_type in qc_config["quality_checks"]:
                 for qc in qc_config["quality_checks"][qc_type]:
-                    self._qclist[qc["check_id"]] = self.quality_type[qc_type](qc)
+                    self._qclist[qc["check_id"]] = self.quality_type[qc_type](**qc)
 
     @property
     def qclist(self) -> dict[str, EOQC]:
@@ -103,6 +106,7 @@ class EOPCConfigFactory:
 
     def add_qc_config(self, id: str, config: EOQCConfig) -> None:
         """Add a quality control configuration to the quality control configuration factory.
+        If the configuration to add is a default one, it check that their is not already one for this product type.
 
         Parameters
         ----------
@@ -110,7 +114,21 @@ class EOPCConfigFactory:
             ID of the config to add.
         config: EOQCConfig
             The config to add.
+
+        Raises
+        ------
+        EOPCConfigFactoryAlreadyDefaultConfiguration
+            Raise this error when their is already a default configuration for this product type.
         """
+        # Check if their is not another default configuration for this product
+        if config.default:
+            configs_wpt = self.get_qc_configs(config.product_type)
+            for configs_wpt in configs_wpt:
+                if configs_wpt.default:
+                    raise EOPCConfigFactoryAlreadyDefaultConfiguration(
+                        f"Product type : {config.product_type} already have a default configuration",
+                    )
+        # If ok then add it to the configs
         self._configs[id] = config
 
     def get_qc_configs(self, product_type: str) -> list[EOQCConfig]:

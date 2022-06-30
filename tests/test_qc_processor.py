@@ -128,6 +128,7 @@ def eoqcProcessor():
 @pytest.fixture
 def eoqcConfig(sample_config_path):
     qc_config = EOQCConfig(sample_config_path)
+    qc_config.default = False
     return qc_config
 
 
@@ -141,9 +142,9 @@ def eoqcConfigFactory():
 @pytest.mark.parametrize(
     "qc",
     [
-        EOQCFormula(check_data("valid_formula")),
-        EOQCValidRange(check_data("valid_valid_range")),
-        EOQCProcessingUnit(check_data("qc_unit")),
+        EOQCFormula(**check_data("valid_formula")),
+        EOQCValidRange(**check_data("valid_valid_range")),
+        EOQCProcessingUnit(**check_data("qc_unit")),
     ],
 )
 def test_eoqcstatus(qc):
@@ -157,7 +158,7 @@ def test_eoqcConfig_qclist(eoqcConfig):
 
 @pytest.mark.unit
 def test_eoqcConfig_set_get_item(eoqcConfig):
-    test_check = EOQCValidRange(check_data("valid_valid_range"))
+    test_check = EOQCValidRange(**check_data("valid_valid_range"))
     eoqcConfig["TestCheck"] = test_check
     assert eoqcConfig["TestCheck"] == test_check
 
@@ -165,7 +166,7 @@ def test_eoqcConfig_set_get_item(eoqcConfig):
 @pytest.mark.unit
 def test_eoqcConfig_rm_qc(eoqcConfig):
     config = eoqcConfig
-    config["TestCheck"] = EOQCValidRange(check_data("valid_valid_range"))
+    config["TestCheck"] = EOQCValidRange(**check_data("valid_valid_range"))
     config.rm_qc(check_id="TestCheck")
     assert "TestCheck" not in config.qclist
 
@@ -308,9 +309,9 @@ def test_error_writing_report(store_type, report_path, sample_config_path):
     # Initialisation of a qcprocessor with a configuration
     broken_eoqcProcessor = EOQCProcessor(config_path=sample_config_path)
     # Creation of a new qcCheck
-    modified_check = EOQCValidRange(check_data("unvalid_valid_range"))
+    modified_check = EOQCValidRange(**check_data("unvalid_valid_range"))
     # Make it unserializable
-    modified_check.message_if_failed = EOQCValidRange(check_data("unvalid_valid_range"))
+    modified_check.message_if_failed = EOQCValidRange(**check_data("unvalid_valid_range"))
     # Change it in the config
     broken_eoqcProcessor.qc_config["crash_test"] = modified_check
     store = EOSafeStore(store_type)
@@ -326,11 +327,11 @@ def test_error_writing_report(store_type, report_path, sample_config_path):
 @pytest.mark.parametrize(
     "store_type, test_check, result",
     [
-        (lazy_fixture("S3_OL_1_EFR"), EOQCValidRange(check_data("valid_valid_range")), True),
-        (lazy_fixture("S3_OL_1_EFR"), EOQCValidRange(check_data("unvalid_valid_range")), False),
-        (lazy_fixture("S3_OL_1_EFR"), EOQCFormula(check_data("valid_formula")), True),
-        (lazy_fixture("S3_OL_1_EFR"), EOQCFormula(check_data("unvalid_formula")), False),
-        (lazy_fixture("S3_OL_1_EFR"), EOQCFormula(check_data("security_issue_formula")), False),
+        (lazy_fixture("S3_OL_1_EFR"), EOQCValidRange(**check_data("valid_valid_range")), True),
+        (lazy_fixture("S3_OL_1_EFR"), EOQCValidRange(**check_data("unvalid_valid_range")), False),
+        (lazy_fixture("S3_OL_1_EFR"), EOQCFormula(**check_data("valid_formula")), True),
+        (lazy_fixture("S3_OL_1_EFR"), EOQCFormula(**check_data("unvalid_formula")), False),
+        (lazy_fixture("S3_OL_1_EFR"), EOQCFormula(**check_data("security_issue_formula")), False),
     ],
 )
 def test_checks(store_type, test_check, result):

@@ -69,3 +69,7 @@ class XmlManifestNetCDFError(Exception):
 
 class EOPCConfigFactoryNoDefaultConfiguration(Exception):
     """When their is no default configuration for the given product type"""
+
+
+class EOPCConfigFactoryAlreadyDefaultConfiguration(Exception):
+    """When their is already a default configuration for the given product type"""

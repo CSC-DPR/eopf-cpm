@@ -1,7 +1,6 @@
 import importlib
 import itertools
 from abc import ABC, abstractmethod
-from typing import Any
 
 from eopf.product import EOProduct
 from eopf.product.core.eo_variable import EOVariable
@@ -12,8 +11,14 @@ class EOQC(ABC):
 
     Parameters
     ----------
-    check: dict[str, Any]
-        Dictionary with all info for the check
+    id: str
+        The id of the quality check.
+    version: str
+        The version of the quality check.
+    message_if_passed: str
+        The message if the quality check pass.
+    message_if_failed: str
+        The message if the quality check fail.
 
     Attributes
     ----------
@@ -30,11 +35,11 @@ class EOQC(ABC):
 
     """
 
-    def __init__(self, check: dict[str, Any]) -> None:
-        self.id = check["check_id"]
-        self.version = check["check_version"]
-        self.message_if_passed = check["message_if_passed"]
-        self.message_if_failed = check["message_if_failed"]
+    def __init__(self, check_id: str, check_version: str, message_if_passed: str, message_if_failed: str) -> None:
+        self.id = check_id
+        self.version = check_version
+        self.message_if_passed = message_if_passed
+        self.message_if_failed = message_if_failed
         self._status = False
 
     @abstractmethod
@@ -64,8 +69,20 @@ class EOQCValidRange(EOQC):
 
     Parameters
     ----------
-    check: dict[str, Any]
-        Dictionary with all info for the check
+    id: str
+        The id of the quality check.
+    version: str
+        The version of the quality check.
+    message_if_passed: str
+        The message if the quality check pass.
+    message_if_failed: str
+        The message if the quality check fail.
+    eovariable_short_name: str
+        Short name  of the variable in the product.
+    valid_min: float
+        The minimium value of the range.
+    valid_max: float
+        The maximum value of the range.
 
     Attributes
     ----------
@@ -87,11 +104,20 @@ class EOQCValidRange(EOQC):
         The maximum value of the range.
     """
 
-    def __init__(self, check: dict[str, Any]) -> None:
-        super().__init__(check)
-        self.eovariable_short_name = check["short_name"]
-        self.valid_min = check["valid_min"]
-        self.valid_max = check["valid_max"]
+    def __init__(
+        self,
+        check_id: str,
+        check_version: str,
+        message_if_passed: str,
+        message_if_failed: str,
+        short_name: str,
+        valid_min: float,
+        valid_max: float,
+    ) -> None:
+        super().__init__(check_id, check_version, message_if_passed, message_if_failed)
+        self.eovariable_short_name = short_name
+        self.valid_min = valid_min
+        self.valid_max = valid_max
 
     # docstr-coverage: inherited
     def check(self, eoproduct: EOProduct) -> bool:
@@ -107,8 +133,20 @@ class EOQCFormula(EOQC):
 
     Parameters
     ----------
-    check: dict[str, Any]
-        Dictionary with all info for the check
+    id: str
+        The id of the quality check.
+    version: str
+        The version of the quality check.
+    message_if_passed: str
+        The message if the quality check pass.
+    message_if_failed: str
+        The message if the quality check fail.
+    formula: str
+        Formula to execute.
+    thresholds: dict[str, Any]
+        The different thresholds use in the formula.
+    variables: dict[str, Any]
+        The different variables use in the formula.
 
     Attributes
     ----------
@@ -132,11 +170,20 @@ class EOQCFormula(EOQC):
 
     SECURITY_TOKEN = ["rm"]
 
-    def __init__(self, check: dict[str, Any]) -> None:
-        super().__init__(check)
-        self.formula = check["formula"]
-        self.thresholds = check["thresholds"]
-        self.variables = check["variables_or_attributes"]
+    def __init__(
+        self,
+        check_id: str,
+        check_version: str,
+        message_if_passed: str,
+        message_if_failed: str,
+        formula: str,
+        thresholds: dict,
+        variables_or_attributes: dict,
+    ) -> None:
+        super().__init__(check_id, check_version, message_if_passed, message_if_failed)
+        self.formula = formula
+        self.thresholds = thresholds
+        self.variables = variables_or_attributes
 
     # docstr-coverage: inherited
     def check(self, eoproduct: EOProduct) -> bool:
@@ -163,8 +210,22 @@ class EOQCProcessingUnit(EOQC):
 
     Parameters
     ----------
-    check: dict[str, Any]
-        Dictionary with all info for the check
+    id: str
+        The id of the quality check.
+    version: str
+        The version of the quality check.
+    message_if_passed: str
+        The message if the quality check pass.
+    message_if_failed: str
+        The message if the quality check fail.
+    module: str
+        Path to the module to execute.
+    processing_unit: str
+        Processing unit to be executed int the module.
+    parameters: dict[str, Any]
+        Parameters use by the processing unit.
+    aux_data: dict[str, Any]
+        Data use by the processing unit.
 
     Attributes
     ----------
@@ -188,12 +249,22 @@ class EOQCProcessingUnit(EOQC):
         Data use by the processing unit.
     """
 
-    def __init__(self, check: dict[str, Any]) -> None:
-        super().__init__(check)
-        self.module = check["module"]
-        self.processing_unit = check["processing_unit"]
-        self.parameters = check["parameters"]
-        self.aux_data = check["aux_data"]
+    def __init__(
+        self,
+        check_id: str,
+        check_version: str,
+        message_if_passed: str,
+        message_if_failed: str,
+        module: str,
+        processing_unit: str,
+        parameters: dict,
+        aux_data: dict,
+    ) -> None:
+        super().__init__(check_id, check_version, message_if_passed, message_if_failed)
+        self.module = module
+        self.processing_unit = processing_unit
+        self.parameters = parameters
+        self.aux_data = aux_data
 
     # docstr-coverage: inherited
     def check(self, eoproduct: EOProduct) -> bool:
