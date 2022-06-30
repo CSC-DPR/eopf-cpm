@@ -41,7 +41,7 @@ class EOProductStore(MutableMapping[str, "EOObject"]):
         self.url = url
         self._status = StorageStatus.CLOSE
 
-    def __del__(self):
+    def __del__(self) -> None:
         if self.status != StorageStatus.CLOSE:
             self.close()
 

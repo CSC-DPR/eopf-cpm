@@ -288,7 +288,9 @@ class EOProduct(EOContainer):
         self.store.write_attrs("", attrs=self.attrs)
         super().write()
 
-    def _add_local_variable(self, name: str = "", data: Optional[Any] = None, **kwargs: Any) -> "EOVariable":
+    def _add_local_variable(
+        self, name: str = "", data: Optional[Any] = None, new_eo: bool = True, **kwargs: Any
+    ) -> "EOVariable":
         if self._strict:
             raise InvalidProductError("Products can't directly store variables.")
         else:
