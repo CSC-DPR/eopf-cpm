@@ -162,7 +162,7 @@ def _glob_to_url(input_dir: str, file_name_pattern: str, protocols: Optional[lis
     if len(matched_files) == 0:
         logging.exception(f"No files for pattern {file_name_pattern} found in the {input_dir}")
         return ""
-        
+
     protocols_string = "::".join(protocols)
     if TEST_ONLY_ONE_PRODUCT:
         return [f"{protocols_string}://{matched_files[0]}"]
