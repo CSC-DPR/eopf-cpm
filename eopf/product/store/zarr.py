@@ -88,6 +88,7 @@ class EOZarrStore(EOProductStore):
         super().__init__(url)
         self._delayed_list: list[Delayed] = []
         self._zarr_kwargs: dict[str, Any] = dict()
+        self._dask_kwargs: dict[str, Any] = dict()
 
     # docstr-coverage: inherited
     def open(self, mode: str = "r", consolidated: bool = True, **kwargs: Any) -> None:
@@ -107,17 +108,26 @@ class EOZarrStore(EOProductStore):
         """
         super().open()
         self._mode = mode
-        if mode == "r" and consolidated:
-            self._root: Group = zarr.open_consolidated(store=self.url, mode=mode, **kwargs)
-        else:
-            self._root: Group = zarr.open(store=self.url, mode=mode, **kwargs)
-        self._fs = self._root.store
-        kwargs.setdefault("storage_options", dict())
+        # dask can take specific kwargs (and probably zarr too).
+        kwargs.setdefault("zarr_kwargs", dict())
+        kwargs.setdefault("dask_kwargs", dict())
+        dask_kwargs = kwargs["dask_kwargs"]
+        dask_kwargs.setdefault("storage_options", dict())
         if not mode.startswith("r") or "+" in mode:
-            kwargs.setdefault("compressor", self.DEFAULT_COMPRESSOR)
-            kwargs.setdefault("compute", False)
-            kwargs.setdefault("overwrite", True)
-        self._zarr_kwargs = kwargs
+            dask_kwargs.setdefault("compressor", self.DEFAULT_COMPRESSOR)
+            dask_kwargs.setdefault("compute", False)
+            dask_kwargs.setdefault("overwrite", True)
+
+        self._zarr_kwargs = kwargs.pop("zarr_kwargs")
+        self._dask_kwargs = kwargs.pop("dask_kwargs")
+        self._zarr_kwargs.update(**kwargs)
+        self._dask_kwargs.update(**kwargs)
+
+        if mode == "r" and consolidated:
+            self._root: Group = zarr.open_consolidated(store=self.url, mode=mode, **self._zarr_kwargs)
+        else:
+            self._root: Group = zarr.open(store=self.url, mode=mode, **self._zarr_kwargs)
+        self._fs = self._root.store
 
     # docstr-coverage: inherited
     def close(self) -> None:
@@ -173,7 +183,7 @@ class EOZarrStore(EOProductStore):
         # Use dask instead of zarr to read the object data to :
         # - avoid memory leak/let dask manage lazily close the data file
         # - read in parallel
-        var_data = da.from_zarr(self.url, component=key, storage_options=self._zarr_kwargs["storage_options"])
+        var_data = da.from_zarr(self.url, component=key, storage_options=self._dask_kwargs["storage_options"])
         if "scale_factor" in obj.attrs:
             var_data *= obj.attrs["scale_factor"]
         return EOVariable(data=var_data, attrs=obj.attrs)
@@ -197,7 +207,7 @@ class EOZarrStore(EOProductStore):
             if dask_array.size > 0:
                 # We must use to_zarr for writing on a distributed cluster,
                 # but to_zarr fail to write array with a 0 dim (divide by zero Exception)
-                delayed = dask_array.to_zarr(self.url, component=key, **self._zarr_kwargs)
+                delayed = dask_array.to_zarr(self.url, component=key, **self._dask_kwargs)
                 if delayed is not None:
                     self._delayed_list.append(delayed)
             else:
