@@ -123,8 +123,8 @@ class EOPCConfigFactory:
         # Check if their is not another default configuration for this product
         if config.default:
             configs_wpt = self.get_qc_configs(config.product_type)
-            for configs_wpt in configs_wpt:
-                if configs_wpt.default:
+            for cfg in configs_wpt:
+                if cfg.default:
                     raise EOPCConfigFactoryAlreadyDefaultConfiguration(
                         f"Product type : {config.product_type} already have a default configuration",
                     )

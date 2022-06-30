@@ -1,6 +1,8 @@
 import importlib
 import itertools
+import numbers
 from abc import ABC, abstractmethod
+from typing import Any
 
 from eopf.product import EOProduct
 from eopf.product.core.eo_variable import EOVariable
@@ -30,7 +32,7 @@ class EOQC(ABC):
         The message if the quality check pass.
     message_if_failed: str
         The message if the quality check fail.
-    _status: bool
+    status: bool
         Status of the quality check, true if it's ok, false if not ot if the quality check was not executed.
 
     """
@@ -79,9 +81,9 @@ class EOQCValidRange(EOQC):
         The message if the quality check fail.
     eovariable_short_name: str
         Short name  of the variable in the product.
-    valid_min: float
+    valid_min: numbers.Number
         The minimium value of the range.
-    valid_max: float
+    valid_max: numbers.Number
         The maximum value of the range.
 
     Attributes
@@ -94,13 +96,11 @@ class EOQCValidRange(EOQC):
         The message if the quality check pass.
     message_if_failed: str
         The message if the quality check fail.
-    _status: bool
-        Status of the quality check, true if it's ok, false if not ot if the quality check was not executed.
     eovariable_short_name: str
         Short name  of the variable in the product.
-    valid_min: float
+    valid_min: numbers.Number
         The minimium value of the range.
-    valid_max: float
+    valid_max: numbers.Number
         The maximum value of the range.
     """
 
@@ -111,8 +111,8 @@ class EOQCValidRange(EOQC):
         message_if_passed: str,
         message_if_failed: str,
         short_name: str,
-        valid_min: float,
-        valid_max: float,
+        valid_min: numbers.Number,
+        valid_max: numbers.Number,
     ) -> None:
         super().__init__(check_id, check_version, message_if_passed, message_if_failed)
         self.eovariable_short_name = short_name
@@ -177,8 +177,8 @@ class EOQCFormula(EOQC):
         message_if_passed: str,
         message_if_failed: str,
         formula: str,
-        thresholds: dict,
-        variables_or_attributes: dict,
+        thresholds: list[dict[str, Any]],
+        variables_or_attributes: list[dict[str, Any]],
     ) -> None:
         super().__init__(check_id, check_version, message_if_passed, message_if_failed)
         self.formula = formula
@@ -257,8 +257,8 @@ class EOQCProcessingUnit(EOQC):
         message_if_failed: str,
         module: str,
         processing_unit: str,
-        parameters: dict,
-        aux_data: dict,
+        parameters: dict[str, Any],
+        aux_data: dict[str, Any],
     ) -> None:
         super().__init__(check_id, check_version, message_if_passed, message_if_failed)
         self.module = module
