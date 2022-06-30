@@ -176,6 +176,7 @@ def test_eoqcConfig_len(eoqcConfig):
     assert len(eoqcConfig) == len(eoqcConfig.qclist)
 
 
+@pytest.mark.need_files
 @pytest.mark.unit
 @pytest.mark.parametrize("store_type", [(lazy_fixture("S3_OL_1_EFR"))])
 def test_eoqcConfigFactory_get_default(eoqcConfigFactory, store_type):
@@ -186,6 +187,7 @@ def test_eoqcConfigFactory_get_default(eoqcConfigFactory, store_type):
         assert default_config.default is True
 
 
+@pytest.mark.need_files
 @pytest.mark.unit
 @pytest.mark.parametrize("store_type", [(lazy_fixture("S3_OL_1_EFR"))])
 def test_eoqcConfigFactory_get_qc_configs(eoqcConfigFactory, store_type):
