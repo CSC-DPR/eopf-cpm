@@ -88,7 +88,7 @@ def conv(obj: Any) -> Any:
         return [conv(i) for i in obj.tolist()]
 
     # check np int
-    if isinstance(obj, (*get_managed_numpy_dtype("int"), int)):
+    if isinstance(obj, (*get_managed_numpy_dtype("int"), int)) and not isinstance(obj, bool):
         return int(obj)
 
     # check np float

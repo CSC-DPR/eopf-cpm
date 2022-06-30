@@ -170,7 +170,7 @@ class EOProduct(EOContainer):
         if self.store is None:
             raise StoreNotDefinedError("Store must be defined")
         self.store.open(mode=mode, **kwargs)
-        if mode in ["r"]:
+        if mode in ["r", "r+", "w+"]:
             attributes = self.store[""].attrs
             self.attrs.update(attributes)
             self.set_type(attributes.get(self._TYPE_ATTR_STR, ""))
