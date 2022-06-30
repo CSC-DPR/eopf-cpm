@@ -612,7 +612,12 @@ def test_read_real_s3(dask_client_all, store: type, path: str, open_kwargs: dict
 def test_write_real_s3(dask_client_all, w_store: type, w_path: str, w_kwargs: dict[str, Any]):
     in_store = EOZarrStore("zip::s3://eopf/cpm/test_data/olci_zarr_test.zip")
     out_store = w_store(w_path)
-    convert(in_store, out_store, dict(storage_options=dict(s3=S3_CONFIG_REAL)), dict(storage_options=w_kwargs))
+    convert(
+        in_store,
+        out_store,
+        dict(storage_options=dict(s3=S3_CONFIG_REAL)),
+        dict(storage_options=w_kwargs, mode="a"),
+    )
 
 
 @pytest.mark.unit
