@@ -38,17 +38,17 @@ from tests.utils import assert_eovariable_equal
         (lazy_fixture("S1_IM_OCN_ZIP"), "/conditions/state_vector/sv_x"),
         # TODO: do we test "item_format": "xmlmetadata", misc ?
         # "item_format": "xmlangles",
-        (lazy_fixture("S2_MSIL1C_ZIP"), "/conditions/geometry/saa"),
-        # "item_format": "jp2",
-        (lazy_fixture("S2_MSIL1C_ZIP"), "/quality/msk_detfoo_b11"),
-        # "item_format": "xmltp",
-        (lazy_fixture("S2_MSIL1C_ZIP"), "/coordinates/tiepoint_grid/y_tp"),
-        # "item_format": "grib",
-        (lazy_fixture("S2_MSIL1C_ZIP"), "/coordinates/meteo/latitude_meteo"),
-        # "item_format": "xmlangles",
-        (lazy_fixture("S2_MSIL1C_ZIP"), "/conditions/geometry/saa"),
-        # "item_format": "xmlangles",
-        (lazy_fixture("S2_MSIL1C_ZIP"), "/conditions/geometry/saa"),
+        # (lazy_fixture("S2_MSIL1C_ZIP"), "/conditions/geometry/saa"),
+        # # "item_format": "jp2",
+        # (lazy_fixture("S2_MSIL1C_ZIP"), "/quality/msk_detfoo_b11"),
+        # # "item_format": "xmltp",
+        # (lazy_fixture("S2_MSIL1C_ZIP"), "/coordinates/tiepoint_grid/y_tp"),
+        # # "item_format": "grib",
+        # (lazy_fixture("S2_MSIL1C_ZIP"), "/coordinates/meteo/latitude_meteo"),
+        # # "item_format": "xmlangles",
+        # (lazy_fixture("S2_MSIL1C_ZIP"), "/conditions/geometry/saa"),
+        # # "item_format": "xmlangles",
+        # (lazy_fixture("S2_MSIL1C_ZIP"), "/conditions/geometry/saa"),
         # "item_format": "netcdf"
         (lazy_fixture("S3_SY_2_SYN_ZIP"), "/coordinates/image_grid/longitude"),
         (lazy_fixture("S3_SY_2_SYN_ZIP"), "/conditions/geometry/saa"),
@@ -92,8 +92,8 @@ def test_read_product(dask_client_all, input_path, key_path):
         lazy_fixture("S3_SL_1_RBT_ZIP"),
         lazy_fixture("S3_SL_2_LST_ZIP"),
         lazy_fixture("S3_SY_2_SYN_ZIP"),
-        lazy_fixture("S2_MSIL1C_ZIP"),
-        lazy_fixture("S2_MSIL1C"),
+        # lazy_fixture("S2_MSIL1C_ZIP"),
+        # lazy_fixture("S2_MSIL1C"),
         lazy_fixture("S1_IM_OCN_ZIP"),
     ],
 )
@@ -177,15 +177,15 @@ def test_convert_test_mapping(
         # ---> S2/Level 0 - tests -> NO PRODUCTS AVAILABLE
         # ---> S2/Level 1 - tests
         # S2_MSIL1C - UNZIP Format -  product type conversions
-        (lazy_fixture("S2_MSIL1C"), lazy_fixture("S2_MSIL1C_MAPPING"), ".SAFE", EOSafeStore, 156),
-        (lazy_fixture("S2_MSIL1C"), lazy_fixture("S2_MSIL1C_MAPPING"), ".zarr", EOZarrStore, 156),
-        (lazy_fixture("S2_MSIL1C"), lazy_fixture("S2_MSIL1C_MAPPING"), ".cog", EOCogStore, 156),
-        (lazy_fixture("S2_MSIL1C"), lazy_fixture("S2_MSIL1C_MAPPING"), ".nc", EONetCDFStore, 156),
-        # S2_MSIL1C - ZIP Format - product type conversions
-        (lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".SAFE", EOSafeStore, 156),
-        (lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".zarr", EOZarrStore, 156),
-        (lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".cog", EOCogStore, 156),
-        (lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".nc", EONetCDFStore, 156),
+        # (lazy_fixture("S2_MSIL1C"), lazy_fixture("S2_MSIL1C_MAPPING"), ".SAFE", EOSafeStore, 156),
+        # (lazy_fixture("S2_MSIL1C"), lazy_fixture("S2_MSIL1C_MAPPING"), ".zarr", EOZarrStore, 156),
+        # (lazy_fixture("S2_MSIL1C"), lazy_fixture("S2_MSIL1C_MAPPING"), ".cog", EOCogStore, 156),
+        # (lazy_fixture("S2_MSIL1C"), lazy_fixture("S2_MSIL1C_MAPPING"), ".nc", EONetCDFStore, 156),
+        # # S2_MSIL1C - ZIP Format - product type conversions
+        # (lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".SAFE", EOSafeStore, 156),
+        # (lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".zarr", EOZarrStore, 156),
+        # (lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".cog", EOCogStore, 156),
+        # (lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".nc", EONetCDFStore, 156),
         # ---> S2/Level 2 - tests -> MAPPING not available
         # S2_MSIL2A - ZIP Format - product type conversions
         # (lazy_fixture("S2_MSIL2A_ZIP"), lazy_fixture("S2_MSIL2A_MAPPING"), ".SAFE", EOSafeStore, 52,),
