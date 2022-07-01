@@ -527,8 +527,21 @@ class XMLManifestAccessor(EOProductStore):
 
         if formatter_name is not None and formatter is not None:
             # Handle special formatters parameters (text, netcdf)
-            if formatter_name in [text_formatter_name, optional_formatter_name] or not self._get_xml_data(xpath):
+            if formatter_name == text_formatter_name:
                 return formatter(xpath)
+            elif formatter_name == optional_formatter_name:
+                data = self._get_xml_data(xpath)
+                if data is None:
+                    # If xpath cannot be read, check for nested wrapper
+                    _, wf, wxpth = EOFormatterFactory().get_formatter(xpath)
+                    nested_data = self._get_xml_data(wxpth)
+                    if nested_data is not None:
+                        # Return nested wrapper if it contains data
+                        return wf(nested_data)  # type: ignore
+                    # Else, if there is no nested wrapper and data is empty, return is_optional()
+                    return formatter(xpath)
+                # Return data if found
+                return data
             elif formatter_name == image_size_formatter_name:
                 return formatter(self._get_nc_data(xpath))
             # if formatter is defined, return it
