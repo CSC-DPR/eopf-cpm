@@ -574,7 +574,7 @@ def test_zarr_open_on_different_fs(client, product: EOProduct, fakefilename: str
             with product.open(storage_options=open_kwargs):
                 product.load()
             assert mock_zarr.call_count == 1
-            mock_zarr.assert_called_with(product.store.url, **open_kwargs)
+            mock_zarr.assert_called_with(product.store.url, check=False, create=False, **open_kwargs)
             assert mock_dask.call_count == 10
 
 
