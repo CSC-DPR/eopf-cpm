@@ -75,11 +75,11 @@ class EOQCProcessor(EOProcessor):
             The controlled product.
         """
         # If no given configuration in Processor, it get the default one.
-        if not eoproduct.type:
+        if not eoproduct.product_type:
             raise InvalidProductError(f"Missing product type for {eoproduct.name} in {self}")
         qc_config = EOQCConfig(config_path) if config_path else self.qc_config
         if qc_config is None:
-            qc_config = EOPCConfigFactory().get_default(eoproduct.type)
+            qc_config = EOPCConfigFactory().get_default(eoproduct.product_type)
         # Run check(s) of the configuration
         for qc in qc_config.qclist.values():
             try:
@@ -145,7 +145,7 @@ class EOQCProcessor(EOProcessor):
         report_path = os.path.join(report_path, f"QC_report_{eoproduct.name}.json")
         report: dict[str, Any] = {}
         report["Product_name"] = eoproduct.name
-        report["Product_type"] = eoproduct.type
+        report["Product_type"] = eoproduct.product_type
         report["Acquisition_station"] = "To be defined"
         report["Processing_center"] = "To be defined"
         report["Start_sensing_time"] = "To be defined"
