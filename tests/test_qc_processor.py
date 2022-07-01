@@ -183,7 +183,7 @@ def test_eoqcConfigFactory_get_default(eoqcConfigFactory, store_type):
     store = EOSafeStore(store_type)
     product = EOProduct("my_product", storage=store)
     with open_store(product):
-        default_config = eoqcConfigFactory.get_default(product.type)
+        default_config = eoqcConfigFactory.get_default(product.product_type)
         assert default_config.default is True
 
 
@@ -194,8 +194,8 @@ def test_eoqcConfigFactory_get_qc_configs(eoqcConfigFactory, store_type):
     store = EOSafeStore(store_type)
     product = EOProduct("my_product", storage=store)
     with open_store(product):
-        configs = eoqcConfigFactory.get_qc_configs(product.type)
-        assert all([True if config.product_type == product.type else False for config in configs]) is True
+        configs = eoqcConfigFactory.get_qc_configs(product.product_type)
+        assert all([config.product_type == product.product_type for config in configs]) is True
 
 
 @pytest.mark.unit
@@ -321,7 +321,9 @@ def test_error_writing_report(store_type, report_path, sample_config_path):
     with open_store(product):
         with pytest.raises(Exception):
             broken_eoqcProcessor.run(eoproduct=product, update_attrs=False, write_report=True, report_path=report_path)
-        os.remove(os.path.join(report_path, "QC_report_my_product.json"))
+        report_file = os.path.join(report_path, "QC_report_my_product.json")
+        if os.path.isfile(report_file):
+            os.remove(report_file)
 
 
 @pytest.mark.need_files

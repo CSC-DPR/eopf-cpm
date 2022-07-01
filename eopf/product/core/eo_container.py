@@ -154,7 +154,7 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
         return (
             self.store is not None
             and self.store.status == StorageStatus.OPEN
-            and (self.store.is_group(key) or self.store.is_variable(key))
+            and any(key == store_key for store_key in self.store.iter(self.path))
         )
 
     def _store_key(self, key: str) -> str:
