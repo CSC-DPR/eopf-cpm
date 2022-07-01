@@ -6,6 +6,7 @@ from eopf.exceptions import InvalidProductError, StoreNotDefinedError, StoreNotO
 from ..store.abstract import EOProductStore, StorageStatus
 from ..store.mapping_factory import EOMappingFactory
 from ..store.store_factory import EOStoreFactory
+from ..utils import is_absolute_eo_path, product_relative_path
 from .eo_container import EOContainer
 from .eo_group import EOGroup
 from .eo_variable import EOVariable
@@ -36,7 +37,7 @@ class EOProduct(EOContainer):
     """
 
     MANDATORY_FIELD = ("measurements", "coordinates")
-    _TYPE_ATTR_STR = "type"
+    _TYPE_ATTR_STR = "product_type"
 
     def __init__(
         self,
@@ -60,6 +61,12 @@ class EOProduct(EOContainer):
         self.__type = ""
         self.__short_names: dict[str, str] = dict()
         self.set_type(type)
+
+    def __contains__(self, key: Any) -> bool:
+        key = self.short_names.get(key, key)
+        if is_absolute_eo_path(key):
+            key = product_relative_path(self.path, key)
+        return super().__contains__(key)
 
     def __delitem__(self, key: str) -> None:
         # Support short name to path conversion
@@ -205,7 +212,7 @@ class EOProduct(EOContainer):
 
     @property
     def short_names(self) -> dict[str, str]:
-        self.type  # check type consistency
+        self.product_type  # check type consistency
         return self.__short_names
 
     # docstr-coverage: inherited
@@ -243,7 +250,7 @@ class EOProduct(EOContainer):
         return
 
     @property
-    def type(self) -> str:
+    def product_type(self) -> str:
         if self.__type is not self.attrs[self._TYPE_ATTR_STR]:
             self.set_type(self.attrs[self._TYPE_ATTR_STR])
         return self.__type
