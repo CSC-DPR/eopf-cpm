@@ -12,6 +12,7 @@ from typing import (
 )
 
 import lxml
+import numpy as np
 import xarray as xr
 from lxml.etree import _ElementUnicodeResult
 
@@ -61,24 +62,51 @@ class XMLAnglesAccessor(EOProductStore):
         ----------
         EOVariable
         """
+        from eopf.formatting import EOFormatterFactory
         from eopf.product.core import EOVariable
 
         if self.status != StorageStatus.OPEN:
             raise StoreNotOpenError()
-        variable_data = self.create_eo_variable(key)
-        return EOVariable(data=variable_data)
 
-    def create_eo_variable(self, xpath: str) -> xr.DataArray:
+        formatter_name, formatter, xpath = EOFormatterFactory().get_formatter(key)
+        xpath_result = self._root.xpath(xpath, namespaces=self._namespaces)
+        if len(xpath_result) == 0:
+            raise KeyError(f"invalid xml xpath : {key}")
+        if formatter_name is not None and formatter is not None:
+            return EOVariable(data=formatter(xpath_result))
+        else:
+            return EOVariable(data=self.create_eo_variable(xpath_result))
+
+    def create_eo_variable(self, xpath_result: List[lxml.etree._Element]) -> xr.DataArray:
         """
         This method is used to recover and create datasets with angles values stored under
         <<VALUES>> tag.
 
         """
-        xpath_result = self._root.xpath(xpath, namespaces=self._namespaces)
-        if len(xpath_result) == 0:
-            raise KeyError(f"invalid xml xpath : {xpath}")
-        eo_variable_data = self.get_values(f"{self._root.getpath(xpath_result[0])}/VALUES")
-        return eo_variable_data
+        if len(xpath_result) == 1:
+            return self.get_values(f"{self._root.getpath(xpath_result[0])}/VALUES")
+        else:
+            array_order = []
+            max_detector_id = -1
+            max_shape: Any = (-1, -1)
+            # Recover informations about each element in xpath's output (bandId, detectorId, data)
+            for element in xpath_result:
+                # Get bandId and detectorID from parentID (i.e azimuth / zenith)
+                parent_node = element.getparent().getparent().attrib
+                band, detector = map(int, parent_node.values())
+                # Compute maximum detectorId
+                if detector > max_detector_id:
+                    max_detector_id = detector
+                data = self.get_values(f"{self._root.getpath(element)}/VALUES")
+                # Compute maximum data shape
+                if data.shape > max_shape:
+                    max_shape = data.shape
+                array_order.append((band, detector, data))
+            # Map data to 4d array
+            zs = np.zeros(shape=(len(array_order), max_detector_id + 1, *max_shape))
+            for array_parser in array_order:
+                zs[array_parser[0]][array_parser[1]] = array_parser[2]
+            return xr.DataArray(zs, dims=["bands", "detectors", "y_tiepoints", "x_tiepoints"])
 
     def get_values(self, path: str) -> xr.DataArray:
         """

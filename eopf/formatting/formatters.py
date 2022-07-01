@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import Any, Dict, List, Union
 
+import lxml
 import numpy
 from pandas import Timedelta, to_datetime
 from pytz import UTC
@@ -368,3 +369,36 @@ class IsOptional(EOAbstractFormatter):
             Returns "Not found"
         """
         return "N/A"
+
+
+class ToBands(EOAbstractFormatter):
+
+    name = "to_bands"
+
+    def format(self, xpath_input: List[lxml.etree._Element]) -> List[int]:
+        bands_set = set()
+        for element in xpath_input:
+            band_id = int(element.attrib["bandId"])
+            bands_set.add(band_id)
+        return sorted(bands_set)
+
+
+class ToDetectors(EOAbstractFormatter):
+
+    name = "to_detectors"
+
+    def format(self, xpath_input: List[lxml.etree._Element]) -> List[int]:
+        detectors_set = set()
+        for element in xpath_input:
+            detector_id = int(element.attrib["detectorId"])
+            detectors_set.add(detector_id)
+
+        return sorted(detectors_set)
+
+
+class ToMean(EOAbstractFormatter):
+
+    name = "to_mean"
+
+    def format(self, xpath_input: List[lxml.etree._Element]) -> Any:
+        return [float(element.text) for element in xpath_input]
