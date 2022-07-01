@@ -455,7 +455,7 @@
     },
     {
       "short_name": "conditions_metadata",
-      "target_path": "",
+      "target_path": "conditions",
       "source_path": "xfdumanifest.xml",
       "item_format": "xmlmetadata",
       "accessor_config": {
@@ -465,7 +465,7 @@
     }
   ],
   "stac_discovery": {
-    "type_": "Text(Feature)",
+    "type": "Text(Feature)",
     "stac_version": "Text(1.0.0)",
     "stac_extensions": [
       "Text(https://stac-extensions.github.io/eopf/v1.0.0/schema.json)"
@@ -592,92 +592,113 @@
   "conditions_metadata": {
     "band_descriptions": {
       "Oa01": {
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa01']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa01']/sentinel3:bandwidth)"
       },
       "Oa02": {
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa02']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa02']/sentinel3:bandwidth)"
       },
       "Oa03": {
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa03']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa03']/sentinel3:bandwidth)"
       },
       "Oa04": {
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa04']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa04']/sentinel3:bandwidth)"
       },
       "Oa05": {
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa05']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa05']/sentinel3:bandwidth)"
       },
       "Oa06": {
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa06']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa06']/sentinel3:bandwidth)"
       },
       "Oa07": {
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa07']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa07']/sentinel3:bandwidth)"
       },
       "Oa08": {
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa08']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa08']/sentinel3:bandwidth)"
       },
       "Oa09": {
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa09']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa09']/sentinel3:bandwidth)"
       },
       "Oa10": {
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa10']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa10']/sentinel3:bandwidth)"
       },
       "Oa11": {
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa11']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa11']/sentinel3:bandwidth)"
       },
       "Oa12": {
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa12']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa12']/sentinel3:bandwidth)"
       },
       "Oa13": {
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa13']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa13']/sentinel3:bandwidth)"
       },
       "Oa14": {
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa14']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa14']/sentinel3:bandwidth)"
       },
       "Oa15": {
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa15']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa15']/sentinel3:bandwidth)"
       },
       "Oa16": {
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa16']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa16']/sentinel3:bandwidth)"
       },
       "Oa17": {
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa17']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa17']/sentinel3:bandwidth)"
       },
       "Oa18": {
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa18']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa18']/sentinel3:bandwidth)"
       },
       "Oa19": {
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa19']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa19']/sentinel3:bandwidth)"
       },
       "Oa20": {
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa20']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa20']/sentinel3:bandwidth)"
       },
       "Oa21": {
+        "units": "Text(nm)",
         "central_wavelength": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa21']/sentinel3:centralWavelength)",
         "bandwidth": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:bandDescriptions/sentinel3:band[@name='Oa21']/sentinel3:bandwidth)"
       }
     },
     "orbit_reference": {
-      "pass_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:passNumber)",
+      "absolute_pass_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:passNumber)",
       "relative_pass_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:relativePassNumber)",
       "cycle_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:cycleNumber)",
       "phase_identifier": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:phaseIdentifier)",

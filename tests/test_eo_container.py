@@ -46,10 +46,10 @@ class EmptyTestStore(EOProductStore):
         raise KeyError()
 
     def is_group(self, path: str) -> bool:
-        raise KeyError()
+        return False
 
     def is_variable(self, path: str) -> bool:
-        raise KeyError()
+        return False
 
     def iter(self, path: str) -> Iterator[str]:
         return iter([])
@@ -507,7 +507,7 @@ def test_hierarchy_html(product: EOProduct):
             },
             "group0": {"dims": (), "attrs": {}, "coords": []},
             "dims": (),
-            "attrs": {"type": ""},
+            "attrs": {"product_type": ""},
             "coords": [],
         },
     }
@@ -534,7 +534,7 @@ def test_group_to_product(product):
     [
         #    (lazy_fixture("S1_IM_OCN_MAPPING"),2),
         (lazy_fixture("S2A_MSIL1C_MAPPING"), 3),
-        (lazy_fixture("S3_OL_1_EFR_MAPPING"), 2),  # invalid for conditions_metadata and stac_discovery
+        (lazy_fixture("S3_OL_1_EFR_MAPPING"), 1),  # invalid for conditions_metadata and stac_discovery
         #    (lazy_fixture("S3_SL_1_RBT_MAPPING"),1),
         (lazy_fixture("S3_SY_2_SYN_MAPPING"), 1),
     ],
@@ -551,13 +551,20 @@ def test_short_name(product, mapping_filename, expected_invalid):
 
     product.set_type(type)
     for short_name, path in product.short_names.items():
-        assert product.add_variable(short_name).path == path
-        assert product[short_name].path == path
-        with pytest.raises(EOObjectExistError):
-            assert product.add_group(short_name).path == path
+        if path in product:
+            del product[short_name]
+        assert short_name not in product
+        if "/" in path.strip("/"):
+            # can't add variable to top level
+            assert product.add_variable(short_name).path == path
+            assert short_name in product
+            assert product[short_name].path == path
+            with pytest.raises(EOObjectExistError):
+                assert product.add_group(short_name).path == path
+            del product[short_name]
+        assert product.add_group(short_name).path.strip("/") == path.strip("/")
         del product[short_name]
-        assert product.add_group(short_name).path == path
-        del product[short_name]
-        product[short_name] = EOVariable()
-        assert product[short_name].path == path
+        if "/" in path.strip("/"):
+            product[short_name] = EOVariable()
+            assert product[short_name].path == path
     assert len(product.short_names) == mapping_count - expected_invalid
