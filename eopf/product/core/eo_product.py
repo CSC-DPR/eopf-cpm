@@ -1,3 +1,4 @@
+import warnings
 from types import TracebackType
 from typing import TYPE_CHECKING, Any, Iterable, MutableMapping, Optional, Type, Union
 
@@ -45,6 +46,7 @@ class EOProduct(EOContainer):
         storage: Optional[Union[str, EOProductStore]] = None,
         attrs: Optional[MutableMapping[str, Any]] = None,
         type: str = "",
+        strict: bool = True,
         store_factory: Optional[EOStoreFactory] = None,
         mapping_factory: Optional[EOMappingFactory] = None,
     ) -> None:
@@ -59,6 +61,7 @@ class EOProduct(EOContainer):
         self._store: Optional[EOProductStore] = None
         self.__set_store(storage=storage)
         self.__type = ""
+        self._strict = strict
         self.__short_names: dict[str, str] = dict()
         self.set_type(type)
 
@@ -128,7 +131,11 @@ class EOProduct(EOContainer):
         """EOGroup: Coordinates mandatory group"""
         coords = self.get("coordinates")
         if not isinstance(coords, EOGroup):  # pragma: no cover (theorically impossible)
-            raise InvalidProductError("coordinates must be defined at product level and must be an EOGroup")
+            if self._strict:
+                raise InvalidProductError("coordinates must be defined at product level and must be an EOGroup")
+            else:
+                warnings.warn("No coordinate group in product. Returning a placeholder group.")
+                return EOGroup()
         return coords
 
     def is_valid(self) -> bool:
@@ -181,6 +188,10 @@ class EOProduct(EOContainer):
             attributes = self.store[""].attrs
             self.attrs.update(attributes)
             self.set_type(attributes.get(self._TYPE_ATTR_STR, ""))
+        if not self._strict and mode in ["r"]:
+            if "coordinates" not in self:
+                warnings.warn("No coordinate group in product read. Implicitly added.")
+                self["coordinates"] = EOGroup()
         return self
 
     # docstr-coverage: inherited
@@ -244,9 +255,7 @@ class EOProduct(EOContainer):
 
             warnings.warn("IPython not found")
         # Iterate and print EOProduct structure otherwise (CLI)
-        for name, group in self.items():
-            print(f"├── {name}")
-            self._create_structure(group, level=2)  # type: ignore[arg-type]
+        self._create_structure(self, level=0)
         return
 
     @property
@@ -277,18 +286,27 @@ class EOProduct(EOContainer):
         if self.store.status == StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open")
         self.store.write_attrs("", attrs=self.attrs)
-        return super().write()
+        super().write()
 
-    def _add_local_variable(self, name: str, data: Optional[Any] = None, **kwargs: Any) -> EOVariable:
-        raise InvalidProductError("Products can't directly store variables.")
+    def _add_local_variable(
+        self, name: str = "", data: Optional[Any] = None, new_eo: bool = True, **kwargs: Any
+    ) -> "EOVariable":
+        if self._strict:
+            raise InvalidProductError("Products can't directly store variables.")
+        else:
+            return super()._add_local_variable(name, data, **kwargs)
 
-    def _create_structure(self, group: Union[EOGroup, tuple[str, EOGroup]], level: int) -> None:
+    def _create_structure(self, group: Union["EOContainer", tuple[str, "EOContainer"]], level: int) -> None:
         if isinstance(group, tuple):
             group = group[1]
+        if level > 0:
+            indent = "|" + " " * level
+        else:
+            indent = ""
         for v in group.variables:
-            print("|" + " " * level + "└──", v[0])
+            print(indent + "└──", v[0])
         for g in group.groups:
-            print("|" + " " * level + "├──", g[0])
+            print(indent + "├──", g[0])
             self._create_structure(g, level + 2)
 
     @property

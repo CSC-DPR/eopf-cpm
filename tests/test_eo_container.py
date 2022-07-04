@@ -214,6 +214,7 @@ def test_setitem(product):
     variable_v1 = EOVariable("variable_v1", None)
     assert variable_v1.path == variable_v1.name
     product["measurements/group1/variable_v1"] = variable_v1
+    variable_v1 = product["measurements/group1/variable_v1"]
     assert variable_v1.path == "/measurements/group1/variable_v1"
 
     product["/measurements/group1/variable_v2"] = EOVariable("variable_v1", None)
@@ -258,17 +259,26 @@ def test_multipleparent_setitem(product):
         product["group1h"] = EOGroup("group1i", product_bis)
     with pytest.raises(EOObjectMultipleParentError):
         product["group1i"] = EOGroup("group1i", product_bis)
-    with pytest.raises(EOObjectMultipleParentError):
-        var = EOVariable("variable_v6", None, product_bis)
-        product["measurements/group1"]["variable_v6"] = var
-    with pytest.raises(EOObjectMultipleParentError):
-        product["measurements/group1"]["variable_v7"] = product_bis.add_variable("/measurements/group1/variable_v7")
 
-    with pytest.raises(EOObjectMultipleParentError):
-        product["measurements/group1"]["variable_v8"] = EOVariable(
-            "variable_v7",
-            parent=product,
-        )
+    var = EOVariable("variable_v6", None, product_bis)
+
+    def sub_test_var_multi_parent(in_var, out_father, out_name):
+        previous_parent = in_var.parent
+        previous_name = in_var.name
+
+        out_father[out_name] = in_var
+        assert out_father[out_name].parent is out_father
+        assert out_father[out_name].name == out_name
+        assert previous_parent is in_var.parent
+        assert previous_name == in_var.name
+
+    sub_test_var_multi_parent(var, product["measurements/group1"], "variable_v6")
+    sub_test_var_multi_parent(
+        product_bis.add_variable("/measurements/group1/variable_v7"),
+        product["measurements/group1"],
+        "variable_v7",
+    )
+    sub_test_var_multi_parent(EOVariable("variable_v7", parent=product), product["measurements/group1"], "variable_v8")
 
 
 @pytest.mark.unit
@@ -346,7 +356,13 @@ def test_write_product(product):
     with pytest.raises(StoreNotOpenError):
         product.write()
 
-    with (patch.object(EmptyTestStore, "__setitem__", return_value=None) as mock_method, product.open(mode="w")):
+    def print_key_val(key, value):
+        print(key, value)
+
+    with (
+        patch.object(EmptyTestStore, "__setitem__", side_effect=print_key_val, return_value=None) as mock_method,
+        product.open(mode="w"),
+    ):
         product.write()
 
     assert mock_method.call_count == 21

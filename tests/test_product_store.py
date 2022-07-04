@@ -566,7 +566,7 @@ def test_rasters(dask_client_all, store_cls: type[EORasterIOAccessor], format_fi
         ),
     ],
 )
-def test_zarr_open_on_different_fs(dask_client_all, product: EOProduct, fakefilename: str, open_kwargs: dict[str, Any]):
+def test_zarr_open_on_different_fs(client, product: EOProduct, fakefilename: str, open_kwargs: dict[str, Any]):
     with patch("dask.array.core.get_mapper") as mock_dask:
         with patch("fsspec.get_mapper") as mock_zarr:
             mock_dask.return_value = fsspec.FSMap(fakefilename, LocalFileSystem())
@@ -612,7 +612,12 @@ def test_read_real_s3(dask_client_all, store: type, path: str, open_kwargs: dict
 def test_write_real_s3(dask_client_all, w_store: type, w_path: str, w_kwargs: dict[str, Any]):
     in_store = EOZarrStore("zip::s3://eopf/cpm/test_data/olci_zarr_test.zip")
     out_store = w_store(w_path)
-    convert(in_store, out_store, dict(storage_options=dict(s3=S3_CONFIG_REAL)), dict(storage_options=w_kwargs))
+    convert(
+        in_store,
+        out_store,
+        dict(storage_options=dict(s3=S3_CONFIG_REAL)),
+        dict(storage_options=w_kwargs, mode="a"),
+    )
 
 
 @pytest.mark.unit
@@ -660,15 +665,16 @@ def test_patch_cog_store(store_cls: type[EOCogStore], format_file: str):
 @pytest.mark.real_s3
 @pytest.mark.unit
 @pytest.mark.parametrize(
-    "store, path, open_kwargs",
+    "store, path, storage_options",
     [
         (EOCogStore, "s3://eopf/cpm/test_data/OLCI_COG", S3_CONFIG_REAL),
     ],
 )
-def test_s3_reading_cog_store(dask_client_all, store: type, path: str, open_kwargs: dict[str, Any]):
+def test_s3_reading_cog_store(dask_client_all, store: type, path: str, storage_options: dict[str, Any]):
+    print(storage_options)
     cog_store = store(path)
     product = EOProduct("s3_test_product", storage=cog_store)
-    with product.open(storage_options=open_kwargs):
+    with product.open(storage_options=storage_options):
         product.load()
         # Test getitem
         assert isinstance(product["conditions/geometry/altitude"], EOVariable)

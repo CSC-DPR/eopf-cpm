@@ -4,10 +4,15 @@ from typing import TYPE_CHECKING, Iterable, Optional
 
 from xarray.backends import zarr
 
-from eopf.exceptions import EOObjectMultipleParentError, InvalidProductError
+from eopf.exceptions import (
+    EOObjectMultipleParentError,
+    InvalidProductError,
+    StoreNotDefinedError,
+    StoreNotOpenError,
+)
 from eopf.product.core.eo_abstract import EOAbstract
-from eopf.product.store.abstract import EOProductStore
-from eopf.product.utils import join_eo_path
+from eopf.product.store.abstract import EOProductStore, StorageStatus
+from eopf.product.utils import join_eo_path, join_path
 
 if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_container import EOContainer
@@ -145,6 +150,15 @@ class EOObject(EOAbstract):
     @property
     def store(self) -> Optional[EOProductStore]:
         return self.product.store if self.parent is not None else None
+
+    # docstr-coverage: inherited
+    def write(self) -> None:
+        if self.store is None:  # pragma: no cover
+            raise StoreNotDefinedError("Store must be defined")
+        if self.store.status == StorageStatus.CLOSE:
+            raise StoreNotOpenError("Store must be open")
+        super().write()
+        self.store[join_path(*self.relative_path, self.name, sep=self.store.sep)] = self
 
     def _find_by_dim(self, dims: Iterable[str], shape: Optional[tuple[int, ...]] = None) -> list["EOObject"]:
         for dim_index, dim_name in enumerate(dims):
