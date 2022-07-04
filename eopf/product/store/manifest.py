@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, Any, Iterator, MutableMapping, Optional, TextI
 
 from eopf.exceptions import StoreNotOpenError, XmlParsingError
 from eopf.product.core import EOGroup
-from eopf.product.store import EOProductStore
+from eopf.product.store import EOProductStore, StorageStatus
 from eopf.product.utils import parse_xml, translate_structure
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -71,12 +71,16 @@ class ManifestStore(EOProductStore):
 
     def is_group(self, path: str) -> bool:
         """Has no functionality within this store"""
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         if path in ["", "/"]:
             return True
         raise NotImplementedError()
 
     def is_variable(self, path: str) -> bool:
         """Has no functionality within this store"""
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         if path in ["", "/"]:
             return False
         raise NotImplementedError()
@@ -110,6 +114,9 @@ class ManifestStore(EOProductStore):
         if self._xml_fobj is None:
             raise StoreNotOpenError("Store must be open before access to it")
 
+        if key not in ["", self.sep]:
+            raise KeyError(f"Invalid path: {key}")
+
         # create an EOGroup and set its attributes with a dictionary containing CF and OM_EOP
         eog: EOGroup = EOGroup("product_metadata", attrs=self._attrs)
         return eog
@@ -120,6 +127,8 @@ class ManifestStore(EOProductStore):
 
     def __len__(self) -> int:
         """Has no functionality within this store"""
+        if self.status != StorageStatus.OPEN:
+            raise StoreNotOpenError()
         return 0
 
     def __iter__(self) -> Iterator[str]:

@@ -1,6 +1,7 @@
 from typing import Any, Optional
 
 from eopf.product.store import EOProductStore
+from eopf.product.store.netcdf import EONetCDFStoreNCpy
 from eopf.product.store.rasterio import EORasterIOAccessor
 
 
@@ -14,7 +15,6 @@ class EOStoreFactory:
                 FilenameToVariableAccessor,
             )
             from eopf.product.store.grib import EOGribAccessor
-            from eopf.product.store.manifest import ManifestStore
             from eopf.product.store.netcdf import (
                 EONetCDFStore,
                 EONetcdfStringToTimeAccessor,
@@ -26,6 +26,7 @@ class EOStoreFactory:
             )
             from eopf.product.store.xml_accessors import (
                 XMLAnglesAccessor,
+                XMLManifestAccessor,
                 XMLTPAccessor,
             )
             from eopf.product.store.zarr import EOZarrStore
@@ -36,8 +37,9 @@ class EOStoreFactory:
             self.register_store(EOCogStore, "cogs")
             self.register_store(FilenameToVariableAccessor, "filename_to_subswath")
             self.register_store(EONetCDFStore, "netcdf")
+            self.register_store(EONetCDFStoreNCpy, "netcdf-netCDF4py")
             self.register_store(EONetcdfStringToTimeAccessor, "netcdf_string_to_time")
-            self.register_store(ManifestStore, "xmlmetadata")
+            self.register_store(XMLManifestAccessor, "xmlmetadata")
             self.register_store(EOGribAccessor, "grib")
             self.register_store(EORasterIOAccessor, "jp2")
             self.register_store(XMLAnglesAccessor, "xmlangles")

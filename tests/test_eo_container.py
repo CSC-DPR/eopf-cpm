@@ -46,10 +46,10 @@ class EmptyTestStore(EOProductStore):
         raise KeyError()
 
     def is_group(self, path: str) -> bool:
-        raise KeyError()
+        return False
 
     def is_variable(self, path: str) -> bool:
-        raise KeyError()
+        return False
 
     def iter(self, path: str) -> Iterator[str]:
         return iter([])
@@ -214,6 +214,7 @@ def test_setitem(product):
     variable_v1 = EOVariable("variable_v1", None)
     assert variable_v1.path == variable_v1.name
     product["measurements/group1/variable_v1"] = variable_v1
+    variable_v1 = product["measurements/group1/variable_v1"]
     assert variable_v1.path == "/measurements/group1/variable_v1"
 
     product["/measurements/group1/variable_v2"] = EOVariable("variable_v1", None)
@@ -258,17 +259,26 @@ def test_multipleparent_setitem(product):
         product["group1h"] = EOGroup("group1i", product_bis)
     with pytest.raises(EOObjectMultipleParentError):
         product["group1i"] = EOGroup("group1i", product_bis)
-    with pytest.raises(EOObjectMultipleParentError):
-        var = EOVariable("variable_v6", None, product_bis)
-        product["measurements/group1"]["variable_v6"] = var
-    with pytest.raises(EOObjectMultipleParentError):
-        product["measurements/group1"]["variable_v7"] = product_bis.add_variable("/measurements/group1/variable_v7")
 
-    with pytest.raises(EOObjectMultipleParentError):
-        product["measurements/group1"]["variable_v8"] = EOVariable(
-            "variable_v7",
-            parent=product,
-        )
+    var = EOVariable("variable_v6", None, product_bis)
+
+    def sub_test_var_multi_parent(in_var, out_father, out_name):
+        previous_parent = in_var.parent
+        previous_name = in_var.name
+
+        out_father[out_name] = in_var
+        assert out_father[out_name].parent is out_father
+        assert out_father[out_name].name == out_name
+        assert previous_parent is in_var.parent
+        assert previous_name == in_var.name
+
+    sub_test_var_multi_parent(var, product["measurements/group1"], "variable_v6")
+    sub_test_var_multi_parent(
+        product_bis.add_variable("/measurements/group1/variable_v7"),
+        product["measurements/group1"],
+        "variable_v7",
+    )
+    sub_test_var_multi_parent(EOVariable("variable_v7", parent=product), product["measurements/group1"], "variable_v8")
 
 
 @pytest.mark.unit
@@ -346,7 +356,13 @@ def test_write_product(product):
     with pytest.raises(StoreNotOpenError):
         product.write()
 
-    with (patch.object(EmptyTestStore, "__setitem__", return_value=None) as mock_method, product.open(mode="w")):
+    def print_key_val(key, value):
+        print(key, value)
+
+    with (
+        patch.object(EmptyTestStore, "__setitem__", side_effect=print_key_val, return_value=None) as mock_method,
+        product.open(mode="w"),
+    ):
         product.write()
 
     assert mock_method.call_count == 21
@@ -507,7 +523,7 @@ def test_hierarchy_html(product: EOProduct):
             },
             "group0": {"dims": (), "attrs": {}, "coords": []},
             "dims": (),
-            "attrs": {"type": ""},
+            "attrs": {"product_type": ""},
             "coords": [],
         },
     }
@@ -534,7 +550,7 @@ def test_group_to_product(product):
     [
         #    (lazy_fixture("S1_IM_OCN_MAPPING"),2),
         (lazy_fixture("S2A_MSIL1C_MAPPING"), 3),
-        (lazy_fixture("S3_OLCI_L1_MAPPING"), 1),
+        (lazy_fixture("S3_OL_1_EFR_MAPPING"), 1),  # invalid for conditions_metadata and stac_discovery
         #    (lazy_fixture("S3_SL_1_RBT_MAPPING"),1),
         (lazy_fixture("S3_SY_2_SYN_MAPPING"), 1),
     ],
@@ -551,13 +567,20 @@ def test_short_name(product, mapping_filename, expected_invalid):
 
     product.set_type(type)
     for short_name, path in product.short_names.items():
-        assert product.add_variable(short_name).path == path
-        assert product[short_name].path == path
-        with pytest.raises(EOObjectExistError):
-            assert product.add_group(short_name).path == path
+        if path in product:
+            del product[short_name]
+        assert short_name not in product
+        if "/" in path.strip("/"):
+            # can't add variable to top level
+            assert product.add_variable(short_name).path == path
+            assert short_name in product
+            assert product[short_name].path == path
+            with pytest.raises(EOObjectExistError):
+                assert product.add_group(short_name).path == path
+            del product[short_name]
+        assert product.add_group(short_name).path.strip("/") == path.strip("/")
         del product[short_name]
-        assert product.add_group(short_name).path == path
-        del product[short_name]
-        product[short_name] = EOVariable()
-        assert product[short_name].path == path
+        if "/" in path.strip("/"):
+            product[short_name] = EOVariable()
+            assert product[short_name].path == path
     assert len(product.short_names) == mapping_count - expected_invalid

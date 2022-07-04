@@ -18,25 +18,6 @@ class EOEventTrigger(EOTrigger, EOPFPluginCommandCLI):
     context_settings: dict, optional
         default values provide to click
 
-    Attributes
-    ----------
-    name: str
-        name of this command
-    cli_params: Sequence[click.Parameter]
-        all argument and option associated to this command
-    help: str
-        text use to specified to the user what this command is made for
-    short_help: str
-        shortter version of the help part
-    epilog: str
-        like help, but only provide at the end of the help command
-    enable_help_option: bool
-        indicate if the help option is provide automatically (default True)
-    hidden: bool
-        indicate if this command is hidden when it's search (default False)
-    deprecated: bool
-        indicate if this command is deprecated or not (default False)
-
     See Also
     --------
     click.Command
@@ -62,6 +43,9 @@ class EOEventTrigger(EOTrigger, EOPFPluginCommandCLI):
         try:
             async for msg in consumer:
                 logger.info(f"Consume message {msg} for {kafka_server}/{kafka_topic}")
-                EOEventTrigger.run(json.loads(msg.value))
+                try:
+                    EOEventTrigger.run(json.loads(msg.value))
+                except Exception as e:
+                    logger.exception(e)
         finally:
             await consumer.stop()

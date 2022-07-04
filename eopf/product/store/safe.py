@@ -1,4 +1,5 @@
 import os
+import pathlib
 import tempfile
 import warnings
 from functools import reduce
@@ -212,12 +213,12 @@ class EOSafeStore(EOProductStore):
 
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
-
         eo_obj_list: list[EOObject] = list()
         if key in ["", "/"]:
             from eopf.product import EOProduct
 
             eo_obj_list.append(EOGroup(attrs={EOProduct._TYPE_ATTR_STR: self.product_type}))
+        last_error = None
         for safe_path, accessor_path in self._accessor_manager.split_target_path(key):
             mapping_match_list = self._accessor_manager.get_accessors_from_mapping(safe_path)
             for accessor, config_accessor_path, config in mapping_match_list:
@@ -225,12 +226,16 @@ class EOSafeStore(EOProductStore):
                 # We should catch Key Error, and throw if the object isn't found in any of the accessors
                 try:
                     accessed_object = accessor[config_accessor_path]
-                    processed_object = self._apply_mapping_properties(accessed_object, config)
+                    processed_object = self._apply_mapping_properties(accessed_object, config, key)
                     eo_obj_list.append(processed_object)
-                except KeyError:
+                except KeyError as error:
+                    last_error = error
                     pass
         if not eo_obj_list:
-            raise KeyError(f"Invalid path :  {key}")
+            if last_error is None:
+                raise KeyError(f"Invalid path :  {key}")
+            else:
+                raise last_error
         return self._eo_object_merge(*eo_obj_list)
 
     def __len__(self) -> int:
@@ -327,7 +332,7 @@ class EOSafeStore(EOProductStore):
                 # We might want to catch Unimplemented/KeyError and throw one if none write_attrs suceed
                 accessor.write_attrs(config_accessor_path)
 
-    def _apply_mapping_properties(self, eo_obj: "EOObject", config: dict[str, Any]) -> "EOObject":
+    def _apply_mapping_properties(self, eo_obj: "EOObject", config: dict[str, Any], debug_key: str) -> "EOObject":
         """Modify the eo_object according to the json data_mapping config.
 
         Parameters
@@ -346,8 +351,11 @@ class EOSafeStore(EOProductStore):
             return eo_obj
         parameters = config["parameters"]
         for parameter_name, parameter_transformation in self._parameters_transformations:
-            if parameter_name in parameters:
-                eo_obj = parameter_transformation(eo_obj, parameters[parameter_name])
+            try:
+                if parameter_name in parameters:
+                    eo_obj = parameter_transformation(eo_obj, parameters[parameter_name])
+            except Exception as err:
+                raise type(err)(f"Applying parameter {parameter_name} on [{debug_key} failed.") from err
         # add a warning if a parameter is missing from _parameters_transformations ?
         return eo_obj
 
@@ -384,6 +392,10 @@ class EOSafeStore(EOProductStore):
         if count_eovar:
             return EOVariable(data=data, attrs=attrs, dims=tuple(dims))
         return EOGroup(attrs=attrs, dims=tuple(dims))
+
+    @staticmethod
+    def guess_can_read(file_path: str) -> bool:
+        return pathlib.Path(file_path).suffix in [".SEN3", ".SAFE"]
 
 
 class SafeMappingManager:
@@ -535,28 +547,30 @@ class SafeMappingManager:
         if accessor_id not in self._accessor_map:
             self._accessor_map[accessor_id] = dict()
 
-        if item_format == "SafeHierarchy":
-            mapped_store = SafeHierarchy()
-        else:
-            if self._is_compressed:
-                if self._temp_dir is None:
-                    self._temp_dir = tempfile.TemporaryDirectory()
-                accessor_file = os.path.join(self._temp_dir.name, file_path)
-                if not os.path.exists(accessor_file):
-                    # create parent directory (needed if the file is in a subfolder of the zip)
-                    os.makedirs(os.path.split(accessor_file)[0], exist_ok=True)
-                    if file_path in self._fs_map_access:  # For file
-                        with open(accessor_file, mode="wb") as file_:
-                            file_.write(self._fs_map_access[file_path])
-                    elif not any(path.startswith(file_path) for path in self._fs_map_access):  # check directory level
-                        raise FileNotFoundError()
-            else:
-                accessor_file = self._fs_map_access.fs.sep.join([self._fs_map_access.root, file_path])
-            mapped_store = self._store_factory.get_store(
-                accessor_file,
-                item_format,
-            )
         try:
+            if item_format == "SafeHierarchy":
+                mapped_store = SafeHierarchy()
+            else:
+                if self._is_compressed:
+                    if self._temp_dir is None:
+                        self._temp_dir = tempfile.TemporaryDirectory()
+                    accessor_file = os.path.join(self._temp_dir.name, file_path)
+                    if not os.path.exists(accessor_file):
+                        # create parent directory (needed if the file is in a subfolder of the zip)
+                        os.makedirs(os.path.split(accessor_file)[0], exist_ok=True)
+                        if file_path in self._fs_map_access:  # For file
+                            with open(accessor_file, mode="wb") as file_:
+                                file_.write(self._fs_map_access[file_path])
+                        elif not any(
+                            path.startswith(file_path) for path in self._fs_map_access
+                        ):  # check directory level
+                            raise FileNotFoundError()
+                else:
+                    accessor_file = self._fs_map_access.fs.sep.join([self._fs_map_access.root, file_path])
+                mapped_store = self._store_factory.get_store(
+                    accessor_file,
+                    item_format,
+                )
             mapped_store.open(mode=self._mode, **accessor_config, **self._open_kwargs)
         except NotImplementedError:
             mapped_store = None

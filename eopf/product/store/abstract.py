@@ -4,7 +4,8 @@ from abc import abstractmethod
 from collections.abc import MutableMapping
 from typing import TYPE_CHECKING, Any, Iterator
 
-from eopf.exceptions.warnings import AlreadyClose, AlreadyOpen
+from eopf.exceptions import StoreNotOpenError
+from eopf.exceptions.warnings import AlreadyOpen
 
 if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_object import EOObject
@@ -40,6 +41,10 @@ class EOProductStore(MutableMapping[str, "EOObject"]):
         self.url = url
         self._status = StorageStatus.CLOSE
 
+    def __del__(self) -> None:
+        if self.status != StorageStatus.CLOSE:
+            self.close()
+
     def __delitem__(self, key: str) -> None:  # pragma: no cover
         raise NotImplementedError()
 
@@ -49,7 +54,7 @@ class EOProductStore(MutableMapping[str, "EOObject"]):
     def close(self) -> None:
         """Close the store"""
         if self._status == StorageStatus.CLOSE:
-            warnings.warn(AlreadyClose())
+            raise StoreNotOpenError("Store must be open before close it")
         self._status = StorageStatus.CLOSE
 
     @property

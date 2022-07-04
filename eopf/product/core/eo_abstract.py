@@ -19,6 +19,22 @@ class EOAbstract(ABC):  # pragma: no cover
 
     @property
     @abstractmethod
+    def attrs(self) -> dict[str, Any]:
+        """dict[str, Any]: Dictionary of this EOObject attributes."""
+
+    @property
+    @abstractmethod
+    def name(self) -> str:
+        """str: Name of this object. Empty string if unnamed."""
+
+    @property
+    @abstractmethod
+    def path(self) -> str:
+        """str: Path from the top level EOProduct to this object.
+        It's a string following Linux path conventions."""
+
+    @property
+    @abstractmethod
     def product(self) -> "EOProduct":
         """EOProduct: Product related to this object.
 
@@ -27,6 +43,12 @@ class EOAbstract(ABC):  # pragma: no cover
         InvalidProductError
             If this object doesn't have a (valid) product.
         """
+
+    @property
+    @abstractmethod
+    def relative_path(self) -> Iterable[str]:
+        """Iterable[str]: Relative path of this object.
+        It's the set of the names of this object parents (Product name as '/')."""
 
     @property
     @abstractmethod
@@ -40,24 +62,26 @@ class EOAbstract(ABC):  # pragma: no cover
             If this object doesn't have a (valid) product.
         """
 
-    @property
     @abstractmethod
-    def path(self) -> str:
-        """str: Path from the top level EOProduct to this object.
-        It's a string following Linux path conventions."""
+    def write(self) -> None:
+        """Write non synchronized subgroups, variables to the store
 
-    @property
-    @abstractmethod
-    def relative_path(self) -> Iterable[str]:
-        """Iterable[str]: Relative path of this object.
-        It's the set of the names of this object parents (Product name as '/')."""
+        the store must be opened to work
 
-    @property
-    @abstractmethod
-    def name(self) -> str:
-        """str: Name of this object. Empty string if unnamed."""
+        Parameters
+        ----------
+        erase: bool, optional
+            if the data already exist, there should be erase or not
 
-    @property
-    @abstractmethod
-    def attrs(self) -> dict[str, Any]:
-        """dict[str, Any]: Dictionary of this EOObject attributes."""
+        Raises
+        ------
+        StoreNotDefinedError
+            Trying to write without a store
+        StoreNotOpenError
+            Trying to write in a closed store
+
+        See Also
+        --------
+        EOProduct.open
+        EOProduct.load
+        """

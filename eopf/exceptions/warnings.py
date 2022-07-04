@@ -16,3 +16,7 @@ class DaskProfilerHtmlDisplayNotWorking(Warning):
 
 class LoggingLevelIsNoneStandard(Warning):
     """When the given log level is set to a value which is none Python standard"""
+
+
+class FormatterAlreadyRegistered(Warning):
+    """When a formatter with the same name was already registered"""
