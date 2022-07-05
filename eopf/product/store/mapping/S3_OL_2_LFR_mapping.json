@@ -9,213 +9,513 @@
       "short_name": "latitude",
       "target_path": "/coordinates/image_grid/latitude",
       "source_path": "geo_coordinates.nc:latitude",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "DEM corrected latitude",
+        "scale_factor": 1e-06,
+        "standard_name": "latitude",
+        "units": "degrees_north",
+        "valid_max": 90000000,
+        "valid_min": -90000000
+      }
     },
     {
       "short_name": "longitude",
       "target_path": "/coordinates/image_grid/longitude",
       "source_path": "geo_coordinates.nc:longitude",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "DEM corrected longitude",
+        "scale_factor": 1e-06,
+        "standard_name": "longitude",
+        "units": "degrees_east",
+        "valid_max": 180000000,
+        "valid_min": -180000000
+      }
     },
     {
       "short_name": "detector_index",
       "target_path": "/coordinates/image_grid/detector_index",
       "source_path": "instrument_data.nc:detector_index",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1,
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Detector index",
+        "valid_max": 3699,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "row_time",
       "target_path": "/coordinates/image_grid/row_time",
       "source_path": "time_coordinates.nc:time_stamp",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1,
+        "long_name": "Elapsed time since 01 Jan 2000 0h",
+        "standard_name": "time",
+        "units": "microseconds since 2000-01-01 00:00:00"
+      }
     },
     {
       "short_name": "tp_latitude",
       "target_path": "/coordinates/tiepoint_grid/latitude",
       "source_path": "tie_geo_coordinates.nc:latitude",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "Latitude",
+        "scale_factor": 1e-06,
+        "standard_name": "latitude",
+        "units": "degrees_north",
+        "valid_max": 90000000,
+        "valid_min": -90000000
+      }
     },
     {
       "short_name": "tp_longitude",
       "target_path": "/coordinates/tiepoint_grid/longitude",
       "source_path": "tie_geo_coordinates.nc:longitude",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "Longitude",
+        "scale_factor": 1e-06,
+        "standard_name": "longitude",
+        "units": "degrees_east",
+        "valid_max": 180000000,
+        "valid_min": -180000000
+      }
     },
     {
       "short_name": " rc681",
       "target_path": "/measurements/image/rc681",
       "source_path": "rc_gifapar.nc:RC681",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "long_name": "Rectified reflectance for the band O10 on the current land pixel",
+        "scale_factor": 1.5259254723787308e-05,
+        "units": "mW.m-2.sr-1.nm-1"
+      }
     },
     {
       "short_name": " rc865",
       "target_path": "/measurements/image/rc865",
       "source_path": "rc_gifapar.nc:RC865",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "long_name": "Rectified reflectance for the band O17 on the current land pixel",
+        "scale_factor": 1.5259254723787308e-05,
+        "units": "mW.m-2.sr-1.nm-1"
+      }
     },
     {
       "short_name": "gifapar",
       "target_path": "/measurements/image/gifapar",
       "source_path": "gifapar.nc:GIFAPAR",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 255,
+        "add_offset": 0.0,
+        "long_name": "Green Instantaneous Fraction of Absorbed Photosynthetically Available Radiation (GIFAPAR) of the current land pixel",
+        "scale_factor": 0.003937007859349251
+      }
     },
     {
       "short_name": "otci",
       "target_path": "/measurements/image/otci",
       "source_path": "otci.nc:OTCI",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 255,
+        "add_offset": 0.0,
+        "long_name": "OLCI Terrestrial Chlorophyll Index of the current land pixel",
+        "scale_factor": 0.025590552017092705
+      }
     },
     {
       "short_name": "iwv",
       "target_path": "/measurements/image/iwv",
       "source_path": "iwv.nc:IWV",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 255,
+        "add_offset": 0.0,
+        "long_name": "Integrated water vapour column above the current pixel",
+        "scale_factor": 0.29999998211860657,
+        "units": "kg.m-2"
+      }
     },
     {
       "short_name": "lqsf",
-        "target_path": "/quality/image/lqsf",
-        "source_path": "lqsf.nc:LQSF",
-        "item_format": "netcdf"
+      "target_path": "/quality/image/lqsf",
+      "source_path": "lqsf.nc:LQSF",
+      "item_format": "netcdf",
+      "attributes": {
+        "flag_masks": [
+          1,
+          2,
+          4,
+          2097152,
+          8,
+          8388608,
+          16777216,
+          16,
+          32,
+          64,
+          128,
+          256,
+          512,
+          1024,
+          2048,
+          4096,
+          8192,
+          16384,
+          32768,
+          65536,
+          131072,
+          262144,
+          524288,
+          1048576,
+          4194304
+        ],
+        "flag_meanings": "INVALID WATER LAND COASTLINE CLOUD CLOUD_AMBIGUOUS CLOUD_MARGIN SNOW_ICE INLAND_WATER TIDAL COSMETIC SUSPECT HISOLZEN SATURATED WV_FAIL GIFAPAR_FAIL OTCI_FAIL LRAYFAIL GIFAPAR_CLASS_BAD GIFAPAR_CLASS_WS GIFAPAR_CLASS_CSI GIFAPAR_CLASS_BRIGHT GIFAPAR_CLASS_INVAL_REC OTCI_BAD_IN OTCI_CLASS_CLSN",
+        "long_name": "Classification flags, quality and science flags for Land pixels"
+      }
     },
     {
       "short_name": "otci_quality_flags",
       "target_path": "/quality/image/otci_quality_flags",
       "source_path": "otci.nc:OTCI_quality_flags",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "flag_descriptions": "Soil flag bit 1\\tSoil flag bit 2\\tAngle flag bit 1\\tAngle flag bit 2\\tRadiometry flag\\tTCI flag",
+        "flag_masks": [
+          1,
+          2,
+          16,
+          32,
+          64,
+          128
+        ],
+        "flag_meanings": "Soil_flag_1 Soil_flag_2 Angle_flag_1 Angle_flag_2 Radiometry_flag TCI_flag",
+        "long_name": "OLCI Terrestrial Vegetation Index Quality Flags"
+      }
     },
     {
-      "short_name": "otci_unc",
-      "target_path": "/quality/image/otci_unc",
+      "short_name": "otci_err",
+      "target_path": "/quality/image/otci_err",
       "source_path": "otci.nc:OTCI_unc",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 255,
+        "add_offset": 0.0,
+        "long_name": "Uncertainty estimate for the OLCI Terrestrial Chlorophyll Index of the current land pixel",
+        "scale_factor": 0.025590552017092705
+      }
     },
     {
-      "short_name": "gifapar_unc",
-      "target_path": "/quality/image/gifapar_unc",
+      "short_name": "gifapar_err",
+      "target_path": "/quality/image/gifapar_err",
       "source_path": "gifapar.nc:GIFAPAR_unc",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 255,
+        "add_offset": 0.0,
+        "long_name": "Uncertainty estimate for the GIFAPAR of the current land pixel",
+        "scale_factor": 0.003937007859349251
+      }
     },
     {
       "short_name": "rc681_err",
       "target_path": "/quality/image/rc681_err",
       "source_path": "rc_gifapar.nc:RC681_unc",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "long_name": "Uncertainty estimate for the Rectified reflectance for the band O10 on the current land pixel",
+        "scale_factor": 1.5259254723787308e-05,
+        "units": "mW.m-2.sr-1.nm-1"
+      }
     },
     {
-      "short_name": "rc865_unc",
-      "target_path": "/quality/image/rc865_unc",
+      "short_name": "rc865_err",
+      "target_path": "/quality/image/rc865_err",
       "source_path": "rc_gifapar.nc:RC865_unc",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "long_name": "Uncertainty estimate for Rectified reflectance for the band O17 on the current land pixel",
+        "scale_factor": 1.5259254723787308e-05,
+        "units": "mW.m-2.sr-1.nm-1"
+      }
     },
     {
-      "short_name": "iwv_unc",
-      "target_path": "/quality/image/iwv_unc",
+      "short_name": "iwv_err",
+      "target_path": "/quality/image/iwv_err",
       "source_path": "iwv.nc:IWV_unc",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 255,
+        "add_offset": 0.0,
+        "long_name": "Uncertainty estimate for the Integrated water vapour column above the current pixel",
+        "scale_factor": 0.29999998211860657,
+        "units": "kg.m-2"
+      }
     },
-
-
     {
       "short_name": "geometry_oaa",
       "target_path": "/conditions/geometry/oaa",
       "source_path": "tie_geometries.nc:OAA",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "coordinates": "latitude longitude",
+        "long_name": "Observation (Viewing) Azimuth Angle",
+        "scale_factor": 1e-06,
+        "units": "degrees",
+        "valid_max": 180000000,
+        "valid_min": -180000000
+      }
     },
     {
       "short_name": "geometry_oza",
       "target_path": "/conditions/geometry/oza",
       "source_path": "tie_geometries.nc:OZA",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 4294967295,
+        "coordinates": "latitude longitude",
+        "long_name": "Observation (Viewing) Zenith Angle",
+        "scale_factor": 1e-06,
+        "units": "degrees",
+        "valid_max": 180000000,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "geometry_saa",
       "target_path": "/conditions/geometry/saa",
       "source_path": "tie_geometries.nc:SAA",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "coordinates": "latitude longitude",
+        "long_name": "Sun Azimuth Angle",
+        "scale_factor": 1e-06,
+        "units": "degrees",
+        "valid_max": 180000000,
+        "valid_min": -180000000
+      }
     },
     {
       "short_name": "geometry_sza",
       "target_path": "/conditions/geometry/sza",
       "source_path": "tie_geometries.nc:SZA",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 4294967295,
+        "coordinates": "latitude longitude",
+        "long_name": "Sun Zenith Angle",
+        "scale_factor": 1e-06,
+        "units": "degrees",
+        "valid_max": 180000000,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "geometry_altitude",
       "target_path": "/conditions/geometry/altitude",
       "source_path": "geo_coordinates.nc:altitude",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -32768,
+        "long_name": "DEM corrected altitude",
+        "standard_name": "altitude",
+        "units": "m",
+        "valid_max": 9000,
+        "valid_min": -1000
+      }
     },
     {
       "short_name": "meteo_atmospheric_temperature_profile",
       "target_path": "/conditions/meteo/atmospheric_temperature_profile",
       "source_path": "tie_meteo.nc:atmospheric_temperature_profile",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1.0,
+        "ancillary_variables": "reference_pressure_level",
+        "coordinates": "latitude longitude",
+        "long_name": "Air temperature profile",
+        "standard_name": "air_temperature",
+        "units": "K",
+        "valid_max": 400.0,
+        "valid_min": 0.0
+      }
     },
     {
       "short_name": "meteo_horizontal_wind",
       "target_path": "/conditions/meteo/horizontal_wind",
       "source_path": "tie_meteo.nc:horizontal_wind",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 9.969209968386869e+36,
+        "coordinates": "latitude longitude",
+        "long_name": "Horizontal wind vector at 10m altitude",
+        "units": "m.s-1",
+        "valid_max": 100.0,
+        "valid_min": -100.0
+      }
     },
     {
       "short_name": "meteo_humidity",
       "target_path": "/conditions/meteo/humidity",
       "source_path": "tie_meteo.nc:humidity",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1.0,
+        "coordinates": "latitude longitude",
+        "long_name": "Relative humidity",
+        "standard_name": "relative_humidity",
+        "units": "%",
+        "valid_max": 100.0,
+        "valid_min": 0.0
+      }
     },
     {
       "short_name": "meteo_reference_pressure_level",
       "target_path": "/conditions/meteo/reference_pressure_level",
       "source_path": "tie_meteo.nc:reference_pressure_level",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1.0,
+        "coordinates": "latitude longitude",
+        "long_name": "Reference pressure level",
+        "standard_name": "air_pressure",
+        "units": "hPa",
+        "valid_max": 1500.0,
+        "valid_min": 0.0
+      }
     },
     {
       "short_name": "meteo_sea_level_pressure",
       "target_path": "/conditions/meteo/sea_level_pressure",
       "source_path": "tie_meteo.nc:sea_level_pressure",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1.0,
+        "coordinates": "latitude longitude",
+        "long_name": "Mean sea level pressure",
+        "standard_name": "air_pressure_at_sea_level",
+        "units": "hPa",
+        "valid_max": 1500.0,
+        "valid_min": 0.0
+      }
     },
     {
       "short_name": "meteo_total_columnar_water_vapour",
       "target_path": "/conditions/meteo/total_columnar_water_vapour",
       "source_path": "tie_meteo.nc:total_columnar_water_vapour",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1.0,
+        "coordinates": "latitude longitude",
+        "long_name": "Total column water vapour",
+        "standard_name": "atmosphere_water_vapor_content",
+        "units": "kg.m-2",
+        "valid_max": 100.0,
+        "valid_min": 0.0
+      }
     },
     {
       "short_name": "meteo_total_ozone",
       "target_path": "/conditions/meteo/total_ozone",
       "source_path": "tie_meteo.nc:total_ozone",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1.0,
+        "coordinates": "latitude longitude",
+        "long_name": "Total columnar ozone",
+        "standard_name": "atmosphere_mass_content_of_ozone",
+        "units": "kg.m-2",
+        "valid_max": 100.0,
+        "valid_min": 0.0
+      }
     },
     {
       "short_name": "instrument_fwhm",
       "target_path": "/conditions/instrument/fwhm",
       "source_path": "instrument_data.nc:FWHM",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1.0,
+        "ancillary_variables": "detector_index lambda0",
+        "long_name": "OLCI bandwidth (Full Widths at Half Maximum)",
+        "units": "nm",
+        "valid_max": 650.0,
+        "valid_min": 0.0
+      }
     },
     {
       "short_name": "instrument_frame_offset",
       "target_path": "/conditions/instrument/frame_offset",
       "source_path": "instrument_data.nc:frame_offset",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -32768,
+        "ancillary_variables": "detector_index",
+        "long_name": "Re-sampling along-track frame offset",
+        "valid_max": 15,
+        "valid_min": -15
+      }
     },
     {
       "short_name": "instrument_lambda0",
       "target_path": "/conditions/instrument/lambda0",
       "source_path": "instrument_data.nc:lambda0",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1.0,
+        "ancillary_variables": "detector_index FWHM",
+        "long_name": "OLCI characterised central wavelength",
+        "units": "nm",
+        "valid_max": 1040.0,
+        "valid_min": 390.0
+      }
     },
     {
       "short_name": "instrument_relative_spectral_covariance",
       "target_path": "/conditions/instrument/relative_spectral_covariance",
       "source_path": "instrument_data.nc:relative_spectral_covariance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": NaN,
+        "ancillary_variables": "lambda0",
+        "long_name": "Relative spectral covariance matrix"
+      }
     },
     {
       "short_name": "instrument_solar_flux",
       "target_path": "/conditions/instrument/solar_flux",
       "source_path": "instrument_data.nc:solar_flux",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1.0,
+        "ancillary_variables": "detector_index lambda0",
+        "long_name": "In-band solar irradiance, seasonally corrected",
+        "units": "mW.m-2.nm-1",
+        "valid_max": 2500.0,
+        "valid_min": 500.0
+      }
     },
     {
       "short_name": "stac_discovery",
