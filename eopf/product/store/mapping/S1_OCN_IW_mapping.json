@@ -1,984 +1,822 @@
 {
-    "recognition": {
-        "filename_pattern": "S1._[IE]W_OCN.*SAFE",
-        "product_type": "S1_OCN_IW",
-        "product_type_pattern": "OCN",
-        "version": "003.40"
+  "recognition": {
+    "filename_pattern": "S1._S[123456]_OCN_2S.*SAFE",
+    "product_type": "S1_OCN_SM",
+    "product_type_pattern": "OCN",
+    "version": "003.40"
+  },
+  "data_mapping": [
+    {
+      "short_name": "osw_polarisation",
+      "target_path": "/conditions/osw/polarisation",
+      "source_path": "measurement/.*nc",
+      "item_format": "attribute_element_to_flag_variable",
+      "_comments": [
+        "not available as a variable in legacy product"
+      ],
+      "paramers": {
+        "dimensions": [
+          "sub_image"
+        ]
+      },
+      "accessor_config": {
+        "flag_values": "flags_polarisation/flag_values",
+        "flag_meanings": "flags_polarisation/flag_meanings",
+        "store_cls": "store_cls/netcdf",
+        "attr_name": "attr_name/polarisation"
+      }
     },
-    "data_mapping": [
-        {
-            "short_name": "owiLon",
-            "target_path": "/coordinates/owi/owiLon",
-            "source_path": "measurement/.*nc:owiLon",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "owiLat",
-            "target_path": "/coordinates/owi/owiLat",
-            "source_path": "measurement/.*nc:owiLat",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "owiPolarisationName",
-            "target_path": "/coordinates/owi/owiPolarisationName",
-            "source_path": "measurement/.*nc",
-            "item_format": "attribute_element_to_flag_variable",
-            "parameters": {
-                "dimensions": [
-                    "sub_image"
-                ]
-            },
-            "accessor_config": {
-                "flag_values": "flags/flag_values",
-                "flag_meanings": "flags/flag_meanings",
-                "store_cls": "store_cls/netcdf",
-                "attr_name": "attr_name/polarisation"
-            }
-        },
-        {
-            "short_name": "time_start_owi",
-            "target_path": "/coordinates/owi/time_start",
-            "source_path": "measurement/.*nc",
-            "item_format": "attribute_element_to_float_variable",
-            "parameters": {
-                "dimensions": [
-                    "sub_image"
-                ]
-            },
-            "accessor_config": {
-                "store_cls": "store_cls/netcdf_string_to_time",
-                "attr_name": "attr_name/firstMeasurementTime"
-            }
-        },
-        {
-            "short_name": "time_stop_owi",
-            "target_path": "/coordinates/owi/time_stop",
-            "source_path": "measurement/.*nc",
-            "item_format": "attribute_element_to_float_variable",
-            "parameters": {
-                "dimensions": [
-                    "sub_image"
-                ]
-            },
-            "accessor_config": {
-                "store_cls": "store_cls/netcdf_string_to_time",
-                "attr_name": "attr_name/lastMeasurementTime"
-            }
-        },
-        {
-            "short_name": "oswLon",
-            "target_path": "/coordinates/osw/oswLon",
-            "source_path": "measurement/.*nc:oswLon",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswLat",
-            "target_path": "/coordinates/osw/oswLat",
-            "source_path": "measurement/.*nc:oswLat",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "polarisation_osw",
-            "target_path": "/coordinates/osw/polarisation",
-            "source_path": "measurement/.*nc",
-            "item_format": "attribute_element_to_flag_variable",
-            "parameters": {
-                "dimensions": [
-                    "sub_image"
-                ]
-            },
-            "accessor_config": {
-                "flag_values": "flags/flag_values",
-                "flag_meanings": "flags/flag_meanings",
-                "store_cls": "store_cls/netcdf",
-                "attr_name": "attr_name/polarisation"
-            }
-        },
-        {
-            "short_name": "sub_swath",
-            "target_path": "/coordinates/osw/sub_swath",
-            "source_path": "measurement",
-            "item_format": "filename_to_subswath",
-            "parameters": {
-                "dimensions": [
-                    "sub_image"
-                ],
-                "attributes": {
-                    "flag_values": [
-                        0,
-                        0,
-                        1,
-                        2
-                    ],
-                    "flag_meanings": "iw ew wv1 wv2"
-                }
-            }
-        },
-        {
-            "short_name": "time_start_osw",
-            "target_path": "/coordinates/osw/time_start",
-            "source_path": "measurement/.*nc",
-            "item_format": "attribute_element_to_float_variable",
-            "parameters": {
-                "dimensions": [
-                    "sub_image"
-                ]
-            },
-            "accessor_config": {
-                "store_cls": "store_cls/netcdf_string_to_time",
-                "attr_name": "attr_name/firstMeasurementTime"
-            }
-        },
-        {
-            "short_name": "time_stop_osw",
-            "target_path": "/coordinates/osw/time_stop",
-            "source_path": "measurement/.*nc",
-            "item_format": "attribute_element_to_float_variable",
-            "parameters": {
-                "dimensions": [
-                    "sub_image"
-                ]
-            },
-            "accessor_config": {
-                "store_cls": "store_cls/netcdf_string_to_time",
-                "attr_name": "attr_name/lastMeasurementTime"
-            }
-        },
-        {
-            "short_name": "oswK",
-            "target_path": "/coordinates/osw/oswK",
-            "source_path": "measurement/.*nc:oswK",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswPhi",
-            "target_path": "/coordinates/osw/oswPhi",
-            "source_path": "measurement/.*nc:oswPhi",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswKx",
-            "target_path": "/coordinates/osw/oswKx",
-            "source_path": "measurement/.*nc:oswKx",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswKy",
-            "target_path": "/coordinates/osw/oswKy",
-            "source_path": "measurement/.*nc:oswKy",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswJx",
-            "target_path": "/coordinates/osw/oswJx",
-            "source_path": "measurement/.*nc:oswJx",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswJy",
-            "target_path": "/coordinates/osw/oswJy",
-            "source_path": "measurement/.*nc:oswJy",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlLon",
-            "target_path": "/coordinates/rvl/rvlLon",
-            "source_path": "measurement/.*nc:rvlLon",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlLat",
-            "target_path": "/coordinates/rvl/rvlLat",
-            "source_path": "measurement/.*nc:rvlLat",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "polarisation_rvl",
-            "target_path": "/coordinates/rvl/polarisation",
-            "source_path": "measurement/.*nc",
-            "item_format": "attribute_element_to_flag_variable",
-            "parameters": {
-                "dimensions": [
-                    "sub_image"
-                ]
-            },
-            "accessor_config": {
-                "flag_values": "flags/flag_values",
-                "flag_meanings": "flags/flag_meanings",
-                "store_cls": "store_cls/netcdf",
-                "attr_name": "attr_name/polarisation"
-            }
-        },
-        {
-            "short_name": "rvlSwathNumber",
-            "target_path": "/coordinates/rvl/rvlSwathNumber",
-            "source_path": "measurement/.*nc:rvlSwathNumber",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "time_start_rvl",
-            "target_path": "/coordinates/rvl/time_start",
-            "source_path": "measurement/.*nc",
-            "item_format": "attribute_element_to_float_variable",
-            "parameters": {
-                "dimensions": [
-                    "sub_image"
-                ]
-            },
-            "accessor_config": {
-                "store_cls": "store_cls/netcdf_string_to_time",
-                "attr_name": "attr_name/firstMeasurementTime"
-            }
-        },
-        {
-            "short_name": "time_stop_rvl",
-            "target_path": "/coordinates/rvl/time_stop",
-            "source_path": "measurement/.*nc",
-            "item_format": "attribute_element_to_float_variable",
-            "parameters": {
-                "dimensions": [
-                    "sub_image"
-                ]
-            },
-            "accessor_config": {
-                "store_cls": "store_cls/netcdf_string_to_time",
-                "attr_name": "attr_name/lastMeasurementTime"
-            }
-        },
-        {
-            "short_name": "sv_time",
-            "target_path": "/coordinates/state_vector/sv_time",
-            "source_path": "measurement/.*nc",
-            "item_format": "attribute_element_to_float_variable",
-            "parameters": {
-                "dimensions": [
-                    "sub_image"
-                ]
-            },
-            "accessor_config": {
-                "store_cls": "store_cls/netcdf_string_to_time",
-                "attr_name": "attr_name/statevectorUtc"
-            }
-        },
-        {
-            "short_name": "owiWindSpeed",
-            "target_path": "/measurements/owi/owiWindSpeed",
-            "source_path": "measurement/.*nc:owiWindSpeed",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "owiWindDirection",
-            "target_path": "/measurements/owi/owiWindDirection",
-            "source_path": "measurement/.*nc:owiWindDirection",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "owiNrcs",
-            "target_path": "/measurements/owi/owiNrcs",
-            "source_path": "measurement/.*nc:owiNrcs",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "owiNesz",
-            "target_path": "/measurements/owi/owiNesz",
-            "source_path": "measurement/.*nc:owiNesz",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "owiPBright",
-            "target_path": "/measurements/owi/owiPBright",
-            "source_path": "measurement/.*nc:owiPBright",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "owiCalConstObsi",
-            "target_path": "/measurements/owi/owiCalConstObsi",
-            "source_path": "measurement/.*nc:owiCalConstObsi",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "owiCalConstInci",
-            "target_path": "/measurements/owi/owiCalConstInci",
-            "source_path": "measurement/.*nc:owiCalConstInci",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "owiNrcsNeszCorr",
-            "target_path": "/measurements/owi/owiNrcsNeszCorr",
-            "source_path": "measurement/.*nc:owiNrcsNeszCorr",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswPolSpec",
-            "target_path": "/measurements/osw/oswPolSpec",
-            "source_path": "measurement/.*nc:oswPolSpec",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswPolSpecNV",
-            "target_path": "/measurements/osw/oswPolSpecNV",
-            "source_path": "measurement/.*nc:oswPolSpecNV",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswPartitions",
-            "target_path": "/measurements/osw/oswPartitions",
-            "source_path": "measurement/.*nc:oswPartitions",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswAzCutoff",
-            "target_path": "/measurements/osw/oswAzCutoff",
-            "source_path": "measurement/.*nc:oswAzCutoff",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswRaCutoff",
-            "target_path": "/measurements/osw/oswRaCutoff",
-            "source_path": "measurement/.*nc:oswRaCutoff",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswSpecRes",
-            "target_path": "/measurements/osw/oswSpecRes",
-            "source_path": "measurement/.*nc:oswSpecRes",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswHs",
-            "target_path": "/measurements/osw/oswHs",
-            "source_path": "measurement/.*nc:oswHs",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswHsNV",
-            "target_path": "/measurements/osw/oswHsNV",
-            "source_path": "measurement/.*nc:oswHsNV",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswWl",
-            "target_path": "/measurements/osw/oswWl",
-            "source_path": "measurement/.*nc:oswWl",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswDirmet",
-            "target_path": "/measurements/osw/oswDirmet",
-            "source_path": "measurement/.*nc:oswDirmet",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswSnr",
-            "target_path": "/measurements/osw/oswSnr",
-            "source_path": "measurement/.*nc:oswSnr",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswAmbiFac",
-            "target_path": "/measurements/osw/oswAmbiFac",
-            "source_path": "measurement/.*nc:oswAmbiFac",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswNrcs",
-            "target_path": "/measurements/osw/oswNrcs",
-            "source_path": "measurement/.*nc:oswNrcs",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswInten",
-            "target_path": "/measurements/osw/oswInten",
-            "source_path": "measurement/.*nc:oswInten",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswNv",
-            "target_path": "/measurements/osw/oswNv",
-            "source_path": "measurement/.*nc:oswNv",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswSkew",
-            "target_path": "/measurements/osw/oswSkew",
-            "source_path": "measurement/.*nc:oswSkew",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswKurt",
-            "target_path": "/measurements/osw/oswKurt",
-            "source_path": "measurement/.*nc:oswKurt",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswWindSpeed",
-            "target_path": "/measurements/osw/oswWindSpeed",
-            "source_path": "measurement/.*nc:oswWindSpeed",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswWindDirection",
-            "target_path": "/measurements/osw/oswWindDirection",
-            "source_path": "measurement/.*nc:oswWindDirection",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswWindSeaHs",
-            "target_path": "/measurements/osw/oswWindSeaHs",
-            "source_path": "measurement/.*nc:oswWindSeaHs",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswWaveAge",
-            "target_path": "/measurements/osw/oswWaveAge",
-            "source_path": "measurement/.*nc:oswWaveAge",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswNlWidth",
-            "target_path": "/measurements/osw/oswNlWidth",
-            "source_path": "measurement/.*nc:oswNlWidth",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswTotalHs",
-            "target_path": "/measurements/osw/oswTotalHs",
-            "source_path": "measurement/.*nc:oswTotalHs",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswTotalHsStdev",
-            "target_path": "/measurements/osw/oswTotalHsStdev",
-            "source_path": "measurement/.*nc:oswTotalHsStdev",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswCartSpecIm",
-            "target_path": "/measurements/osw/oswCartSpecIm",
-            "source_path": "measurement/.*nc:oswCartSpecIm",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswCartSpecRe",
-            "target_path": "/measurements/osw/oswCartSpecRe",
-            "source_path": "measurement/.*nc:oswCartSpecRe",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlNrcs",
-            "target_path": "/measurements/rvl/rvlNrcs",
-            "source_path": "measurement/.*nc:rvlNrcs",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlDcObs",
-            "target_path": "/measurements/rvl/rvlDcObs",
-            "source_path": "measurement/.*nc:rvlDcObs",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlDcObsStd",
-            "target_path": "/measurements/rvl/rvlDcObsStd",
-            "source_path": "measurement/.*nc:rvlDcObsStd",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlRadVel",
-            "target_path": "/measurements/rvl/rvlRadVel",
-            "source_path": "measurement/.*nc:rvlRadVel",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlRadVelStd",
-            "target_path": "/measurements/rvl/rvlRadVelStd",
-            "source_path": "measurement/.*nc:rvlRadVelStd",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlSnr",
-            "target_path": "/measurements/rvl/rvlSnr",
-            "source_path": "measurement/.*nc:rvlSnr",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "owiInversionQuality",
-            "target_path": "/quality/owi/owiInversionQuality",
-            "source_path": "measurement/.*nc:owiInversionQuality",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "owiWindQuality",
-            "target_path": "/quality/owi/owiWindQuality",
-            "source_path": "measurement/.*nc:owiWindQuality",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswQualityCrossSpectraRe",
-            "target_path": "/quality/osw/oswQualityCrossSpectraRe",
-            "source_path": "measurement/.*nc:oswQualityCrossSpectraRe",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswQualityCrossSpectraIm",
-            "target_path": "/quality/osw/oswQualityCrossSpectraIm",
-            "source_path": "measurement/.*nc:oswQualityCrossSpectraIm",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswIconf",
-            "target_path": "/quality/osw/oswIconf",
-            "source_path": "measurement/.*nc:oswIconf",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswQualityFlagPartition",
-            "target_path": "/quality/osw/oswQualityFlagPartition",
-            "source_path": "measurement/.*nc:oswQualityFlagPartition",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswQualityFlag",
-            "target_path": "/quality/osw/oswQualityFlag",
-            "source_path": "measurement/.*nc:oswQualityFlag",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlConfDcObs",
-            "target_path": "/quality/rvl/rvlConfDcObs",
-            "source_path": "measurement/.*nc:rvlConfDcObs",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sv_x",
-            "target_path": "/conditions/state_vector/sv_x",
-            "source_path": "measurement/.*nc",
-            "item_format": "attribute_element_to_float_variable",
-            "accessor_config": {
-                "store_cls": "store_cls/netcdf",
-                "index": "index/0",
-                "attr_name": "attr_name/pos"
-            },
-            "parameters": {
-                "dimensions": [
-                    "sub_image"
-                ]
-            }
-        },
-        {
-            "short_name": "sv_y",
-            "target_path": "/conditions/state_vector/sv_y",
-            "source_path": "measurement/.*nc",
-            "item_format": "attribute_element_to_float_variable",
-            "accessor_config": {
-                "store_cls": "store_cls/netcdf",
-                "index": "index/1",
-                "attr_name": "attr_name/pos"
-            },
-            "parameters": {
-                "dimensions": [
-                    "sub_image"
-                ]
-            }
-        },
-        {
-            "short_name": "sv_z",
-            "target_path": "/conditions/state_vector/sv_z",
-            "source_path": "measurement/.*nc:",
-            "item_format": "attribute_element_to_float_variable",
-            "accessor_config": {
-                "store_cls": "store_cls/netcdf",
-                "index": "index/2",
-                "attr_name": "attr_name/pos"
-            },
-            "parameters": {
-                "dimensions": [
-                    "sub_image"
-                ]
-            }
-        },
-        {
-            "short_name": "sv_vx",
-            "target_path": "/conditions/state_vector/sv_vx",
-            "source_path": "measurement/.*nc",
-            "item_format": "attribute_element_to_float_variable",
-            "accessor_config": {
-                "store_cls": "store_cls/netcdf",
-                "index": "index/0",
-                "attr_name": "attr_name/vel"
-            },
-            "parameters": {
-                "dimensions": [
-                    "sub_image"
-                ]
-            }
-        },
-        {
-            "short_name": "sv_vy",
-            "target_path": "/conditions/state_vector/sv_vy",
-            "source_path": "measurement/.*nc",
-            "item_format": "attribute_element_to_float_variable",
-            "accessor_config": {
-                "store_cls": "store_cls/netcdf",
-                "index": "index/1",
-                "attr_name": "attr_name/vel"
-            },
-            "parameters": {
-                "dimensions": [
-                    "sub_image"
-                ]
-            }
-        },
-        {
-            "short_name": "sv_vz",
-            "target_path": "/conditions/state_vector/sv_vz",
-            "source_path": "measurement/.*nc",
-            "item_format": "attribute_element_to_float_variable",
-            "accessor_config": {
-                "store_cls": "store_cls/netcdf",
-                "index": "index/2",
-                "attr_name": "attr_name/vel"
-            },
-            "parameters": {
-                "dimensions": [
-                    "sub_image"
-                ]
-            }
-        },
-        {
-            "short_name": "owiIncidenceAngle",
-            "target_path": "/conditions/owi/owiIncidenceAngle",
-            "source_path": "measurement/.*nc:owiIncidenceAngle",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "owiElevationAngle",
-            "target_path": "/conditions/owi/owiElevationAngle",
-            "source_path": "measurement/.*nc:owiElevationAngle",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "owiEcmwfWindSpeed",
-            "target_path": "/conditions/owi/owiEcmwfWindSpeed",
-            "source_path": "measurement/.*nc:owiEcmwfWindSpeed",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "owiEcmwfWindDirection",
-            "target_path": "/conditions/owi/owiEcmwfWindDirection",
-            "source_path": "measurement/.*nc:owiEcmwfWindDirection",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "owiNrcsCmod",
-            "target_path": "/conditions/owi/owiNrcsCmod",
-            "source_path": "measurement/.*nc:owiNrcsCmod",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "owiMask",
-            "target_path": "/conditions/owi/owiMask",
-            "source_path": "measurement/.*nc:owiMask",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "owiHeading",
-            "target_path": "/conditions/owi/owiHeading",
-            "source_path": "measurement/.*nc:owiHeading",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswLookSeparationTime",
-            "target_path": "/conditions/osw/oswLookSeparationTime",
-            "source_path": "measurement/.*nc:oswLookSeparationTime",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswEcmwfWindSpeed",
-            "target_path": "/conditions/osw/oswEcmwfWindSpeed",
-            "source_path": "measurement/.*nc:oswEcmwfWindSpeed",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswEcmwfWindDirection",
-            "target_path": "/conditions/osw/oswEcmwfWindDirection",
-            "source_path": "measurement/.*nc:oswEcmwfWindDirection",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswDepth",
-            "target_path": "/conditions/osw/oswDepth",
-            "source_path": "measurement/.*nc:oswDepth",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswLandFlag",
-            "target_path": "/conditions/osw/oswLandFlag",
-            "source_path": "measurement/.*nc:oswLandFlag",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswLandCoverage",
-            "target_path": "/conditions/osw/oswLandCoverage",
-            "source_path": "measurement/.*nc:oswLandCoverage",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswIncidenceAngle",
-            "target_path": "/conditions/osw/oswIncidenceAngle",
-            "source_path": "measurement/.*nc:oswIncidenceAngle",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswHeading",
-            "target_path": "/conditions/osw/oswHeading",
-            "source_path": "measurement/.*nc:oswHeading",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswGroundRngSize",
-            "target_path": "/conditions/osw/oswGroundRngSize",
-            "source_path": "measurement/.*nc:oswGroundRngSize",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswAziSize",
-            "target_path": "/conditions/osw/oswAziSize",
-            "source_path": "measurement/.*nc:oswAziSize",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "oswPrf",
-            "target_path": "/conditions/osw/oswPrf",
-            "source_path": "measurement/.*nc",
-            "item_format": "attribute_element_to_float_variable",
-            "accessor_config": {
-                "store_cls": "store_cls/netcdf",
-                "attr_name": "attr_name/prf"
-            }
-        },
-        {
-            "short_name": "rvlLandCoverage",
-            "target_path": "/conditions/rvl/rvlLandCoverage",
-            "source_path": "measurement/.*nc:rvlLandCoverage",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlLandFlag",
-            "target_path": "/conditions/rvl/rvlLandFlag",
-            "source_path": "measurement/.*nc:rvlLandFlag",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlIncidenceAngle",
-            "target_path": "/conditions/rvl/rvlIncidenceAngle",
-            "source_path": "measurement/.*nc:rvlIncidenceAngle",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlHeading",
-            "target_path": "/conditions/rvl/rvlHeading",
-            "source_path": "measurement/.*nc:rvlHeading",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlDcGeo",
-            "target_path": "/conditions/rvl/rvlDcGeo",
-            "source_path": "measurement/.*nc:rvlDcGeo",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlDcMiss",
-            "target_path": "/conditions/rvl/rvlDcMiss",
-            "source_path": "measurement/.*nc:rvlDcMiss",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlUssX",
-            "target_path": "/conditions/rvl/rvlUssX",
-            "source_path": "measurement/.*nc:rvlUssX",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlUssY",
-            "target_path": "/conditions/rvl/rvlUssY",
-            "source_path": "measurement/.*nc:rvlUssY",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlPitch",
-            "target_path": "/conditions/rvl/rvlPitch",
-            "source_path": "measurement/.*nc:rvlPitch",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlYaw",
-            "target_path": "/conditions/rvl/rvlYaw",
-            "source_path": "measurement/.*nc:rvlYaw",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlRoll",
-            "target_path": "/conditions/rvl/rvlRoll",
-            "source_path": "measurement/.*nc:rvlRoll",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlSweepAngle",
-            "target_path": "/conditions/rvl/rvlSweepAngle",
-            "source_path": "measurement/.*nc:rvlSweepAngle",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlSlantRangeTime",
-            "target_path": "/conditions/rvl/rvlSlantRangeTime",
-            "source_path": "measurement/.*nc:rvlSlantRangeTime",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlZeroDopplerTime",
-            "target_path": "/conditions/rvl/rvlZeroDopplerTime",
-            "source_path": "measurement/.*nc:rvlZeroDopplerTime",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlGroundRngSize",
-            "target_path": "/conditions/rvl/rvlGroundRngSize",
-            "source_path": "measurement/.*nc:rvlGroundRngSize",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "rvlAziSize",
-            "target_path": "/conditions/rvl/rvlAziSize",
-            "source_path": "measurement/.*nc:rvlAziSize",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "metadata",
-            "source_path": "manifest.safe",
-            "target_path": "",
-            "item_format": "xmlmetadata",
-            "accessor_config": {
-                "mapping": "metadata_mapping/xfdumanifest-CF",
-                "namespaces": "metadata_mapping/namespaces"
-            }
-        },
-        {
-            "short_name": "metadata",
-            "source_path": "manifest.safe",
-            "target_path": "",
-            "item_format": "xmlmetadata",
-            "accessor_config": {
-                "mapping": "metadata_mapping/xfdumanifest-OM-EOP",
-                "namespaces": "metadata_mapping/namespaces"
-            }
-        },
-        {
-            "short_name": "manifest",
-            "target_path": "/misc/manifest.safe",
-            "source_path": "manifest.safe",
-            "item_format": "misc"
-        }
-    ],
-    "flags": {
-        "flag_values": [
-            1,
-            2,
-            3,
-            4,
-            5,
-            6
-        ],
-        "flag_meanings": "HH+HV HH HV VV+VH VV VH"
+    {
+      "short_name": "rvl_polarisation",
+      "target_path": "/conditions/rvl/polarisation",
+      "source_path": "measurement/.*nc",
+      "item_format": "attribute_element_to_flag_variable",
+      "_comments": [
+        "not available as a variable in legacy product"
+      ],
+      "paramers": {
+        "dimensions": [
+          "sub_image"
+        ]
+      },
+      "accessor_config": {
+        "flag_values": "flags_polarisation/flag_values",
+        "flag_meanings": "flags_polarisation/flag_meanings",
+        "store_cls": "store_cls/netcdf",
+        "attr_name": "attr_name/polarisation"
+      }
     },
-    "store_cls": {
-        "netcdf": "eopf.product.store.netcdf.EONetCDFStore",
-        "netcdf_string_to_time": "eopf.product.store.netcdf.EONetcdfStringToTimeAccessor"
+    {
+      "short_name": "owiRadVel",
+      "target_path": null,
+      "source_path": "measurement/.*nc:owiRadVel",
+      "item_format": "netcdf",
+      "_comments": [
+        "not kept in new format"
+      ]
     },
-    "attr_name": {
-        "pos": "statevectorPos",
-        "vel": "statevectorVel",
-        "polarisation": "polarisation",
-        "firstMeasurementTime": "firstMeasurementTime",
-        "lastMeasurementTime": "lastMeasurementTime",
-        "statevectorUtc": "statevectorUtc",
-        "prf": "prf"
+    {
+      "short_name": "owiHs",
+      "target_path": null,
+      "source_path": "measurement/.*nc:owiHs",
+      "item_format": "netcdf",
+      "_comments": [
+        "not kept in new format"
+      ]
     },
-    "index": {
-        "0": 0,
-        "1": 1,
-        "2": 2
+    {
+      "short_name": "owiWl",
+      "target_path": null,
+      "source_path": "measurement/.*nc:owiWl",
+      "item_format": "netcdf",
+      "_comments": [
+        "not kept in new format"
+      ]
     },
-    "metadata_mapping": {
-        "xfdumanifest-CF": {
-            "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName/text())",
-            "history": "concat(metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/sentinel-safe:software/@name,' ',metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/sentinel-safe:software/@version,' ',metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/@stop)",
-            "institution": "concat(metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/@organisation,', ',metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/@name)",
-            "source": "concat(metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:familyName/text(), metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:number/text(), ' ',metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/@abbreviation,' ',metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/text())",
-            "comment": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dispositionMode/text())",
-            "references": "'https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-3, https://sentinels.copernicus.eu/web/sentinel/user-guides/sentinel-3-olci/processing-levels/level-1'",
-            "Conventions": "'CF-1.9'"
-        },
-        "xfdumanifest-OM-EOP": {
-            "phenomenonTime": {
-                "beginPosition": "metadataSection/metadataObject[@ID='acquisitionPeriod']//sentinel-safe:acquisitionPeriod/sentinel-safe:startTime",
-                "endPosition": "metadataSection/metadataObject[@ID='acquisitionPeriod']//sentinel-safe:acquisitionPeriod/sentinel-safe:stopTime"
-            },
-            "resultTime": {
-                "timePosition": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:creationTime"
-            },
-            "procedure": {
-                "platform": {
-                    "shortName": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:familyName",
-                    "serialIdentifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:number"
-                },
-                "instrument": {
-                    "shortName": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/@abbreviation"
-                },
-                "sensor": {
-                    "sensorType": "'OPTICAL'",
-                    "operationalMode": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode/@identifier"
-                },
-                "acquistionParameters": {
-                    "orbitNumber": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber",
-                    "orbitDirection": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber/@groundTrackDirection"
-                }
-            },
-            "featureOfInterest": {
-                "multiExtentOf": "metadataSection/metadataObject[@ID='measurementFrameSet']/metadataWrap/xmlData/sentinel-safe:frameSet/sentinel-safe:footPrint/gml:posList"
-            },
-            "result": {
-                "product": {
-                    "fileName": "dataObjectSection/dataObject/byteStream/fileLocation/@href",
-                    "timeliness": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:timeliness"
-                }
-            },
-            "metadataProperty": {
-                "identifier": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName",
-                "creationDate": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:creationTime",
-                "acquisitionType": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dispositionMode",
-                "productType": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productType",
-                "status": "'ARCHIVED'",
-                "downlinkedTo": {
-                    "acquisitionStation": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingGroundStation",
-                    "acquisitionDate": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingStopTime"
-                },
-                "productQualityStatus": "metadataSection/metadataObject[@ID='measurementQualityInformation']/metadataWrap/xmlData/sentinel-safe:qualityInformation/sentinel-safe:extension/sentinel3:productQuality/sentinel3:onlineQualityCheck",
-                "productQualityDegradationTag": "metadataSection/metadataObject[@ID='measurementQualityInformation']/metadataWrap/xmlData/sentinel-safe:qualityInformation/sentinel-safe:extension/sentinel3:productQuality/sentinel3:degradationFlags",
-                "processing": {
-                    "processingCenter": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/@name",
-                    "processingDate": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/@stop",
-                    "processorName": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/sentinel-safe:software/@name",
-                    "processorVersion": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/sentinel-safe:software/@version"
-                }
-            }
-        },
-        "namespaces": {
-            "xfdu": "urn:ccsds:schema:xfdu:1",
-            "gml": "http://www.opengis.net/gml",
-            "safe": "http://www.esa.int/safe/sentinel/1.1",
-            "sentinel-safe": "http://www.esa.int/safe/sentinel/1.1",
-            "sentinel3": "http://www.esa.int/safe/sentinel/sentinel-3/1.0",
-            "olci": "http://www.esa.int/safe/sentinel/sentinel-3/olci/1.0"
-        }
+    {
+      "short_name": "owiDirmet",
+      "target_path": null,
+      "source_path": "measurement/.*nc:owiDirmet",
+      "item_format": "netcdf",
+      "_comments": [
+        "not kept in new format"
+      ]
+    },
+    {
+      "short_name": "owiWindSeaHs",
+      "target_path": null,
+      "source_path": "measurement/.*nc:owiWindSeaHs",
+      "item_format": "netcdf",
+      "_comments": [
+        "not kept in new format"
+      ]
+    },
+    {
+      "short_name": "owiLon",
+      "target_path": "/coordinates/owi/longitude",
+      "source_path": "measurement/.*nc:owiLon",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "owiLat",
+      "target_path": "/coordinates/owi/latitude",
+      "source_path": "measurement/.*nc:owiLat",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "owiIncidenceAngle",
+      "target_path": "/conditions/owi/incidence_angle",
+      "source_path": "measurement/.*nc:owiIncidenceAngle",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "owiElevationAngle",
+      "target_path": "/conditions/owi/elevation_angle",
+      "source_path": "measurement/.*nc:owiElevationAngle",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "owiWindSpeed",
+      "target_path": "/measurements/owi/wind_speed",
+      "source_path": "measurement/.*nc:owiWindSpeed",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "owiWindDirection",
+      "target_path": "/measurements/owi/wind_direction",
+      "source_path": "measurement/.*nc:owiWindDirection",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "owiEcmwfWindSpeed",
+      "target_path": "/conditions/owi/auxiliary_wind_speed",
+      "source_path": "measurement/.*nc:owiEcmwfWindSpeed",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "owiEcmwfWindDirection",
+      "target_path": "/conditions/owi/auxiliary_wind_direction",
+      "source_path": "measurement/.*nc:owiEcmwfWindDirection",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "owiNrcs",
+      "target_path": "/measurements/owi/nrcs",
+      "source_path": "measurement/.*nc:owiNrcs",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "owiNesz",
+      "target_path": "/measurements/owi/nesz",
+      "source_path": "measurement/.*nc:owiNesz",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "owiPBright",
+      "target_path": "/quality/owi/percentage_bright_points",
+      "source_path": "measurement/.*nc:owiPBright",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "owiNrcsCmod",
+      "target_path": "/measurements/owi/nrcs_wind_gmf",
+      "source_path": "measurement/.*nc:owiNrcsCmod",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "owiCalConstObsi",
+      "target_path": "/quality/owi/calibration_constant",
+      "source_path": "measurement/.*nc:owiCalConstObsi",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "owiCalConstInci",
+      "target_path": null,
+      "source_path": "measurement/.*nc:owiCalConstInci",
+      "item_format": "netcdf",
+      "_comments": [
+        "not kept in new format"
+      ]
+    },
+    {
+      "short_name": "owiInversionQuality",
+      "target_path": "/quality/owi/inversion_quality",
+      "source_path": "measurement/.*nc:owiInversionQuality",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "owiMask",
+      "target_path": "/conditions/owi/mask",
+      "source_path": "measurement/.*nc:owiMask",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "owiHeading",
+      "target_path": "/conditions/owi/heading",
+      "source_path": "measurement/.*nc:owiHeading",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "owiWindQuality",
+      "target_path": "/quality/owi/wind_quality",
+      "source_path": "measurement/.*nc:owiWindQuality",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "owiNrcsNeszCorr",
+      "target_path": "/measurements/owi/nrcs_noise_corrected",
+      "source_path": "measurement/.*nc:owiNrcsNeszCorr",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "owiPolarisationName",
+      "target_path": "/conditions/owi/polarisation",
+      "source_path": "measurement/.*nc:owiPolarisationName",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlLon",
+      "target_path": "/coordinates/rvl/longitude",
+      "source_path": "measurement/.*nc:rvlLon",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlLat",
+      "target_path": "/coordinates/rvl/latitude",
+      "source_path": "measurement/.*nc:rvlLat",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlLandCoverage",
+      "target_path": "/conditions/rvl/land_coverage",
+      "source_path": "measurement/.*nc:rvlLandCoverage",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlLandFlag",
+      "target_path": "/conditions/rvl/land_flag",
+      "source_path": "measurement/.*nc:rvlLandFlag",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlIncidenceAngle",
+      "target_path": "/coordinates/rvl/range",
+      "source_path": "measurement/.*nc:rvlIncidenceAngle",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlHeading",
+      "target_path": "/conditions/rvl/heading",
+      "source_path": "measurement/.*nc:rvlHeading",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlNrcs",
+      "target_path": "/measurements/rvl/nrcs",
+      "source_path": "measurement/.*nc:rvlNrcs",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlDcObs",
+      "target_path": "/measurements/rvl/dc_obs",
+      "source_path": "measurement/.*nc:rvlDcObs",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlDcObsStd",
+      "target_path": "/quality/rvl/dc_obs_std",
+      "source_path": "measurement/.*nc:rvlDcObsStd",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlRadVel",
+      "target_path": "/measurements/rvl/radial_velocity",
+      "source_path": "measurement/.*nc:rvlRadVel",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlRadVelStd",
+      "target_path": "/quality/rvl/radial_velocity_std",
+      "source_path": "measurement/.*nc:rvlRadVelStd",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlDcGeo",
+      "target_path": "/conditions/rvl/dc_geo",
+      "source_path": "measurement/.*nc:rvlDcGeo",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlDcMiss",
+      "target_path": "/conditions/rvl/dc_miss",
+      "source_path": "measurement/.*nc:rvlDcMiss",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlConfDcObs",
+      "target_path": "/quality/rvl/dc_obs_confidence",
+      "source_path": "measurement/.*nc:rvlConfDcObs",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlUssX",
+      "target_path": "/conditions/rvl/stokes_drift_x",
+      "source_path": "measurement/.*nc:rvlUssX",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlUssY",
+      "target_path": "/conditions/rvl/stokes_drift_y",
+      "source_path": "measurement/.*nc:rvlUssY",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlPitch",
+      "target_path": "/conditions/rvl/pitch",
+      "source_path": "measurement/.*nc:rvlPitch",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlYaw",
+      "target_path": "/conditions/rvl/yaw",
+      "source_path": "measurement/.*nc:rvlYaw",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlRoll",
+      "target_path": "/conditions/rvl/roll",
+      "source_path": "measurement/.*nc:rvlRoll",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlSnr",
+      "target_path": "/quality/rvl/snr",
+      "source_path": "measurement/.*nc:rvlSnr",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlSweepAngle",
+      "target_path": "/conditions/rvl/sweep_angle",
+      "source_path": "measurement/.*nc:rvlSweepAngle",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlSlantRangeTime",
+      "target_path": "/conditions/rvl/slant_range_time",
+      "source_path": "measurement/.*nc:rvlSlantRangeTime",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlZeroDopplerTime",
+      "target_path": "/conditions/rvl/zero_doppler_time",
+      "source_path": "measurement/.*nc:rvlZeroDopplerTime",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlGroundRngSize",
+      "target_path": "/conditions/rvl/ground_range_size",
+      "source_path": "measurement/.*nc:rvlGroundRngSize",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "rvlAziSize",
+      "target_path": "/conditions/rvl/azimuth_size",
+      "source_path": "measurement/.*nc:rvlAziSize",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswPolSpec",
+      "target_path": "/measurements/osw/polar_spectrum",
+      "source_path": "measurement/.*nc:oswPolSpec",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswPolSpecNV",
+      "target_path": "/measurements/osw/polar_spectrum_normalised_variance",
+      "source_path": "measurement/.*nc:oswPolSpecNV",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswPartitions",
+      "target_path": "/measurements/osw/partition",
+      "source_path": "measurement/.*nc:oswPartitions",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswQualityCrossSpectraRe",
+      "target_path": "/quality/osw/quality_cross_spectra_real_part",
+      "source_path": "measurement/.*nc:oswQualityCrossSpectraRe",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswQualityCrossSpectraIm",
+      "target_path": "/quality/osw/quality_cross_spectra_imaginary_part",
+      "source_path": "measurement/.*nc:oswQualityCrossSpectraIm",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswK",
+      "target_path": "/coordinates/osw/K",
+      "source_path": "measurement/.*nc:oswK",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswPhi",
+      "target_path": "/coordinates/osw/Phi",
+      "source_path": "measurement/.*nc:oswPhi",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswAzCutoff",
+      "target_path": "/measurements/osw/azimuth_cutoff",
+      "source_path": "measurement/.*nc:oswAzCutoff",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswRaCutoff",
+      "target_path": "/measurements/osw/range_cutoff",
+      "source_path": "measurement/.*nc:oswRaCutoff",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswSpecRes",
+      "target_path": "/measurements/osw/spectrum_resolution",
+      "source_path": "measurement/.*nc:oswSpecRes",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswLon",
+      "target_path": "/coordinates/osw/longitude",
+      "source_path": "measurement/.*nc:oswLon",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswLat",
+      "target_path": "/coordinates/osw/latitude",
+      "source_path": "measurement/.*nc:oswLat",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswHs",
+      "target_path": "/measurements/osw/hs",
+      "source_path": "measurement/.*nc:oswHs",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswHsNV",
+      "target_path": "/measurements/osw/hs_normalised_variance",
+      "source_path": "measurement/.*nc:oswHsNV",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswWl",
+      "target_path": "/measurements/osw/wave_length",
+      "source_path": "measurement/.*nc:oswWl",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswDirmet",
+      "target_path": "/measurements/osw/wave_direction",
+      "source_path": "measurement/.*nc:oswDirmet",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswSnr",
+      "target_path": "/quality/osw/snr",
+      "source_path": "measurement/.*nc:oswSnr",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswAmbiFac",
+      "target_path": "/measurements/osw/ambiguity_factor",
+      "source_path": "measurement/.*nc:oswAmbiFac",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswIconf",
+      "target_path": "/quality/osw/i_confidence",
+      "source_path": "measurement/.*nc:oswIconf",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswLookSeparationTime",
+      "target_path": "/measurements/osw/look_separation_time",
+      "source_path": "measurement/.*nc:oswLookSeparationTime",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswNrcs",
+      "target_path": "/measurements/osw/nrcs",
+      "source_path": "measurement/.*nc:oswNrcs",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswNrcsNeszCorr",
+      "target_path": "/measurements/osw/nrcs_noise_corrected",
+      "source_path": "measurement/.*nc:oswNrcsNeszCorr",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswInten",
+      "target_path": "/measurements/osw/intensity",
+      "source_path": "measurement/.*nc:oswInten",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswNv",
+      "target_path": "/measurements/osw/normalised_variance",
+      "source_path": "measurement/.*nc:oswNv",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswSkew",
+      "target_path": "/measurements/osw/skewness",
+      "source_path": "measurement/.*nc:oswSkew",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswKurt",
+      "target_path": "/measurements/osw/kurtosis",
+      "source_path": "measurement/.*nc:oswKurt",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswWindSpeed",
+      "target_path": "/measurements/osw/wind_speed",
+      "source_path": "measurement/.*nc:oswWindSpeed",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswWindDirection",
+      "target_path": "/measurements/osw/wind_direction",
+      "source_path": "measurement/.*nc:oswWindDirection",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswEcmwfWindSpeed",
+      "target_path": "/conditions/osw/auxiliary_wind_speed",
+      "source_path": "measurement/.*nc:oswEcmwfWindSpeed",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswEcmwfWindDirection",
+      "target_path": "/conditions/osw/auxiliary_wind_direction",
+      "source_path": "measurement/.*nc:oswEcmwfWindDirection",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswWindSeaHs",
+      "target_path": "/measurements/osw/wind_sea_hs",
+      "source_path": "measurement/.*nc:oswWindSeaHs",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswWaveAge",
+      "target_path": "/measurements/osw/wave_age",
+      "source_path": "measurement/.*nc:oswWaveAge",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswDepth",
+      "target_path": "/conditions/osw/depth",
+      "source_path": "measurement/.*nc:oswDepth",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswNlWidth",
+      "target_path": "/measurements/osw/non_linear_width",
+      "source_path": "measurement/.*nc:oswNlWidth",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswLandFlag",
+      "target_path": "/conditions/osw/land_flag",
+      "source_path": "measurement/.*nc:oswLandFlag",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswLandCoverage",
+      "target_path": "/conditions/osw/land_coverage",
+      "source_path": "measurement/.*nc:oswLandCoverage",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswIncidenceAngle",
+      "target_path": "/conditions/osw/incidence_angle",
+      "source_path": "measurement/.*nc:oswIncidenceAngle",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswHeading",
+      "target_path": "/conditions/osw/heading",
+      "source_path": "measurement/.*nc:oswHeading",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswGroundRngSize",
+      "target_path": "/conditions/osw/ground_range_size",
+      "source_path": "measurement/.*nc:oswGroundRngSize",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswAziSize",
+      "target_path": "/conditions/osw/azimuth_size",
+      "source_path": "measurement/.*nc:oswAziSize",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswEllipsLength",
+      "target_path": null,
+      "source_path": "measurement/.*nc:oswEllipsLength",
+      "item_format": "netcdf",
+      "_comments": [
+        "not kept in new format"
+      ]
+    },
+    {
+      "short_name": "oswEllipsLengthStdDev",
+      "target_path": null,
+      "source_path": "measurement/.*nc:oswEllipsLengthStdDev",
+      "item_format": "netcdf",
+      "_comments": [
+        "not kept in new format"
+      ]
+    },
+    {
+      "short_name": "oswEllipsWidth",
+      "target_path": null,
+      "source_path": "measurement/.*nc:oswEllipsWidth",
+      "item_format": "netcdf",
+      "_comments": [
+        "not kept in new format"
+      ]
+    },
+    {
+      "short_name": "oswEllipsWidthStdDev",
+      "target_path": null,
+      "source_path": "measurement/.*nc:oswEllipsWidthStdDev",
+      "item_format": "netcdf",
+      "_comments": [
+        "not kept in new format"
+      ]
+    },
+    {
+      "short_name": "oswGroupDir",
+      "target_path": null,
+      "source_path": "measurement/.*nc:oswGroupDir",
+      "item_format": "netcdf",
+      "_comments": [
+        "not kept in new format"
+      ]
+    },
+    {
+      "short_name": "oswQualityFlagPartition",
+      "target_path": "/quality/osw/partition_quality_flag",
+      "source_path": "measurement/.*nc:oswQualityFlagPartition",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswQualityFlag",
+      "target_path": "/quality/osw/quality_flag",
+      "source_path": "measurement/.*nc:oswQualityFlag",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswTotalHs",
+      "target_path": "/measurements/osw/total_hs",
+      "source_path": "measurement/.*nc:oswTotalHs",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswTotalHsStdev",
+      "target_path": "/quality/osw/total_hs_std",
+      "source_path": "measurement/.*nc:oswTotalHsStdev",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswCartSpecIm",
+      "target_path": "/measurements/osw/cartesian_spectra_imaginary",
+      "source_path": "measurement/.*nc:oswCartSpecIm",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswCartSpecRe",
+      "target_path": "/measurements/osw/cartesian_spectra_real",
+      "source_path": "measurement/.*nc:oswCartSpecRe",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswKx",
+      "target_path": "/coordinates/osw/Kx",
+      "source_path": "measurement/.*nc:oswKx",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswKy",
+      "target_path": "/coordinates/osw/Ky",
+      "source_path": "measurement/.*nc:oswKy",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswJx",
+      "target_path": "/coordinates/osw/Jx",
+      "source_path": "measurement/.*nc:oswJx",
+      "item_format": "netcdf",
+      "_comments": []
+    },
+    {
+      "short_name": "oswJy",
+      "target_path": "/coordinates/osw/Jy",
+      "source_path": "measurement/.*nc:oswJy",
+      "item_format": "netcdf",
+      "_comments": []
     }
+  ],
+  "flags_polarisation": {
+    "flag_values": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "flag_meanings": "HH+HV HH HV VV+VH VV VH"
+  },
+  "store_cls": {
+    "netcdf": "eopf.product.store.netcdf.EONetCDFStore",
+    "netcdf_string_to_time": "eopf.product.store.netcdf.EONetcdfStringToTimeAccessor"
+  }
 }
