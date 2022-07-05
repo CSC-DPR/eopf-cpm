@@ -58,7 +58,11 @@ def INPUT_DIR():
     folder = TEST_DATA_PATH
     if os.path.isdir(folder):
         return folder
-    raise FileNotFoundError(f"{folder} does not exist or is not accessible")
+    raise FileNotFoundError(
+        f"{folder=} does not exist or is not accessible, "
+        "please refer to the online documentation to setup test data: "
+        "https://cpm.pages.csc-eopf.csgroup.space/eopf-cpm/main/contributing.html#testing",
+    )
 
 
 @pytest.fixture
