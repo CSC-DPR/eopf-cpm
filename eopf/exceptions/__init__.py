@@ -73,3 +73,7 @@ class EOPCConfigFactoryNoDefaultConfiguration(Exception):
 
 class EOPCConfigFactoryAlreadyDefaultConfiguration(Exception):
     """When their is already a default configuration for the given product type"""
+
+
+class EOTriggeringConfigurationError(Exception):
+    """When Trigger configuration file is miss prepare"""

@@ -5,8 +5,11 @@ from importlib_metadata import PackageNotFoundError
 
 
 class DaskContext:
-    def __init__(self, cluster_type="local", addr=None, cluster_config: dict = {}, client_config: dict = {}) -> None:
-        if cluster_type == "local":
+    def __init__(self, cluster_type=None, addr=None, cluster_config: dict = {}, client_config: dict = {}) -> None:
+        cluster = None
+        if cluster_type is None:
+            pass
+        elif cluster_type == "local":
             from dask.distributed import LocalCluster
 
             cluster = LocalCluster(**cluster_config)
@@ -92,12 +95,14 @@ class DaskContext:
         self._client_config = client_config
 
     def __enter__(self):
-        self._cluster.__enter__()
-        self._client = Client(self._cluster, **self._client_config)
-        self._client.__enter__()
+        if self._cluster is not None:
+            self._cluster.__enter__()
+            self._client = Client(self._cluster, **self._client_config)
+            self._client.__enter__()
         return self
 
     def __exit__(self, *args, **kwargs):
-        self._cluster.__exit__(*args, **kwargs)
-        self._client.__exit__(*args, **kwargs)
-        self._client = None
+        if self._cluster is not None:
+            self._cluster.__exit__(*args, **kwargs)
+            self._client.__exit__(*args, **kwargs)
+            self._client = None

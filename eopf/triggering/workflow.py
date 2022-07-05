@@ -5,6 +5,7 @@ from typing import Any, Sequence
 
 from eopf.computing import EOProcessingUnit, EOProcessor
 from eopf.computing.breakpoint import BreakMode, eopf_class_breakpoint
+from eopf.exceptions import EOTriggeringConfigurationError
 from eopf.product import EOProduct
 
 logger = logging.getLogger("eopf")
@@ -65,15 +66,19 @@ class EOProcessorWorkFlow(EOProcessor):
         inputs_name_provided: list[str] = [],
     ) -> None:
         super().__init__(identifier)
-        # products_name = [i for i in inputs_name_provided]
-        # ids = []
-        # while not len(products_name) != len(inputs_name_provided) + len(workflow_units):
-        #     for idx, workflow_unit in filter(lambda x: x.identifier not in products_name, enumerate(workflow_units)):
-        #         if all(input_product_name in products_name for input_product_name in workflow_unit.inputs):
-        #             ids.append(idx)
-        #             products_name.append(workflow_unit.identifier)
-        # self.workflow = sorted(workflow_units, key=lambda x: ids.index(workflow_units.index(x)))
-        self.workflow = workflow_units
+        # reorder units
+        ids = []
+        products_name = [i for i in inputs_name_provided]
+        while len(products_name) != len(inputs_name_provided) + len(workflow_units):
+            for idx, workflow_unit in filter(lambda x: x.identifier not in products_name, enumerate(workflow_units)):
+                if all(input_product_name in products_name for input_product_name in workflow_unit.inputs):
+                    ids.append(idx)
+                    products_name.append(workflow_unit.identifier)
+            if len(ids) == 0 and len(workflow_units) > 0:
+                raise EOTriggeringConfigurationError(
+                    "workflow miss configured: inputs for unit never match inputs product.",
+                )
+        self.workflow = sorted(workflow_units, key=lambda x: ids.index(workflow_units.index(x)))
 
     def run(self, *inputs: EOProduct, context: dict[str, Any] = {}, **kwargs: Any) -> EOProduct:
         available_products = {product.name: product for product in inputs}

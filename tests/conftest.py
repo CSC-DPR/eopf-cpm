@@ -252,6 +252,8 @@ def TRIGGER_JSON_FILE(dask_client_all, EMBEDED_TEST_DATA_FOLDER, OUTPUT_DIR, S3_
     data["I/O"]["output_product"]["path"] = os.path.join(OUTPUT_DIR, data["I/O"]["output_product"]["path"])
     if dask_client_all:
         data["dask_context"] = {"cluster_type": "local", "cluster_config": {"processes": True}, "client_config": {}}
+    else:
+        data["dask_context"] = {}
     output_name = os.path.join(OUTPUT_DIR, trigger_filename)
     with open(os.path.join(OUTPUT_DIR, trigger_filename), mode="w") as f:
         json.dump(data, f)

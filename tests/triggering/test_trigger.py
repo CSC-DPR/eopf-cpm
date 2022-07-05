@@ -79,7 +79,7 @@ def client():
     "args, match_output",
     [(["request"], r"Server return status code [0-9]{3} with content: .*"), (["local"], r"Run with .*")],
 )
-def test_cli_trigger(dask_client_all, server, TRIGGER_JSON_FILE, args, match_output):
+def test_cli_trigger(server, TRIGGER_JSON_FILE, args, match_output):
     runner = CliRunner()
     with mock.patch("tests.computing.test_abstract.TestAbstractProcessor.run", return_value=init_product("")):
         r = runner.invoke(EOCLITrigger(), args=" ".join([*args, TRIGGER_JSON_FILE]))
@@ -106,7 +106,7 @@ def test_kafka_send(TRIGGER_JSON_FILE):
 
 # TODO: To Update when a kafka can be accessible in the ci
 @pytest.mark.unit
-def test_kafka_consume(dask_client_all, fake_kafka_consumer):
+def test_kafka_consume(fake_kafka_consumer):
     runner = CliRunner()
     with (
         mock.patch("aiokafka.AIOKafkaConsumer.start") as start,
@@ -125,7 +125,7 @@ def test_kafka_consume(dask_client_all, fake_kafka_consumer):
 
 
 @pytest.mark.unit
-def test_web_trigger(dask_client_all, client, TRIGGER_JSON_FILE):
+def test_web_trigger(client, TRIGGER_JSON_FILE):
     with open(TRIGGER_JSON_FILE) as f:
         data = json.load(f)
     with mock.patch("tests.computing.test_abstract.TestAbstractProcessor.run", return_value=init_product("")):
@@ -166,7 +166,6 @@ def test_web_trigger(dask_client_all, client, TRIGGER_JSON_FILE):
                 "inputs_products": [{"id": "OLCI", "path": "product_path", "store_type": "safe", "store_params": {}}],
                 "output_product": {"id": "output", "path": "output.zarr", "store_type": "zarr", "store_params": {}},
             },
-            "dask_context": {"cluster_type": "local", "cluster_config": {"processes": True}, "client_config": {}},
         },
     ],
 )
