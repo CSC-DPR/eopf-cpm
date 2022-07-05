@@ -178,7 +178,7 @@ def test_eoqcConfig_len(eoqcConfig):
 
 @pytest.mark.need_files
 @pytest.mark.unit
-@pytest.mark.parametrize("store_type", [(lazy_fixture("S3_OL_1_EFR"))])
+@pytest.mark.parametrize("store_type", [(lazy_fixture("S3_OL_1_EFR_ZIP"))])
 def test_eoqcConfigFactory_get_default(eoqcConfigFactory, store_type):
     store = EOSafeStore(store_type)
     product = EOProduct("my_product", storage=store)
@@ -189,7 +189,7 @@ def test_eoqcConfigFactory_get_default(eoqcConfigFactory, store_type):
 
 @pytest.mark.need_files
 @pytest.mark.unit
-@pytest.mark.parametrize("store_type", [(lazy_fixture("S3_OL_1_EFR"))])
+@pytest.mark.parametrize("store_type", [(lazy_fixture("S3_OL_1_EFR_ZIP"))])
 def test_eoqcConfigFactory_get_qc_configs(eoqcConfigFactory, store_type):
     store = EOSafeStore(store_type)
     product = EOProduct("my_product", storage=store)
@@ -227,7 +227,7 @@ def test_EOQCProcessor_productType(store_type, eoqcProcessor):
 @pytest.mark.unit
 @pytest.mark.parametrize(
     "store_type",
-    [(lazy_fixture("S3_OL_1_EFR"))],
+    [(lazy_fixture("S3_OL_1_EFR_ZIP"))],
 )
 def test_create_quality_group(store_type, sample_config_path):
     eoqcProcessor = EOQCProcessor(config_path=sample_config_path)
@@ -244,7 +244,7 @@ def test_create_quality_group(store_type, sample_config_path):
 @pytest.mark.unit
 @pytest.mark.parametrize(
     "store_type, update_attrs",
-    [(lazy_fixture("S3_OL_1_EFR"), True), (lazy_fixture("S3_OL_1_EFR"), False)],
+    [(lazy_fixture("S3_OL_1_EFR_ZIP"), True), (lazy_fixture("S3_OL_1_EFR_ZIP"), False)],
 )
 def test_update_attribute(store_type, eoqcProcessor, update_attrs):
     store = EOSafeStore(store_type)
@@ -261,7 +261,7 @@ def test_update_attribute(store_type, eoqcProcessor, update_attrs):
 @pytest.mark.unit
 @pytest.mark.parametrize(
     "store_type",
-    [(lazy_fixture("S3_OL_1_EFR"))],
+    [(lazy_fixture("S3_OL_1_EFR_ZIP"))],
 )
 def test_qc_exception(store_type, eoqcProcessor):
     store = EOSafeStore(store_type)
@@ -279,8 +279,8 @@ def test_qc_exception(store_type, eoqcProcessor):
 @pytest.mark.parametrize(
     "store_type, write_report, report_path",
     [
-        (lazy_fixture("S3_OL_1_EFR"), True, lazy_fixture("output_report_path")),
-        (lazy_fixture("S3_OL_1_EFR"), True, None),
+        (lazy_fixture("S3_OL_1_EFR_ZIP"), True, lazy_fixture("output_report_path")),
+        (lazy_fixture("S3_OL_1_EFR_ZIP"), True, None),
     ],
 )
 def test_write_report(store_type, eoqcProcessor, write_report, report_path):
@@ -305,7 +305,7 @@ def test_write_report(store_type, eoqcProcessor, write_report, report_path):
 @pytest.mark.unit
 @pytest.mark.parametrize(
     "store_type, report_path",
-    [(lazy_fixture("S3_OL_1_EFR"), lazy_fixture("output_report_path"))],
+    [(lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("output_report_path"))],
 )
 def test_error_writing_report(store_type, report_path, sample_config_path):
     # Initialisation of a qcprocessor with a configuration
@@ -331,11 +331,11 @@ def test_error_writing_report(store_type, report_path, sample_config_path):
 @pytest.mark.parametrize(
     "store_type, test_check, result",
     [
-        (lazy_fixture("S3_OL_1_EFR"), EOQCValidRange(**check_data("valid_valid_range")), True),
-        (lazy_fixture("S3_OL_1_EFR"), EOQCValidRange(**check_data("unvalid_valid_range")), False),
-        (lazy_fixture("S3_OL_1_EFR"), EOQCFormula(**check_data("valid_formula")), True),
-        (lazy_fixture("S3_OL_1_EFR"), EOQCFormula(**check_data("unvalid_formula")), False),
-        (lazy_fixture("S3_OL_1_EFR"), EOQCFormula(**check_data("security_issue_formula")), False),
+        (lazy_fixture("S3_OL_1_EFR_ZIP"), EOQCValidRange(**check_data("valid_valid_range")), True),
+        (lazy_fixture("S3_OL_1_EFR_ZIP"), EOQCValidRange(**check_data("unvalid_valid_range")), False),
+        (lazy_fixture("S3_OL_1_EFR_ZIP"), EOQCFormula(**check_data("valid_formula")), True),
+        (lazy_fixture("S3_OL_1_EFR_ZIP"), EOQCFormula(**check_data("unvalid_formula")), False),
+        (lazy_fixture("S3_OL_1_EFR_ZIP"), EOQCFormula(**check_data("security_issue_formula")), False),
     ],
 )
 def test_checks(store_type, test_check, result):
