@@ -382,7 +382,7 @@ class XMLManifestAccessor(EOProductStore):
                     continue
                 else:
                     # If xpath is invalid, and doesn't containt a conversion function reference
-                    raise KeyError(f"{value} is an invalid xpath expression!")
+                    raise AttributeError(f"{value} is an invalid xpath expression!")
         return internal_dict
 
     def translate_list_attributes(self, attributes_list: List[Any], global_key: str = None) -> Any:
