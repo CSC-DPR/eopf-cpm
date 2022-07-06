@@ -17,6 +17,7 @@ class PoolMemMap:
     _n_packets: int
     _packet_length: Any
     _packet_offset: Any
+    _items: Any
 
     _n_packets = 0
     _loaded = False
@@ -122,7 +123,7 @@ class MemMapAccessor(EOProductStore):
             k += int(pool._packet_length[pool._n_packets])
             pool._n_packets += 1
 
-    def parsekey(self, offset_in_bits: int, length_in_bits: int, output_type: str) -> Any:
+    def parsekey(self, offset_in_bits: int, length_in_bits: int, output_type: Any) -> Any:
 
         if output_type == "var_bytearray":
             start_byte = offset_in_bits // 8
@@ -278,7 +279,7 @@ class FixedMemMapAccessor(EOProductStore):
         except IOError:
             raise IOError(f"Error While Opening {self.url}")
 
-    def parsekey(self, offset_in_bits: int, length_in_bits: int, packet_len: int, output_type: str) -> Any:
+    def parsekey(self, offset_in_bits: int, length_in_bits: int, packet_len: int, output_type: Any) -> Any:
 
         if output_type == "bytearray":
             start_byte = offset_in_bits // 8
