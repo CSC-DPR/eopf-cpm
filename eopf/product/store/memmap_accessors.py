@@ -38,9 +38,9 @@ class PoolMemMap:
 
         if hasattr(self, "_buffer"):
             del self._buffer
-        if hasattr(self, "_buffer"):
+        if hasattr(self, "_packet_length"):
             del self._packet_length
-        if hasattr(self, "_buffer"):
+        if hasattr(self, "_packet_offset"):
             del self._packet_offset
 
 
@@ -88,8 +88,7 @@ class MemMapAccessor(EOProductStore):
         if hasattr(self, "_poolmemmap"):
             self._poolmemmap.close()
 
-    def loadbuffer(self, pool: PoolMemMap):
-        print("buffering: ", self.url)
+    def loadbuffer(self, pool: PoolMemMap) -> None:
 
         try:
             with open(self.url, "rb") as f:
@@ -118,9 +117,7 @@ class MemMapAccessor(EOProductStore):
             k += int(pool._packet_length[pool._n_packets])
             pool._n_packets += 1
 
-    def parsekey(self, offset_in_bits, length_in_bits, output_type):
-
-        #       print("MemMap: parsing inside ", offset_in_bits, length_in_bits, output_type)
+    def parsekey(self, offset_in_bits: int, length_in_bits: int, output_type: str) -> np.ndarray:
 
         if output_type == "var_bytearray":
             start_byte = offset_in_bits // 8
@@ -197,16 +194,6 @@ class MemMapAccessor(EOProductStore):
         offset_in_bits = key.start
         length_in_bits = key.step
 
-        print(
-            "MemMap: parsing ",
-            offset_in_bits,
-            length_in_bits,
-            self._poolmemmap._n_packets,
-            self._target_type,
-            hex(id(self)),
-            self.url,
-        )
-
         ndarray = self.parsekey(offset_in_bits, length_in_bits, self._target_type)
         if len(ndarray.shape) == 0:
             raise KeyError
@@ -278,17 +265,15 @@ class FixedMemMapAccessor(EOProductStore):
         if hasattr(self, "_poolmemmap"):
             self._poolmemmap.close()
 
-    def loadbuffer(self, pool: PoolMemMap):
-        print("Buffering ", self.url)
+    def loadbuffer(self, pool: PoolMemMap) -> None:
+
         try:
             with open(self.url, "rb") as f:
                 pool._buffer = np.fromfile(f, np.dtype("B"))
         except IOError:
             raise IOError(f"Error While Opening {self.url}")
 
-    def parsekey(self, offset_in_bits, length_in_bits, packet_len, output_type):
-
-        #        print("FixedMemMap: parsing inside ", offset_in_bits, length_in_bits, packet_len)
+    def parsekey(self, offset_in_bits: int, length_in_bits: int, packet_len: int, output_type: str) -> np.ndarray:
 
         if output_type == "bytearray":
             start_byte = offset_in_bits // 8
@@ -343,17 +328,6 @@ class FixedMemMapAccessor(EOProductStore):
         length_in_bits = key.stop - offset_in_bits
         packet_length = key.step
         self._poolmemmap._n_packets = self._poolmemmap._buffer.size // packet_length
-
-        print(
-            "FixedMemMap: parsing ",
-            offset_in_bits,
-            length_in_bits,
-            packet_length,
-            self._poolmemmap._n_packets,
-            self._target_type,
-            hex(id(self)),
-            self.url,
-        )
 
         ndarray = self.parsekey(offset_in_bits, length_in_bits, packet_length, self._target_type)
         if len(ndarray.shape) == 0:
