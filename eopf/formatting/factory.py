@@ -217,9 +217,6 @@ class formatable_method:
     def __call__(self, fn: CALLABLE_TYPE) -> CALLABLE_TYPE:
         def inner(this: Any, formatable: str, *args: list[Any], **kwargs: dict[str, Any]) -> Any:
 
-            if not len(args) >= 2:
-                raise FormattingDecoratorMissingUri("The decorated function does not contain a URI")
-
             # parse the path, which should always be the first argument
             _, formatter, formatter_stripped_uri = self.decorator_factory.get_formatter(formatable)
             # replace the first argument with the formatter_stripped_uri
