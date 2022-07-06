@@ -178,7 +178,7 @@ class MemMapAccessor(EOProductStore):
 
             return parameter
 
-    def __getitem__(self, key: slice) -> "EOObject": # type: ignore
+    def __getitem__(self, key: slice) -> "EOObject":  # type: ignore
         """
         This method is used to return eo_variables if parameters value match
 
@@ -311,7 +311,7 @@ class FixedMemMapAccessor(EOProductStore):
 
             return parameter
 
-    def __getitem__(self, key: slice) -> "EOObject": # type: ignore
+    def __getitem__(self, key: slice) -> "EOObject":  # type: ignore
         """
         This method is used to return eo_variables if parameters value match
 

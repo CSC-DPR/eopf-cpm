@@ -470,7 +470,11 @@ class SafeMappingManager:
         def _parse_local_path(local_path: str) -> Any:
             if local_path:
                 element = ast.parse(local_path).body
-                if element and isinstance(element[0], ast.Expr) and isinstance(value:=element[0].value, ast.Tuple):
+                if (
+                    element
+                    and isinstance(element[0], ast.Expr)
+                    and isinstance(value := element[0].value, ast.Tuple)  # noqa
+                ):
                     return slice(*ast.literal_eval(local_path))
             return local_path
 
