@@ -6,6 +6,8 @@ from typing import Any, Iterator, Optional, Union
 import xarray
 
 from eopf.exceptions import StoreNotOpenError
+from eopf.formatting import formatable_method
+from eopf.formatting.factory import unformatable_method
 from eopf.product.core import EOVariable
 from eopf.product.core.eo_group import EOGroup
 from eopf.product.core.eo_object import EOObject
@@ -67,10 +69,12 @@ class FromAttributesToVariableAccessor(EOProductStore):
         self.store.close()
         self.store = None
 
+    @formatable_method
     def __getitem__(self, key: str) -> EOObject:
         data = self._extract_data(key)
         return EOVariable(data=data)
 
+    @unformatable_method
     def __setitem__(self, key: str, value: EOObject) -> None:
         if self.store is None:
             raise StoreNotOpenError()
@@ -97,6 +101,7 @@ class FromAttributesToVariableAccessor(EOProductStore):
         return iter(self.store)
 
     # docstr-coverage: inherited
+    @unformatable_method
     def is_group(self, path: str) -> bool:
         # to have an harmonized behavior with is_variable
         if self.store is None:
@@ -104,6 +109,7 @@ class FromAttributesToVariableAccessor(EOProductStore):
         return False
 
     # docstr-coverage: inherited
+    @unformatable_method
     def is_variable(self, path: str) -> bool:
         if self.store is None:
             raise StoreNotOpenError()
@@ -208,6 +214,7 @@ class FromAttributesToFlagValueAccessor(FromAttributesToVariableAccessor):
         self.flag_values = flag_values
 
     # docstr-coverage: inherited
+    @formatable_method
     def __getitem__(self, key: str) -> EOObject:
         data = self._apply_flags(self._extract_data(key))
         return EOVariable(data=data)

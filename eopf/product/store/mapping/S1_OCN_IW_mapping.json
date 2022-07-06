@@ -37,7 +37,7 @@
         },
         {
             "short_name": "time_start_owi",
-            "target_path": "/coordinates/owi/time_start",
+            "target_path": "/coordinates/owi/time_start:to_unix_time_slstr_l1(/)",
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",
             "parameters": {
@@ -46,13 +46,13 @@
                 ]
             },
             "accessor_config": {
-                "store_cls": "store_cls/netcdf_string_to_time",
+                "store_cls": "store_cls/netcdf",
                 "attr_name": "attr_name/firstMeasurementTime"
             }
         },
         {
             "short_name": "time_stop_owi",
-            "target_path": "/coordinates/owi/time_stop",
+            "target_path": "/coordinates/owi/time_stop:to_unix_time_slstr_l1(/)",
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",
             "parameters": {
@@ -61,7 +61,7 @@
                 ]
             },
             "accessor_config": {
-                "store_cls": "store_cls/netcdf_string_to_time",
+                "store_cls": "store_cls/netcdf",
                 "attr_name": "attr_name/lastMeasurementTime"
             }
         },
@@ -116,7 +116,7 @@
         },
         {
             "short_name": "time_start_osw",
-            "target_path": "/coordinates/osw/time_start",
+            "target_path": "/coordinates/osw/time_start:to_unix_time_slstr_l1(/)",
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",
             "parameters": {
@@ -125,13 +125,13 @@
                 ]
             },
             "accessor_config": {
-                "store_cls": "store_cls/netcdf_string_to_time",
+                "store_cls": "store_cls/netcdf",
                 "attr_name": "attr_name/firstMeasurementTime"
             }
         },
         {
             "short_name": "time_stop_osw",
-            "target_path": "/coordinates/osw/time_stop",
+            "target_path": "/coordinates/osw/time_stop:to_unix_time_slstr_l1(/)",
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",
             "parameters": {
@@ -140,7 +140,7 @@
                 ]
             },
             "accessor_config": {
-                "store_cls": "store_cls/netcdf_string_to_time",
+                "store_cls": "store_cls/netcdf",
                 "attr_name": "attr_name/lastMeasurementTime"
             }
         },
@@ -217,7 +217,7 @@
         },
         {
             "short_name": "time_start_rvl",
-            "target_path": "/coordinates/rvl/time_start",
+            "target_path": "/coordinates/rvl/time_start:to_unix_time_slstr_l1(/)",
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",
             "parameters": {
@@ -226,13 +226,13 @@
                 ]
             },
             "accessor_config": {
-                "store_cls": "store_cls/netcdf_string_to_time",
+                "store_cls": "store_cls/netcdf",
                 "attr_name": "attr_name/firstMeasurementTime"
             }
         },
         {
             "short_name": "time_stop_rvl",
-            "target_path": "/coordinates/rvl/time_stop",
+            "target_path": "/coordinates/rvl/time_stop:to_unix_time_slstr_l1(/)",
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",
             "parameters": {
@@ -241,13 +241,13 @@
                 ]
             },
             "accessor_config": {
-                "store_cls": "store_cls/netcdf_string_to_time",
+                "store_cls": "store_cls/netcdf",
                 "attr_name": "attr_name/lastMeasurementTime"
             }
         },
         {
             "short_name": "sv_time",
-            "target_path": "/coordinates/state_vector/sv_time",
+            "target_path": "/coordinates/state_vector/sv_time:to_unix_time_slstr_l1(/)",
             "source_path": "measurement/.*nc",
             "item_format": "attribute_element_to_float_variable",
             "parameters": {
@@ -256,7 +256,7 @@
                 ]
             },
             "accessor_config": {
-                "store_cls": "store_cls/netcdf_string_to_time",
+                "store_cls": "store_cls/netcdf",
                 "attr_name": "attr_name/statevectorUtc"
             }
         },
@@ -891,8 +891,7 @@
         "flag_meanings": "HH+HV HH HV VV+VH VV VH"
     },
     "store_cls": {
-        "netcdf": "eopf.product.store.netcdf.EONetCDFStore",
-        "netcdf_string_to_time": "eopf.product.store.netcdf.EONetcdfStringToTimeAccessor"
+        "netcdf": "eopf.product.store.netcdf.EONetCDFStore"
     },
     "attr_name": {
         "pos": "statevectorPos",

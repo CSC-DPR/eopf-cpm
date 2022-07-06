@@ -204,10 +204,10 @@ class formatable_method(object):
     >>> ex.get_val("to_str(a_val)")
     """
 
-    def __init__(self, fn: Callable[[Any], Any], decorator_factory: EOFormatterFactory = None) -> None:
+    def __init__(self, fn: Callable[[Any], Any], decorator_factory: EOFormatterFactory = None, formatable=True) -> None:
         self.fn = fn
         self.parent_obj: object = None
-
+        self.formatable = formatable
         if decorator_factory:
             self.decorator_factory = decorator_factory
         else:
@@ -231,7 +231,44 @@ class formatable_method(object):
 
         # call the decorated function
         decorated_method_ret = self.fn(self.parent_obj, *new_args, **kwargs)
-        if formatter is not None:
+        if self.formatable and formatter is not None:
             return formatter(decorated_method_ret)
 
         return decorated_method_ret
+
+
+class unformatable_method(formatable_method):
+    """Decorator class to allow class methods to ingnore formating of the return\
+
+    Parameters
+    ----------
+    fn: Callable[[Any], Any]
+        a method of class which has a return
+
+    Attributes
+    ----------
+    fn: Callable[[Any], Any]
+        a method of class which has a return
+    parent_obj: Any
+        the object coresponding to the decorated method
+
+    Examples
+    --------
+    >>> class example(object):
+    ...     def __init__(self, val:int):
+    ...         self.d: Dict[str, int] = {"a_val": val}
+    ...
+    ...     @unformatable_method
+    ...     def get_val(self, url: str):
+    ...         return self.d[url]
+    >>> ex = example(2)
+    >>> ex.get_val("to_str(a_val)")
+    """
+
+    def __init__(
+        self,
+        fn: Callable[[Any], Any],
+        decorator_factory: EOFormatterFactory = None,
+        formatable=False,
+    ) -> None:
+        super().__init__(fn, decorator_factory, formatable)
