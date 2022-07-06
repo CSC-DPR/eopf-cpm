@@ -1,8 +1,13 @@
 {
-    "breakpoints": {},
+    "breakpoints": [{
+        "related_unit": "test_abstract_processor",
+        "break_mode": "s"
+    }],
     "workflow": {
         "module": "tests.computing.test_abstract",
         "processing_unit": "TestAbstractProcessor",
+        "name": "test_abstract_processor",
+        "inputs": ["OLCI"],
         "parameters": {
             "variables_paths": [
                 "/measurements/image/oa01_radiance",
@@ -36,9 +41,7 @@
     },
     "dask_context":{
         "cluster_type": "local",
-        "cluster_config": {
-            "processes": true
-        },
+        "cluster_config": {},
         "client_config": {}
     }
 }

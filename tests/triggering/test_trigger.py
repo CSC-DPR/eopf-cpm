@@ -13,8 +13,8 @@ from eopf.product.conveniences import init_product
 from eopf.product.store.store_factory import EOStoreFactory
 from eopf.triggering import EOCLITrigger, EOEventTrigger, EOWebTrigger
 from eopf.triggering.abstract import EOTrigger
-from eopf.triggering.dask_configuration import DaskContext
-from eopf.triggering.workflow import EOProcessorWorkFlow
+from eopf.triggering.conf.dask_configuration import DaskContext
+from eopf.triggering.parser.workflow import EOProcessorWorkFlow
 
 
 @pytest.fixture
@@ -167,6 +167,29 @@ def test_web_trigger(client, TRIGGER_JSON_FILE):
                 "output_product": {"id": "output", "path": "output.zarr", "store_type": "zarr", "store_params": {}},
             },
         },
+        {
+            "workflow": [
+                {
+                    "module": "tests.computing.test_abstract",
+                    "processing_unit": "TestAbstractProcessor",
+                    "parameters": {"key": "value"},
+                    "name": "unit_1",
+                    "inputs": ["OLCI"],
+                },
+                {
+                    "module": "tests.computing.test_abstract",
+                    "processing_unit": "TestAbstractProcessor",
+                    "parameters": {"key": "value"},
+                    "inputs": ["unit_1"],
+                    "name": "unit_1",
+                },
+            ],
+            "I/O": {
+                "modification_mode": "newproduct",
+                "inputs_products": [{"id": "OLCI", "path": "product_path", "store_type": "safe", "store_params": {}}],
+                "output_product": {"id": "output", "path": "output.zarr", "store_type": "zarr", "store_params": {}},
+            },
+        },
     ],
 )
 def test_extract_payload(trigger_class, payload):
@@ -174,30 +197,33 @@ def test_extract_payload(trigger_class, payload):
         processing_unit,
         io_config,
         ctx,
-        parameters,
     ) = trigger_class.extract_from_payload(payload)
     factory = EOStoreFactory()
     if isinstance(processing_unit, EOProcessorWorkFlow):
-        units_classes = [unit["processing_unit"] for unit in payload["workflow"]]
-        assert all(unit.processing_unit.__class__.__name__ in units_classes for unit in processing_unit.workflow)
+        units_classes, parameters = zip(
+            *[(unit["processing_unit"], unit.get("parameters", {})) for unit in payload["workflow"]]
+        )
+        assert all(
+            (unit.processing_unit.__class__.__name__ in units_classes and unit.parameters in parameters)
+            for unit in processing_unit.workflow
+        )
     else:
         assert processing_unit.processing_unit.__class__.__name__ == payload["workflow"].get("processing_unit")
+        assert processing_unit.parameters == payload["workflow"].get("parameters", {})
     inputs_products_data = payload["I/O"].get("inputs_products")
     inputs_products = io_config["inputs"]
     for product, input_product_data in zip(inputs_products, inputs_products_data):
-        input_product = product["product"]
+        input_product = product["instance"]
         assert input_product.name == input_product_data.get("id")
         assert type(input_product.store) == factory.item_formats[input_product_data.get("store_type")]
         assert input_product.store.url == input_product_data.get("path")
         assert product["parameters"] == input_product_data.get("store_params", {})
 
     output_product_data = payload["I/O"].get("output_product")
-    output_store = io_config["output"]["store"]
+    output_store = io_config["output"]["instance"]
     assert type(output_store) == factory.item_formats[output_product_data.get("store_type")]
     assert output_store.url == output_product_data.get("path")
     assert io_config["output"]["parameters"] == payload["I/O"].get("output_product", {}).get("store_params", {})
-
-    assert parameters == payload.get("parameters", {})
 
     assert isinstance(ctx, DaskContext)
 
@@ -233,7 +259,7 @@ def test_extract_payload(trigger_class, payload):
                     "output_product": {"id": "output", "path": "output.zarr", "store_type": "zarr"},
                 },
             },
-            AttributeError,
+            ValueError,
         ),
         (
             {

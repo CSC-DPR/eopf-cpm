@@ -79,6 +79,8 @@ Examples
             return sum(args)
 
 
+.. _breakpoint-usage:
+
 Intermediate Output - BreakPoint Object
 =======================================
 
