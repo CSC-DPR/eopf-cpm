@@ -15,6 +15,10 @@ class EOStoreFactory:
                 FilenameToVariableAccessor,
             )
             from eopf.product.store.grib import EOGribAccessor
+            from eopf.product.store.memmap_accessors import (
+                FixedMemMapAccessor,
+                MemMapAccessor,
+            )
             from eopf.product.store.netcdf import (
                 EONetCDFStore,
                 EONetcdfStringToTimeAccessor,
@@ -29,11 +33,6 @@ class EOStoreFactory:
                 XMLManifestAccessor,
                 XMLTPAccessor,
             )
-            from eopf.product.store.memmap_accessors import (
-                MemMapAccessor,
-                FixedMemMapAccessor,
-            )
-
             from eopf.product.store.zarr import EOZarrStore
 
             self.register_store(EOZarrStore)

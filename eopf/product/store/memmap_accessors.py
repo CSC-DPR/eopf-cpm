@@ -1,7 +1,6 @@
 import errno
 import glob
 import os
-
 from typing import TYPE_CHECKING, Any, Iterator, MutableMapping
 
 import numpy as np
@@ -12,7 +11,7 @@ if TYPE_CHECKING:  # pragma: no cover
     from eopf.product.core.eo_object import EOObject
 
 
-class PoolMemMap():
+class PoolMemMap:
 
     _n_packets = 0
     _loaded = False
@@ -43,6 +42,7 @@ class PoolMemMap():
             del self._packet_length
         if hasattr(self, "_buffer"):
             del self._packet_offset
+
 
 class MemMapAccessor(EOProductStore):
 
@@ -120,15 +120,20 @@ class MemMapAccessor(EOProductStore):
 
     def parsekey(self, offset_in_bits, length_in_bits, output_type):
 
-#       print("MemMap: parsing inside ", offset_in_bits, length_in_bits, output_type)
+        #       print("MemMap: parsing inside ", offset_in_bits, length_in_bits, output_type)
 
         if output_type == "var_bytearray":
             start_byte = offset_in_bits // 8
-            parameter = np.zeros((self._poolmemmap._n_packets, np.max(self._poolmemmap._packet_length) - start_byte), dtype="uint8")
+            parameter = np.zeros(
+                (self._poolmemmap._n_packets, np.max(self._poolmemmap._packet_length) - start_byte),
+                dtype="uint8",
+            )
             for k in range(self._poolmemmap._n_packets):
                 end_byte = self._poolmemmap._packet_length[k]
                 parameter[k, 0 : end_byte - start_byte] = self._poolmemmap._buffer[  # noqa
-                    self._poolmemmap._packet_offset[k] + start_byte : self._poolmemmap._packet_offset[k] + end_byte  # noqa
+                    self._poolmemmap._packet_offset[k]
+                    + start_byte : self._poolmemmap._packet_offset[k]  # noqa
+                    + end_byte  # noqa
                 ]
 
             return parameter
@@ -139,7 +144,9 @@ class MemMapAccessor(EOProductStore):
             for k in range(self._poolmemmap._n_packets):
                 end_byte = length_in_bits // 8 + start_byte
                 parameter[k,] = self._poolmemmap._buffer[  # noqa
-                    self._poolmemmap._packet_offset[k] + start_byte : self._poolmemmap._packet_offset[k] + end_byte  # noqa
+                    self._poolmemmap._packet_offset[k]
+                    + start_byte : self._poolmemmap._packet_offset[k]  # noqa
+                    + end_byte  # noqa
                 ]
 
             return parameter
@@ -158,7 +165,9 @@ class MemMapAccessor(EOProductStore):
             for k in range(output_packets):
                 data = (
                     self._poolmemmap._buffer[
-                        int(self._poolmemmap._packet_offset[k] + start_byte) : int(self._poolmemmap._packet_offset[k] + end_byte)  # noqa
+                        int(self._poolmemmap._packet_offset[k] + start_byte) : int(  # noqa
+                            self._poolmemmap._packet_offset[k] + end_byte,
+                        )  # noqa
                     ]
                     >> shift
                 )
@@ -188,7 +197,15 @@ class MemMapAccessor(EOProductStore):
         offset_in_bits = key.start
         length_in_bits = key.step
 
-        print("MemMap: parsing ", offset_in_bits, length_in_bits, self._poolmemmap._n_packets, self._target_type, hex(id(self)), self.url)
+        print(
+            "MemMap: parsing ",
+            offset_in_bits,
+            length_in_bits,
+            self._poolmemmap._n_packets,
+            self._target_type,
+            hex(id(self)),
+            self.url,
+        )
 
         ndarray = self.parsekey(offset_in_bits, length_in_bits, self._target_type)
         if len(ndarray.shape) == 0:
@@ -222,7 +239,6 @@ class MemMapAccessor(EOProductStore):
 
 
 class FixedMemMapAccessor(EOProductStore):
-
     def __init__(self, url: str, **kwargs: Any) -> None:
 
         if hasattr(self, "url"):
@@ -272,7 +288,7 @@ class FixedMemMapAccessor(EOProductStore):
 
     def parsekey(self, offset_in_bits, length_in_bits, packet_len, output_type):
 
-#        print("FixedMemMap: parsing inside ", offset_in_bits, length_in_bits, packet_len)
+        #        print("FixedMemMap: parsing inside ", offset_in_bits, length_in_bits, packet_len)
 
         if output_type == "bytearray":
             start_byte = offset_in_bits // 8
@@ -297,7 +313,9 @@ class FixedMemMapAccessor(EOProductStore):
             mask = np.sum(2 ** np.arange(length_in_bits))
 
             for k in range(output_packets):
-                data = self._poolmemmap._buffer[packet_len * k + start_byte : packet_len * k + end_byte] >> shift  # noqa
+                data = (
+                    self._poolmemmap._buffer[packet_len * k + start_byte : packet_len * k + end_byte] >> shift  # noqa
+                )  # noqa
                 parameter[k] = (int.from_bytes(data, "big")) & mask
 
             return parameter
@@ -326,7 +344,16 @@ class FixedMemMapAccessor(EOProductStore):
         packet_length = key.step
         self._poolmemmap._n_packets = self._poolmemmap._buffer.size // packet_length
 
-        print("FixedMemMap: parsing ", offset_in_bits, length_in_bits, packet_length, self._poolmemmap._n_packets, self._target_type, hex(id(self)), self.url)
+        print(
+            "FixedMemMap: parsing ",
+            offset_in_bits,
+            length_in_bits,
+            packet_length,
+            self._poolmemmap._n_packets,
+            self._target_type,
+            hex(id(self)),
+            self.url,
+        )
 
         ndarray = self.parsekey(offset_in_bits, length_in_bits, packet_length, self._target_type)
         if len(ndarray.shape) == 0:
