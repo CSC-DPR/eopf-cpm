@@ -23,7 +23,7 @@ class PoolMemMap:
     _loaded = False
     _items = {}
 
-    def __new__(cls: type, url: str) -> "PoolMemMap":
+    def __new__(cls: type["PoolMemMap"], url: str) -> "PoolMemMap":
 
         if url not in cls._items:
             cls._items[url] = super().__new__(cls)
@@ -178,7 +178,7 @@ class MemMapAccessor(EOProductStore):
 
             return parameter
 
-    def __getitem__(self, key: slice) -> "EOObject":
+    def __getitem__(self, key: slice) -> "EOObject": # type: ignore
         """
         This method is used to return eo_variables if parameters value match
 
@@ -311,7 +311,7 @@ class FixedMemMapAccessor(EOProductStore):
 
             return parameter
 
-    def __getitem__(self, key: slice) -> "EOObject":
+    def __getitem__(self, key: slice) -> "EOObject": # type: ignore
         """
         This method is used to return eo_variables if parameters value match
 
