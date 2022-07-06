@@ -1,6 +1,6 @@
 from functools import wraps
 from re import compile
-from typing import Any, Callable, Union
+from typing import Any, Callable, TypeVar, Union
 
 from eopf.exceptions import FormattingDecoratorMissingUri
 from eopf.exceptions.warnings import FormatterAlreadyRegistered
@@ -176,7 +176,10 @@ def formatable_func(fn: Callable[[Any], Any]) -> Any:
     return wrap
 
 
-class formatable_method(object):
+CALLABLE_TYPE = TypeVar("CALLABLE_TYPE", bound="Callable[..., Any]")
+
+
+class formatable_method:
     """Decorator class to allow class methods to allow formating of the return\
 
     Parameters
@@ -204,37 +207,31 @@ class formatable_method(object):
     >>> ex.get_val("to_str(a_val)")
     """
 
-    def __init__(self, fn: Callable[[Any], Any], decorator_factory: EOFormatterFactory = None, formatable=True) -> None:
-        self.fn = fn
-        self.parent_obj: object = None
+    def __init__(self, decorator_factory: EOFormatterFactory = None, formatable: bool = True) -> None:
         self.formatable = formatable
         if decorator_factory:
             self.decorator_factory = decorator_factory
         else:
             self.decorator_factory = EOFormatterFactory()
 
-    def __get__(self, obj: object, _: Any = None) -> "formatable_method":
-        self.parent_obj = obj
-        return self
+    def __call__(self, fn: CALLABLE_TYPE) -> CALLABLE_TYPE:
+        def inner(this: Any, formatable: str, *args: list[Any], **kwargs: dict[str, Any]) -> Any:
 
-    def __call__(self, *args: Any, **kwargs: Any) -> Any:
+            if not len(args) >= 2:
+                raise FormattingDecoratorMissingUri("The decorated function does not contain a URI")
 
-        if not len(args) >= 1:
-            raise FormattingDecoratorMissingUri("The decorated function does not contain a URI")
+            # parse the path, which should always be the first argument
+            _, formatter, formatter_stripped_uri = self.decorator_factory.get_formatter(formatable)
+            # replace the first argument with the formatter_stripped_uri
 
-        # parse the path, which should always be the first argument
-        _, formatter, formatter_stripped_uri = self.decorator_factory.get_formatter(args[0])
-        # replace the first argument with the formatter_stripped_uri
-        lst_args = list(args)
-        lst_args[0] = formatter_stripped_uri
-        new_args = tuple(lst_args)
+            # call the decorated function
+            decorated_method_ret = fn(this, formatable, *args, **kwargs)
+            if self.formatable and formatter is not None:
+                return formatter(decorated_method_ret)
 
-        # call the decorated function
-        decorated_method_ret = self.fn(self.parent_obj, *new_args, **kwargs)
-        if self.formatable and formatter is not None:
-            return formatter(decorated_method_ret)
+            return decorated_method_ret
 
-        return decorated_method_ret
+        return inner  # type: ignore
 
 
 class unformatable_method(formatable_method):
@@ -267,8 +264,7 @@ class unformatable_method(formatable_method):
 
     def __init__(
         self,
-        fn: Callable[[Any], Any],
         decorator_factory: EOFormatterFactory = None,
-        formatable=False,
+        formatable: bool = False,
     ) -> None:
-        super().__init__(fn, decorator_factory, formatable)
+        super().__init__(decorator_factory, formatable)

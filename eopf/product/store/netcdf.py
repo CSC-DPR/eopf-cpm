@@ -52,18 +52,20 @@ class EONetCDFStore(EOProductStore):
         super().__init__(url)
 
     # docstr-coverage: inherited
+    @unformatable_method()
     def __delitem__(self, key: str) -> None:
         if self._sub_store is not None:
             del self._sub_store
 
     # docstr-coverage: inherited
-    @formatable_method
+    @formatable_method()
     def __getitem__(self, key: str) -> "EOObject":
         item = self.sub_store[key]
         item.attrs.update(decode_netcdf_attrs(item.attrs))
         return item
 
     # docstr-coverage: inherited
+    @unformatable_method()
     def __setitem__(self, key: str, value: "EOObject") -> None:
         self.sub_store[key] = value
 
@@ -86,14 +88,17 @@ class EONetCDFStore(EOProductStore):
         super().open(mode)
 
     # docstr-coverage: inherited
+    @unformatable_method()
     def is_group(self, path: str) -> bool:
         return self.sub_store.is_group(path)
 
     # docstr-coverage: inherited
+    @unformatable_method()
     def is_variable(self, path: str) -> bool:
         return self.sub_store.is_variable(path)
 
     # docstr-coverage: inherited
+    @unformatable_method()
     def iter(self, path: str) -> Iterator[str]:
         return self.sub_store.iter(path)
 
@@ -186,7 +191,7 @@ class EONetCDFStoreNCpy(EOProductStore):
         self.complevel: int = 4
         self.shuffle: bool = True
 
-    @formatable_method
+    @formatable_method()
     def __getitem__(self, key: str) -> "EOObject":
 
         if self._root is None:
@@ -213,7 +218,7 @@ class EONetCDFStoreNCpy(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         return len(self._root.groups) + len(self._root.variables)
 
-    @unformatable_method
+    @unformatable_method()
     def __setitem__(self, key: str, value: "EOObject") -> None:
         from eopf.product.core import EOGroup, EOVariable
 
@@ -269,7 +274,7 @@ class EONetCDFStoreNCpy(EOProductStore):
         return False  # We don't want this store to be our default netcdf store.
 
     # docstr-coverage: inherited
-    @unformatable_method
+    @unformatable_method()
     def is_group(self, path: str) -> bool:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
@@ -277,7 +282,7 @@ class EONetCDFStoreNCpy(EOProductStore):
         return isinstance(current_node, (Group, Dataset))
 
     # docstr-coverage: inherited
-    @unformatable_method
+    @unformatable_method()
     def is_variable(self, path: str) -> bool:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
@@ -285,6 +290,7 @@ class EONetCDFStoreNCpy(EOProductStore):
         return isinstance(current_node, Variable)
 
     # docstr-coverage: inherited
+    @unformatable_method()
     def iter(self, path: str) -> Iterator[str]:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")

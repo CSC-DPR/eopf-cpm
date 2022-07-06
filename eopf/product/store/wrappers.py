@@ -69,12 +69,12 @@ class FromAttributesToVariableAccessor(EOProductStore):
         self.store.close()
         self.store = None
 
-    @formatable_method
+    @formatable_method()
     def __getitem__(self, key: str) -> EOObject:
         data = self._extract_data(key)
         return EOVariable(data=data)
 
-    @unformatable_method
+    @unformatable_method()
     def __setitem__(self, key: str, value: EOObject) -> None:
         if self.store is None:
             raise StoreNotOpenError()
@@ -101,7 +101,7 @@ class FromAttributesToVariableAccessor(EOProductStore):
         return iter(self.store)
 
     # docstr-coverage: inherited
-    @unformatable_method
+    @unformatable_method()
     def is_group(self, path: str) -> bool:
         # to have an harmonized behavior with is_variable
         if self.store is None:
@@ -109,7 +109,7 @@ class FromAttributesToVariableAccessor(EOProductStore):
         return False
 
     # docstr-coverage: inherited
-    @unformatable_method
+    @unformatable_method()
     def is_variable(self, path: str) -> bool:
         if self.store is None:
             raise StoreNotOpenError()
@@ -120,6 +120,7 @@ class FromAttributesToVariableAccessor(EOProductStore):
         raise NotImplementedError
 
     # docstr-coverage: inherited
+    @unformatable_method()
     def iter(self, path: str) -> Iterator[str]:
         if self.store is None:
             raise StoreNotOpenError()
@@ -214,7 +215,7 @@ class FromAttributesToFlagValueAccessor(FromAttributesToVariableAccessor):
         self.flag_values = flag_values
 
     # docstr-coverage: inherited
-    @formatable_method
+    @formatable_method()
     def __getitem__(self, key: str) -> EOObject:
         data = self._apply_flags(self._extract_data(key))
         return EOVariable(data=data)
