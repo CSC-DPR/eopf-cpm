@@ -11,6 +11,7 @@ import pytest
 # dask_solomulti require client.
 # client require loop and cluster_fixture.
 from distributed.utils_test import (  # noqa # pylint: disable=unused-import
+    cleanup,
     client,
     cluster_fixture,
     loop,
