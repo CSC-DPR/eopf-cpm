@@ -1,7 +1,11 @@
+import glob
+import logging
 import os
-from typing import TYPE_CHECKING, Any, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 
+import fsspec
 import numpy as np
+import pytest
 from hypothesis import strategies as st
 
 from eopf.product import EOVariable
@@ -148,9 +152,30 @@ def realize_strategy(draw, to_realize: Union[Any, st.SearchStrategy]):
     return to_realize
 
 
+def _glob_to_url(input_dir: str, file_name_pattern: str, protocols: Optional[list[str]] = None):
+    if protocols is None:
+        protocols = []
+    protocols.append("file")
+
+    glob_path = os.path.join(input_dir, file_name_pattern)
+    matched_files = glob.glob(glob_path)
+    if len(matched_files) == 0:
+        logging.exception(f"No files for pattern {file_name_pattern} found in the {input_dir}")
+        return ""
+
+    protocols_string = "::".join(protocols)
+    if TEST_ONLY_ONE_PRODUCT:
+        return [f"{protocols_string}://{matched_files[0]}"]
+    return [f"{protocols_string}://{matched_file}" for matched_file in matched_files]
+
+
 PARENT_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..")
+TEST_DATA_PATH = os.environ.get("TEST_DATA_FOLDER", os.path.join(PARENT_DATA_PATH, "data"))
+EMBEDED_TEST_DATA_PATH = os.path.join(PARENT_DATA_PATH, "tests", "data")
+MAPPING_PATH = os.path.join(PARENT_DATA_PATH, "eopf", "product", "store", "mapping")
+TEST_ONLY_ONE_PRODUCT = os.environ.get("TEST_ONLY_ONE_PRODUCT") in [True, "True", "true", 1, "1"]
 
-
+S3_TEST_DATA_PROTOCOL, S3_TEST_DATA_PATH = fsspec.core.split_protocol(os.environ.get("S3_TEST_DATA_FOLDER", ""))
 S3_CONFIG_FAKE = dict(
     key="aaaa",
     secret="bbbbb",
@@ -161,3 +186,11 @@ S3_CONFIG_REAL = dict(
     secret=os.environ.get("S3_SECRET"),
     client_kwargs=dict(endpoint_url=os.environ.get("S3_URL"), region_name=os.environ.get("S3_REGION")),
 )
+
+
+def glob_fixture(
+    glob_pattern: str, input_dir: str = TEST_DATA_PATH, protocols: Optional[list[str]] = None, **kwargs: Any
+):
+    params = kwargs.setdefault("params", [])
+    params.extend(_glob_to_url(input_dir, glob_pattern, protocols=protocols))
+    return pytest.fixture(**kwargs)
