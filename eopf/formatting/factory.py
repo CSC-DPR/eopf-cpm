@@ -222,7 +222,7 @@ class formatable_method:
             # replace the first argument with the formatter_stripped_uri
 
             # call the decorated function
-            decorated_method_ret = fn(this, formatable, *args, **kwargs)
+            decorated_method_ret = fn(this, formatter_stripped_uri, *args, **kwargs)
             if self.formatable and formatter is not None:
                 return formatter(decorated_method_ret)
 
