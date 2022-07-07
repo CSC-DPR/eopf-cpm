@@ -175,7 +175,7 @@ class ToUNIXTimeSLSTRL1(EOAbstractFormatter):
         try:
             # compute the start and end time
             start = to_datetime(datetime.fromtimestamp(0, tz=UTC))
-            end = to_datetime(input[:])
+            end = to_datetime(input[:], utc=True)
 
             # compute and convert the time difference into microseconds
             time_delta = numpy.array(numpy.int64((end - start) // Timedelta("1microsecond")))
