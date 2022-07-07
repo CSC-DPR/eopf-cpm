@@ -148,8 +148,8 @@ depicted below.
 
     .. jupyter-execute::
 
-        log1 = EOLogFactory().get_log(cfg_name="console_info", name="same name")
-        log2 = EOLogFactory().get_log(cfg_name="console_info", name="different name")
+        log1 = EOLogFactory().get_log(cfg_name="console", name="same name")
+        log2 = EOLogFactory().get_log(cfg_name="console", name="different name")
         print(id(log1))
         print(id(log2))
 
