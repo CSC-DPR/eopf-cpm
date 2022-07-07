@@ -1,6 +1,6 @@
 {
   "recognition": {
-    "filename_pattern": "S1._[EI]W_OCN_2S.*SAFE",
+    "filename_pattern": "S1._[EI]W_OCN__2S.*SAFE",
     "product_type": "S1_OCN_IW",
     "product_type_pattern": "OCN",
     "version": "003.40"
@@ -9,86 +9,6 @@
     {
       "short_name": "osw_polarisation",
       "target_path": "/conditions/osw/polarisation",
-      "source_path": "measurement/.*nc",
-      "item_format": "attribute_element_to_flag_variable",
-      "_comments": [
-        "not available as a variable in legacy product"
-      ],
-      "paramers": {
-        "dimensions": [
-          "sub_image"
-        ]
-      },
-      "accessor_config": {
-        "flag_values": "flags_polarisation/flag_values",
-        "flag_meanings": "flags_polarisation/flag_meanings",
-        "store_cls": "store_cls/netcdf",
-        "attr_name": "attr_name/polarisation"
-      }
-    },
-    {
-      "short_name": "osw_polarisation",
-      "target_path": "/conditions/osw/polarisation",
-      "source_path": "measurement/.*nc",
-      "item_format": "attribute_element_to_flag_variable",
-      "_comments": [
-        "not available as a variable in legacy product"
-      ],
-      "paramers": {
-        "dimensions": [
-          "sub_image"
-        ]
-      },
-      "accessor_config": {
-        "flag_values": "flags_polarisation/flag_values",
-        "flag_meanings": "flags_polarisation/flag_meanings",
-        "store_cls": "store_cls/netcdf",
-        "attr_name": "attr_name/polarisation"
-      }
-    },
-    {
-      "short_name": "osw_polarisation",
-      "target_path": "/conditions/osw/polarisation",
-      "source_path": "measurement/.*nc",
-      "item_format": "attribute_element_to_flag_variable",
-      "_comments": [
-        "not available as a variable in legacy product"
-      ],
-      "paramers": {
-        "dimensions": [
-          "sub_image"
-        ]
-      },
-      "accessor_config": {
-        "flag_values": "flags_polarisation/flag_values",
-        "flag_meanings": "flags_polarisation/flag_meanings",
-        "store_cls": "store_cls/netcdf",
-        "attr_name": "attr_name/polarisation"
-      }
-    },
-    {
-      "short_name": "rvl_polarisation",
-      "target_path": "/conditions/rvl/polarisation",
-      "source_path": "measurement/.*nc",
-      "item_format": "attribute_element_to_flag_variable",
-      "_comments": [
-        "not available as a variable in legacy product"
-      ],
-      "paramers": {
-        "dimensions": [
-          "sub_image"
-        ]
-      },
-      "accessor_config": {
-        "flag_values": "flags_polarisation/flag_values",
-        "flag_meanings": "flags_polarisation/flag_meanings",
-        "store_cls": "store_cls/netcdf",
-        "attr_name": "attr_name/polarisation"
-      }
-    },
-    {
-      "short_name": "rvl_polarisation",
-      "target_path": "/conditions/rvl/polarisation",
       "source_path": "measurement/.*nc",
       "item_format": "attribute_element_to_flag_variable",
       "_comments": [
@@ -400,51 +320,6 @@
       "_comments": []
     },
     {
-      "short_name": "oswEllipsLength",
-      "target_path": null,
-      "source_path": "measurement/.*nc:oswEllipsLength",
-      "item_format": "netcdf",
-      "_comments": [
-        "not kept in new format"
-      ]
-    },
-    {
-      "short_name": "oswEllipsLengthStdDev",
-      "target_path": null,
-      "source_path": "measurement/.*nc:oswEllipsLengthStdDev",
-      "item_format": "netcdf",
-      "_comments": [
-        "not kept in new format"
-      ]
-    },
-    {
-      "short_name": "oswEllipsWidth",
-      "target_path": null,
-      "source_path": "measurement/.*nc:oswEllipsWidth",
-      "item_format": "netcdf",
-      "_comments": [
-        "not kept in new format"
-      ]
-    },
-    {
-      "short_name": "oswEllipsWidthStdDev",
-      "target_path": null,
-      "source_path": "measurement/.*nc:oswEllipsWidthStdDev",
-      "item_format": "netcdf",
-      "_comments": [
-        "not kept in new format"
-      ]
-    },
-    {
-      "short_name": "oswGroupDir",
-      "target_path": null,
-      "source_path": "measurement/.*nc:oswGroupDir",
-      "item_format": "netcdf",
-      "_comments": [
-        "not kept in new format"
-      ]
-    },
-    {
       "short_name": "oswQualityFlagPartition",
       "target_path": "/quality/osw/partition_quality_flag",
       "source_path": "measurement/.*nc:oswQualityFlagPartition",
@@ -506,42 +381,6 @@
       "source_path": "measurement/.*nc:oswJy",
       "item_format": "netcdf",
       "_comments": []
-    },
-    {
-      "short_name": "owiHs",
-      "target_path": null,
-      "source_path": "measurement/.*nc:owiHs",
-      "item_format": "netcdf",
-      "_comments": [
-        "not kept in new format"
-      ]
-    },
-    {
-      "short_name": "owiWl",
-      "target_path": null,
-      "source_path": "measurement/.*nc:owiWl",
-      "item_format": "netcdf",
-      "_comments": [
-        "not kept in new format"
-      ]
-    },
-    {
-      "short_name": "owiDirmet",
-      "target_path": null,
-      "source_path": "measurement/.*nc:owiDirmet",
-      "item_format": "netcdf",
-      "_comments": [
-        "not kept in new format"
-      ]
-    },
-    {
-      "short_name": "owiWindSeaHs",
-      "target_path": null,
-      "source_path": "measurement/.*nc:owiWindSeaHs",
-      "item_format": "netcdf",
-      "_comments": [
-        "not kept in new format"
-      ]
     },
     {
       "short_name": "owiLon",
@@ -647,15 +486,6 @@
       "source_path": "measurement/.*nc:owiCalConstObsi",
       "item_format": "netcdf",
       "_comments": []
-    },
-    {
-      "short_name": "owiCalConstInci",
-      "target_path": null,
-      "source_path": "measurement/.*nc:owiCalConstInci",
-      "item_format": "netcdf",
-      "_comments": [
-        "not kept in new format"
-      ]
     },
     {
       "short_name": "owiInversionQuality",
@@ -859,24 +689,6 @@
       "source_path": "measurement/.*nc:rvlLandFlag",
       "item_format": "netcdf",
       "_comments": []
-    },
-    {
-      "short_name": "rvlSwathNumber",
-      "target_path": null,
-      "source_path": "measurement/.*nc:rvlSwathNumber",
-      "item_format": "netcdf",
-      "_comments": [
-        "not kept in new format"
-      ]
-    },
-    {
-      "short_name": "owiRadVel",
-      "target_path": null,
-      "source_path": "measurement/.*nc:owiRadVel",
-      "item_format": "netcdf",
-      "_comments": [
-        "not kept in new format"
-      ]
     }
   ],
   "flags_polarisation": {
@@ -893,5 +705,8 @@
   "store_cls": {
     "netcdf": "eopf.product.store.netcdf.EONetCDFStore",
     "netcdf_string_to_time": "eopf.product.store.netcdf.EONetcdfStringToTimeAccessor"
+  },
+  "attr_name": {
+    "polarisation": "polarisation"
   }
 }
