@@ -4,21 +4,20 @@ from pathlib import Path
 
 import numpy as np
 import pytest
-from pytest_lazyfixture import lazy_fixture
 
 from eopf.product.conveniences import open_store
 from eopf.product.core import EOProduct, EOVariable
 from eopf.product.core.eo_object import EOObject
-from eopf.product.store import (  # , EOCogStore
-    EONetCDFStore,
-    EOProductStore,
-    EOZarrStore,
+from eopf.product.store import (
+    EOProductStore,  # , EOCogStore; EONetCDFStore,; EOZarrStore,
 )
 from eopf.product.store.conveniences import convert
 from eopf.product.store.mapping_factory import EOMappingFactory
 from eopf.product.store.safe import EOSafeStore
 from eopf.product.utils import conv
 from tests.utils import assert_eovariable_equal
+
+# from pytest_lazyfixture import lazy_fixture
 
 
 ##########################################################################################
