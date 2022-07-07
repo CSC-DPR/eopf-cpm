@@ -27,7 +27,7 @@
             "backupCount": "60",
             "formatter": "file",
             "level": "DEBUG",
-            "filename": "./eopf/logging/progress.log"
+            "filename": "progress.log"
         }
     },
         
