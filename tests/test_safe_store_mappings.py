@@ -56,7 +56,7 @@ from tests.utils import assert_eovariable_equal
         # "item_format": "netcdf"
         # (lazy_fixture("S3_SY_2_SYN_ZIP"), "/coordinates/image_grid/longitude"),
         # (lazy_fixture("S3_SY_2_SYN_ZIP"), "/conditions/geometry/saa"),
-        #(lazy_fixture("S3_SY_2_SYN_ZIP"), "/measurements/olci/sdr_oa01"),
+        # (lazy_fixture("S3_SY_2_SYN_ZIP"), "/measurements/olci/sdr_oa01"),
         # "item_format": "netcdf"
         # (lazy_fixture("S3_OL_1_EFR_ZIP"), "/coordinates/image_grid/longitude"),
         # (lazy_fixture("S3_OL_1_EFR_ZIP"), "/conditions/geometry/oza"),
@@ -153,15 +153,12 @@ def test_convert_test_mapping(
     "input_path, mapping_filename, output_extension, output_store, max_optional_miss",
     [
         # fmt: off
-
         # Target: convert safe to zarr for all level , netcdf (for L1/L2 ), cog(for L1/L2 )
         # S1 (L0 / L1 / OCN L2), S2 L1C / L2, S3 (L0, OLCI L1/L2, SLSTR L1/L2, SRAL L1/L2 , SYN L2 )
-
         # ####################### S1 product type conversions ########################
         # ---> S1/Level 0 - tests -> MAPPING not available
         # (lazy_fixture("S1_IW_RAW_ZIP"), lazy_fixture("S1_IW_RAW_MAPPING"), ".SAFE", EOSafeStore, 0,),
         # (lazy_fixture("S1_IW_RAW_ZIP"), lazy_fixture("S1_IW_RAW_MAPPING"), ".zarr", EOZarrStore, 0,),
-
         # ---> S1/Level 1 - tests -> MAPPING not available
         # (lazy_fixture("S1_IW_SLC_ZIP"), lazy_fixture("S1_IW_SLC_MAPPING"), ".SAFE", EOSafeStore, 0,),
         # (lazy_fixture("S1_IW_SLC_ZIP"), lazy_fixture("S1_IW_SLC_MAPPING"), ".zarr", EOZarrStore, 0,),
@@ -171,14 +168,12 @@ def test_convert_test_mapping(
         # (lazy_fixture("S1_IW_GRD_ZIP"), lazy_fixture("S1_IW_GRD_MAPPING"), ".zarr", EOZarrStore, 0,),
         # (lazy_fixture("S1_IW_GRD_ZIP"), lazy_fixture("S1_IW_GRD_MAPPING"), ".cog", EOCogStore, 0,),
         # (lazy_fixture("S1_IW_GRD_ZIP"), lazy_fixture("S1_IW_GRD_MAPPING"), ".nc", EONetCDFStore, 0,),
-
         # ---> S1/Level 2 - tests
         # not working 04.07 -> SEE ISSUE #71
         # (lazy_fixture("S1_IM_OCN_ZIP"), lazy_fixture("S1_IM_OCN_MAPPING"), ".SAFE", EOSafeStore, 0),
         # (lazy_fixture("S1_IM_OCN_ZIP"), lazy_fixture("S1_IM_OCN_MAPPING"), ".zarr", EOZarrStore, 0),
         # (lazy_fixture("S1_IM_OCN_ZIP"), lazy_fixture("S1_IM_OCN_MAPPING"), ".cog", EOCogStore, 0),
         # (lazy_fixture("S1_IM_OCN_ZIP"), lazy_fixture("S1_IM_OCN_MAPPING"), ".nc", EONetCDFStore, 0),
-
         # ####################### S2 product type conversions ########################
         # ---> S2/Level 0 - tests -> NO PRODUCTS AVAILABLE
         # ---> S2/Level 1 - tests
@@ -199,7 +194,6 @@ def test_convert_test_mapping(
         # (lazy_fixture("S2_MSIL2A_ZIP"), lazy_fixture("S2_MSIL2A_MAPPING"), ".zarr", EOZarrStore, 52,),
         # (lazy_fixture("S2_MSIL2A_ZIP"), lazy_fixture("S2_MSIL2A_MAPPING"), ".cog", EOCogStore, 0,),
         # (lazy_fixture("S2_MSIL2A_ZIP"), lazy_fixture("S2_MSIL2A_MAPPING"), ".nc", EONetCDFStore, 0,),
-
         # ####################### S3 product type conversions ########################
         # ---> S3/Level 0 - tests -> NO PRODUCTS AVAILABLE
         # ---> S2/Level 1/2 - tests
