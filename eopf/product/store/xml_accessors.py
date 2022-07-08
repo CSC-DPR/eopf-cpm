@@ -1,3 +1,4 @@
+import warnings
 from pathlib import Path
 from typing import (
     TYPE_CHECKING,
@@ -382,6 +383,7 @@ class XMLManifestAccessor(EOProductStore):
                     continue
                 else:
                     # If xpath is invalid, and doesn't containt a conversion function reference
+                    warnings.warn(f"{key}:{value} is an invalid binding")
                     raise KeyError(f"{value} is an invalid xpath expression!")
         return internal_dict
 
