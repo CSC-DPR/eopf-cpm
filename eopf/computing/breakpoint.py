@@ -65,7 +65,7 @@ def _write_product(product: EOProduct, storage: str, **store_params: Any) -> EOP
     EOProduct
     """
     store = EOZarrStore(storage)
-    with product.open(mode="w", store_or_path_url=store, **store_params):
+    with product.open(mode="w", storage=store, **store_params):
         product.write()
     return EOProduct(product.name, store).open(mode="r", **store_params)
 
