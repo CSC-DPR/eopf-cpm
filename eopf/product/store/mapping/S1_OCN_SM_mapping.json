@@ -1,6 +1,6 @@
 {
   "recognition": {
-    "filename_pattern": "S1._S[123456]_OCN_2S.*SAFE",
+    "filename_pattern": "S1._S[123456]_OCN__2S.*SAFE",
     "product_type": "S1_OCN_SM",
     "product_type_pattern": "OCN",
     "version": "003.40"
@@ -14,7 +14,7 @@
       "_comments": [
         "not available as a variable in legacy product"
       ],
-      "paramers": {
+      "parameters": {
         "dimensions": [
           "sub_image"
         ]
@@ -34,7 +34,7 @@
       "_comments": [
         "not available as a variable in legacy product"
       ],
-      "paramers": {
+      "parameters": {
         "dimensions": [
           "sub_image"
         ]

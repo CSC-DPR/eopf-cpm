@@ -179,6 +179,16 @@ def test_convert_test_mapping(
         # (lazy_fixture("S1_IM_OCN_ZIP"), lazy_fixture("S1_IM_OCN_MAPPING"), ".cog", EOCogStore, 0),
         # (lazy_fixture("S1_IM_OCN_ZIP"), lazy_fixture("S1_IM_OCN_MAPPING"), ".nc", EONetCDFStore, 0),
 
+        (lazy_fixture("S1_SM_OCN_ZIP"), lazy_fixture("S1_SM_OCN_MAPPING"), ".SAFE", EOSafeStore, 0),
+        (lazy_fixture("S1_SM_OCN_ZIP"), lazy_fixture("S1_SM_OCN_MAPPING"), ".zarr", EOZarrStore, 0),
+        #(lazy_fixture("S1_SM_OCN_ZIP"), lazy_fixture("S1_SM_OCN_MAPPING"), ".cog", EOCogStore, 0),
+        (lazy_fixture("S1_SM_OCN_ZIP"), lazy_fixture("S1_SM_OCN_MAPPING"), ".nc", EONetCDFStore, 0),
+
+        (lazy_fixture("S1_VW_OCN_ZIP"), lazy_fixture("S1_VW_OCN_MAPPING"), ".SAFE", EOSafeStore, 0),
+        (lazy_fixture("S1_VW_OCN_ZIP"), lazy_fixture("S1_VW_OCN_MAPPING"), ".zarr", EOZarrStore, 0),
+        #(lazy_fixture("S1_VW_OCN_ZIP"), lazy_fixture("S1_VW_OCN_MAPPING"), ".cog", EOCogStore, 0),
+        (lazy_fixture("S1_VW_OCN_ZIP"), lazy_fixture("S1_VW_OCN_MAPPING"), ".nc", EONetCDFStore, 0),
+                
         # ####################### S2 product type conversions ########################
         # ---> S2/Level 0 - tests -> NO PRODUCTS AVAILABLE
         # ---> S2/Level 1 - tests

@@ -99,6 +99,18 @@ def S1_IM_OCN_MAPPING(MAPPING_FOLDER: str):
 
 
 @pytest.fixture
+def S1_SM_OCN_MAPPING(MAPPING_FOLDER: str):
+    """Path to a S1 OCN SM 1 mapping"""
+    return os.path.join(MAPPING_FOLDER, "S1_OCN_SM_mapping.json")
+
+
+@pytest.fixture
+def S1_VW_OCN_MAPPING(MAPPING_FOLDER: str):
+    """Path to a S1 OCN WV 1 mapping"""
+    return os.path.join(MAPPING_FOLDER, "S1_OCN_WV_mapping.json")
+
+
+@pytest.fixture
 def S2_MSIL1C_MAPPING(MAPPING_FOLDER: str):
     """Path to a S2 MSIL1C mapping"""
     return os.path.join(MAPPING_FOLDER, "S2_MSIL1C_mapping.json")
@@ -152,7 +164,7 @@ def TEST_PRODUCT_ZIP(request):
 
 
 # ############# S1 ##############
-@glob_fixture("S1*_IW_OCN*[!.zarr][!.SAFE].zip", protocols=["zip"])
+@glob_fixture("S1*_IW_OCN*[!.zarr][!.SAFE]")
 def S1_IM_OCN(request):
     """Path to a S1 OCN LEVEL 1 product"""
     return request.param
@@ -164,6 +176,30 @@ def S1_IM_OCN_ZIP(request):
     return request.param
 
 
+@glob_fixture("S1*_S[1-6]_OCN*[!.zarr][!.SAFE]")
+def S1_SM_OCN(request):
+    """Path to a S1 OCN LEVEL 1 product"""
+    return request.param
+
+
+@glob_fixture("S1*_S[1-6]_OCN*[!.zarr][!.SAFE].zip", protocols=["zip"])
+def S1_SM_OCN_ZIP(request):
+    """Path to a S1 OCN LEVEL 1 product"""
+    return request.param
+    
+    
+@glob_fixture("S1*_WV_OCN*[!.zarr][!.SAFE]")
+def S1_VW_OCN(request):
+    """Path to a S1 OCN LEVEL 1 product"""
+    return request.param
+
+
+@glob_fixture("S1*_WV_OCN*[!.zarr][!.SAFE].zip", protocols=["zip"])
+def S1_VW_OCN_ZIP(request):
+    """Path to a S1 OCN LEVEL 1 product"""
+    return request.param
+    
+    
 # ############# S2 ##############
 @glob_fixture("S2*_MSIL1C*.SAFE")
 def S2_MSIL1C(request):
