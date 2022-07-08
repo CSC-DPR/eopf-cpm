@@ -1,22 +1,20 @@
-from logging import Logger
+from logging import CRITICAL, DEBUG, ERROR, INFO, NOTSET, WARNING, Logger
 from pathlib import Path
-from pstats import Stats
 
-import dask.array as da
 import pytest
 
 from eopf.exceptions import (
-    DaskProfilerError,
     LoggingConfigurationAlreadyExists,
     LoggingConfigurationDirDoesNotExist,
     LoggingConfigurationFileIsNotValid,
     LoggingConfigurationFileTypeNotSupported,
     LoggingConfigurationNotRegistered,
-    SingleThreadProfilerError,
 )
-from eopf.exceptions.warnings import NoLoggingConfigurationFile
-from eopf.logging import EOLogFactory, dask_profiler
-from eopf.logging.log import single_thread_profiler
+from eopf.exceptions.warnings import (
+    LoggingLevelIsNoneStandard,
+    NoLoggingConfigurationFile,
+)
+from eopf.logging import EOLogFactory
 
 
 @pytest.mark.unit
@@ -28,19 +26,9 @@ def test_correct_init():
 
 @pytest.mark.unit
 def test_correct_return_conf():
-    """Test that the EOLogFactory returns a Logger object configured through a yaml file"""
+    """Test that the EOLogFactory returns a Logger object configured through a json file"""
     test_factory = EOLogFactory()
     test_log = test_factory.get_log()
-    assert isinstance(test_log, Logger)
-
-
-@pytest.mark.unit
-def test_correct_return_yaml():
-    """Test that the EOLogFactory returns a Logger object configured through a conf file"""
-    test_factory = EOLogFactory()
-    yaml_path = Path(__file__).parent / "data" / "a_yaml_log_conf.yaml"
-    test_factory.register_cfg("a_yaml", yaml_path)
-    test_log = test_factory.get_log("a_yaml")
     assert isinstance(test_log, Logger)
 
 
@@ -55,9 +43,13 @@ def test_unregistered_configuration():
 @pytest.mark.unit
 def test_non_existent_cfg_dir():
     """Test that when setting the cfg dir with a non-existent dir it raises LoggingConfigurationDirDoesNotExist"""
+    initial_conf_path = EOLogFactory().cfg_dir
     test_factory = EOLogFactory()
     with pytest.raises(LoggingConfigurationDirDoesNotExist):
         _ = test_factory.set_cfg_dir("/tmp/does_not_exist")
+
+    # reset the path to avoid impacting other tests
+    _ = test_factory.set_cfg_dir(initial_conf_path)
 
 
 @pytest.mark.unit
@@ -89,7 +81,7 @@ def test_register_cfg_with_incorrect_file_extension():
     """Test that when setting the cfg dir with a non-existent dir it raises LoggingConfigurationDirDoesNotExist"""
 
     test_factory = EOLogFactory()
-    test_file_path = Path(__file__).parent / "data" / "log_conf.yam"
+    test_file_path = Path(__file__).parent / "data" / "log_conf.jso"
     with pytest.raises(LoggingConfigurationFileTypeNotSupported):
         _ = test_factory.register_cfg("invalid", cfg_path=test_file_path)
 
@@ -98,10 +90,14 @@ def test_register_cfg_with_incorrect_file_extension():
 def test_register_cfg_dir_with_no_log_configurations():
     """Test that when setting the cfg dir with a non-existent dir it raises NoLoggingConfigurationFile"""
 
+    initial_conf_path = EOLogFactory().cfg_dir
     test_factory = EOLogFactory()
     test_dir_path = Path(__file__).parent
     with pytest.raises(NoLoggingConfigurationFile):
         test_factory.set_cfg_dir(test_dir_path)
+
+    # reset the path to avoid impacting other tests
+    _ = test_factory.set_cfg_dir(initial_conf_path)
 
 
 @pytest.mark.unit
@@ -109,98 +105,59 @@ def test_get_log_with_non_valid_configuration_file():
     """Test that when setting the cfg dir with a non-existent dir it raises LoggingConfigurationDirDoesNotExist"""
 
     test_factory = EOLogFactory()
-    test_file_path = Path(__file__).parent / "data" / "log_conf.conf"
+    test_file_path = Path(__file__).parent / "data" / "log_conf.json"
     test_factory.register_cfg("invalid", cfg_path=test_file_path)
     with pytest.raises(LoggingConfigurationFileIsNotValid):
         _ = test_factory.get_log("invalid")
 
 
+@pytest.mark.parametrize(
+    "expected_log_level",
+    [
+        DEBUG,
+        INFO,
+        WARNING,
+        ERROR,
+        CRITICAL,
+    ],
+)
 @pytest.mark.unit
-def test_dask_profiler_nominal(OUTPUT_DIR):
-    expected_return_value = 100
-    expected_parameter_value = 2
-    report_path = Path(OUTPUT_DIR) / "test-dask-report.html"
+def test_override_log_cfg_level_with_standard_level_value(expected_log_level: int):
+    """Test the override log level functionaly of the get_log"""
 
-    @dask_profiler(
-        n_workers=3,
-        threads_per_worker=1,
-        report_name=report_path,
-        display_report=False,
-    )
-    def just_a_simple_dask_func(a_parameter: int):
-        # test parameters are passed correctly
-        assert isinstance(a_parameter, int) and a_parameter == expected_parameter_value
-
-        # some dask computation
-        x = da.arange(10, chunks=10)
-        x.sum().compute()
-
-        return expected_return_value
-
-    # test that the decorated function returns the expected value
-    assert just_a_simple_dask_func(expected_parameter_value) == expected_return_value
-
-    # test that the report was saved on disk
-    assert report_path.is_file()
+    logger = EOLogFactory().get_log(level=expected_log_level)
+    assert logger.level == expected_log_level
 
 
+@pytest.mark.parametrize(
+    "expected_log_level",
+    [
+        5,
+        100,
+    ],
+)
 @pytest.mark.unit
-def test_dask_profiler_raises_exception(OUTPUT_DIR):
-    """Test that DaskProfilerError is raised when the decorated function raises an exception"""
+def test_override_log_cfg_level_with_non_standard_level_value(expected_log_level: int):
+    """Test the override log level functionaly of the get_log"""
 
-    report_path = Path(OUTPUT_DIR) / "test-dask-report.html"
-
-    @dask_profiler(
-        n_workers=3,
-        threads_per_worker=1,
-        report_name=report_path,
-        display_report=False,
-    )
-    def just_a_simple_dask_func():
-        raise Exception("Just an exception")
-
-    # test that an Exception is raised
-    with pytest.raises(DaskProfilerError):
-        _ = just_a_simple_dask_func()
+    with pytest.raises(LoggingLevelIsNoneStandard):
+        logger = EOLogFactory().get_log(level=expected_log_level)
+        assert logger.level == expected_log_level
 
 
+@pytest.mark.parametrize(
+    "given_log_level",
+    [
+        None,
+        NOTSET,
+    ],
+)
 @pytest.mark.unit
-def test_single_threaded_profiler_nominal(OUTPUT_DIR):
-    """Test nominal functioning of the single_thread_profiler"""
-    expected_return_type = Stats
-    expected_parameter_value = 2
-    report_path = Path(OUTPUT_DIR) / "single-thread-report"
+def test_override_log_cfg_level_with_none_and_notset(given_log_level: int):
+    """Test the override log level functionaly of the get_log"""
 
-    @single_thread_profiler(
-        report_name=report_path,
-    )
-    def just_a_simple_dask_func(a_parameter: int):
-        # test parameters are passed correctly
-        assert isinstance(a_parameter, int) and a_parameter == expected_parameter_value
-
-        # some dask computation
-        x = da.arange(10, chunks=10)
-        x.sum().compute()
-
-        return 100
-
-    # test that the decorated function returns a Stats object
-    assert isinstance(just_a_simple_dask_func(expected_parameter_value), expected_return_type)
-
-    # test that the report was saved on disk
-    assert report_path.is_file()
-
-
-@pytest.mark.unit
-def test_single_thread_profiler_raises_exception(OUTPUT_DIR):
-    """Test that SingleThreadProfilerError is raised when the decorated function raises an exception"""
-
-    @single_thread_profiler(
-        report_name=Path(OUTPUT_DIR) / "single-thread-report",
-    )
-    def just_a_simple_dask_func():
-        raise Exception("Just an exception")
-
-    # test that an Exception is raised
-    with pytest.raises(SingleThreadProfilerError):
-        _ = just_a_simple_dask_func()
+    # test_override_log_cfg_level_with_standard_level_value modies the log level to CRITICAL
+    # hence, we expect that the log value will remain CRITICAL
+    expected_log_level = CRITICAL
+    logger = EOLogFactory().get_log(level=given_log_level)
+    assert logger.level == expected_log_level
