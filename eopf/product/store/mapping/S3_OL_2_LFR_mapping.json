@@ -498,7 +498,7 @@
       "source_path": "instrument_data.nc:relative_spectral_covariance",
       "item_format": "netcdf",
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "ancillary_variables": "lambda0",
         "long_name": "Relative spectral covariance matrix"
       }

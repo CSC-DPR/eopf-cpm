@@ -126,7 +126,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Geolocated x (across track) coordinate of detector FOV centre",
         "units": "m"
       }
@@ -143,7 +143,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Geolocated y (along track) coordinate of detector FOV centre",
         "units": "m"
       }
@@ -160,7 +160,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Latitude of detector FOV centre on the earth's surface",
         "standard_name": "latitude",
         "units": "degrees_north",
@@ -180,7 +180,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Longitude of detector FOV centre on the earth's surface",
         "standard_name": "longitude",
         "units": "degrees_east",
@@ -580,7 +580,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Satellite azimuth angle",
         "standard_name": "satellite_azimuth_angle",
         "units": "degrees"
@@ -598,7 +598,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Distance from satellite to surface",
         "units": "m"
       }
@@ -615,7 +615,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Satellite zenith angle",
         "standard_name": "satellite_zenith_angle",
         "units": "degrees"
@@ -633,7 +633,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar azimuth angle",
         "standard_name": "solar_azimuth_angle",
         "units": "degrees"
@@ -651,7 +651,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Distance from sun to surface",
         "units": "m"
       }
@@ -668,7 +668,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar zenith angle",
         "standard_name": "solar_zenith_angle",
         "units": "degrees"
@@ -1275,7 +1275,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Fractional cloud cover",
         "model": "ECMWF_F",
         "parameter": "164",
@@ -1296,7 +1296,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "2m dew point",
         "model": "ECMWF_F",
         "parameter": "168",
@@ -1317,7 +1317,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "East-west integrated surface wind stress",
         "model": "ECMWF_F",
         "parameter": "180",
@@ -1338,7 +1338,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Integrated surface latent heat flux",
         "model": "ECMWF_F",
         "parameter": "147",
@@ -1359,7 +1359,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "North-south integrated surface wind stress",
         "model": "ECMWF_F",
         "parameter": "181",
@@ -1380,7 +1380,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Sea ice fraction",
         "model": "ECMWF_F",
         "parameter": "31",
@@ -1400,7 +1400,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Sea surface temperature",
         "model": "ECMWF_F",
         "parameter": "34",
@@ -1421,7 +1421,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Integrated surface sensible heat flux",
         "model": "ECMWF_F",
         "parameter": "146",
@@ -1442,7 +1442,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Skin temperature",
         "model": "ECMWF_F",
         "parameter": "235",
@@ -1463,7 +1463,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Snow albedo",
         "model": "ECMWF_F",
         "parameter": "32",
@@ -1483,7 +1483,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Snow liquid water equivalent depth",
         "model": "ECMWF_F",
         "parameter": "141",
@@ -1504,7 +1504,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Volumetric Soil Water Layer 1",
         "model": "ECMWF_F",
         "parameter": "39",
@@ -1525,7 +1525,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Integrated surface solar radiation",
         "model": "ECMWF_F",
         "parameter": "176",
@@ -1547,7 +1547,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Specific humidity profile (kg/kg)",
         "model": "ECMWF_F",
         "parameter": "133",
@@ -1568,7 +1568,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Surface pressure",
         "model": "ECMWF_F",
         "parameter": "134",
@@ -1590,7 +1590,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Atmospheric temperature profile",
         "model": "ECMWF_F",
         "parameter": "130",
@@ -1612,7 +1612,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "2m air temperature",
         "model": "ECMWF_F",
         "parameter": "167",
@@ -1633,7 +1633,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Integrated surface thermal radiation",
         "model": "ECMWF_F",
         "parameter": "177",
@@ -1654,7 +1654,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Total column ozone",
         "model": "ECMWF_F",
         "parameter": "206",
@@ -1675,7 +1675,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Total column water vapour",
         "model": "ECMWF_F",
         "parameter": "137",
@@ -1697,7 +1697,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "10m U wind component",
         "model": "ECMWF_F",
         "parameter": "165",
@@ -1719,7 +1719,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "10m V wind component",
         "model": "ECMWF_F",
         "parameter": "166",
@@ -2052,7 +2052,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Time sampling interval for pixels along each scan",
         "units": "us"
       }

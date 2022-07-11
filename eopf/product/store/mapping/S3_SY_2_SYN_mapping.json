@@ -132,7 +132,7 @@
       "source_path": "tiepoints_slstr_n.nc:SLN_TP_lat",
       "item_format": "netcdf",
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Latitude (WGS-84)",
         "standard_name": "latitude",
         "units": "degrees_north",
@@ -146,7 +146,7 @@
       "source_path": "tiepoints_slstr_n.nc:SLN_TP_lon",
       "item_format": "netcdf",
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Longitude (WGS-84)",
         "standard_name": "longitude",
         "units": "degrees_east",
@@ -160,7 +160,7 @@
       "source_path": "tiepoints_slstr_o.nc:SLO_TP_lat",
       "item_format": "netcdf",
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Latitude (WGS-84)",
         "standard_name": "latitude",
         "units": "degrees_north",
@@ -174,7 +174,7 @@
       "source_path": "tiepoints_slstr_o.nc:SLO_TP_lon",
       "item_format": "netcdf",
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Longitude (WGS-84)",
         "standard_name": "longitude",
         "units": "degrees_east",
@@ -2368,7 +2368,7 @@
       "source_path": "tiepoints_slstr_n.nc:SLN_VAA",
       "item_format": "netcdf",
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "SLSTR nadir view azimuth angle",
         "units": "degrees",
         "valid_max": 180.0,
@@ -2381,7 +2381,7 @@
       "source_path": "tiepoints_slstr_n.nc:SLN_VZA",
       "item_format": "netcdf",
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "SLSTR nadir view zenith angle",
         "units": "degrees",
         "valid_max": 90.0,
@@ -2394,7 +2394,7 @@
       "source_path": "tiepoints_slstr_o.nc:SLO_VAA",
       "item_format": "netcdf",
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "SLSTR oblique view azimuth angle",
         "standard_name": "slstr_oblique_view_azimuth_angle",
         "units": "degrees",
@@ -2408,7 +2408,7 @@
       "source_path": "tiepoints_slstr_o.nc:SLO_VZA",
       "item_format": "netcdf",
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "SLSTR oblique view zenith angle",
         "standard_name": "slstr_oblique_view_zenith_angle",
         "units": "degrees",

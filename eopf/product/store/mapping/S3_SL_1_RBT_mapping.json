@@ -882,7 +882,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Geolocated x (across track) coordinate of detector FOV centre",
         "units": "m"
       }
@@ -899,7 +899,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Geolocated y (along track) coordinate of detector FOV centre",
         "units": "m"
       }
@@ -916,7 +916,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Latitude of detector FOV centre on the earth's surface",
         "standard_name": "latitude",
         "units": "degrees_north",
@@ -936,7 +936,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Longitude of detector FOV centre on the earth's surface",
         "standard_name": "longitude",
         "units": "degrees_east",
@@ -6366,7 +6366,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Satellite azimuth angle",
         "standard_name": "satellite_azimuth_angle",
         "units": "degrees"
@@ -6384,7 +6384,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Distance from satellite to surface",
         "units": "m"
       }
@@ -6401,7 +6401,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Satellite zenith angle",
         "standard_name": "satellite_zenith_angle",
         "units": "degrees"
@@ -6419,7 +6419,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar azimuth angle",
         "standard_name": "solar_azimuth_angle",
         "units": "degrees"
@@ -6437,7 +6437,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Distance from sun to surface",
         "units": "m"
       }
@@ -6454,7 +6454,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar zenith angle",
         "standard_name": "solar_zenith_angle",
         "units": "degrees"
@@ -6472,7 +6472,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Satellite azimuth angle",
         "standard_name": "satellite_azimuth_angle",
         "units": "degrees"
@@ -6490,7 +6490,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Distance from satellite to surface",
         "units": "m"
       }
@@ -6507,7 +6507,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Satellite zenith angle",
         "standard_name": "satellite_zenith_angle",
         "units": "degrees"
@@ -6525,7 +6525,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar azimuth angle",
         "standard_name": "solar_azimuth_angle",
         "units": "degrees"
@@ -6543,7 +6543,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Distance from sun to surface",
         "units": "m"
       }
@@ -6560,7 +6560,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar zenith angle",
         "standard_name": "solar_zenith_angle",
         "units": "degrees"
@@ -6579,7 +6579,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Fractional cloud cover",
         "model": "ECMWF_F",
         "parameter": "164",
@@ -6600,7 +6600,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "2m dew point",
         "model": "ECMWF_F",
         "parameter": "168",
@@ -6621,7 +6621,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "East-west integrated surface wind stress",
         "model": "ECMWF_F",
         "parameter": "180",
@@ -6642,7 +6642,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Integrated surface latent heat flux",
         "model": "ECMWF_F",
         "parameter": "147",
@@ -6663,7 +6663,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "North-south integrated surface wind stress",
         "model": "ECMWF_F",
         "parameter": "181",
@@ -6702,7 +6702,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Sea ice fraction",
         "model": "ECMWF_F",
         "parameter": "31",
@@ -6722,7 +6722,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Sea surface temperature",
         "model": "ECMWF_F",
         "parameter": "34",
@@ -6743,7 +6743,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Integrated surface sensible heat flux",
         "model": "ECMWF_F",
         "parameter": "146",
@@ -6764,7 +6764,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Skin temperature",
         "model": "ECMWF_F",
         "parameter": "235",
@@ -6785,7 +6785,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Snow albedo",
         "model": "ECMWF_F",
         "parameter": "32",
@@ -6805,7 +6805,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Snow liquid water equivalent depth",
         "model": "ECMWF_F",
         "parameter": "141",
@@ -6826,7 +6826,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Volumetric Soil Water Layer 1",
         "model": "ECMWF_F",
         "parameter": "39",
@@ -6847,7 +6847,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Integrated surface solar radiation",
         "model": "ECMWF_F",
         "parameter": "176",
@@ -6869,7 +6869,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Specific humidity profile (kg/kg)",
         "model": "ECMWF_F",
         "parameter": "133",
@@ -6890,7 +6890,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Surface pressure",
         "model": "ECMWF_F",
         "parameter": "134",
@@ -6968,7 +6968,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Atmospheric temperature profile",
         "model": "ECMWF_F",
         "parameter": "130",
@@ -6990,7 +6990,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "2m air temperature",
         "model": "ECMWF_F",
         "parameter": "167",
@@ -7011,7 +7011,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Integrated surface thermal radiation",
         "model": "ECMWF_F",
         "parameter": "177",
@@ -7032,7 +7032,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Total column ozone",
         "model": "ECMWF_F",
         "parameter": "206",
@@ -7053,7 +7053,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Total column water vapour",
         "model": "ECMWF_F",
         "parameter": "137",
@@ -7075,7 +7075,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "10m U wind component",
         "model": "ECMWF_F",
         "parameter": "165",
@@ -7097,7 +7097,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "10m V wind component",
         "model": "ECMWF_F",
         "parameter": "166",
@@ -7136,7 +7136,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "axis": "Z",
         "long_name": "Soil wetness level depth bounds",
         "positive": "down",
@@ -7155,7 +7155,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "axis": "Z",
         "bounds": "z_bound",
         "long_name": "Depth of soil wetness level",
@@ -7194,7 +7194,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage gain added to detector signal",
         "units": "V",
         "valid_max": 1.0,
@@ -7212,7 +7212,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "V",
         "valid_max": 2.99,
@@ -7248,7 +7248,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -7264,7 +7264,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -7280,7 +7280,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 316.8639,
@@ -7298,7 +7298,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S1 (A stripe, nadir view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -7315,7 +7315,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -7332,7 +7332,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -7350,7 +7350,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -7368,7 +7368,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance noise from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -7385,7 +7385,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance noise",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -7401,7 +7401,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 20.0,
@@ -7420,7 +7420,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiometric Uncertainty Estimate at Lref",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -7436,7 +7436,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene radiance for VIS-SWIR channel calibration uncertainty estimates",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -7452,7 +7452,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar irradiance at top of atmosphere",
         "units": "mW m^-2 nm^-1"
       }
@@ -7468,7 +7468,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage gain added to detector signal",
         "units": "V",
         "valid_max": 1.0,
@@ -7486,7 +7486,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "V",
         "valid_max": 2.99,
@@ -7522,7 +7522,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -7538,7 +7538,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -7554,7 +7554,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 316.87,
@@ -7572,7 +7572,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S2 (A stripe, nadir view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -7589,7 +7589,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -7606,7 +7606,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -7624,7 +7624,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -7642,7 +7642,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance noise from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -7659,7 +7659,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance noise",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -7675,7 +7675,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 20.0,
@@ -7694,7 +7694,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiometric Uncertainty Estimate at Lref",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -7710,7 +7710,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene radiance for VIS-SWIR channel calibration uncertainty estimates",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -7726,7 +7726,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar irradiance at top of atmosphere",
         "units": "mW m^-2 nm^-1"
       }
@@ -7742,7 +7742,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage gain added to detector signal",
         "units": "V",
         "valid_max": 1.0,
@@ -7760,7 +7760,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "V",
         "valid_max": 2.99,
@@ -7796,7 +7796,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -7812,7 +7812,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -7828,7 +7828,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 316.87,
@@ -7846,7 +7846,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S3 (A stripe, nadir view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -7863,7 +7863,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -7880,7 +7880,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -7898,7 +7898,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -7916,7 +7916,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance noise from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -7933,7 +7933,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance noise",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -7949,7 +7949,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 20.0,
@@ -7968,7 +7968,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiometric Uncertainty Estimate at Lref",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -7984,7 +7984,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene radiance for VIS-SWIR channel calibration uncertainty estimates",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -8000,7 +8000,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar irradiance at top of atmosphere",
         "units": "mW m^-2 nm^-1"
       }
@@ -8016,7 +8016,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "V",
         "valid_max": 2.99,
@@ -8051,7 +8051,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage reference added to detector signal",
         "units": "V",
         "valid_max": 2.5,
@@ -8070,7 +8070,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -8086,7 +8086,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -8102,7 +8102,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Coarse detector temperature",
         "units": "K",
         "valid_max": 313.6246,
@@ -8120,7 +8120,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 100.9203,
@@ -8138,7 +8138,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S4 (A stripe, nadir view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -8155,7 +8155,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -8172,7 +8172,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -8190,7 +8190,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -8208,7 +8208,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance noise from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -8225,7 +8225,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance noise",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -8241,7 +8241,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Adjustable integration time",
         "units": "us",
         "valid_max": 35.0,
@@ -8259,7 +8259,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 28.0,
@@ -8278,7 +8278,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiometric Uncertainty Estimate at Lref",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -8294,7 +8294,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene radiance for VIS-SWIR channel calibration uncertainty estimates",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -8310,7 +8310,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar irradiance at top of atmosphere",
         "units": "mW m^-2 nm^-1"
       }
@@ -8326,7 +8326,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "V",
         "valid_max": 2.99,
@@ -8361,7 +8361,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage reference added to detector signal",
         "units": "V",
         "valid_max": 2.5,
@@ -8380,7 +8380,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -8396,7 +8396,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -8412,7 +8412,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Coarse detector temperature",
         "units": "K",
         "valid_max": 314.2292,
@@ -8430,7 +8430,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 101.2603,
@@ -8448,7 +8448,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S5 (A stripe, nadir view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -8465,7 +8465,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -8482,7 +8482,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -8500,7 +8500,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -8518,7 +8518,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance noise from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -8535,7 +8535,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance noise",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -8551,7 +8551,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Adjustable integration time",
         "units": "us",
         "valid_max": 35.0,
@@ -8569,7 +8569,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 28.0,
@@ -8588,7 +8588,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiometric Uncertainty Estimate at Lref",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -8604,7 +8604,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene radiance for VIS-SWIR channel calibration uncertainty estimates",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -8620,7 +8620,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar irradiance at top of atmosphere",
         "units": "mW m^-2 nm^-1"
       }
@@ -8636,7 +8636,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "V",
         "valid_max": 2.99,
@@ -8671,7 +8671,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage reference added to detector signal",
         "units": "V",
         "valid_max": 2.5,
@@ -8690,7 +8690,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -8706,7 +8706,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -8722,7 +8722,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Coarse detector temperature",
         "units": "K",
         "valid_max": 313.9114,
@@ -8740,7 +8740,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 101.2952,
@@ -8758,7 +8758,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S6 (A stripe, nadir view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -8775,7 +8775,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -8792,7 +8792,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -8810,7 +8810,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -8828,7 +8828,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance noise from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -8845,7 +8845,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance noise",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -8861,7 +8861,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Adjustable integration time",
         "units": "us",
         "valid_max": 35.0,
@@ -8879,7 +8879,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 28.0,
@@ -8898,7 +8898,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiometric Uncertainty Estimate at Lref",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -8914,7 +8914,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene radiance for VIS-SWIR channel calibration uncertainty estimates",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -8930,7 +8930,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar irradiance at top of atmosphere",
         "units": "mW m^-2 nm^-1"
       }
@@ -8946,7 +8946,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "V",
         "valid_max": 2.99,
@@ -8981,7 +8981,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage reference added to detector signal",
         "units": "V",
         "valid_max": 2.5,
@@ -9000,7 +9000,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -9016,7 +9016,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -9032,7 +9032,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Coarse detector temperature",
         "units": "K",
         "valid_max": 313.6246,
@@ -9050,7 +9050,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 100.9203,
@@ -9068,7 +9068,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S4 (B stripe, nadir view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -9085,7 +9085,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -9102,7 +9102,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -9120,7 +9120,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -9138,7 +9138,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance noise from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -9155,7 +9155,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance noise",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -9171,7 +9171,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Adjustable integration time",
         "units": "us",
         "valid_max": 35.0,
@@ -9189,7 +9189,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 28.0,
@@ -9208,7 +9208,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiometric Uncertainty Estimate at Lref",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -9224,7 +9224,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene radiance for VIS-SWIR channel calibration uncertainty estimates",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -9240,7 +9240,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar irradiance at top of atmosphere",
         "units": "mW m^-2 nm^-1"
       }
@@ -9256,7 +9256,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "V",
         "valid_max": 2.99,
@@ -9291,7 +9291,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage reference added to detector signal",
         "units": "V",
         "valid_max": 2.5,
@@ -9310,7 +9310,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -9326,7 +9326,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -9342,7 +9342,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Coarse detector temperature",
         "units": "K",
         "valid_max": 314.2292,
@@ -9360,7 +9360,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 101.2603,
@@ -9378,7 +9378,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S5 (B stripe, nadir view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -9395,7 +9395,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -9412,7 +9412,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -9430,7 +9430,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -9448,7 +9448,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance noise from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -9465,7 +9465,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance noise",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -9481,7 +9481,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Adjustable integration time",
         "units": "us",
         "valid_max": 35.0,
@@ -9499,7 +9499,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 28.0,
@@ -9518,7 +9518,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiometric Uncertainty Estimate at Lref",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -9534,7 +9534,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene radiance for VIS-SWIR channel calibration uncertainty estimates",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -9550,7 +9550,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar irradiance at top of atmosphere",
         "units": "mW m^-2 nm^-1"
       }
@@ -9566,7 +9566,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "V",
         "valid_max": 2.99,
@@ -9601,7 +9601,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage reference added to detector signal",
         "units": "V",
         "valid_max": 2.5,
@@ -9620,7 +9620,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -9636,7 +9636,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -9652,7 +9652,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Coarse detector temperature",
         "units": "K",
         "valid_max": 313.9114,
@@ -9670,7 +9670,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 101.2952,
@@ -9688,7 +9688,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S6 (B stripe, nadir view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -9705,7 +9705,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -9722,7 +9722,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -9740,7 +9740,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -9758,7 +9758,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance noise from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -9775,7 +9775,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance noise",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -9791,7 +9791,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Adjustable integration time",
         "units": "us",
         "valid_max": 35.0,
@@ -9809,7 +9809,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 28.0,
@@ -9828,7 +9828,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiometric Uncertainty Estimate at Lref",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -9844,7 +9844,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene radiance for VIS-SWIR channel calibration uncertainty estimates",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -9860,7 +9860,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar irradiance at top of atmosphere",
         "units": "mW m^-2 nm^-1"
       }
@@ -9876,7 +9876,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB1 Reference resistor 1 voltage",
         "units": "V",
         "valid_max": 15.25434,
@@ -9894,7 +9894,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB1 Reference resistor 2 voltage",
         "units": "V",
         "valid_max": 21.86551,
@@ -9912,7 +9912,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB2 Reference resistor 1 voltage",
         "units": "V",
         "valid_max": 15.25434,
@@ -9930,7 +9930,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB2 Reference resistor 2 voltage",
         "units": "V",
         "valid_max": 21.86551,
@@ -9948,7 +9948,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU +5V Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -9966,7 +9966,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU Bridge Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -9984,7 +9984,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU Ground Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -10003,7 +10003,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "volt",
         "valid_max": 2.99,
@@ -10038,7 +10038,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage reference added to detector signal",
         "units": "V",
         "valid_max": 2.5,
@@ -10056,7 +10056,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO plus 5V internal reference voltage",
         "units": "V",
         "valid_max": 6342.473,
@@ -10074,7 +10074,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO minus VPRT internal reference voltage",
         "units": "V",
         "valid_max": 9030.078,
@@ -10092,7 +10092,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO plus VPRT internal reference voltage",
         "units": "V",
         "valid_max": 16410.16,
@@ -10110,7 +10110,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO VPRT internal reference voltage",
         "units": "V",
         "valid_max": 9990.234,
@@ -10128,7 +10128,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body temperature 1",
         "units": "K",
         "valid_max": 315.193783,
@@ -10146,7 +10146,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body temperature 2",
         "units": "K",
         "valid_max": 316.317533,
@@ -10164,7 +10164,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Coarse detector temperature",
         "units": "K",
         "valid_max": 314.7451,
@@ -10182,7 +10182,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 103.893,
@@ -10200,7 +10200,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VDG value for S7 detector",
         "units": "V",
         "valid_max": 7.5,
@@ -10218,7 +10218,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S7 (1km TIR grid, nadir view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -10235,7 +10235,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -10253,7 +10253,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -10271,7 +10271,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -10289,7 +10289,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body 1 noise equivalent brightness temperature",
         "units": "K"
       }
@@ -10307,7 +10307,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body 2 noise equivalent brightness temperature",
         "units": "K"
       }
@@ -10323,7 +10323,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Adjustable integration time",
         "units": "us",
         "valid_max": 70.0,
@@ -10341,7 +10341,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 56.0,
@@ -10360,7 +10360,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "IR channel radiometric uncertainty estimates at BTs in scene temperature array",
         "units": "K"
       }
@@ -10376,7 +10376,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene temperature for IR channel uncertainty estimates",
         "units": "K"
       }
@@ -10392,7 +10392,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB1 Reference resistor 1 voltage",
         "units": "V",
         "valid_max": 15.25434,
@@ -10410,7 +10410,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB1 Reference resistor 2 voltage",
         "units": "V",
         "valid_max": 21.86551,
@@ -10428,7 +10428,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB2 Reference resistor 1 voltage",
         "units": "V",
         "valid_max": 15.25434,
@@ -10446,7 +10446,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB2 Reference resistor 2 voltage",
         "units": "V",
         "valid_max": 21.86551,
@@ -10464,7 +10464,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU +5V Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -10482,7 +10482,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU Bridge Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -10500,7 +10500,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU Ground Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -10519,7 +10519,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "volt",
         "valid_max": 2.99,
@@ -10554,7 +10554,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO plus 5V internal reference voltage",
         "units": "V",
         "valid_max": 6342.473,
@@ -10572,7 +10572,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO minus VPRT internal reference voltage",
         "units": "V",
         "valid_max": 9030.078,
@@ -10590,7 +10590,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO plus VPRT internal reference voltage",
         "units": "V",
         "valid_max": 16410.16,
@@ -10608,7 +10608,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO VPRT internal reference voltage",
         "units": "V",
         "valid_max": 9990.234,
@@ -10626,7 +10626,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body temperature 1",
         "units": "K",
         "valid_max": 315.193783,
@@ -10644,7 +10644,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body temperature 2",
         "units": "K",
         "valid_max": 316.317533,
@@ -10662,7 +10662,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Coarse detector temperature",
         "units": "K",
         "valid_max": 314.8585,
@@ -10680,7 +10680,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 102.3702,
@@ -10698,7 +10698,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector Voltage Bias",
         "units": "V",
         "valid_max": 9.0,
@@ -10716,7 +10716,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S8 (1km TIR grid, nadir view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -10733,7 +10733,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -10751,7 +10751,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -10769,7 +10769,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -10787,7 +10787,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body 1 noise equivalent brightness temperature",
         "units": "K"
       }
@@ -10805,7 +10805,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body 2 noise equivalent brightness temperature",
         "units": "K"
       }
@@ -10821,7 +10821,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Adjustable integration time",
         "units": "us",
         "valid_max": 70.0,
@@ -10839,7 +10839,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 40.0,
@@ -10858,7 +10858,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "IR channel radiometric uncertainty estimates at BTs in scene temperature array",
         "units": "K"
       }
@@ -10874,7 +10874,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene temperature for IR channel uncertainty estimates",
         "units": "K"
       }
@@ -10890,7 +10890,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB1 Reference resistor 1 voltage",
         "units": "V",
         "valid_max": 15.25434,
@@ -10908,7 +10908,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB1 Reference resistor 2 voltage",
         "units": "V",
         "valid_max": 21.86551,
@@ -10926,7 +10926,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB2 Reference resistor 1 voltage",
         "units": "V",
         "valid_max": 15.25434,
@@ -10944,7 +10944,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB2 Reference resistor 2 voltage",
         "units": "V",
         "valid_max": 21.86551,
@@ -10962,7 +10962,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU +5V Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -10980,7 +10980,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU Bridge Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -10998,7 +10998,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU Ground Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -11017,7 +11017,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "volt",
         "valid_max": 2.99,
@@ -11052,7 +11052,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO plus 5V internal reference voltage",
         "units": "V",
         "valid_max": 6342.473,
@@ -11070,7 +11070,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO minus VPRT internal reference voltage",
         "units": "V",
         "valid_max": 9030.078,
@@ -11088,7 +11088,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO plus VPRT internal reference voltage",
         "units": "V",
         "valid_max": 16410.16,
@@ -11106,7 +11106,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO VPRT internal reference voltage",
         "units": "V",
         "valid_max": 9990.234,
@@ -11124,7 +11124,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body temperature 1",
         "units": "K",
         "valid_max": 315.193783,
@@ -11142,7 +11142,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body temperature 2",
         "units": "K",
         "valid_max": 316.317533,
@@ -11160,7 +11160,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Coarse detector temperature",
         "units": "K",
         "valid_max": 314.8075,
@@ -11178,7 +11178,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 101.5941,
@@ -11196,7 +11196,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector Voltage Bias",
         "units": "V",
         "valid_max": 9.0,
@@ -11214,7 +11214,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S9 (1km TIR grid, nadir view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -11231,7 +11231,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -11249,7 +11249,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -11267,7 +11267,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -11285,7 +11285,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body 1 noise equivalent brightness temperature",
         "units": "K"
       }
@@ -11303,7 +11303,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body 2 noise equivalent brightness temperature",
         "units": "K"
       }
@@ -11319,7 +11319,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Adjustable integration time",
         "units": "us",
         "valid_max": 70.0,
@@ -11337,7 +11337,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 40.0,
@@ -11356,7 +11356,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "IR channel radiometric uncertainty estimates at BTs in scene temperature array",
         "units": "K"
       }
@@ -11372,7 +11372,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene temperature for IR channel uncertainty estimates",
         "units": "K"
       }
@@ -11388,7 +11388,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB1 Reference resistor 1 voltage",
         "units": "V",
         "valid_max": 15.25434,
@@ -11406,7 +11406,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB1 Reference resistor 2 voltage",
         "units": "V",
         "valid_max": 21.86551,
@@ -11424,7 +11424,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB2 Reference resistor 1 voltage",
         "units": "V",
         "valid_max": 15.25434,
@@ -11442,7 +11442,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB2 Reference resistor 2 voltage",
         "units": "V",
         "valid_max": 21.86551,
@@ -11460,7 +11460,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU +5V Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -11478,7 +11478,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU Bridge Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -11496,7 +11496,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU Ground Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -11515,7 +11515,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "volt",
         "valid_max": 2.99,
@@ -11533,7 +11533,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO plus 5V internal reference voltage",
         "units": "V",
         "valid_max": 6342.473,
@@ -11551,7 +11551,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO minus VPRT internal reference voltage",
         "units": "V",
         "valid_max": 9030.078,
@@ -11569,7 +11569,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO plus VPRT internal reference voltage",
         "units": "V",
         "valid_max": 16410.16,
@@ -11587,7 +11587,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO VPRT internal reference voltage",
         "units": "V",
         "valid_max": 9990.234,
@@ -11605,7 +11605,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body temperature 1",
         "units": "K",
         "valid_max": 315.193783,
@@ -11623,7 +11623,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body temperature 2",
         "units": "K",
         "valid_max": 316.317533,
@@ -11641,7 +11641,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Coarse detector temperature",
         "units": "K",
         "valid_max": 314.8585,
@@ -11659,7 +11659,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 102.3702,
@@ -11677,7 +11677,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel F2 (1km TIR grid, nadir view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -11694,7 +11694,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -11712,7 +11712,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -11730,7 +11730,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -11748,7 +11748,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body 1 noise equivalent brightness temperature",
         "units": "K"
       }
@@ -11766,7 +11766,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body 2 noise equivalent brightness temperature",
         "units": "K"
       }
@@ -11782,7 +11782,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Adjustable integration time",
         "units": "us",
         "valid_max": 70.0,
@@ -11800,7 +11800,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 40.0,
@@ -11819,7 +11819,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "IR channel radiometric uncertainty estimates at BTs in scene temperature array",
         "units": "K"
       }
@@ -11835,7 +11835,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene temperature for IR channel uncertainty estimates",
         "units": "K"
       }
@@ -11851,7 +11851,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB1 Reference resistor 1 voltage",
         "units": "V",
         "valid_max": 15.25434,
@@ -11869,7 +11869,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB1 Reference resistor 2 voltage",
         "units": "V",
         "valid_max": 21.86551,
@@ -11887,7 +11887,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB2 Reference resistor 1 voltage",
         "units": "V",
         "valid_max": 15.25434,
@@ -11905,7 +11905,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB2 Reference resistor 2 voltage",
         "units": "V",
         "valid_max": 21.86551,
@@ -11923,7 +11923,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU +5V Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -11941,7 +11941,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU Bridge Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -11959,7 +11959,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU Ground Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -11978,7 +11978,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "volt",
         "valid_max": 2.99,
@@ -11996,7 +11996,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO plus 5V internal reference voltage",
         "units": "V",
         "valid_max": 6342.473,
@@ -12014,7 +12014,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO minus VPRT internal reference voltage",
         "units": "V",
         "valid_max": 9030.078,
@@ -12032,7 +12032,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO plus VPRT internal reference voltage",
         "units": "V",
         "valid_max": 16410.16,
@@ -12050,7 +12050,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO VPRT internal reference voltage",
         "units": "V",
         "valid_max": 9990.234,
@@ -12068,7 +12068,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body temperature 1",
         "units": "K",
         "valid_max": 315.193783,
@@ -12086,7 +12086,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body temperature 2",
         "units": "K",
         "valid_max": 316.317533,
@@ -12104,7 +12104,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Coarse detector temperature",
         "units": "K",
         "valid_max": 314.7451,
@@ -12122,7 +12122,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 103.893,
@@ -12140,7 +12140,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel F1 (1km F1 grid, nadir view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -12157,7 +12157,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -12175,7 +12175,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -12193,7 +12193,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -12211,7 +12211,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body 1 noise equivalent brightness temperature",
         "units": "K"
       }
@@ -12229,7 +12229,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body 2 noise equivalent brightness temperature",
         "units": "K"
       }
@@ -12245,7 +12245,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Adjustable integration time",
         "units": "us",
         "valid_max": 70.0,
@@ -12263,7 +12263,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 0.0,
@@ -12282,7 +12282,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "IR channel radiometric uncertainty estimates at BTs in scene temperature array",
         "units": "K"
       }
@@ -12298,7 +12298,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene temperature for IR channel uncertainty estimates",
         "units": "K"
       }
@@ -12314,7 +12314,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage gain added to detector signal",
         "units": "V",
         "valid_max": 1.0,
@@ -12332,7 +12332,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "V",
         "valid_max": 2.99,
@@ -12368,7 +12368,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -12384,7 +12384,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -12400,7 +12400,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 316.8639,
@@ -12418,7 +12418,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S1 (A stripe, oblique view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -12435,7 +12435,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -12452,7 +12452,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -12470,7 +12470,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -12488,7 +12488,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance noise from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -12505,7 +12505,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance noise",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -12521,7 +12521,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 20.0,
@@ -12540,7 +12540,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiometric Uncertainty Estimate at Lref",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -12556,7 +12556,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene radiance for VIS-SWIR channel calibration uncertainty estimates",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -12572,7 +12572,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar irradiance at top of atmosphere",
         "units": "mW m^-2 nm^-1"
       }
@@ -12588,7 +12588,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage gain added to detector signal",
         "units": "V",
         "valid_max": 1.0,
@@ -12606,7 +12606,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "V",
         "valid_max": 2.99,
@@ -12642,7 +12642,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -12658,7 +12658,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -12674,7 +12674,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 316.87,
@@ -12692,7 +12692,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S2 (A stripe, oblique view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -12709,7 +12709,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -12726,7 +12726,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -12744,7 +12744,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -12762,7 +12762,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance noise from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -12779,7 +12779,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance noise",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -12795,7 +12795,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 20.0,
@@ -12814,7 +12814,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiometric Uncertainty Estimate at Lref",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -12830,7 +12830,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene radiance for VIS-SWIR channel calibration uncertainty estimates",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -12846,7 +12846,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar irradiance at top of atmosphere",
         "units": "mW m^-2 nm^-1"
       }
@@ -12862,7 +12862,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage gain added to detector signal",
         "units": "V",
         "valid_max": 1.0,
@@ -12880,7 +12880,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "V",
         "valid_max": 2.99,
@@ -12916,7 +12916,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -12932,7 +12932,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -12948,7 +12948,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 316.87,
@@ -12966,7 +12966,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S3 (A stripe, oblique view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -12983,7 +12983,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -13000,7 +13000,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -13018,7 +13018,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -13036,7 +13036,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance noise from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -13053,7 +13053,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance noise",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -13069,7 +13069,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 20.0,
@@ -13088,7 +13088,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiometric Uncertainty Estimate at Lref",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -13104,7 +13104,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene radiance for VIS-SWIR channel calibration uncertainty estimates",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -13120,7 +13120,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar irradiance at top of atmosphere",
         "units": "mW m^-2 nm^-1"
       }
@@ -13136,7 +13136,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "V",
         "valid_max": 2.99,
@@ -13171,7 +13171,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage reference added to detector signal",
         "units": "V",
         "valid_max": 2.5,
@@ -13190,7 +13190,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -13206,7 +13206,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -13222,7 +13222,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Coarse detector temperature",
         "units": "K",
         "valid_max": 313.6246,
@@ -13240,7 +13240,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 100.9203,
@@ -13258,7 +13258,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S4 (A stripe, nadir view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -13275,7 +13275,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -13292,7 +13292,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -13310,7 +13310,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -13328,7 +13328,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance noise from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -13345,7 +13345,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance noise",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -13361,7 +13361,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Adjustable integration time",
         "units": "us",
         "valid_max": 35.0,
@@ -13379,7 +13379,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 28.0,
@@ -13398,7 +13398,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiometric Uncertainty Estimate at Lref",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -13414,7 +13414,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene radiance for VIS-SWIR channel calibration uncertainty estimates",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -13430,7 +13430,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar irradiance at top of atmosphere",
         "units": "mW m^-2 nm^-1"
       }
@@ -13446,7 +13446,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "V",
         "valid_max": 2.99,
@@ -13481,7 +13481,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage reference added to detector signal",
         "units": "V",
         "valid_max": 2.5,
@@ -13500,7 +13500,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -13516,7 +13516,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -13532,7 +13532,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Coarse detector temperature",
         "units": "K",
         "valid_max": 314.2292,
@@ -13550,7 +13550,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 101.2603,
@@ -13568,7 +13568,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S5 (A stripe, oblique view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -13585,7 +13585,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -13602,7 +13602,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -13620,7 +13620,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -13638,7 +13638,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance noise from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -13655,7 +13655,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance noise",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -13671,7 +13671,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Adjustable integration time",
         "units": "us",
         "valid_max": 35.0,
@@ -13689,7 +13689,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 28.0,
@@ -13708,7 +13708,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiometric Uncertainty Estimate at Lref",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -13724,7 +13724,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene radiance for VIS-SWIR channel calibration uncertainty estimates",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -13740,7 +13740,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar irradiance at top of atmosphere",
         "units": "mW m^-2 nm^-1"
       }
@@ -13756,7 +13756,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "V",
         "valid_max": 2.99,
@@ -13791,7 +13791,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage reference added to detector signal",
         "units": "V",
         "valid_max": 2.5,
@@ -13810,7 +13810,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -13826,7 +13826,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -13842,7 +13842,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Coarse detector temperature",
         "units": "K",
         "valid_max": 313.9114,
@@ -13860,7 +13860,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 101.2952,
@@ -13878,7 +13878,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S6 (A stripe, oblique view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -13895,7 +13895,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -13912,7 +13912,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -13930,7 +13930,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -13948,7 +13948,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance noise from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -13965,7 +13965,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance noise",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -13981,7 +13981,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Adjustable integration time",
         "units": "us",
         "valid_max": 35.0,
@@ -13999,7 +13999,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 28.0,
@@ -14018,7 +14018,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiometric Uncertainty Estimate at Lref",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -14034,7 +14034,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene radiance for VIS-SWIR channel calibration uncertainty estimates",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -14050,7 +14050,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar irradiance at top of atmosphere",
         "units": "mW m^-2 nm^-1"
       }
@@ -14066,7 +14066,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "V",
         "valid_max": 2.99,
@@ -14101,7 +14101,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage reference added to detector signal",
         "units": "V",
         "valid_max": 2.5,
@@ -14120,7 +14120,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -14136,7 +14136,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -14152,7 +14152,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Coarse detector temperature",
         "units": "K",
         "valid_max": 313.6246,
@@ -14170,7 +14170,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 100.9203,
@@ -14188,7 +14188,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S4 (B stripe, oblique view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -14205,7 +14205,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -14222,7 +14222,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -14240,7 +14240,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -14258,7 +14258,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance noise from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -14275,7 +14275,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance noise",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -14291,7 +14291,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Adjustable integration time",
         "units": "us",
         "valid_max": 35.0,
@@ -14309,7 +14309,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 28.0,
@@ -14328,7 +14328,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiometric Uncertainty Estimate at Lref",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -14344,7 +14344,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene radiance for VIS-SWIR channel calibration uncertainty estimates",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -14360,7 +14360,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar irradiance at top of atmosphere",
         "units": "mW m^-2 nm^-1"
       }
@@ -14376,7 +14376,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "V",
         "valid_max": 2.99,
@@ -14411,7 +14411,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage reference added to detector signal",
         "units": "V",
         "valid_max": 2.5,
@@ -14430,7 +14430,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -14446,7 +14446,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -14462,7 +14462,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Coarse detector temperature",
         "units": "K",
         "valid_max": 314.2292,
@@ -14480,7 +14480,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 101.2603,
@@ -14498,7 +14498,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S5 (B stripe, oblique view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -14515,7 +14515,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -14532,7 +14532,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -14550,7 +14550,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -14568,7 +14568,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance noise from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -14585,7 +14585,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance noise",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -14601,7 +14601,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Adjustable integration time",
         "units": "us",
         "valid_max": 35.0,
@@ -14619,7 +14619,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 28.0,
@@ -14638,7 +14638,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiometric Uncertainty Estimate at Lref",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -14654,7 +14654,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene radiance for VIS-SWIR channel calibration uncertainty estimates",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -14670,7 +14670,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar irradiance at top of atmosphere",
         "units": "mW m^-2 nm^-1"
       }
@@ -14686,7 +14686,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "V",
         "valid_max": 2.99,
@@ -14721,7 +14721,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage reference added to detector signal",
         "units": "V",
         "valid_max": 2.5,
@@ -14740,7 +14740,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -14756,7 +14756,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -14772,7 +14772,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Coarse detector temperature",
         "units": "K",
         "valid_max": 313.9114,
@@ -14790,7 +14790,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 101.2952,
@@ -14808,7 +14808,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S6 (B stripe, oblique view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -14825,7 +14825,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -14842,7 +14842,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -14860,7 +14860,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -14878,7 +14878,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiance noise from cold BB",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -14895,7 +14895,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VISCAL radiance noise",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -14911,7 +14911,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Adjustable integration time",
         "units": "us",
         "valid_max": 35.0,
@@ -14929,7 +14929,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 28.0,
@@ -14948,7 +14948,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Radiometric Uncertainty Estimate at Lref",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -14964,7 +14964,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene radiance for VIS-SWIR channel calibration uncertainty estimates",
         "units": "mW m^-2 sr^-1 nm^-1"
       }
@@ -14980,7 +14980,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Solar irradiance at top of atmosphere",
         "units": "mW m^-2 nm^-1"
       }
@@ -14996,7 +14996,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB1 Reference resistor 1 voltage",
         "units": "V",
         "valid_max": 15.25434,
@@ -15014,7 +15014,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB1 Reference resistor 2 voltage",
         "units": "V",
         "valid_max": 21.86551,
@@ -15032,7 +15032,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB2 Reference resistor 1 voltage",
         "units": "V",
         "valid_max": 15.25434,
@@ -15050,7 +15050,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB2 Reference resistor 2 voltage",
         "units": "V",
         "valid_max": 21.86551,
@@ -15068,7 +15068,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU +5V Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -15086,7 +15086,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU Bridge Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -15104,7 +15104,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU Ground Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -15123,7 +15123,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "volt",
         "valid_max": 2.99,
@@ -15158,7 +15158,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage reference added to detector signal",
         "units": "V",
         "valid_max": 2.5,
@@ -15176,7 +15176,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO plus 5V internal reference voltage",
         "units": "V",
         "valid_max": 6342.473,
@@ -15194,7 +15194,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO minus VPRT internal reference voltage",
         "units": "V",
         "valid_max": 9030.078,
@@ -15212,7 +15212,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO plus VPRT internal reference voltage",
         "units": "V",
         "valid_max": 16410.16,
@@ -15230,7 +15230,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO VPRT internal reference voltage",
         "units": "V",
         "valid_max": 9990.234,
@@ -15248,7 +15248,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body temperature 1",
         "units": "K",
         "valid_max": 315.193783,
@@ -15266,7 +15266,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body temperature 2",
         "units": "K",
         "valid_max": 316.317533,
@@ -15284,7 +15284,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Coarse detector temperature",
         "units": "K",
         "valid_max": 314.7451,
@@ -15302,7 +15302,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 103.893,
@@ -15320,7 +15320,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "VDG value for S7 detector",
         "units": "V",
         "valid_max": 7.5,
@@ -15338,7 +15338,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S7 (1km TIR grid, oblique view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -15355,7 +15355,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -15373,7 +15373,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -15391,7 +15391,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -15409,7 +15409,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body 1 noise equivalent brightness temperature",
         "units": "K"
       }
@@ -15427,7 +15427,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body 2 noise equivalent brightness temperature",
         "units": "K"
       }
@@ -15443,7 +15443,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Adjustable integration time",
         "units": "us",
         "valid_max": 70.0,
@@ -15461,7 +15461,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 56.0,
@@ -15480,7 +15480,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "IR channel radiometric uncertainty estimates at BTs in scene temperature array",
         "units": "K"
       }
@@ -15496,7 +15496,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene temperature for IR channel uncertainty estimates",
         "units": "K"
       }
@@ -15512,7 +15512,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB1 Reference resistor 1 voltage",
         "units": "V",
         "valid_max": 15.25434,
@@ -15530,7 +15530,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB1 Reference resistor 2 voltage",
         "units": "V",
         "valid_max": 21.86551,
@@ -15548,7 +15548,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB2 Reference resistor 1 voltage",
         "units": "V",
         "valid_max": 15.25434,
@@ -15566,7 +15566,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB2 Reference resistor 2 voltage",
         "units": "V",
         "valid_max": 21.86551,
@@ -15584,7 +15584,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU +5V Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -15602,7 +15602,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU Bridge Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -15620,7 +15620,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU Ground Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -15639,7 +15639,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "volt",
         "valid_max": 2.99,
@@ -15674,7 +15674,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO plus 5V internal reference voltage",
         "units": "V",
         "valid_max": 6342.473,
@@ -15692,7 +15692,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO minus VPRT internal reference voltage",
         "units": "V",
         "valid_max": 9030.078,
@@ -15710,7 +15710,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO plus VPRT internal reference voltage",
         "units": "V",
         "valid_max": 16410.16,
@@ -15728,7 +15728,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO VPRT internal reference voltage",
         "units": "V",
         "valid_max": 9990.234,
@@ -15746,7 +15746,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body temperature 1",
         "units": "K",
         "valid_max": 315.193783,
@@ -15764,7 +15764,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body temperature 2",
         "units": "K",
         "valid_max": 316.317533,
@@ -15782,7 +15782,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Coarse detector temperature",
         "units": "K",
         "valid_max": 314.8585,
@@ -15800,7 +15800,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 102.3702,
@@ -15818,7 +15818,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector Voltage Bias",
         "units": "V",
         "valid_max": 9.0,
@@ -15836,7 +15836,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S8 (1km TIR grid, oblique view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -15853,7 +15853,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -15871,7 +15871,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -15889,7 +15889,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -15907,7 +15907,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body 1 noise equivalent brightness temperature",
         "units": "K"
       }
@@ -15925,7 +15925,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body 2 noise equivalent brightness temperature",
         "units": "K"
       }
@@ -15941,7 +15941,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Adjustable integration time",
         "units": "us",
         "valid_max": 70.0,
@@ -15959,7 +15959,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 40.0,
@@ -15978,7 +15978,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "IR channel radiometric uncertainty estimates at BTs in scene temperature array",
         "units": "K"
       }
@@ -15994,7 +15994,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene temperature for IR channel uncertainty estimates",
         "units": "K"
       }
@@ -16010,7 +16010,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB1 Reference resistor 1 voltage",
         "units": "V",
         "valid_max": 15.25434,
@@ -16028,7 +16028,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB1 Reference resistor 2 voltage",
         "units": "V",
         "valid_max": 21.86551,
@@ -16046,7 +16046,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB2 Reference resistor 1 voltage",
         "units": "V",
         "valid_max": 15.25434,
@@ -16064,7 +16064,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB2 Reference resistor 2 voltage",
         "units": "V",
         "valid_max": 21.86551,
@@ -16082,7 +16082,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU +5V Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -16100,7 +16100,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU Bridge Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -16118,7 +16118,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU Ground Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -16137,7 +16137,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "volt",
         "valid_max": 2.99,
@@ -16172,7 +16172,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO plus 5V internal reference voltage",
         "units": "V",
         "valid_max": 6342.473,
@@ -16190,7 +16190,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO minus VPRT internal reference voltage",
         "units": "V",
         "valid_max": 9030.078,
@@ -16208,7 +16208,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO plus VPRT internal reference voltage",
         "units": "V",
         "valid_max": 16410.16,
@@ -16226,7 +16226,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO VPRT internal reference voltage",
         "units": "V",
         "valid_max": 9990.234,
@@ -16244,7 +16244,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body temperature 1",
         "units": "K",
         "valid_max": 315.193783,
@@ -16262,7 +16262,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body temperature 2",
         "units": "K",
         "valid_max": 316.317533,
@@ -16280,7 +16280,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Coarse detector temperature",
         "units": "K",
         "valid_max": 314.8075,
@@ -16298,7 +16298,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 101.5941,
@@ -16316,7 +16316,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector Voltage Bias",
         "units": "V",
         "valid_max": 9.0,
@@ -16334,7 +16334,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel S9 (1km TIR grid, oblique view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -16351,7 +16351,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -16369,7 +16369,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -16387,7 +16387,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -16405,7 +16405,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body 1 noise equivalent brightness temperature",
         "units": "K"
       }
@@ -16423,7 +16423,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body 2 noise equivalent brightness temperature",
         "units": "K"
       }
@@ -16439,7 +16439,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Adjustable integration time",
         "units": "us",
         "valid_max": 70.0,
@@ -16457,7 +16457,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 40.0,
@@ -16476,7 +16476,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "IR channel radiometric uncertainty estimates at BTs in scene temperature array",
         "units": "K"
       }
@@ -16492,7 +16492,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene temperature for IR channel uncertainty estimates",
         "units": "K"
       }
@@ -16508,7 +16508,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB1 Reference resistor 1 voltage",
         "units": "V",
         "valid_max": 15.25434,
@@ -16526,7 +16526,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB1 Reference resistor 2 voltage",
         "units": "V",
         "valid_max": 21.86551,
@@ -16544,7 +16544,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB2 Reference resistor 1 voltage",
         "units": "V",
         "valid_max": 15.25434,
@@ -16562,7 +16562,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB2 Reference resistor 2 voltage",
         "units": "V",
         "valid_max": 21.86551,
@@ -16580,7 +16580,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU +5V Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -16598,7 +16598,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU Bridge Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -16616,7 +16616,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU Ground Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -16635,7 +16635,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "volt",
         "valid_max": 2.99,
@@ -16653,7 +16653,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO plus 5V internal reference voltage",
         "units": "V",
         "valid_max": 6342.473,
@@ -16671,7 +16671,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO minus VPRT internal reference voltage",
         "units": "V",
         "valid_max": 9030.078,
@@ -16689,7 +16689,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO plus VPRT internal reference voltage",
         "units": "V",
         "valid_max": 16410.16,
@@ -16707,7 +16707,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO VPRT internal reference voltage",
         "units": "V",
         "valid_max": 9990.234,
@@ -16725,7 +16725,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body temperature 1",
         "units": "K",
         "valid_max": 315.193783,
@@ -16743,7 +16743,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body temperature 2",
         "units": "K",
         "valid_max": 316.317533,
@@ -16761,7 +16761,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Coarse detector temperature",
         "units": "K",
         "valid_max": 314.8585,
@@ -16779,7 +16779,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 102.3702,
@@ -16797,7 +16797,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel F2 (1km TIR grid, oblique view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -16814,7 +16814,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -16832,7 +16832,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -16850,7 +16850,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -16868,7 +16868,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body 1 noise equivalent brightness temperature",
         "units": "K"
       }
@@ -16886,7 +16886,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body 2 noise equivalent brightness temperature",
         "units": "K"
       }
@@ -16902,7 +16902,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Adjustable integration time",
         "units": "us",
         "valid_max": 70.0,
@@ -16920,7 +16920,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 40.0,
@@ -16939,7 +16939,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "IR channel radiometric uncertainty estimates at BTs in scene temperature array",
         "units": "K"
       }
@@ -16955,7 +16955,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene temperature for IR channel uncertainty estimates",
         "units": "K"
       }
@@ -16971,7 +16971,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB1 Reference resistor 1 voltage",
         "units": "V",
         "valid_max": 15.25434,
@@ -16989,7 +16989,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB1 Reference resistor 2 voltage",
         "units": "V",
         "valid_max": 21.86551,
@@ -17007,7 +17007,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB2 Reference resistor 1 voltage",
         "units": "V",
         "valid_max": 15.25434,
@@ -17025,7 +17025,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BB2 Reference resistor 2 voltage",
         "units": "V",
         "valid_max": 21.86551,
@@ -17043,7 +17043,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU +5V Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -17061,7 +17061,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU Bridge Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -17079,7 +17079,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "BBEU Ground Reference",
         "units": "V",
         "valid_max": 16383.0,
@@ -17098,7 +17098,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Voltage offset added to detector signal",
         "units": "volt",
         "valid_max": 2.99,
@@ -17116,7 +17116,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO plus 5V internal reference voltage",
         "units": "V",
         "valid_max": 6342.473,
@@ -17134,7 +17134,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO minus VPRT internal reference voltage",
         "units": "V",
         "valid_max": 9030.078,
@@ -17152,7 +17152,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO plus VPRT internal reference voltage",
         "units": "V",
         "valid_max": 16410.16,
@@ -17170,7 +17170,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "TAEO VPRT internal reference voltage",
         "units": "V",
         "valid_max": 9990.234,
@@ -17188,7 +17188,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body temperature 1",
         "units": "K",
         "valid_max": 315.193783,
@@ -17206,7 +17206,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body temperature 2",
         "units": "K",
         "valid_max": 316.317533,
@@ -17224,7 +17224,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Coarse detector temperature",
         "units": "K",
         "valid_max": 314.7451,
@@ -17242,7 +17242,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector temperature",
         "units": "K",
         "valid_max": 103.893,
@@ -17260,7 +17260,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Detector filter band centre for channel F1 (1km F1 grid, oblique view)",
         "standard_name": "radiation_wavelength",
         "units": "m"
@@ -17277,7 +17277,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "standard_name": "radiation_wavelength",
         "units": "m"
       }
@@ -17295,7 +17295,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scale factor multiplying detector count",
         "units": "W m-2 sr-1"
       }
@@ -17313,7 +17313,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Offset added to scaled detector count",
         "units": "W m-2 sr-1"
       }
@@ -17331,7 +17331,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body 1 noise equivalent brightness temperature",
         "units": "K"
       }
@@ -17349,7 +17349,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Black body 2 noise equivalent brightness temperature",
         "units": "K"
       }
@@ -17365,7 +17365,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Adjustable integration time",
         "units": "us",
         "valid_max": 70.0,
@@ -17383,7 +17383,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Delay in start of integration",
         "units": "us",
         "valid_max": 0.0,
@@ -17402,7 +17402,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "IR channel radiometric uncertainty estimates at BTs in scene temperature array",
         "units": "K"
       }
@@ -17418,7 +17418,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Scene temperature for IR channel uncertainty estimates",
         "units": "K"
       }
@@ -18324,7 +18324,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "555nm BB1 noise counts"
       }
     },
@@ -18341,7 +18341,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "555nm BB1 average counts"
       }
     },
@@ -18358,7 +18358,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "555nm VISCAL noise counts"
       }
     },
@@ -18375,7 +18375,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "555nm VISCAL average counts"
       }
     },
@@ -18392,7 +18392,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "555nm slopes"
       }
     },
@@ -18408,7 +18408,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "555nm solar irradiances",
         "units": "mW m-2 nm-1"
       }
@@ -18426,7 +18426,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "659nm BB1 noise counts"
       }
     },
@@ -18443,7 +18443,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "659nm BB1 average counts"
       }
     },
@@ -18460,7 +18460,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "659nm VISCAL noise counts"
       }
     },
@@ -18477,7 +18477,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "659nm VISCAL average counts"
       }
     },
@@ -18494,7 +18494,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "659nm slopes"
       }
     },
@@ -18510,7 +18510,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "659nm solar irradiances",
         "units": "mW m-2 nm-1"
       }
@@ -18528,7 +18528,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "865nm BB1 noise counts"
       }
     },
@@ -18545,7 +18545,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "865nm BB1 average counts"
       }
     },
@@ -18562,7 +18562,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "865nm VISCAL noise counts"
       }
     },
@@ -18579,7 +18579,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "865nm VISCAL average counts"
       }
     },
@@ -18596,7 +18596,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "865nm slopes"
       }
     },
@@ -18612,7 +18612,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "865nm solar irradiances",
         "units": "mW m-2 nm-1"
       }
@@ -18630,7 +18630,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "1.375microm BB1 noise counts"
       }
     },
@@ -18647,7 +18647,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "1.375microm BB1 average counts"
       }
     },
@@ -18664,7 +18664,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "1.375microm VISCAL noise counts"
       }
     },
@@ -18681,7 +18681,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "1.375microm VISCAL average counts"
       }
     },
@@ -18698,7 +18698,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "1.375microm slopes"
       }
     },
@@ -18714,7 +18714,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "1.375microm solar irradiances",
         "units": "mW m-2 nm-1"
       }
@@ -18732,7 +18732,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "1.61microm BB1 noise counts"
       }
     },
@@ -18749,7 +18749,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "1.61microm BB1 average counts"
       }
     },
@@ -18766,7 +18766,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "1.61microm VISCAL noise counts"
       }
     },
@@ -18783,7 +18783,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "1.61microm VISCAL average counts"
       }
     },
@@ -18800,7 +18800,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "1.61microm slopes"
       }
     },
@@ -18816,7 +18816,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "1.61microm solar irradiances",
         "units": "mW m-2 nm-1"
       }
@@ -18834,7 +18834,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "2.25microm BB1 noise counts"
       }
     },
@@ -18851,7 +18851,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "2.25microm BB1 average counts"
       }
     },
@@ -18868,7 +18868,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "2.25microm VISCAL noise counts"
       }
     },
@@ -18885,7 +18885,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "2.25microm VISCAL average counts"
       }
     },
@@ -18902,7 +18902,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "2.25microm slopes"
       }
     },
@@ -18918,7 +18918,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "2.25microm solar irradiances",
         "units": "mW m-2 nm-1"
       }
@@ -18949,7 +18949,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Monitor diode noise counts"
       }
     },
@@ -18964,7 +18964,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Monitor diode average counts"
       }
     },
@@ -19145,7 +19145,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Time sampling interval for pixels along each scan",
         "units": "us"
       }
@@ -19343,7 +19343,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Time sampling interval for pixels along each scan",
         "units": "us"
       }
@@ -19541,7 +19541,7 @@
         ]
       },
       "attributes": {
-        "_FillValue": NaN,
+        "_FillValue": "to_float(NaN)",
         "long_name": "Time sampling interval for pixels along each scan",
         "units": "us"
       }
