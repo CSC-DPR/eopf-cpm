@@ -1,0 +1,333 @@
+{
+    "recognition": {
+        "filename_pattern": "S3.?_.+_0_.*SEN3",
+        "product_type_pattern": "S3_L0",
+        "version": "TODO"
+    },
+    "data_mapping": [
+		{
+            "short_name": "packet_version",
+            "source_path": "ISPData.dat:(0,3,3)",
+            "target_path": "/conditions/packet_version",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/scalar_uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "packet version number"
+                },
+                "dimensions": [ "one"]
+            }
+        },
+        {
+            "short_name": "packet_type",
+            "source_path": "ISPData.dat:(3,4,1)",
+            "target_path": "/conditions/packet_type",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/scalar_bool"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "packet type"
+                },
+                "dimensions": [ "one"]
+            }
+        },
+        {
+            "short_name": "datafield_header_flag",
+            "source_path": "ISPData.dat:(4,5,1)",
+            "target_path": "/conditions/datafield_header_flag",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/scalar_bool"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "datafield header flag"
+                },
+                "dimensions": [ "one"]
+            }
+        },
+		{
+            "short_name": "PID",
+            "source_path": "ISPData.dat:(5,12,7)",
+            "target_path": "/conditions/PID",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "application process PID"
+                },
+                "dimensions": [ "packet_number"]
+            }
+        },
+		{
+            "short_name": "PCAT",
+            "source_path": "ISPData.dat:(12,16,4)",
+            "target_path": "/conditions/pcat",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "pcat"
+                },
+                "dimensions": [ "packet_number"]
+            }
+        },
+        {
+            "short_name": "grouping_flags",
+            "source_path": "ISPData.dat:(16,18,2)",
+            "target_path": "/conditions/grouping_flags",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/scalar_uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "grouping flags"
+                },
+                "dimensions": [ "one"]
+            }
+        },
+        {
+            "short_name": "packet_sequence_count",
+            "source_path": "ISPData.dat:(18,32,14)",
+            "target_path": "/conditions/packet_sequence_count",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "packet sequence count"
+                },
+                "dimensions": [ "packet_number"]
+            }
+        },
+		{
+            "short_name": "packet_data_length",
+            "source_path": "ISPData.dat:(32,48,16)",
+            "target_path": "/conditions/packet_data_length",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "packet data length"
+                },
+                "dimensions": [ "packet_number"]
+            }
+        },
+        {
+            "short_name": "pus_version",
+            "source_path": "ISPData.dat:(49,56,3)",
+            "target_path": "/conditions/pus_version",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/scalar_uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "pus version"
+                },
+                "dimensions": [ "one"]
+            }
+        },
+		{
+            "short_name": "service_packet_type",
+            "source_path": "ISPData.dat:(56,64,8)",
+            "target_path": "/conditions/service_packet_type",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "service packet type"
+                },
+                "dimensions": [ "packet_number"]
+            }
+        },
+		{
+            "short_name": "service_packet_subtype",
+            "source_path": "ISPData.dat:(64,72,8)",
+            "target_path": "/conditions/service_packet_subtype",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "service packet subtype"
+                },
+                "dimensions": [ "packet_number"]
+            }
+        },
+		{
+            "short_name": "destination_id",
+            "source_path": "ISPData.dat:(72,80,8)",
+            "target_path": "/conditions/destination_id",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "destination id"
+                },
+                "dimensions": [ "packet_number"]
+            }
+        },
+		{
+            "short_name": "coarse_time",
+            "source_path": "ISPData.dat:(80,112,32)",
+            "target_path": "/coordinates/coarse_time",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "coarse time"
+                },
+                "dimensions": [ "packet_number"]
+            }
+        },
+		{
+            "short_name": "fine_time",
+            "source_path": "ISPData.dat:(112,136,24)",
+            "target_path": "/coordinates/fine_time",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "fine time"
+                },
+                "dimensions": [ "packet_number"]
+            }
+        },
+		{
+            "short_name": "time_status",
+            "source_path": "ISPData.dat:(136,144,1)",
+            "target_path": "/conditions/time_status",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/bool"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "time status"
+                },
+                "dimensions": [ "packet_number"]
+            }
+        },
+        {
+            "short_name": "user_data",
+            "source_path": "ISPData.dat:(144,None,-1)",
+            "target_path": "/measurements/user_data",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/var_bytearray"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "user data packet"
+                },
+                "dimensions": [ "packet_number", "max_data_length"]
+            }
+        },
+		{
+            "short_name": "fep",
+            "source_path": "ISPAnnotation.dat:(0,144,30)",
+            "target_path": "/conditions/fep",
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/bytearray"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "fep annotation data"
+                },
+                "dimensions": [ "packet_number", "fep_info"]
+            }
+        },
+		{
+            "short_name": "gps_time_days",
+            "source_path": "ISPAnnotation.dat:(144,176,30)",
+            "target_path": "/coordinates/gps_time/days",
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "gps time days"
+                },
+                "dimensions": [ "packet_number"]
+            }
+        },
+		{
+            "short_name": "gps_time_seconds",
+            "source_path": "ISPAnnotation.dat:(176,208,30)",
+            "target_path": "/coordinates/gps_time/seconds",
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "gps time seconds"
+                },
+                "dimensions": [ "packet_number"]
+            }
+        },
+		{
+            "short_name": "gps_time_microseconds",
+            "source_path": "ISPAnnotation.dat:(208,240,30)",
+            "target_path": "/coordinates/gps_time/microseconds",
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "gps time microseconds"
+                },
+                "dimensions": [ "packet_number"]
+            }
+        }
+    ],
+    "l0_mapping": {
+        "types": {
+            "bool": "bool",
+            "scalar_bool": "s_bool",
+            "uint8": "uint8",
+            "scalar_uint8": "s_uint8",
+            "uint16": "uint16",
+            "uint32": "uint32",
+            "var_bytearray": "var_bytearray",
+            "bytearray": "bytearray"
+        }
+    },
+	"annotation_mapping": {
+	    "types": {
+            "bool": "bool",
+            "scalar_bool": "s_bool",
+            "uint8": "uint8",
+            "scalar_uint8": "s_uint8",
+            "uint16": "uint16",
+            "uint32": "uint32",
+            "var_bytearray": "var_bytearray",
+            "bytearray": "bytearray"
+        }
+    }
+}

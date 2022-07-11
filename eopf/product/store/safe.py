@@ -1,3 +1,4 @@
+import ast
 import os
 import pathlib
 import tempfile
@@ -465,6 +466,22 @@ class SafeMappingManager:
         """Get all accessor corresponding to the configs of conf_path.
         As multiple mapping car match a single conf_path, it can return multiple accessors.
         """
+
+        def _parse_local_path(local_path: str) -> Any:
+            if local_path and isinstance(local_path, str):
+                try:
+                    element = ast.parse(local_path).body
+
+                    if (
+                        element
+                        and isinstance(element[0], ast.Expr)
+                        and isinstance(value := element[0].value, ast.Tuple)  # noqa
+                    ):
+                        return slice(*ast.literal_eval(local_path))
+                except SyntaxError:
+                    return local_path
+            return local_path
+
         configs = self._config_mapping[conf_path]
         results = list()
         for conf in configs:
@@ -476,6 +493,7 @@ class SafeMappingManager:
                 accessor_local_path = accessor_source_split[1]
             else:
                 accessor_local_path = conf.get("local_path")
+
             accessor = self._get_accessor(
                 accessor_file_regex,
                 conf[self.CONFIG_FORMAT],
@@ -484,7 +502,7 @@ class SafeMappingManager:
                 conf.get(self.CONFIG_OPTIONAL, False),
             )
             if accessor is not None:  # We also want to append accessor of len 0.
-                results.append((accessor, accessor_local_path, conf))
+                results.append((accessor, _parse_local_path(accessor_local_path), conf))
         return results
 
     def open_all(self, mode: str = "r", fsspec_kwargs: dict[str, Any] = {}, **kwargs: Any) -> None:
