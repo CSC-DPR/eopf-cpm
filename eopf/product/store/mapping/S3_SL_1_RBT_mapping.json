@@ -19639,7 +19639,7 @@
         "relative_orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:relativeOrbitNumber)",
         "ground_track_direction": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber/@groundTrackDirection",
         "downlink_information": {
-          "granule_number": "to_int(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:granuleNumber)",
+          "granule_number": "is_optional(to_int(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:granuleNumber))",
           "granule_position": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:granulePosition",
           "dump_start": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:dumpStart",
           "receiving_station": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingGroundStation",
@@ -19794,7 +19794,7 @@
         },
         "data_information": {
           "measurement_accuracy": "metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:measurementAccuracy",
-          "accuracy_reference": "metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:accuracyReference",
+          "accuracy_reference": "metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:accuracyReference",
           "nadir_image_sizes": {
             "1 km": {
               "start_offset": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize[@grid='1 km']/sentinel3:startOffset)",
@@ -19869,8 +19869,9 @@
         }
       ],
       "assets": []
-    },
-    "conditions_metadata": {
+    }
+  },
+  "conditions_metadata": {
       "band_descriptions": {
         "S1": {
           "units": "Text(nm)",
@@ -19947,7 +19948,7 @@
         },
         "S5_Detector": {
           "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S5_Detector']/slstr:min)",
-          "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S5 Detector']/slstr:max)"
+          "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S5_Detector']/slstr:max)"
         },
         "S6_Detector": {
           "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S6_Detector']/slstr:min)",
@@ -20016,13 +20017,12 @@
         "time_relevance": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:ecmwfType/@timeRelevance)"
       }
     },
-    "namespaces": {
-      "xfdu": "urn:ccsds:schema:xfdu:1",
-      "gml": "http://www.opengis.net/gml",
-      "safe": "http://www.esa.int/safe/sentinel/1.1",
-      "sentinel-safe": "http://www.esa.int/safe/sentinel/1.1",
-      "sentinel3": "http://www.esa.int/safe/sentinel/sentinel-3/1.0",
-      "slstr": "http://www.esa.int/safe/sentinel/sentinel-3/slstr/1.0"
-    }
+  "namespaces": {
+    "xfdu": "urn:ccsds:schema:xfdu:1",
+    "gml": "http://www.opengis.net/gml",
+    "safe": "http://www.esa.int/safe/sentinel/1.1",
+    "sentinel-safe": "http://www.esa.int/safe/sentinel/1.1",
+    "sentinel3": "http://www.esa.int/safe/sentinel/sentinel-3/1.0",
+    "slstr": "http://www.esa.int/safe/sentinel/sentinel-3/slstr/1.0"
   }
 }
