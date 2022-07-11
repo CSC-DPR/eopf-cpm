@@ -80,6 +80,7 @@ doc = [
     "eopf[notebook]",
     "sphinxcontrib-apidoc ==0.3.0",
     "GitPython >=3.1",
+    "nbsphinx >= 0.8.9",
     "eopf[cluster-plugin]",
 ]
 complexity = ["xenon >=0.8.0"]

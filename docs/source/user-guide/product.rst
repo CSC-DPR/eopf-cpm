@@ -76,8 +76,11 @@ Create a product
             product.is_valid()
 
 
-Using groups and variables
---------------------------
+Groups and Variables
+--------------------
+
+Accessing Groups and Variables
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     .. jupyter-execute::
         :hide-output:
@@ -126,15 +129,13 @@ Using groups and variables
     :py:class:`~eopf.product.core.eo_product.EOProduct` are dict-like object (i.e :py:class:`~collections.abc.MutableMapping`), so you can retrieve
     your group by index, with the fullpath for exemple, or directly with a `dot`:
 
-        .. jupyter-execute::
-            :hide-output:
+        .. code-block:: python
 
             product["measurements"]
             product["measurements/group1/group2/group3"]
             product.measurements.group1
 
-        .. jupyter-execute::
-            :hide-output:
+        .. code-block:: python
 
             product["measurements/group1/group2c/variable_d"]
 
@@ -180,6 +181,26 @@ Using groups and variables
     .. note::
 
         For :py:class:`~eopf.product.core.eo_variable.EOVariable` data must be an object usable by :py:class:`~xarray.DataArray`
+
+Iterate over Groups
+~~~~~~~~~~~~~~~~~~~
+
+As a dict-like object, :py:class:`~eopf.product.core.eo_group.EOGroup` are iterable,
+also, to iterate over specific subitems we provide two property on
+:py:class:`~eopf.product.core.eo_group.EOGroup` and :py:class:`~eopf.product.core.eo_product.EOProduct`:
+
+    * :py:attr:`~eopf.product.core.eo_container.EOContainer.groups`
+    * :py:attr:`~eopf.product.core.eo_container.EOContainer.variables`
+
+    .. jupyter-execute::
+
+        for group_name, eogroup in product.groups:
+            for subgroup_name, _ in eogroup.groups:
+                print(f"group in {group_name}: {subgroup_name}")
+
+        for group_name, eogroup in product.measurements.groups:
+            for subvar_name, _ in eogroup.variables:
+                print(f"variable in {group_name}: {subvar_name}")
 
 
 Coordinates

@@ -40,6 +40,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.intersphinx",
     "jupyter_sphinx",
+    "nbsphinx",
     "sphinx_multiversion",
 ]
 
