@@ -1,974 +1,1184 @@
 {
-    "recognition": {
-        "filename_pattern": "S3._SY_2_SYN.*SEN3",
-        "product_type": "S3_SY_2_SYN",
-        "product_type_pattern": "SY_2_SYN___",
-        "version": "TODO"
+  "recognition": {
+    "filename_pattern": "S3._SY_2_SYN.*SEN3",
+    "product_type": "S3_SY_2_SYN",
+    "product_type_pattern": "SY_2_SYN___",
+    "version": "TODO"
+  },
+  "data_mapping": [
+    {
+      "short_name": "lat",
+      "target_path": "/coordinates/image_grid/latitude",
+      "source_path": "geolocation.nc:lat",
+      "item_format": "netcdf"
     },
-    "data_mapping": [
-        {
-            "short_name": "lat",
-            "target_path": "/coordinates/image_grid/latitude",
-            "source_path": "geolocation.nc:lat",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "lon",
-            "target_path": "/coordinates/image_grid/longitude",
-            "source_path": "geolocation.nc:lon",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "altitude",
-            "target_path": "/coordinates/image_grid/altitude",
-            "source_path": "geolocation.nc:altitude",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "latitude_orphan",
-            "target_path": "/coordinates/orphan/latitude",
-            "source_path": "Syn_annot_rem.nc:lat",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "longitude_orphan",
-            "target_path": "/coordinates/orphan/longitude",
-            "source_path": "Syn_annot_rem.nc:lon",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "altitude_orphan",
-            "target_path": "/coordinates/orphan/altitude",
-            "source_path": "Syn_annot_rem.nc:altitude",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "olci_tp_latitude",
-            "target_path": "/coordinates/olci_tp_grid/latitude",
-            "source_path": "tiepoints_olci.nc:OLC_TP_lat",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "olci_tp_longitude",
-            "target_path": "/coordinates/olci_tp_grid/longitude",
-            "source_path": "tiepoints_olci.nc:OLC_TP_lon",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "slstr_n_tp_latitude",
-            "target_path": "/coordinates/slstr_n_tp_grid/latitude",
-            "source_path": "tiepoints_slstr_n.nc:SLN_TP_lat",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "slstr_n_tp_longitude",
-            "target_path": "/coordinates/slstr_n_tp_grid/longitude",
-            "source_path": "tiepoints_slstr_n.nc:SLN_TP_lon",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "slstr_o_tp_latitude",
-            "target_path": "/coordinates/slstr_o_tp_grid/latitude",
-            "source_path": "tiepoints_slstr_o.nc:SLO_TP_lat",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "slstr_o_tp_longitude",
-            "target_path": "/coordinates/slstr_o_tp_grid/longitude",
-            "source_path": "tiepoints_slstr_o.nc:SLO_TP_lon",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "time",
-            "target_path": "/coordinates/time/time",
-            "source_path": "time.nc:Time",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa01",
-            "target_path": "/measurements/olci/sdr_oa01",
-            "source_path": "Syn_Oa01_reflectance.nc:SDR_Oa01",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa02",
-            "target_path": "/measurements/olci/sdr_oa02",
-            "source_path": "Syn_Oa02_reflectance.nc:SDR_Oa02",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa03",
-            "target_path": "/measurements/olci/sdr_oa03",
-            "source_path": "Syn_Oa03_reflectance.nc:SDR_Oa03",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa04",
-            "target_path": "/measurements/olci/sdr_oa04",
-            "source_path": "Syn_Oa04_reflectance.nc:SDR_Oa04",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa05",
-            "target_path": "/measurements/olci/sdr_oa05",
-            "source_path": "Syn_Oa05_reflectance.nc:SDR_Oa05",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa06",
-            "target_path": "/measurements/olci/sdr_oa06",
-            "source_path": "Syn_Oa06_reflectance.nc:SDR_Oa06",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa07",
-            "target_path": "/measurements/olci/sdr_oa07",
-            "source_path": "Syn_Oa07_reflectance.nc:SDR_Oa07",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa08",
-            "target_path": "/measurements/olci/sdr_oa08",
-            "source_path": "Syn_Oa08_reflectance.nc:SDR_Oa08",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa09",
-            "target_path": "/measurements/olci/sdr_oa09",
-            "source_path": "Syn_Oa09_reflectance.nc:SDR_Oa09",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa10",
-            "target_path": "/measurements/olci/sdr_oa10",
-            "source_path": "Syn_Oa10_reflectance.nc:SDR_Oa10",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa11",
-            "target_path": "/measurements/olci/sdr_oa11",
-            "source_path": "Syn_Oa11_reflectance.nc:SDR_Oa11",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa12",
-            "target_path": "/measurements/olci/sdr_oa12",
-            "source_path": "Syn_Oa12_reflectance.nc:SDR_Oa12",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa16",
-            "target_path": "/measurements/olci/sdr_oa16",
-            "source_path": "Syn_Oa16_reflectance.nc:SDR_Oa16",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa17",
-            "target_path": "/measurements/olci/sdr_oa17",
-            "source_path": "Syn_Oa17_reflectance.nc:SDR_Oa17",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa18",
-            "target_path": "/measurements/olci/sdr_oa18",
-            "source_path": "Syn_Oa18_reflectance.nc:SDR_Oa18",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa21",
-            "target_path": "/measurements/olci/sdr_oa21",
-            "source_path": "Syn_Oa21_reflectance.nc:SDR_Oa21",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s1n",
-            "target_path": "/measurements/slstr_n/sdr_s1n",
-            "source_path": "Syn_S1N_reflectance.nc:SDR_S1N",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s2n",
-            "target_path": "/measurements/slstr_n/sdr_s2n",
-            "source_path": "Syn_S2N_reflectance.nc:SDR_S2N",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s3n",
-            "target_path": "/measurements/slstr_n/sdr_s3n",
-            "source_path": "Syn_S3N_reflectance.nc:SDR_S3N",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s5n",
-            "target_path": "/measurements/slstr_n/sdr_s5n",
-            "source_path": "Syn_S5N_reflectance.nc:SDR_S5N",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s6n",
-            "target_path": "/measurements/slstr_n/sdr_s6n",
-            "source_path": "Syn_S6N_reflectance.nc:SDR_S6N",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s1o",
-            "target_path": "/measurements/slstr_o/sdr_s1o",
-            "source_path": "Syn_S1O_reflectance.nc:SDR_S1O",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s2o",
-            "target_path": "/measurements/slstr_o/sdr_s2o",
-            "source_path": "Syn_S2O_reflectance.nc:SDR_S2O",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s3o",
-            "target_path": "/measurements/slstr_o/sdr_s3o",
-            "source_path": "Syn_S3O_reflectance.nc:SDR_S3O",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s5o",
-            "target_path": "/measurements/slstr_o/sdr_s5o",
-            "source_path": "Syn_S5O_reflectance.nc:SDR_S5O",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s6o",
-            "target_path": "/measurements/slstr_o/sdr_s6o",
-            "source_path": "Syn_S6O_reflectance.nc:SDR_S6O",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "amin",
-            "target_path": "/measurements/meteo/amin",
-            "source_path": "Syn_AMIN.nc:AMIN",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "a550",
-            "target_path": "/measurements/meteo/a550",
-            "source_path": "Syn_Angstrom_exp550.nc:A550",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "t550",
-            "target_path": "/measurements/meteo/t550",
-            "source_path": "Syn_AOT550.nc:T550",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa01_orphan",
-            "target_path": "/measurements/orphan/sdr_oa01",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa01",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa02_orphan",
-            "target_path": "/measurements/orphan/sdr_oa02",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa02",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa03_orphan",
-            "target_path": "/measurements/orphan/sdr_oa03",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa03",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa04_orphan",
-            "target_path": "/measurements/orphan/sdr_oa04",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa04",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa05_orphan",
-            "target_path": "/measurements/orphan/sdr_oa05",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa05",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa06_orphan",
-            "target_path": "/measurements/orphan/sdr_oa06",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa06",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa07_orphan",
-            "target_path": "/measurements/orphan/sdr_oa07",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa07",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa08_orphan",
-            "target_path": "/measurements/orphan/sdr_oa08",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa08",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa09_orphan",
-            "target_path": "/measurements/orphan/sdr_oa09",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa09",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa10_orphan",
-            "target_path": "/measurements/orphan/sdr_oa10",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa10",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa11_orphan",
-            "target_path": "/measurements/orphan/sdr_oa11",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa11",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa12_orphan",
-            "target_path": "/measurements/orphan/sdr_oa12",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa12",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa16_orphan",
-            "target_path": "/measurements/orphan/sdr_oa16",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa16",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa17_orphan",
-            "target_path": "/measurements/orphan/sdr_oa17",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa17",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa18_orphan",
-            "target_path": "/measurements/orphan/sdr_oa18",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa18",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa21_orphan",
-            "target_path": "/measurements/orphan/sdr_oa21",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa21",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s1n_orphan",
-            "target_path": "/measurements/orphan/sdr_s1n",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_S1N",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s1o_orphan",
-            "target_path": "/measurements/orphan/sdr_s1o",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_S1O",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s2n_orphan",
-            "target_path": "/measurements/orphan/sdr_s2n",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_S2N",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s2o_orphan",
-            "target_path": "/measurements/orphan/sdr_s2o",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_S2O",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s3n_orphan",
-            "target_path": "/measurements/orphan/sdr_s3n",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_S3N",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s3o_orphan",
-            "target_path": "/measurements/orphan/sdr_s3o",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_S3O",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s5n_orphan",
-            "target_path": "/measurements/orphan/sdr_s5n",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_S5N",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s5o_orphan",
-            "target_path": "/measurements/orphan/sdr_s5o",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_S5O",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s6n_orphan",
-            "target_path": "/measurements/orphan/sdr_s6n",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_S6N",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s6o_orphan",
-            "target_path": "/measurements/orphan/sdr_s6o",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_S6O",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "a550_orphan",
-            "target_path": "/measurements/orphan/a550",
-            "source_path": "Syn_SDR_removed_pixel.nc:A550",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "t550_orphan",
-            "target_path": "/measurements/orphan/t550",
-            "source_path": "Syn_SDR_removed_pixel.nc:T550",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "cloud_flags",
-            "target_path": "/quality/flags/cloud_flags",
-            "source_path": "flags.nc:CLOUD_flags",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "olci_flags",
-            "target_path": "/quality/flags/olci_flags",
-            "source_path": "flags.nc:OLC_flags",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "slstr_n_flags",
-            "target_path": "/quality/flags/slstr_n_flags",
-            "source_path": "flags.nc:SLN_flags",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "slstr_o_flags",
-            "target_path": "/quality/flags/slstr_o_flags",
-            "source_path": "flags.nc:SLO_flags",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "syn_flags",
-            "target_path": "/quality/flags/syn_flags",
-            "source_path": "flags.nc:SYN_flags",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa01_err",
-            "target_path": "/quality/err/sdr_oa01_err",
-            "source_path": "Syn_Oa01_reflectance.nc:SDR_Oa01_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa02_err",
-            "target_path": "/quality/err/sdr_oa02_err",
-            "source_path": "Syn_Oa02_reflectance.nc:SDR_Oa02_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa03_err",
-            "target_path": "/quality/err/sdr_oa03_err",
-            "source_path": "Syn_Oa03_reflectance.nc:SDR_Oa03_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa04_err",
-            "target_path": "/quality/err/sdr_oa04_err",
-            "source_path": "Syn_Oa04_reflectance.nc:SDR_Oa04_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa05_err",
-            "target_path": "/quality/err/sdr_oa05_err",
-            "source_path": "Syn_Oa05_reflectance.nc:SDR_Oa05_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa06_err",
-            "target_path": "/quality/err/sdr_oa06_err",
-            "source_path": "Syn_Oa06_reflectance.nc:SDR_Oa06_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa07_err",
-            "target_path": "/quality/err/sdr_oa07_err",
-            "source_path": "Syn_Oa07_reflectance.nc:SDR_Oa07_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa08_err",
-            "target_path": "/quality/err/sdr_oa08_err",
-            "source_path": "Syn_Oa08_reflectance.nc:SDR_Oa08_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa09_err",
-            "target_path": "/quality/err/sdr_oa09_err",
-            "source_path": "Syn_Oa09_reflectance.nc:SDR_Oa09_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa10_err",
-            "target_path": "/quality/err/sdr_oa10_err",
-            "source_path": "Syn_Oa10_reflectance.nc:SDR_Oa10_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa11_err",
-            "target_path": "/quality/err/sdr_oa11_err",
-            "source_path": "Syn_Oa11_reflectance.nc:SDR_Oa11_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa12_err",
-            "target_path": "/quality/err/sdr_oa12_err",
-            "source_path": "Syn_Oa12_reflectance.nc:SDR_Oa12_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa16_err",
-            "target_path": "/quality/err/sdr_oa16_err",
-            "source_path": "Syn_Oa16_reflectance.nc:SDR_Oa16_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa17_err",
-            "target_path": "/quality/err/sdr_oa17_err",
-            "source_path": "Syn_Oa17_reflectance.nc:SDR_Oa17_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa18_err",
-            "target_path": "/quality/err/sdr_oa18_err",
-            "source_path": "Syn_Oa18_reflectance.nc:SDR_Oa18_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa21_err",
-            "target_path": "/quality/err/sdr_oa21_err",
-            "source_path": "Syn_Oa21_reflectance.nc:SDR_Oa21_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s1n_err",
-            "target_path": "/quality/err/sdr_s1n_err",
-            "source_path": "Syn_S1N_reflectance.nc:SDR_S1N_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s1o_err",
-            "target_path": "/quality/err/sdr_s1o_err",
-            "source_path": "Syn_S1O_reflectance.nc:SDR_S1O_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s2n_err",
-            "target_path": "/quality/err/sdr_s2n_err",
-            "source_path": "Syn_S2N_reflectance.nc:SDR_S2N_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s2o_err",
-            "target_path": "/quality/err/sdr_s2o_err",
-            "source_path": "Syn_S2O_reflectance.nc:SDR_S2O_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s3n_err",
-            "target_path": "/quality/err/sdr_s3n_err",
-            "source_path": "Syn_S3N_reflectance.nc:SDR_S3N_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s3o_err",
-            "target_path": "/quality/err/sdr_s3o_err",
-            "source_path": "Syn_S3O_reflectance.nc:SDR_S3O_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s5n_err",
-            "target_path": "/quality/err/sdr_s5n_err",
-            "source_path": "Syn_S5N_reflectance.nc:SDR_S5N_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s5o_err",
-            "target_path": "/quality/err/sdr_s5o_err",
-            "source_path": "Syn_S5O_reflectance.nc:SDR_S5O_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s6n_err",
-            "target_path": "/quality/err/sdr_s6n_err",
-            "source_path": "Syn_S6N_reflectance.nc:SDR_S6N_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s6o_err",
-            "target_path": "/quality/err/sdr_s6o_err",
-            "source_path": "Syn_S6O_reflectance.nc:SDR_S6O_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "t550_err",
-            "target_path": "/quality/err/t550_err",
-            "source_path": "Syn_AOT550.nc:T550_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "amin_orphan",
-            "target_path": "/quality/orphan/amin",
-            "source_path": "Syn_annot_rem.nc:AMIN",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "cloud_flags_orphan",
-            "target_path": "/quality/orphan/cloud_flags",
-            "source_path": "Syn_annot_rem.nc:CLOUD_flags",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "olc_flags_orphan",
-            "target_path": "/quality/orphan/olc_flags",
-            "source_path": "Syn_annot_rem.nc:OLC_flags",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sln_flags_orphan",
-            "target_path": "/quality/orphan/sln_flags",
-            "source_path": "Syn_annot_rem.nc:SLN_flags",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "slo_flags_orphan",
-            "target_path": "/quality/orphan/slo_flags",
-            "source_path": "Syn_annot_rem.nc:SLO_flags",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "syn_flags_orphan",
-            "target_path": "/quality/orphan/syn_flags",
-            "source_path": "Syn_annot_rem.nc:SYN_flags",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa01_err_orphan",
-            "target_path": "/quality/orphan/sdr_oa01_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa01_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa02_err_orphan",
-            "target_path": "/quality/orphan/sdr_oa02_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa02_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa03_err_orphan",
-            "target_path": "/quality/orphan/sdr_oa03_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa03_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa04_err_orphan",
-            "target_path": "/quality/orphan/sdr_oa04_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa04_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa05_err_orphan",
-            "target_path": "/quality/orphan/sdr_oa05_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa05_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa06_err_orphan",
-            "target_path": "/quality/orphan/sdr_oa06_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa06_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa07_err_orphan",
-            "target_path": "/quality/orphan/sdr_oa07_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa07_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa08_err_orphan",
-            "target_path": "/quality/orphan/sdr_oa08_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa08_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa09_err_orphan",
-            "target_path": "/quality/orphan/sdr_oa09_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa09_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa10_err_orphan",
-            "target_path": "/quality/orphan/sdr_oa10_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa10_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa11_err_orphan",
-            "target_path": "/quality/orphan/sdr_oa11_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa11_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa12_err_orphan",
-            "target_path": "/quality/orphan/sdr_oa12_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa12_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa16_err_orphan",
-            "target_path": "/quality/orphan/sdr_oa16_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa16_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa17_err_orphan",
-            "target_path": "/quality/orphan/sdr_oa17_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa17_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa18_err_orphan",
-            "target_path": "/quality/orphan/sdr_oa18_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa18_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_oa21_err_orphan",
-            "target_path": "/quality/orphan/sdr_oa21_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa21_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s1n_err_orphan",
-            "target_path": "/quality/orphan/sdr_s1n_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_S1N_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s1o_err_orphan",
-            "target_path": "/quality/orphan/sdr_s1o_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_S1O_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s2n_err_orphan",
-            "target_path": "/quality/orphan/sdr_s2n_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_S2N_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s2o_err_orphan",
-            "target_path": "/quality/orphan/sdr_s2o_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_S2O_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s3n_err_orphan",
-            "target_path": "/quality/orphan/sdr_s3n_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_S3N_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s3o_err_orphan",
-            "target_path": "/quality/orphan/sdr_s3o_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_S3O_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s5n_err_orphan",
-            "target_path": "/quality/orphan/sdr_s5n_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_S5N_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s5o_err_orphan",
-            "target_path": "/quality/orphan/sdr_s5o_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_S5O_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s6n_err_orphan",
-            "target_path": "/quality/orphan/sdr_s6n_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_S6N_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sdr_s6o_err_orphan",
-            "target_path": "/quality/orphan/sdr_s6o_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:SDR_S6O_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "t550_err_orphan",
-            "target_path": "/quality/orphan/t550_err",
-            "source_path": "Syn_SDR_removed_pixel.nc:T550_err",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "saa",
-            "target_path": "/conditions/geometry/saa",
-            "source_path": "tiepoints_olci.nc:SAA",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "sza",
-            "target_path": "/conditions/geometry/sza",
-            "source_path": "tiepoints_olci.nc:SZA",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "olci_vaa",
-            "target_path": "/conditions/geometry/olci_vaa",
-            "source_path": "tiepoints_olci.nc:OLC_VAA",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "olci_vza",
-            "target_path": "/conditions/geometry/olci_vza",
-            "source_path": "tiepoints_olci.nc:OLC_VZA",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "slstr_n_vaa",
-            "target_path": "/conditions/geometry/slstr_n_vaa",
-            "source_path": "tiepoints_slstr_n.nc:SLN_VAA",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "slstr_n_vza",
-            "target_path": "/conditions/geometry/slstr_n_vza",
-            "source_path": "tiepoints_slstr_n.nc:SLN_VZA",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "slstr_o_vaa",
-            "target_path": "/conditions/geometry/slstr_o_vaa",
-            "source_path": "tiepoints_slstr_o.nc:SLO_VAA",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "slstr_o_vza",
-            "target_path": "/conditions/geometry/slstr_o_vza",
-            "source_path": "tiepoints_slstr_o.nc:SLO_VZA",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "air_pressure",
-            "target_path": "/conditions/meteo/air_pressure",
-            "source_path": "tiepoints_meteo.nc:air_pressure",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "ozone",
-            "target_path": "/conditions/meteo/ozone",
-            "source_path": "tiepoints_meteo.nc:ozone",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "water_vapour",
-            "target_path": "/conditions/meteo/water_vapour",
-            "source_path": "tiepoints_meteo.nc:water_vapour",
-            "item_format": "netcdf"
-        },
-        {
-            "short_name": "metadata",
-            "source_path": "xfdumanifest.xml",
-            "target_path": "",
-            "item_format": "xmlmetadata",
-            "accessor_config": {
-                "mapping": "metadata_mapping",
-                "namespaces": "namespaces"
-            }
-        }
-    ],
-    "metadata_mapping": {
-        "TBD": "concat('','TBD')"
+    {
+      "short_name": "lon",
+      "target_path": "/coordinates/image_grid/longitude",
+      "source_path": "geolocation.nc:lon",
+      "item_format": "netcdf"
     },
-    "metadata_mapping2": {
-        "CF": {
-            "title": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName/text())",
-            "history": "concat(metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/sentinel-safe:software/@name,' ',metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/sentinel-safe:software/@version,' ',metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/@stop)",
-            "institution": "concat(metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/@organisation,', ',metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/@name)",
-            "source": "concat(metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:familyName/text(), metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:number/text(), ' ',metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/@abbreviation,' ',metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/text())",
-            "comment": "concat('',metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dispositionMode/text())",
-            "references": "'https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-3, https://sentinels.copernicus.eu/web/sentinel/user-guides/sentinel-3-olci/processing-levels/level-1'",
-            "Conventions": "'CF-1.9'"
-        },
-        "OM_EOP": {
-            "phenomenonTime": {
-                "beginPosition": "metadataSection/metadataObject[@ID='acquisitionPeriod']//sentinel-safe:acquisitionPeriod/sentinel-safe:startTime",
-                "endPosition": "metadataSection/metadataObject[@ID='acquisitionPeriod']//sentinel-safe:acquisitionPeriod/sentinel-safe:stopTime"
-            },
-            "resultTime": {
-                "timePosition": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:creationTime"
-            },
-            "procedure": {
-                "platform": {
-                    "shortName": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:familyName",
-                    "serialIdentifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:number"
-                },
-                "instrument": {
-                    "shortName": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/@abbreviation"
-                },
-                "sensor": {
-                    "sensorType": "'OPTICAL'",
-                    "operationalMode": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode/@identifier"
-                },
-                "acquistionParameters": {
-                    "orbitNumber": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber",
-                    "orbitDirection": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber/@groundTrackDirection"
-                }
-            },
-            "featureOfInterest": {
-                "multiExtentOf": "metadataSection/metadataObject[@ID='measurementFrameSet']/metadataWrap/xmlData/sentinel-safe:frameSet/sentinel-safe:footPrint/gml:posList"
-            },
-            "result": {
-                "cloudCoverPercentage": "metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:classificationSummary/sentinel3:cloudyPixels/@percentage",
-                "product": {
-                    "fileName": "dataObjectSection/dataObject/byteStream/fileLocation/@href",
-                    "timeliness": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:timeliness"
-                }
-            },
-            "metadataProperty": {
-                "identifier": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName",
-                "creationDate": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:creationTime",
-                "acquisitionType": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dispositionMode",
-                "productType": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productType",
-                "status": "'ARCHIVED'",
-                "downlinkedTo": {
-                    "acquisitionStation": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingGroundStation",
-                    "acquisitionDate": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingStopTime"
-                },
-                "productQualityStatus": "metadataSection/metadataObject[@ID='measurementQualityInformation']/metadataWrap/xmlData/sentinel-safe:qualityInformation/sentinel-safe:extension/sentinel3:productQuality/sentinel3:onlineQualityCheck",
-                "productQualityDegradationTag": "metadataSection/metadataObject[@ID='measurementQualityInformation']/metadataWrap/xmlData/sentinel-safe:qualityInformation/sentinel-safe:extension/sentinel3:productQuality/sentinel3:degradationFlags",
-                "processing": {
-                    "processingCenter": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/@name",
-                    "processingDate": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/@stop",
-                    "processorName": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/sentinel-safe:software/@name",
-                    "processorVersion": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:facility/sentinel-safe:software/@version"
-                }
-            }
-        }
+    {
+      "short_name": "altitude",
+      "target_path": "/coordinates/image_grid/altitude",
+      "source_path": "geolocation.nc:altitude",
+      "item_format": "netcdf"
     },
-    "namespaces": {
-        "xfdu": "urn:ccsds:schema:xfdu:1",
-        "gml": "http://www.opengis.net/gml",
-        "sentinel-safe": "http://www.esa.int/safe/sentinel/1.1",
-        "sentinel3": "http://www.esa.int/safe/sentinel/sentinel-3/1.0",
-        "olci": "http://www.esa.int/safe/sentinel/sentinel-3/olci/1.0",
-        "slstr": "http://www.esa.int/safe/sentinel/sentinel-3/slstr/1.0",
-        "syn": "http://www.esa.int/safe/sentinel/sentinel-3/synergy/1.0"
+    {
+      "short_name": "latitude_orphan",
+      "target_path": "/coordinates/orphan/latitude",
+      "source_path": "Syn_annot_rem.nc:lat",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "longitude_orphan",
+      "target_path": "/coordinates/orphan/longitude",
+      "source_path": "Syn_annot_rem.nc:lon",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "altitude_orphan",
+      "target_path": "/coordinates/orphan/altitude",
+      "source_path": "Syn_annot_rem.nc:altitude",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "olci_tp_latitude",
+      "target_path": "/coordinates/olci_tp_grid/latitude",
+      "source_path": "tiepoints_olci.nc:OLC_TP_lat",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "olci_tp_longitude",
+      "target_path": "/coordinates/olci_tp_grid/longitude",
+      "source_path": "tiepoints_olci.nc:OLC_TP_lon",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "slstr_n_tp_latitude",
+      "target_path": "/coordinates/slstr_n_tp_grid/latitude",
+      "source_path": "tiepoints_slstr_n.nc:SLN_TP_lat",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "slstr_n_tp_longitude",
+      "target_path": "/coordinates/slstr_n_tp_grid/longitude",
+      "source_path": "tiepoints_slstr_n.nc:SLN_TP_lon",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "slstr_o_tp_latitude",
+      "target_path": "/coordinates/slstr_o_tp_grid/latitude",
+      "source_path": "tiepoints_slstr_o.nc:SLO_TP_lat",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "slstr_o_tp_longitude",
+      "target_path": "/coordinates/slstr_o_tp_grid/longitude",
+      "source_path": "tiepoints_slstr_o.nc:SLO_TP_lon",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "time",
+      "target_path": "/coordinates/time/time",
+      "source_path": "time.nc:Time",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa01",
+      "target_path": "/measurements/olci/sdr_oa01",
+      "source_path": "Syn_Oa01_reflectance.nc:SDR_Oa01",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa02",
+      "target_path": "/measurements/olci/sdr_oa02",
+      "source_path": "Syn_Oa02_reflectance.nc:SDR_Oa02",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa03",
+      "target_path": "/measurements/olci/sdr_oa03",
+      "source_path": "Syn_Oa03_reflectance.nc:SDR_Oa03",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa04",
+      "target_path": "/measurements/olci/sdr_oa04",
+      "source_path": "Syn_Oa04_reflectance.nc:SDR_Oa04",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa05",
+      "target_path": "/measurements/olci/sdr_oa05",
+      "source_path": "Syn_Oa05_reflectance.nc:SDR_Oa05",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa06",
+      "target_path": "/measurements/olci/sdr_oa06",
+      "source_path": "Syn_Oa06_reflectance.nc:SDR_Oa06",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa07",
+      "target_path": "/measurements/olci/sdr_oa07",
+      "source_path": "Syn_Oa07_reflectance.nc:SDR_Oa07",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa08",
+      "target_path": "/measurements/olci/sdr_oa08",
+      "source_path": "Syn_Oa08_reflectance.nc:SDR_Oa08",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa09",
+      "target_path": "/measurements/olci/sdr_oa09",
+      "source_path": "Syn_Oa09_reflectance.nc:SDR_Oa09",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa10",
+      "target_path": "/measurements/olci/sdr_oa10",
+      "source_path": "Syn_Oa10_reflectance.nc:SDR_Oa10",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa11",
+      "target_path": "/measurements/olci/sdr_oa11",
+      "source_path": "Syn_Oa11_reflectance.nc:SDR_Oa11",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa12",
+      "target_path": "/measurements/olci/sdr_oa12",
+      "source_path": "Syn_Oa12_reflectance.nc:SDR_Oa12",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa16",
+      "target_path": "/measurements/olci/sdr_oa16",
+      "source_path": "Syn_Oa16_reflectance.nc:SDR_Oa16",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa17",
+      "target_path": "/measurements/olci/sdr_oa17",
+      "source_path": "Syn_Oa17_reflectance.nc:SDR_Oa17",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa18",
+      "target_path": "/measurements/olci/sdr_oa18",
+      "source_path": "Syn_Oa18_reflectance.nc:SDR_Oa18",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa21",
+      "target_path": "/measurements/olci/sdr_oa21",
+      "source_path": "Syn_Oa21_reflectance.nc:SDR_Oa21",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s1n",
+      "target_path": "/measurements/slstr_n/sdr_s1n",
+      "source_path": "Syn_S1N_reflectance.nc:SDR_S1N",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s2n",
+      "target_path": "/measurements/slstr_n/sdr_s2n",
+      "source_path": "Syn_S2N_reflectance.nc:SDR_S2N",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s3n",
+      "target_path": "/measurements/slstr_n/sdr_s3n",
+      "source_path": "Syn_S3N_reflectance.nc:SDR_S3N",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s5n",
+      "target_path": "/measurements/slstr_n/sdr_s5n",
+      "source_path": "Syn_S5N_reflectance.nc:SDR_S5N",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s6n",
+      "target_path": "/measurements/slstr_n/sdr_s6n",
+      "source_path": "Syn_S6N_reflectance.nc:SDR_S6N",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s1o",
+      "target_path": "/measurements/slstr_o/sdr_s1o",
+      "source_path": "Syn_S1O_reflectance.nc:SDR_S1O",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s2o",
+      "target_path": "/measurements/slstr_o/sdr_s2o",
+      "source_path": "Syn_S2O_reflectance.nc:SDR_S2O",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s3o",
+      "target_path": "/measurements/slstr_o/sdr_s3o",
+      "source_path": "Syn_S3O_reflectance.nc:SDR_S3O",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s5o",
+      "target_path": "/measurements/slstr_o/sdr_s5o",
+      "source_path": "Syn_S5O_reflectance.nc:SDR_S5O",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s6o",
+      "target_path": "/measurements/slstr_o/sdr_s6o",
+      "source_path": "Syn_S6O_reflectance.nc:SDR_S6O",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "amin",
+      "target_path": "/measurements/meteo/amin",
+      "source_path": "Syn_AMIN.nc:AMIN",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "a550",
+      "target_path": "/measurements/meteo/a550",
+      "source_path": "Syn_Angstrom_exp550.nc:A550",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "t550",
+      "target_path": "/measurements/meteo/t550",
+      "source_path": "Syn_AOT550.nc:T550",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa01_orphan",
+      "target_path": "/measurements/orphan/sdr_oa01",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa01",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa02_orphan",
+      "target_path": "/measurements/orphan/sdr_oa02",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa02",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa03_orphan",
+      "target_path": "/measurements/orphan/sdr_oa03",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa03",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa04_orphan",
+      "target_path": "/measurements/orphan/sdr_oa04",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa04",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa05_orphan",
+      "target_path": "/measurements/orphan/sdr_oa05",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa05",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa06_orphan",
+      "target_path": "/measurements/orphan/sdr_oa06",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa06",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa07_orphan",
+      "target_path": "/measurements/orphan/sdr_oa07",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa07",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa08_orphan",
+      "target_path": "/measurements/orphan/sdr_oa08",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa08",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa09_orphan",
+      "target_path": "/measurements/orphan/sdr_oa09",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa09",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa10_orphan",
+      "target_path": "/measurements/orphan/sdr_oa10",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa10",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa11_orphan",
+      "target_path": "/measurements/orphan/sdr_oa11",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa11",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa12_orphan",
+      "target_path": "/measurements/orphan/sdr_oa12",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa12",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa16_orphan",
+      "target_path": "/measurements/orphan/sdr_oa16",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa16",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa17_orphan",
+      "target_path": "/measurements/orphan/sdr_oa17",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa17",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa18_orphan",
+      "target_path": "/measurements/orphan/sdr_oa18",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa18",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa21_orphan",
+      "target_path": "/measurements/orphan/sdr_oa21",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa21",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s1n_orphan",
+      "target_path": "/measurements/orphan/sdr_s1n",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_S1N",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s1o_orphan",
+      "target_path": "/measurements/orphan/sdr_s1o",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_S1O",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s2n_orphan",
+      "target_path": "/measurements/orphan/sdr_s2n",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_S2N",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s2o_orphan",
+      "target_path": "/measurements/orphan/sdr_s2o",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_S2O",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s3n_orphan",
+      "target_path": "/measurements/orphan/sdr_s3n",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_S3N",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s3o_orphan",
+      "target_path": "/measurements/orphan/sdr_s3o",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_S3O",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s5n_orphan",
+      "target_path": "/measurements/orphan/sdr_s5n",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_S5N",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s5o_orphan",
+      "target_path": "/measurements/orphan/sdr_s5o",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_S5O",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s6n_orphan",
+      "target_path": "/measurements/orphan/sdr_s6n",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_S6N",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s6o_orphan",
+      "target_path": "/measurements/orphan/sdr_s6o",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_S6O",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "a550_orphan",
+      "target_path": "/measurements/orphan/a550",
+      "source_path": "Syn_SDR_removed_pixel.nc:A550",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "t550_orphan",
+      "target_path": "/measurements/orphan/t550",
+      "source_path": "Syn_SDR_removed_pixel.nc:T550",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "cloud_flags",
+      "target_path": "/quality/flags/cloud_flags",
+      "source_path": "flags.nc:CLOUD_flags",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "olci_flags",
+      "target_path": "/quality/flags/olci_flags",
+      "source_path": "flags.nc:OLC_flags",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "slstr_n_flags",
+      "target_path": "/quality/flags/slstr_n_flags",
+      "source_path": "flags.nc:SLN_flags",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "slstr_o_flags",
+      "target_path": "/quality/flags/slstr_o_flags",
+      "source_path": "flags.nc:SLO_flags",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "syn_flags",
+      "target_path": "/quality/flags/syn_flags",
+      "source_path": "flags.nc:SYN_flags",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa01_err",
+      "target_path": "/quality/err/sdr_oa01_err",
+      "source_path": "Syn_Oa01_reflectance.nc:SDR_Oa01_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa02_err",
+      "target_path": "/quality/err/sdr_oa02_err",
+      "source_path": "Syn_Oa02_reflectance.nc:SDR_Oa02_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa03_err",
+      "target_path": "/quality/err/sdr_oa03_err",
+      "source_path": "Syn_Oa03_reflectance.nc:SDR_Oa03_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa04_err",
+      "target_path": "/quality/err/sdr_oa04_err",
+      "source_path": "Syn_Oa04_reflectance.nc:SDR_Oa04_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa05_err",
+      "target_path": "/quality/err/sdr_oa05_err",
+      "source_path": "Syn_Oa05_reflectance.nc:SDR_Oa05_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa06_err",
+      "target_path": "/quality/err/sdr_oa06_err",
+      "source_path": "Syn_Oa06_reflectance.nc:SDR_Oa06_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa07_err",
+      "target_path": "/quality/err/sdr_oa07_err",
+      "source_path": "Syn_Oa07_reflectance.nc:SDR_Oa07_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa08_err",
+      "target_path": "/quality/err/sdr_oa08_err",
+      "source_path": "Syn_Oa08_reflectance.nc:SDR_Oa08_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa09_err",
+      "target_path": "/quality/err/sdr_oa09_err",
+      "source_path": "Syn_Oa09_reflectance.nc:SDR_Oa09_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa10_err",
+      "target_path": "/quality/err/sdr_oa10_err",
+      "source_path": "Syn_Oa10_reflectance.nc:SDR_Oa10_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa11_err",
+      "target_path": "/quality/err/sdr_oa11_err",
+      "source_path": "Syn_Oa11_reflectance.nc:SDR_Oa11_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa12_err",
+      "target_path": "/quality/err/sdr_oa12_err",
+      "source_path": "Syn_Oa12_reflectance.nc:SDR_Oa12_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa16_err",
+      "target_path": "/quality/err/sdr_oa16_err",
+      "source_path": "Syn_Oa16_reflectance.nc:SDR_Oa16_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa17_err",
+      "target_path": "/quality/err/sdr_oa17_err",
+      "source_path": "Syn_Oa17_reflectance.nc:SDR_Oa17_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa18_err",
+      "target_path": "/quality/err/sdr_oa18_err",
+      "source_path": "Syn_Oa18_reflectance.nc:SDR_Oa18_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa21_err",
+      "target_path": "/quality/err/sdr_oa21_err",
+      "source_path": "Syn_Oa21_reflectance.nc:SDR_Oa21_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s1n_err",
+      "target_path": "/quality/err/sdr_s1n_err",
+      "source_path": "Syn_S1N_reflectance.nc:SDR_S1N_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s1o_err",
+      "target_path": "/quality/err/sdr_s1o_err",
+      "source_path": "Syn_S1O_reflectance.nc:SDR_S1O_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s2n_err",
+      "target_path": "/quality/err/sdr_s2n_err",
+      "source_path": "Syn_S2N_reflectance.nc:SDR_S2N_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s2o_err",
+      "target_path": "/quality/err/sdr_s2o_err",
+      "source_path": "Syn_S2O_reflectance.nc:SDR_S2O_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s3n_err",
+      "target_path": "/quality/err/sdr_s3n_err",
+      "source_path": "Syn_S3N_reflectance.nc:SDR_S3N_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s3o_err",
+      "target_path": "/quality/err/sdr_s3o_err",
+      "source_path": "Syn_S3O_reflectance.nc:SDR_S3O_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s5n_err",
+      "target_path": "/quality/err/sdr_s5n_err",
+      "source_path": "Syn_S5N_reflectance.nc:SDR_S5N_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s5o_err",
+      "target_path": "/quality/err/sdr_s5o_err",
+      "source_path": "Syn_S5O_reflectance.nc:SDR_S5O_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s6n_err",
+      "target_path": "/quality/err/sdr_s6n_err",
+      "source_path": "Syn_S6N_reflectance.nc:SDR_S6N_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s6o_err",
+      "target_path": "/quality/err/sdr_s6o_err",
+      "source_path": "Syn_S6O_reflectance.nc:SDR_S6O_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "t550_err",
+      "target_path": "/quality/err/t550_err",
+      "source_path": "Syn_AOT550.nc:T550_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "amin_orphan",
+      "target_path": "/quality/orphan/amin",
+      "source_path": "Syn_annot_rem.nc:AMIN",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "cloud_flags_orphan",
+      "target_path": "/quality/orphan/cloud_flags",
+      "source_path": "Syn_annot_rem.nc:CLOUD_flags",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "olc_flags_orphan",
+      "target_path": "/quality/orphan/olc_flags",
+      "source_path": "Syn_annot_rem.nc:OLC_flags",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sln_flags_orphan",
+      "target_path": "/quality/orphan/sln_flags",
+      "source_path": "Syn_annot_rem.nc:SLN_flags",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "slo_flags_orphan",
+      "target_path": "/quality/orphan/slo_flags",
+      "source_path": "Syn_annot_rem.nc:SLO_flags",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "syn_flags_orphan",
+      "target_path": "/quality/orphan/syn_flags",
+      "source_path": "Syn_annot_rem.nc:SYN_flags",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa01_err_orphan",
+      "target_path": "/quality/orphan/sdr_oa01_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa01_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa02_err_orphan",
+      "target_path": "/quality/orphan/sdr_oa02_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa02_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa03_err_orphan",
+      "target_path": "/quality/orphan/sdr_oa03_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa03_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa04_err_orphan",
+      "target_path": "/quality/orphan/sdr_oa04_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa04_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa05_err_orphan",
+      "target_path": "/quality/orphan/sdr_oa05_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa05_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa06_err_orphan",
+      "target_path": "/quality/orphan/sdr_oa06_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa06_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa07_err_orphan",
+      "target_path": "/quality/orphan/sdr_oa07_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa07_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa08_err_orphan",
+      "target_path": "/quality/orphan/sdr_oa08_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa08_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa09_err_orphan",
+      "target_path": "/quality/orphan/sdr_oa09_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa09_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa10_err_orphan",
+      "target_path": "/quality/orphan/sdr_oa10_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa10_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa11_err_orphan",
+      "target_path": "/quality/orphan/sdr_oa11_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa11_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa12_err_orphan",
+      "target_path": "/quality/orphan/sdr_oa12_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa12_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa16_err_orphan",
+      "target_path": "/quality/orphan/sdr_oa16_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa16_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa17_err_orphan",
+      "target_path": "/quality/orphan/sdr_oa17_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa17_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa18_err_orphan",
+      "target_path": "/quality/orphan/sdr_oa18_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa18_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_oa21_err_orphan",
+      "target_path": "/quality/orphan/sdr_oa21_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa21_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s1n_err_orphan",
+      "target_path": "/quality/orphan/sdr_s1n_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_S1N_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s1o_err_orphan",
+      "target_path": "/quality/orphan/sdr_s1o_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_S1O_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s2n_err_orphan",
+      "target_path": "/quality/orphan/sdr_s2n_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_S2N_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s2o_err_orphan",
+      "target_path": "/quality/orphan/sdr_s2o_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_S2O_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s3n_err_orphan",
+      "target_path": "/quality/orphan/sdr_s3n_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_S3N_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s3o_err_orphan",
+      "target_path": "/quality/orphan/sdr_s3o_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_S3O_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s5n_err_orphan",
+      "target_path": "/quality/orphan/sdr_s5n_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_S5N_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s5o_err_orphan",
+      "target_path": "/quality/orphan/sdr_s5o_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_S5O_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s6n_err_orphan",
+      "target_path": "/quality/orphan/sdr_s6n_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_S6N_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sdr_s6o_err_orphan",
+      "target_path": "/quality/orphan/sdr_s6o_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:SDR_S6O_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "t550_err_orphan",
+      "target_path": "/quality/orphan/t550_err",
+      "source_path": "Syn_SDR_removed_pixel.nc:T550_err",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "saa",
+      "target_path": "/conditions/geometry/saa",
+      "source_path": "tiepoints_olci.nc:SAA",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "sza",
+      "target_path": "/conditions/geometry/sza",
+      "source_path": "tiepoints_olci.nc:SZA",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "olci_vaa",
+      "target_path": "/conditions/geometry/olci_vaa",
+      "source_path": "tiepoints_olci.nc:OLC_VAA",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "olci_vza",
+      "target_path": "/conditions/geometry/olci_vza",
+      "source_path": "tiepoints_olci.nc:OLC_VZA",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "slstr_n_vaa",
+      "target_path": "/conditions/geometry/slstr_n_vaa",
+      "source_path": "tiepoints_slstr_n.nc:SLN_VAA",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "slstr_n_vza",
+      "target_path": "/conditions/geometry/slstr_n_vza",
+      "source_path": "tiepoints_slstr_n.nc:SLN_VZA",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "slstr_o_vaa",
+      "target_path": "/conditions/geometry/slstr_o_vaa",
+      "source_path": "tiepoints_slstr_o.nc:SLO_VAA",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "slstr_o_vza",
+      "target_path": "/conditions/geometry/slstr_o_vza",
+      "source_path": "tiepoints_slstr_o.nc:SLO_VZA",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "air_pressure",
+      "target_path": "/conditions/meteo/air_pressure",
+      "source_path": "tiepoints_meteo.nc:air_pressure",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "ozone",
+      "target_path": "/conditions/meteo/ozone",
+      "source_path": "tiepoints_meteo.nc:ozone",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "water_vapour",
+      "target_path": "/conditions/meteo/water_vapour",
+      "source_path": "tiepoints_meteo.nc:water_vapour",
+      "item_format": "netcdf"
+    },
+    {
+      "short_name": "stac_discovery",
+      "source_path": "xfdumanifest.xml",
+      "target_path": "",
+      "item_format": "xmlmetadata",
+      "accessor_config": {
+        "mapping": "stac_discovery",
+        "namespaces": "namespaces"
+      }
+    },
+    {
+      "short_name": "conditions_metadata",
+      "source_path": "xfdumanifest.xml",
+      "target_path": "conditions",
+      "item_format": "xmlmetadata",
+      "accessor_config": {
+        "mapping": "conditions_metadata",
+        "namespaces": "namespaces"
+      }
     }
+  ],
+  "stac_discovery": {
+    "type": "Text(Feature)",
+    "stac_version": "Text(1.0.0)",
+    "stac_extensions": [
+      "Text(https://stac-extensions.github.io/eopf/v1.0.0/schema.json)"
+    ],
+    "id": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName",
+    "geometry": "to_geoJson(metadataSection/metadataObject[@ID='measurementFrameSet']/metadataWrap/xmlData/sentinel-safe:frameSet/sentinel-safe:footPrint/gml:posList)",
+    "bbox": "to_bbox(metadataSection/metadataObject[@ID='measurementFrameSet']/metadataWrap/xmlData/sentinel-safe:frameSet/sentinel-safe:footPrint/gml:posList)",
+    "properties": {
+      "datetime": "Text(null)",
+      "start_datetime": "metadataSection/metadataObject[@ID='acquisitionPeriod']/metadataWrap/xmlData/sentinel-safe:acquisitionPeriod/sentinel-safe:startTime",
+      "end_datetime": "metadataSection/metadataObject[@ID='acquisitionPeriod']/metadataWrap/xmlData/sentinel-safe:acquisitionPeriod/sentinel-safe:stopTime",
+      "created": "to_ISO8601(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:creationTime)",
+      "eopf:platform": {
+        "nssdc_identifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:nssdcIdentifier",
+        "family": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:familyName",
+        "number": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:number"
+      },
+      "eopf:instrument": {
+        "name": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName",
+        "short_name": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/@abbreviation",
+        "mode": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode",
+        "identifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode/@identifier"
+      },
+      "providers": [
+        {
+          "name": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:resource[@role='L2 Product']/sentinel-safe:processing/sentinel-safe:facility/@name",
+          "roles": [
+            "Text(processor)"
+          ]
+        },
+        {
+          "name": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:resource[@role='L2 Product']/sentinel-safe:processing/sentinel-safe:facility/@organisation",
+          "roles": [
+            "Text(producer)"
+          ]
+        }
+      ],
+      "eopf:resolutions": {
+        "FR": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:samplingParameters/olci:acSpatialSampling)"
+      },
+      "eopf:product": {
+        "name": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productName",
+        "type": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productType",
+        "timeliness": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:timeliness",
+        "collection": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:baselineCollection",
+        "processing_baseline": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:processingBaseline",
+        "disposition": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dispositionMode",
+        "orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber)",
+        "relative_orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:relativeOrbitNumber)",
+        "ground_track_direction": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber/@groundTrackDirection",
+        "downlink_information": {
+          "granule_number": "to_int(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:granuleNumber)",
+          "granule_position": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:granulePosition",
+          "dump_start": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:dumpStart",
+          "receiving_station": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingGroundStation",
+          "receiving_start": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingStartTime",
+          "receiving_stop": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingStopTime"
+        },
+        "pixel_classification": {
+          "saline_water": {
+            "percent": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:classificationSummary/sentinel3:salineWaterPixels/@percentage)"
+          },
+          "coastal": {
+            "percent": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:classificationSummary/sentinel3:coastalPixels/@percentage)"
+          },
+          "inland_water": {
+            "percent": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:classificationSummary/sentinel3:freshInlandWaterPixels/@percentage)"
+          },
+          "tidal": {
+            "percent": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:classificationSummary/sentinel3:tidalRegionPixels/@percentage)"
+          },
+          "land": {
+            "percent": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:classificationSummary/sentinel3:landPixels/@percentage)"
+          },
+          "cloud": {
+            "percent": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:classificationSummary/sentinel3:cloudyPixels/@percentage)"
+          }
+        },
+        "data_information": {
+          "image_size": "to_imageSize(Syn_Oa01_reflectance.nc:rows,columns)"
+        }
+      }
+    }
+  },
+  "conditions_metadata": {
+    "band_descriptions": {
+      "SYN01": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN01']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN01']/sentinel3:bandwidth)"
+      },
+      "SYN02": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN02']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN02']/sentinel3:bandwidth)"
+      },
+      "SYN03": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN03']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN03']/sentinel3:bandwidth)"
+      },
+      "SYN04": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN04']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN04']/sentinel3:bandwidth)"
+      },
+      "SYN05": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN05']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN05']/sentinel3:bandwidth)"
+      },
+      "SYN06": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN06']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN06']/sentinel3:bandwidth)"
+      },
+      "SYN07": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN07']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN07']/sentinel3:bandwidth)"
+      },
+      "SYN08": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN08']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN08']/sentinel3:bandwidth)"
+      },
+      "SYN09": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN09']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN09']/sentinel3:bandwidth)"
+      },
+      "SYN10": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN10']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN10']/sentinel3:bandwidth)"
+      },
+      "SYN11": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN11']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN11']/sentinel3:bandwidth)"
+      },
+      "SYN12": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN12']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN12']/sentinel3:bandwidth)"
+      },
+      "SYN13": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN13']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN13']/sentinel3:bandwidth)"
+      },
+      "SYN14": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN14']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN14']/sentinel3:bandwidth)"
+      },
+      "SYN15": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN15']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN15']/sentinel3:bandwidth)"
+      },
+      "SYN16": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN16']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN16']/sentinel3:bandwidth)"
+      },
+      "SYN17": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN17']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN17']/sentinel3:bandwidth)"
+      },
+      "SYN18": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN18']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN18']/sentinel3:bandwidth)"
+      },
+      "SYN19": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN19']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN19']/sentinel3:bandwidth)"
+      },
+      "SYN20": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN20']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN20']/sentinel3:bandwidth)"
+      },
+      "SYN21": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN21']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN21']/sentinel3:bandwidth)"
+      },
+      "SYN22": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN22']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN22']/sentinel3:bandwidth)"
+      },
+      "SYN23": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN23']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN23']/sentinel3:bandwidth)"
+      },
+      "SYN24": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN24']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN24']/sentinel3:bandwidth)"
+      },
+      "SYN25": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN25']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN25']/sentinel3:bandwidth)"
+      },
+      "SYN26": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN26']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:bandDescriptions/sentinel3:band[@name='SYN26']/sentinel3:bandwidth)"
+      }
+    },
+    "orbit_reference": {
+      "absolute_pass_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:passNumber)",
+      "relative_pass_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:relativePassNumber)",
+      "cycle_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:cycleNumber)",
+      "phase_identifier": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:phaseIdentifier)",
+      "type": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber/@type",
+      "ephemeris": {
+        "start": {
+          "TAI": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:epoch[@type='TAI']",
+          "UTC": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:epoch[@type='UTC']",
+          "UT1": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:epoch[@type='UT1']",
+          "position": {
+            "x": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:position/sentinel-safe:x)",
+            "y": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:position/sentinel-safe:y)",
+            "z": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:position/sentinel-safe:z)"
+          },
+          "velocity": {
+            "x": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:velocity/sentinel-safe:x)",
+            "y": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:velocity/sentinel-safe:y)",
+            "z": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:velocity/sentinel-safe:z)"
+          }
+        },
+        "stop": {
+          "TAI": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:epoch[@type='TAI']",
+          "UTC": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:epoch[@type='UTC']",
+          "UT1": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:epoch[@type='UT1']",
+          "position": {
+            "x": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:position/sentinel-safe:x)",
+            "y": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:position/sentinel-safe:y)",
+            "z": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:position/sentinel-safe:z)"
+          },
+          "velocity": {
+            "x": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:velocity/sentinel-safe:x)",
+            "y": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:velocity/sentinel-safe:y)",
+            "z": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:velocity/sentinel-safe:z)"
+          }
+        }
+      }
+    },
+    "product_unit": {
+      "type": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productUnit/sentinel3:type",
+      "duration": "to_int(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productUnit/sentinel3:duration)",
+      "alongtrack_coordinate": "to_int(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productUnit/sentinel3:alongtrackCoordinate)"
+    },
+    "meteo": {
+      "source": "Text(ECMWF)",
+      "type": "metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:ecmwfType",
+      "time_relevance": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:ecmwfType/@timeRelevance)"
+    }
+  },
+  "namespaces": {
+    "xfdu": "urn:ccsds:schema:xfdu:1",
+    "gml": "http://www.opengis.net/gml",
+    "sentinel-safe": "http://www.esa.int/safe/sentinel/1.1",
+    "sentinel3": "http://www.esa.int/safe/sentinel/sentinel-3/1.0",
+    "olci": "http://www.esa.int/safe/sentinel/sentinel-3/olci/1.0",
+    "slstr": "http://www.esa.int/safe/sentinel/sentinel-3/slstr/1.0",
+    "syn": "http://www.esa.int/safe/sentinel/sentinel-3/synergy/1.0"
+  }
 }

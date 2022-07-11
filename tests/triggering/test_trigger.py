@@ -13,6 +13,8 @@ from eopf.product.conveniences import init_product
 from eopf.product.store.store_factory import EOStoreFactory
 from eopf.triggering import EOCLITrigger, EOEventTrigger, EOWebTrigger
 from eopf.triggering.abstract import EOTrigger
+from eopf.triggering.conf.dask_configuration import DaskContext
+from eopf.triggering.parser.workflow import EOProcessorWorkFlow
 
 
 @pytest.fixture
@@ -77,7 +79,7 @@ def client():
     "args, match_output",
     [(["request"], r"Server return status code [0-9]{3} with content: .*"), (["local"], r"Run with .*")],
 )
-def test_cli_trigger(dask_client_all, server, TRIGGER_JSON_FILE, args, match_output):
+def test_cli_trigger(server, TRIGGER_JSON_FILE, args, match_output):
     runner = CliRunner()
     with mock.patch("tests.computing.test_abstract.TestAbstractProcessor.run", return_value=init_product("")):
         r = runner.invoke(EOCLITrigger(), args=" ".join([*args, TRIGGER_JSON_FILE]))
@@ -104,7 +106,7 @@ def test_kafka_send(TRIGGER_JSON_FILE):
 
 # TODO: To Update when a kafka can be accessible in the ci
 @pytest.mark.unit
-def test_kafka_consume(dask_client_all, fake_kafka_consumer):
+def test_kafka_consume(fake_kafka_consumer):
     runner = CliRunner()
     with (
         mock.patch("aiokafka.AIOKafkaConsumer.start") as start,
@@ -123,7 +125,7 @@ def test_kafka_consume(dask_client_all, fake_kafka_consumer):
 
 
 @pytest.mark.unit
-def test_web_trigger(dask_client_all, client, TRIGGER_JSON_FILE):
+def test_web_trigger(client, TRIGGER_JSON_FILE):
     with open(TRIGGER_JSON_FILE) as f:
         data = json.load(f)
     with mock.patch("tests.computing.test_abstract.TestAbstractProcessor.run", return_value=init_product("")):
@@ -142,52 +144,88 @@ def test_web_trigger(dask_client_all, client, TRIGGER_JSON_FILE):
     "payload",
     [
         {
-            "module": "tests.computing.test_abstract",
-            "processing_unit": "TestAbstractProcessor",
-            "parameters": {"key": "value"},
-            "input_product": {"id": "OLCI", "path": "product_path", "store_type": "safe"},
-            "output_product": {"id": "output", "path": "output.zarr", "store_type": "zarr"},
-            "dask_context": {"local": "processes"},
+            "workflow": {
+                "module": "tests.computing.test_abstract",
+                "processing_unit": "TestAbstractProcessor",
+                "parameters": {"key": "value"},
+            },
+            "I/O": {
+                "modification_mode": "newproduct",
+                "inputs_products": [{"id": "OLCI", "path": "product_path", "store_type": "safe", "store_params": {}}],
+                "output_product": {"id": "output", "path": "output.zarr", "store_type": "zarr", "store_params": {}},
+            },
         },
         {
-            "module": "tests.computing.test_abstract",
-            "processing_unit": "TestAbstractProcessor",
-            "parameters": {"key": "value"},
-            "input_product": {"id": "OLCI", "path": "product_path", "store_type": "safe"},
-            "output_product": {"id": "output", "path": "output.zarr", "store_type": "zarr"},
-            "dask_context": {"distributed": "processes"},
+            "workflow": {
+                "module": "tests.computing.test_abstract",
+                "processing_unit": "TestAbstractProcessor",
+                "parameters": {"key": "value"},
+            },
+            "I/O": {
+                "modification_mode": "newproduct",
+                "inputs_products": [{"id": "OLCI", "path": "product_path", "store_type": "safe", "store_params": {}}],
+                "output_product": {"id": "output", "path": "output.zarr", "store_type": "zarr", "store_params": {}},
+            },
+        },
+        {
+            "workflow": [
+                {
+                    "module": "tests.computing.test_abstract",
+                    "processing_unit": "TestAbstractProcessor",
+                    "parameters": {"key": "value"},
+                    "name": "unit_1",
+                    "inputs": ["OLCI"],
+                },
+                {
+                    "module": "tests.computing.test_abstract",
+                    "processing_unit": "TestAbstractProcessor",
+                    "parameters": {"key": "value"},
+                    "inputs": ["unit_1"],
+                    "name": "unit_1",
+                },
+            ],
+            "I/O": {
+                "modification_mode": "newproduct",
+                "inputs_products": [{"id": "OLCI", "path": "product_path", "store_type": "safe", "store_params": {}}],
+                "output_product": {"id": "output", "path": "output.zarr", "store_type": "zarr", "store_params": {}},
+            },
         },
     ],
 )
 def test_extract_payload(trigger_class, payload):
     (
         processing_unit,
-        input_product,
-        output_store,
-        scheduler_mode,
-        scheduler_info,
-        parameters,
-        input_param,
-        output_param,
+        io_config,
+        ctx,
     ) = trigger_class.extract_from_payload(payload)
     factory = EOStoreFactory()
-    assert processing_unit.__class__.__name__ == payload.get("processing_unit")
+    if isinstance(processing_unit, EOProcessorWorkFlow):
+        units_classes, parameters = zip(
+            *[(unit["processing_unit"], unit.get("parameters", {})) for unit in payload["workflow"]]
+        )
+        assert all(
+            (unit.processing_unit.__class__.__name__ in units_classes and unit.parameters in parameters)
+            for unit in processing_unit.workflow
+        )
+    else:
+        assert processing_unit.processing_unit.__class__.__name__ == payload["workflow"].get("processing_unit")
+        assert processing_unit.parameters == payload["workflow"].get("parameters", {})
+    inputs_products_data = payload["I/O"].get("inputs_products")
+    inputs_products = io_config["inputs"]
+    for product, input_product_data in zip(inputs_products, inputs_products_data):
+        input_product = product["instance"]
+        assert input_product.name == input_product_data.get("id")
+        assert type(input_product.store) == factory.item_formats[input_product_data.get("store_type")]
+        assert input_product.store.url == input_product_data.get("path")
+        assert product["parameters"] == input_product_data.get("store_params", {})
 
-    input_product_data = payload.get("input_product")
-    assert input_product.name == input_product_data.get("id")
-    assert type(input_product.store) == factory.item_formats[input_product_data.get("store_type")]
-    assert input_product.store.url == input_product_data.get("path")
-
-    output_product_data = payload.get("output_product")
+    output_product_data = payload["I/O"].get("output_product")
+    output_store = io_config["output"]["instance"]
     assert type(output_store) == factory.item_formats[output_product_data.get("store_type")]
     assert output_store.url == output_product_data.get("path")
+    assert io_config["output"]["parameters"] == payload["I/O"].get("output_product", {}).get("store_params", {})
 
-    assert scheduler_mode == list(payload.get("dask_context", {}).keys())[0]
-    assert scheduler_info == payload.get("dask_context", {}).get(scheduler_mode)
-
-    assert parameters == payload.get("parameters")
-    assert input_param == payload.get("input_product", {}).get("parameters", {})
-    assert output_param == payload.get("output_product", {}).get("parameters", {})
+    assert isinstance(ctx, DaskContext)
 
 
 @pytest.mark.unit
@@ -197,33 +235,60 @@ def test_extract_payload(trigger_class, payload):
     [
         (
             {
-                "module": "tests.computing.test_abstract",
-                "processing_unit": "",
-                "input_product": {"id": "OLCI", "path": "product_path", "store_type": "safe"},
-                "output_product": {"id": "output", "path": "output.zarr", "store_type": "zarr"},
-                "dask_context": {"local": "processes"},
+                "workflow": {
+                    "module": "tests.computing.test_abstract",
+                    "processing_unit": "",
+                },
+                "I/O": {
+                    "modification_mode": "newproduct",
+                    "inputs_products": [{"id": "OLCI", "path": "product_path", "store_type": "safe"}],
+                    "output_product": {"id": "output", "path": "output.zarr", "store_type": "zarr"},
+                },
             },
             AttributeError,
         ),
         (
             {
-                "module": "",
-                "processing_unit": "TestAbstractProcessor",
-                "input_product": {"id": "OLCI", "path": "product_path", "store_type": "safe"},
-                "output_product": {"id": "output", "path": "output.zarr", "store_type": "zarr"},
-                "dask_context": {"local": "processes"},
+                "workflow": {
+                    "module": "",
+                    "processing_unit": "TestAbstractProcessor",
+                },
+                "I/O": {
+                    "modification_mode": "newproduct",
+                    "inputs_products": [{"id": "OLCI", "path": "product_path", "store_type": "safe"}],
+                    "output_product": {"id": "output", "path": "output.zarr", "store_type": "zarr"},
+                },
             },
-            AttributeError,
+            ValueError,
         ),
         (
             {
-                "module": "aaaa",
-                "processing_unit": "TestAbstractProcessor",
-                "input_product": {"id": "OLCI", "path": "product_path", "store_type": "safe"},
-                "output_product": {"id": "output", "path": "output.zarr", "store_type": "zarr"},
-                "dask_context": {"local": "processes"},
+                "workflow": {
+                    "module": "aaaa",
+                    "processing_unit": "TestAbstractProcessor",
+                },
+                "I/O": {
+                    "modification_mode": "newproduct",
+                    "inputs_products": [{"id": "OLCI", "path": "product_path", "store_type": "safe"}],
+                    "output_product": {"id": "output", "path": "output.zarr", "store_type": "zarr"},
+                },
             },
             ModuleNotFoundError,
+        ),
+        (
+            {
+                "workflow": {
+                    "module": "tests.computing.test_abstract",
+                    "processing_unit": "TestAbstractProcessor",
+                    "parameters": {"key": "value"},
+                },
+                "I/O": {
+                    "modification_mode": "invalide_mode",
+                    "inputs_products": [{"id": "OLCI", "path": "product_path", "store_type": "safe"}],
+                    "output_product": {"id": "output", "path": "output.zarr", "store_type": "zarr"},
+                },
+            },
+            ValueError,
         ),
     ],
 )

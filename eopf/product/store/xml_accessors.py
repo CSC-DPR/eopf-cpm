@@ -1,3 +1,4 @@
+import warnings
 from pathlib import Path
 from typing import (
     TYPE_CHECKING,
@@ -12,6 +13,7 @@ from typing import (
 )
 
 import lxml
+import numpy as np
 import xarray as xr
 from lxml.etree import _ElementUnicodeResult
 
@@ -61,24 +63,51 @@ class XMLAnglesAccessor(EOProductStore):
         ----------
         EOVariable
         """
+        from eopf.formatting import EOFormatterFactory
         from eopf.product.core import EOVariable
 
         if self.status != StorageStatus.OPEN:
             raise StoreNotOpenError()
-        variable_data = self.create_eo_variable(key)
-        return EOVariable(data=variable_data)
 
-    def create_eo_variable(self, xpath: str) -> xr.DataArray:
+        formatter_name, formatter, xpath = EOFormatterFactory().get_formatter(key)
+        xpath_result = self._root.xpath(xpath, namespaces=self._namespaces)
+        if len(xpath_result) == 0:
+            raise KeyError(f"invalid xml xpath : {key}")
+        if formatter_name is not None and formatter is not None:
+            return EOVariable(data=formatter(xpath_result))
+        else:
+            return EOVariable(data=self.create_eo_variable(xpath_result))
+
+    def create_eo_variable(self, xpath_result: List[lxml.etree._Element]) -> xr.DataArray:
         """
         This method is used to recover and create datasets with angles values stored under
         <<VALUES>> tag.
 
         """
-        xpath_result = self._root.xpath(xpath, namespaces=self._namespaces)
-        if len(xpath_result) == 0:
-            raise KeyError(f"invalid xml xpath : {xpath}")
-        eo_variable_data = self.get_values(f"{self._root.getpath(xpath_result[0])}/VALUES")
-        return eo_variable_data
+        if len(xpath_result) == 1:
+            return self.get_values(f"{self._root.getpath(xpath_result[0])}/VALUES")
+        else:
+            array_order = []
+            max_detector_id = -1
+            max_shape: Any = (-1, -1)
+            # Recover informations about each element in xpath's output (bandId, detectorId, data)
+            for element in xpath_result:
+                # Get bandId and detectorID from parentID (i.e azimuth / zenith)
+                parent_node = element.getparent().getparent().attrib
+                band, detector = map(int, parent_node.values())
+                # Compute maximum detectorId
+                if detector > max_detector_id:
+                    max_detector_id = detector
+                data = self.get_values(f"{self._root.getpath(element)}/VALUES")
+                # Compute maximum data shape
+                if data.shape > max_shape:
+                    max_shape = data.shape
+                array_order.append((band, detector, data))
+            # Map data to 4d array
+            zs = np.zeros(shape=(len(array_order), max_detector_id + 1, *max_shape))
+            for array_parser in array_order:
+                zs[array_parser[0]][array_parser[1]] = array_parser[2]
+            return xr.DataArray(zs, dims=["bands", "detectors", "y_tiepoints", "x_tiepoints"])
 
     def get_values(self, path: str) -> xr.DataArray:
         """
@@ -354,6 +383,7 @@ class XMLManifestAccessor(EOProductStore):
                     continue
                 else:
                     # If xpath is invalid, and doesn't containt a conversion function reference
+                    warnings.warn(f"{key}:{value} is an invalid binding")
                     raise KeyError(f"{value} is an invalid xpath expression!")
         return internal_dict
 
@@ -499,8 +529,21 @@ class XMLManifestAccessor(EOProductStore):
 
         if formatter_name is not None and formatter is not None:
             # Handle special formatters parameters (text, netcdf)
-            if formatter_name in [text_formatter_name, optional_formatter_name] or not self._get_xml_data(xpath):
+            if formatter_name == text_formatter_name:
                 return formatter(xpath)
+            elif formatter_name == optional_formatter_name:
+                data = self._get_xml_data(xpath)
+                if data is None:
+                    # If xpath cannot be read, check for nested wrapper
+                    _, wf, wxpth = EOFormatterFactory().get_formatter(xpath)
+                    nested_data = self._get_xml_data(wxpth)
+                    if nested_data is not None:
+                        # Return nested wrapper if it contains data
+                        return wf(nested_data)  # type: ignore
+                    # Else, if there is no nested wrapper and data is empty, return is_optional()
+                    return formatter(xpath)
+                # Return data if found
+                return data
             elif formatter_name == image_size_formatter_name:
                 return formatter(self._get_nc_data(xpath))
             # if formatter is defined, return it
@@ -523,7 +566,7 @@ class XMLManifestAccessor(EOProductStore):
         """
         try:
             result = apply_xpath(self._parsed_xml, path, namespaces=self._namespaces)
-        except lxml.etree.XPathEvalError:
+        except KeyError:
             # Return false for lxml parsing errors
             return False
         # Return true if output is not void

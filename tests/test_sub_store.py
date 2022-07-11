@@ -137,7 +137,7 @@ def test_grib_exceptions(EMBEDED_TEST_DATA_FOLDER: str):
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize("mapping", [lazy_fixture("S2A_MSIL1C_MAPPING")])
+@pytest.mark.parametrize("mapping", [lazy_fixture("S2_MSIL1C_MAPPING")])
 @pytest.mark.parametrize(
     "array_size, expected_data, xpath",
     [
@@ -169,7 +169,7 @@ def test_xml_angles_accessor(EMBEDED_TEST_DATA_FOLDER, mapping, array_size, expe
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize("mapping", [lazy_fixture("S2A_MSIL1C_MAPPING")])
+@pytest.mark.parametrize("mapping", [lazy_fixture("S2_MSIL1C_MAPPING")])
 @pytest.mark.parametrize("array_size", [(23,)])
 @pytest.mark.parametrize("ul, dummy_array_factor, kind, reversed", [(300000, 1, "x", "y"), (4800000, -1, "y", "x")])
 def test_xml_tiepoints_accessor(EMBEDED_TEST_DATA_FOLDER, mapping, ul, dummy_array_factor, kind, reversed, array_size):
@@ -263,7 +263,7 @@ def test_extended_xml_manifest_accessor(path: str, mapping: str, tmp_path: pathl
         expected_FR_res = 270
         expected_bright_percent = 3.586159
         expected_links = [{"rel": "self", "href": "./.zattrs.json", "type": "application/json"}]
-        assert stac_discovery["type_"] == expected_type
+        assert stac_discovery["type"] == expected_type
         assert stac_discovery["properties"]["eopf:instrument"] == expected_instruments
         assert isinstance(stac_discovery["properties"]["eopf:resolutions"]["FR"], int)
         assert stac_discovery["properties"]["eopf:resolutions"]["FR"] == expected_FR_res

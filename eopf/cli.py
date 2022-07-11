@@ -15,25 +15,6 @@ class EOPFPluginCommandCLI(ABC, click.Command):
     context_settings: dict, optional
         default values provide to click
 
-    Attributes
-    ----------
-    name: str
-        name of this command
-    cli_params: Sequence[click.Parameter]
-        all argument and option associated to this command
-    help: str
-        text use to specified to the user what this command is made for
-    short_help: str
-        shortter version of the help part
-    epilog: str
-        like help, but only provide at the end of the help command
-    enable_help_option: bool
-        indicate if the help option is provide automatically (default True)
-    hidden: bool
-        indicate if this command is hidden when it's search (default False)
-    deprecated: bool
-        indicate if this command is deprecated or not (default False)
-
     See Also
     --------
     click.Command
@@ -41,12 +22,19 @@ class EOPFPluginCommandCLI(ABC, click.Command):
 
     name: str
     cli_params: list[click.Parameter] = []
+    """all argument and option associated to this command"""
     help: str = ""
+    """text use to specified to the user what this command is made for"""
     short_help: str = ""
+    """shortter version of the help part"""
     epilog: str = ""
-    enable_help_option = True
-    hidden = False
-    deprecated = False
+    """like help, but only provide at the end of the help command"""
+    enable_help_option: bool = True
+    """indicate if the help option is provide automatically (default True)"""
+    hidden: bool = False
+    """indicate if this command is hidden when it's search (default False)"""
+    deprecated: bool = False
+    """indicate if this command is deprecated or not (default False)"""
 
     def __init__(
         self,
@@ -81,25 +69,6 @@ class EOPFPluginCommandCLI(ABC, click.Command):
 class EOPFPluginGroupCLI(click.Group):
     """Abstract class used to extend eopf cli and provide other group of command
 
-    Attributes:
-    -----------
-    name: str
-        name of this group of command
-    cli_commands: Sequence[click.Command]
-        Sequence of command aggregate here
-    help: str
-        text use to specified to the user what this command is made for
-    short_help: str
-        shortter version of the help part
-    epilog: str
-        like help, but only provide at the end of the help command
-    enable_help_option: bool
-        indicate if the help option is provide automatically (default True)
-    hidden: bool
-        indicate if this command is hidden when it's search (default False)
-    deprecated: bool
-        indicate if this command is deprecated or not (default False)
-
     Parameters
     ----------
     **attrs: Any
@@ -112,12 +81,19 @@ class EOPFPluginGroupCLI(click.Group):
 
     name: str
     cli_commands: list[click.Command] = []
+    """Sequence of command aggregate here"""
     help: str = ""
+    """text use to specified to the user what this command is made for"""
     short_help: str = ""
+    """shortter version of the help part"""
     epilog: str = ""
-    enable_help_option = True
-    hidden = False
-    deprecated = False
+    """like help, but only provide at the end of the help command"""
+    enable_help_option: bool = True
+    """indicate if the help option is provide automatically (default True)"""
+    hidden: bool = False
+    """indicate if this command is hidden when it's search (default False)"""
+    deprecated: bool = False
+    """indicate if this command is deprecated or not (default False)"""
 
     def __init__(self, **attrs: Any) -> None:
         super().__init__(

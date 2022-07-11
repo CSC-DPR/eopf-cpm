@@ -1,3 +1,4 @@
+import ast
 import os
 import pathlib
 import tempfile
@@ -213,12 +214,12 @@ class EOSafeStore(EOProductStore):
 
         if self.status is StorageStatus.CLOSE:
             raise StoreNotOpenError("Store must be open before access to it")
-
         eo_obj_list: list[EOObject] = list()
         if key in ["", "/"]:
             from eopf.product import EOProduct
 
             eo_obj_list.append(EOGroup(attrs={EOProduct._TYPE_ATTR_STR: self.product_type}))
+        last_error = None
         for safe_path, accessor_path in self._accessor_manager.split_target_path(key):
             mapping_match_list = self._accessor_manager.get_accessors_from_mapping(safe_path)
             for accessor, config_accessor_path, config in mapping_match_list:
@@ -226,12 +227,16 @@ class EOSafeStore(EOProductStore):
                 # We should catch Key Error, and throw if the object isn't found in any of the accessors
                 try:
                     accessed_object = accessor[config_accessor_path]
-                    processed_object = self._apply_mapping_properties(accessed_object, config)
+                    processed_object = self._apply_mapping_properties(accessed_object, config, key)
                     eo_obj_list.append(processed_object)
-                except KeyError:
+                except KeyError as error:
+                    last_error = error
                     pass
         if not eo_obj_list:
-            raise KeyError(f"Invalid path :  {key}")
+            if last_error is None:
+                raise KeyError(f"Invalid path :  {key}")
+            else:
+                raise last_error
         return self._eo_object_merge(*eo_obj_list)
 
     def __len__(self) -> int:
@@ -328,7 +333,7 @@ class EOSafeStore(EOProductStore):
                 # We might want to catch Unimplemented/KeyError and throw one if none write_attrs suceed
                 accessor.write_attrs(config_accessor_path)
 
-    def _apply_mapping_properties(self, eo_obj: "EOObject", config: dict[str, Any]) -> "EOObject":
+    def _apply_mapping_properties(self, eo_obj: "EOObject", config: dict[str, Any], debug_key: str) -> "EOObject":
         """Modify the eo_object according to the json data_mapping config.
 
         Parameters
@@ -347,8 +352,11 @@ class EOSafeStore(EOProductStore):
             return eo_obj
         parameters = config["parameters"]
         for parameter_name, parameter_transformation in self._parameters_transformations:
-            if parameter_name in parameters:
-                eo_obj = parameter_transformation(eo_obj, parameters[parameter_name])
+            try:
+                if parameter_name in parameters:
+                    eo_obj = parameter_transformation(eo_obj, parameters[parameter_name])
+            except Exception as err:
+                raise type(err)(f"Applying parameter {parameter_name} on [{debug_key} failed.") from err
         # add a warning if a parameter is missing from _parameters_transformations ?
         return eo_obj
 
@@ -458,6 +466,22 @@ class SafeMappingManager:
         """Get all accessor corresponding to the configs of conf_path.
         As multiple mapping car match a single conf_path, it can return multiple accessors.
         """
+
+        def _parse_local_path(local_path: str) -> Any:
+            if local_path and isinstance(local_path, str):
+                try:
+                    element = ast.parse(local_path).body
+
+                    if (
+                        element
+                        and isinstance(element[0], ast.Expr)
+                        and isinstance(value := element[0].value, ast.Tuple)  # noqa
+                    ):
+                        return slice(*ast.literal_eval(local_path))
+                except SyntaxError:
+                    return local_path
+            return local_path
+
         configs = self._config_mapping[conf_path]
         results = list()
         for conf in configs:
@@ -469,6 +493,7 @@ class SafeMappingManager:
                 accessor_local_path = accessor_source_split[1]
             else:
                 accessor_local_path = conf.get("local_path")
+
             accessor = self._get_accessor(
                 accessor_file_regex,
                 conf[self.CONFIG_FORMAT],
@@ -477,7 +502,7 @@ class SafeMappingManager:
                 conf.get(self.CONFIG_OPTIONAL, False),
             )
             if accessor is not None:  # We also want to append accessor of len 0.
-                results.append((accessor, accessor_local_path, conf))
+                results.append((accessor, _parse_local_path(accessor_local_path), conf))
         return results
 
     def open_all(self, mode: str = "r", fsspec_kwargs: dict[str, Any] = {}, **kwargs: Any) -> None:

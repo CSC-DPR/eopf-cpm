@@ -1,0 +1,2586 @@
+{
+    "recognition": {
+        "filename_pattern": "S2._MSIL2A_.*SAFE",
+        "product_type": "S2_MSIL2A",
+        "product_type_pattern": "S2MSIL2A",
+        "version": "04.00"
+    },
+    "data_mapping": [
+        {
+            "short_name": "y_10m",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R10m/.*_B02_.*.jp2:coordinates/y",
+            "target_path": "/coordinates/image_grid_10m/y_10m",
+            "item_format": "jp2",
+            "parameters": {
+                "dimensions": [
+                    "y_10m"
+                ],
+                "attributes": {
+                    "units": "m",
+                    "long_name": "y coordinates of tile image at 10m",
+                    "comment": "meters from up-left pixel"
+                }
+            }
+        },
+        {
+            "short_name": "x_10m",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R10m/.*_B02_.*.jp2:coordinates/x",
+            "target_path": "/coordinates/image_grid_10m/x_10m",
+            "item_format": "jp2",
+            "parameters": {
+                "dimensions": [
+                    "x_10m"
+                ],
+                "attributes": {
+                    "units": "m",
+                    "long_name": "x coordinates of tile image at 10m",
+                    "comment": "meters from up-left pixel"
+                }
+            }
+        },
+        {
+            "short_name": "spatialref_10m",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R10m/.*_B02_.*.jp2:coordinates/spatial_ref",
+            "target_path": "/coordinates/image_grid_10m/spatialref_10m",
+            "item_format": "jp2"
+        },
+        {
+            "short_name": "y_20m",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R20m/.*_B05_.*.jp2:coordinates/y",
+            "target_path": "/coordinates/image_grid_20m/y_20m",
+            "item_format": "jp2",
+            "parameters": {
+                "dimensions": [
+                    "y_20m"
+                ],
+                "attributes": {
+                    "units": "m",
+                    "long_name": "y coordinates of tile image at 20m",
+                    "comment": "meters from up-left pixel"
+                }
+            }
+        },
+        {
+            "short_name": "x_20m",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R20m/.*_B05_.*.jp2:coordinates/x",
+            "target_path": "/coordinates/image_grid_20m/x_20m",
+            "item_format": "jp2",
+            "parameters": {
+                "dimensions": [
+                    "x_20m"
+                ],
+                "attributes": {
+                    "units": "m",
+                    "long_name": "x coordinates of tile image at 20m",
+                    "comment": "meters from up-left pixel"
+                }
+            }
+        },
+        {
+            "short_name": "spatialref_20m",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R20m/.*_B05_.*.jp2:coordinates/spatial_ref",
+            "target_path": "/coordinates/image_grid_20m/spatialref_20m",
+            "item_format": "jp2"
+        },
+        {
+            "short_name": "y_60m",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R60m/.*_B09_.*.jp2:coordinates/y",
+            "target_path": "/coordinates/image_grid_60m/y_60m",
+            "item_format": "jp2",
+            "parameters": {
+                "dimensions": [
+                    "y_60m"
+                ],
+                "attributes": {
+                    "units": "m",
+                    "long_name": "y coordinates of tile image at 60m",
+                    "comment": "meters from up-left pixel"
+                }
+            }
+        },
+        {
+            "short_name": "x_60m",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R60m/.*_B09_.*.jp2:coordinates/x",
+            "target_path": "/coordinates/image_grid_60m/x_60m",
+            "item_format": "jp2",
+            "parameters": {
+                "dimensions": [
+                    "x_60m"
+                ],
+                "attributes": {
+                    "units": "m",
+                    "long_name": "x coordinates of tile image at 60m",
+                    "comment": "meters from up-left pixel"
+                }
+            }
+        },
+        {
+            "short_name": "spatialref_60m",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R60m/.*_B09_.*.jp2:coordinates/spatial_ref",
+            "target_path": "/coordinates/image_grid_60m/spatialref_60m",
+            "item_format": "jp2"
+        },
+        {
+            "short_name": "y_a",
+            "source_path": "GRANULE/[^/]*/MTD_TL.xml",
+            "target_path": "/coordinates/angles_grid/y_a",
+            "item_format": "xmltp",
+            "local_path": "n1:Geometric_Info/Tile_Geocoding/Geoposition[@resolution='10']/ULY",
+            "accessor_config": {
+                "namespace": "xml_mapping/namespace",
+                "step_path": "xml_mapping/xmltp_angles/step_y_angle",
+                "values_path": "xml_mapping/xmltp_angles/angle_values"
+            },
+            "parameters": {
+                "dimensions": [
+                    "y_a"
+                ],
+                "attributes": {
+                    "units": "m",
+                    "long_name": "y coordinates of angles grid",
+                    "comment": "steps of 5km from up-left pixel"
+                }
+            }
+        },
+        {
+            "short_name": "x_a",
+            "source_path": "GRANULE/[^/]*/MTD_TL.xml",
+            "target_path": "/coordinates/angles_grid/x_a",
+            "item_format": "xmltp",
+            "local_path": "n1:Geometric_Info/Tile_Geocoding/Geoposition[@resolution='10']/ULX",
+            "accessor_config": {
+                "namespace": "xml_mapping/namespace",
+                "step_path": "xml_mapping/xmltp_angles/step_x_angle",
+                "values_path": "xml_mapping/xmltp_angles/angle_values"
+            },
+            "parameters": {
+                "dimensions": [
+                    "x_a"
+                ],
+                "attributes": {
+                    "units": "m",
+                    "long_name": "x coordinates of angles grid",
+                    "comment": "steps of 5km from up-left pixel"
+                }
+            }
+        },
+       {
+            "short_name": "band",
+            "source_path": "GRANULE/[^/]*/MTD_TL.xml",
+            "target_path": "/coordinates/angles_grid/band",
+            "item_format": "xmlangles",
+            "local_path": "to_bands(n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids)",
+            "accessor_config": {
+                "namespace": "xml_mapping/namespace"
+            },
+            "parameters": {
+                "dimensions": [ "band" ],
+                "attributes": {
+                    "long_name": "band number",
+                    "flag_values": [ 0,1,2,3,4,5,6,7,8,9,10,11,12 ],
+                    "flag_meanings": "B1 B2 B3 B4 B5 B6 B7 B8 B8A B9 B10 B11 B12"
+                }
+            }
+        },
+        {
+            "short_name": "detector",
+            "source_path": "GRANULE/[^/]*/MTD_TL.xml",
+            "target_path": "/coordinates/angles_grid/detector",
+            "item_format": "xmlangles",
+            "local_path": "to_detectors(n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids)",
+            "accessor_config": {
+                "namespace": "xml_mapping/namespace"
+            },
+            "parameters": {
+                "dimensions": [ "detector" ],
+                "attributes": {
+                    "long_name": "detector number",
+                    "valid_min": 1,
+                    "valid_max": 12
+                }
+            }
+        },
+        {
+            "short_name": "latitude_meteo",
+            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_ECMWFT:coordinates/latitude",
+            "target_path": "/coordinates/meteo/latitude_meteo",
+            "item_format": "grib",
+            "parameters": {
+                "attributes": {
+                    "standard_name": "latitude",
+                    "long_name": "latitudes of ECMWF grid",
+                    "units": "degrees_north"
+                },
+                "dimensions": [
+                    "latitude_meteo"
+                ]
+            }
+        },
+        {
+            "short_name": "longitude_meteo",
+            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_ECMWFT:coordinates/longitude",
+            "target_path": "/coordinates/meteo/longitude_meteo",
+            "item_format": "grib",
+            "parameters": {
+                "attributes": {
+                    "standard_name": "longitude",
+                    "long_name": "longitudes of ECMWF grid",
+                    "units": "degrees_east"
+                },
+                "dimensions": [
+                    "longitude_meteo"
+                ]
+            }
+        },
+        {
+            "short_name": "b01_60",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R60m/.*_B01_.*.jp2:value",
+            "target_path": "/measurements/r60m/b01",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_60m",
+                    "x_60m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 01 443 nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "b02_60",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R60m/.*_B02_.*.jp2:value",
+            "target_path": "/measurements/r60m/b02",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_60m",
+                    "x_60m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 02 ??? nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "b03_60",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R60m/.*_B03_.*.jp2:value",
+            "target_path": "/measurements/r60m/b03",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_60m",
+                    "x_60m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 03 ??? nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "b04_60",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R60m/.*_B04_.*.jp2:value",
+            "target_path": "/measurements/r60m/b04",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_60m",
+                    "x_60m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 04 ??? nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "b05_60",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R60m/.*_B05_.*.jp2:value",
+            "target_path": "/measurements/r60m/b05",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_60m",
+                    "x_60m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 05 ??? nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "b06_60",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R60m/.*_B06_.*.jp2:value",
+            "target_path": "/measurements/r60m/b06",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_60m",
+                    "x_60m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 06 ??? nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "b07_60",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R60m/.*_B07_.*.jp2:value",
+            "target_path": "/measurements/r60m/b07",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_60m",
+                    "x_60m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 07 ??? nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "b8a_60",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R60m/.*_B8A_.*.jp2:value",
+            "target_path": "/measurements/r60m/b8a",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_60m",
+                    "x_60m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 8A ??? nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "b09_60",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R60m/.*_B09_.*.jp2:value",
+            "target_path": "/measurements/r60m/b09",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_60m",
+                    "x_60m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 09 940 nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "b11_60",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R60m/.*_B11_.*.jp2:value",
+            "target_path": "/measurements/r60m/b11",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_60m",
+                    "x_60m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 11 ??? nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "b12_60",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R60m/.*_B12_.*.jp2:value",
+            "target_path": "/measurements/r60m/b12",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_60m",
+                    "x_60m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 12 ??? nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+	    {
+            "short_name": "aot_60",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R60m/.*_AOT_.*.jp2:value",
+            "target_path": "/measurements/r60m/aot",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_60m",
+                    "x_60m"
+                ],
+                "attributes": {
+                    "long_name": "Aerosol Optical Thickness map (at 550nm)",
+                    "units": "???",
+                    "_FillValue": 0,
+                    "scale_factor": 1,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+	    {
+            "short_name": "wvc_60",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R60m/.*_WVP_.*.jp2:value",
+            "target_path": "/measurements/r60m/wvc",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_60m",
+                    "x_60m"
+                ],
+                "attributes": {
+                    "long_name": "Water Vapour Content map",
+                    "units": "???",
+                    "_FillValue": 0,
+                    "scale_factor": 1,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+	    {
+            "short_name": "scl_60",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R60m/.*_SCL_.*.jp2:value",
+            "target_path": "/measurements/r60m/scl",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_60m",
+                    "x_60m"
+                ],
+                "attributes": {
+                    "long_name": "scene classification map",
+                    "units": "none",
+                    "_FillValue": 0,
+                    "scale_factor": 1,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "b01_20",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R20m/.*_B01_.*.jp2:value",
+            "target_path": "/measurements/r20m/b01",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 01 443 nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "b02_20",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R20m/.*_B02_.*.jp2:value",
+            "target_path": "/measurements/r20m/b02",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 02 490 nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "b03_20",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R20m/.*_B03_.*.jp2:value",
+            "target_path": "/measurements/r20m/b03",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 03 560 nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "b04_20",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R20m/.*_B04_.*.jp2:value",
+            "target_path": "/measurements/r20m/b04",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 04 665 nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+       {
+            "short_name": "b05_20",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R20m/.*_B05_.*.jp2:value",
+            "target_path": "/measurements/r20m/b05",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 05 705 nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "b06_20",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R20m/.*_B06_.*.jp2:value",
+            "target_path": "/measurements/r20m/b06",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 06 740 nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "b07_20",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R20m/.*_B07_.*.jp2:value",
+            "target_path": "/measurements/r20m/b07",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 07 783 nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+		        {
+            "short_name": "b8a_20",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R20m/.*_B8A_.*.jp2:value",
+            "target_path": "/measurements/r20m/b8A",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 8A 865 nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "b11_20",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R20m/.*_B11_.*.jp2:value",
+            "target_path": "/measurements/r20m/b11",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 11 1610 nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "b12_20",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R20m/.*_B12_.*.jp2:value",
+            "target_path": "/measurements/r20m/b12",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 12 2190 nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+	    {
+            "short_name": "aot_20",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R60m/.*_AOT_.*.jp2:value",
+            "target_path": "/measurements/r20m/aot",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "attributes": {
+                    "long_name": "Aerosol Optical Thickness map at 20m (for 550nm)",
+                    "units": "???",
+                    "_FillValue": 0,
+                    "scale_factor": 1,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+	    {
+            "short_name": "wvc_20",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R20m/.*_WVP_.*.jp2:value",
+            "target_path": "/measurements/r20m/wvc",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "attributes": {
+                    "long_name": "Water Vapour Content map at 20m",
+                    "units": "???",
+                    "_FillValue": 0,
+                    "scale_factor": 1,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+	    {
+            "short_name": "scl_20",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R20m/.*_SCL_.*.jp2:value",
+            "target_path": "/measurements/r20m/scl",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "attributes": {
+                    "long_name": "scene classification map at 20m",
+                    "units": "none",
+                    "_FillValue": 0,
+                    "scale_factor": 1,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "aot_10",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R10m/.*_AOT_.*.jp2:value",
+            "target_path": "/measurements/r10m/aot",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_10m",
+                    "x_10m"
+                ],
+                "attributes": {
+                    "long_name": "Aerosol Optical Thickness map at 10m (for 550nm) resampled from 20m AOT map",
+                    "units": "???",
+                    "_FillValue": 0,
+                    "scale_factor": 1,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "wvc_10",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R10m/.*_WVP_.*.jp2:value",
+            "target_path": "/measurements/r10m/wvc",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_10m",
+                    "x_10m"
+                ],
+                "attributes": {
+                    "long_name": "Water Vapour Content map at 10m resampled from 20m WVC map",
+                    "units": "???",
+                    "_FillValue": 0,
+                    "scale_factor": 1,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "b08_10",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R10m/.*_B08_.*.jp2:value",
+            "target_path": "/measurements/r10m/b08",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_10m",
+                    "x_10m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 08 842 nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "b04_10",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R10m/.*_B04_.*.jp2:value",
+            "target_path": "/measurements/r10m/b04",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_10m",
+                    "x_10m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 04 665 nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "b02_10",
+            "source_path": "GRANULE/[^/]*/IMG_DATA/R10m/.*_B02_.*.jp2:value",
+            "target_path": "/measurements/r10m/b02",
+            "item_format": "jp2",
+            "parameters": {
+                "sub_array": {
+                    "dim_0": 0
+                },
+                "dimensions": [
+                    "y_10m",
+                    "x_10m"
+                ],
+                "attributes": {
+                    "long_name": "BOA reflectance from MSI acquisition at spectral band 02 490 nm",
+                    "units": "digital_counts",
+                    "_FillValue": 0,
+                    "scale_factor": 1e-4,
+                    "add_offset": 0,
+                    "valid_min": 1,
+                    "valid_max": 65535
+                }
+            }
+        },
+        {
+            "short_name": "msk_classif",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_CLASSI_B00.jp2:value",
+            "target_path": "/conditions/msk_classif",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "source_bands": [
+                        1,
+                        2,
+                        3
+                    ],
+                    "flag_masks": [
+                        1,
+                        2,
+                        4
+                    ],
+                    "flag_meanings": "OPAQUE CIRRUS SNOW_ICE",
+                    "long_name": "cloud classification mask",
+                    "comment": "provided in the final reference frame (ground geometry)"
+                },
+                "dimensions": [
+                    "y_60m",
+                    "x_60m"
+                ],
+                "pack_bits": 0
+            }
+        },
+        {
+            "short_name": "msk_quality_b01",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_QUALIT_B01.jp2:value",
+            "target_path": "/quality/msk_quality_b01",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "source_bands": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10
+                    ],
+                    "flag_masks": [
+                        1,
+                        2,
+                        4,
+                        8,
+                        16,
+                        32,
+                        64,
+                        128,
+                        256,
+                        512
+                    ],
+                    "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG DEFECTIVE_PIXEL NODATA_PIXEL PARTIALLY_CORRECTED_PIXEL SATURATED_PIXEL_L1A SATURATED_PIXEL_L1B CLOUD"
+                },
+                "dimensions": [
+                    "y_60m",
+                    "x_60m"
+                ],
+                "pack_bits": 0
+            }
+        },
+        {
+            "short_name": "msk_quality_b02",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_QUALIT_B02.jp2:value",
+            "target_path": "/quality/msk_quality_b02",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "source_bands": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10
+                    ],
+                    "flag_masks": [
+                        1,
+                        2,
+                        4,
+                        8,
+                        16,
+                        32,
+                        64,
+                        128,
+                        256,
+                        512
+                    ],
+                    "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG DEFECTIVE_PIXEL NODATA_PIXEL PARTIALLY_CORRECTED_PIXEL SATURATED_PIXEL_L1A SATURATED_PIXEL_L1B CLOUD"
+                },
+                "dimensions": [
+                    "y_10m",
+                    "x_10m"
+                ],
+                "pack_bits": 0
+            }
+        },
+        {
+            "short_name": "msk_quality_b03",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_QUALIT_B03.jp2:value",
+            "target_path": "/quality/msk_quality_b03",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "source_bands": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10
+                    ],
+                    "flag_masks": [
+                        1,
+                        2,
+                        4,
+                        8,
+                        16,
+                        32,
+                        64,
+                        128,
+                        256,
+                        512
+                    ],
+                    "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG DEFECTIVE_PIXEL NODATA_PIXEL PARTIALLY_CORRECTED_PIXEL SATURATED_PIXEL_L1A SATURATED_PIXEL_L1B CLOUD"
+                },
+                "dimensions": [
+                    "y_10m",
+                    "x_10m"
+                ],
+                "pack_bits": 0
+            }
+        },
+        {
+            "short_name": "msk_quality_b04",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_QUALIT_B04.jp2:value",
+            "target_path": "/quality/msk_quality_b04",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "source_bands": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10
+                    ],
+                    "flag_masks": [
+                        1,
+                        2,
+                        4,
+                        8,
+                        16,
+                        32,
+                        64,
+                        128,
+                        256,
+                        512
+                    ],
+                    "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG DEFECTIVE_PIXEL NODATA_PIXEL PARTIALLY_CORRECTED_PIXEL SATURATED_PIXEL_L1A SATURATED_PIXEL_L1B CLOUD"
+                },
+                "dimensions": [
+                    "y_10m",
+                    "x_10m"
+                ],
+                "pack_bits": 0
+            }
+        },
+        {
+            "short_name": "msk_quality_b05",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_QUALIT_B05.jp2:value",
+            "target_path": "/quality/msk_quality_b05",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "source_bands": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10
+                    ],
+                    "flag_masks": [
+                        1,
+                        2,
+                        4,
+                        8,
+                        16,
+                        32,
+                        64,
+                        128,
+                        256,
+                        512
+                    ],
+                    "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG DEFECTIVE_PIXEL NODATA_PIXEL PARTIALLY_CORRECTED_PIXEL SATURATED_PIXEL_L1A SATURATED_PIXEL_L1B CLOUD"
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "pack_bits": 0
+            }
+        },
+        {
+            "short_name": "msk_quality_b06",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_QUALIT_B06.jp2:value",
+            "target_path": "/quality/msk_quality_b06",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "source_bands": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10
+                    ],
+                    "flag_masks": [
+                        1,
+                        2,
+                        4,
+                        8,
+                        16,
+                        32,
+                        64,
+                        128,
+                        256,
+                        512
+                    ],
+                    "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG DEFECTIVE_PIXEL NODATA_PIXEL PARTIALLY_CORRECTED_PIXEL SATURATED_PIXEL_L1A SATURATED_PIXEL_L1B CLOUD"
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "pack_bits": 0
+            }
+        },
+        {
+            "short_name": "msk_quality_b07",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_QUALIT_B07.jp2:value",
+            "target_path": "/quality/msk_quality_b07",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "source_bands": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10
+                    ],
+                    "flag_masks": [
+                        1,
+                        2,
+                        4,
+                        8,
+                        16,
+                        32,
+                        64,
+                        128,
+                        256,
+                        512
+                    ],
+                    "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG DEFECTIVE_PIXEL NODATA_PIXEL PARTIALLY_CORRECTED_PIXEL SATURATED_PIXEL_L1A SATURATED_PIXEL_L1B CLOUD"
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "pack_bits": 0
+            }
+        },
+        {
+            "short_name": "msk_quality_b08",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_QUALIT_B08.jp2:value",
+            "target_path": "/quality/msk_quality_b08",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "source_bands": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10
+                    ],
+                    "flag_masks": [
+                        1,
+                        2,
+                        4,
+                        8,
+                        16,
+                        32,
+                        64,
+                        128,
+                        256,
+                        512
+                    ],
+                    "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG DEFECTIVE_PIXEL NODATA_PIXEL PARTIALLY_CORRECTED_PIXEL SATURATED_PIXEL_L1A SATURATED_PIXEL_L1B CLOUD"
+                },
+                "dimensions": [
+                    "y_10m",
+                    "x_10m"
+                ],
+                "pack_bits": 0
+            }
+        },
+        {
+            "short_name": "msk_quality_b8a",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_QUALIT_B8A.jp2:value",
+            "target_path": "/quality/msk_quality_b8a",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "source_bands": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10
+                    ],
+                    "flag_masks": [
+                        1,
+                        2,
+                        4,
+                        8,
+                        16,
+                        32,
+                        64,
+                        128,
+                        256,
+                        512
+                    ],
+                    "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG DEFECTIVE_PIXEL NODATA_PIXEL PARTIALLY_CORRECTED_PIXEL SATURATED_PIXEL_L1A SATURATED_PIXEL_L1B CLOUD"
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "pack_bits": 0
+            }
+        },
+        {
+            "short_name": "msk_quality_b09",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_QUALIT_B09.jp2:value",
+            "target_path": "/quality/msk_quality_b09",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "source_bands": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10
+                    ],
+                    "flag_masks": [
+                        1,
+                        2,
+                        4,
+                        8,
+                        16,
+                        32,
+                        64,
+                        128,
+                        256,
+                        512
+                    ],
+                    "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG DEFECTIVE_PIXEL NODATA_PIXEL PARTIALLY_CORRECTED_PIXEL SATURATED_PIXEL_L1A SATURATED_PIXEL_L1B CLOUD"
+                },
+                "dimensions": [
+                    "y_60m",
+                    "x_60m"
+                ],
+                "pack_bits": 0
+            }
+        },
+        {
+            "short_name": "msk_quality_b10",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_QUALIT_B10.jp2:value",
+            "target_path": "/quality/msk_quality_b10",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "source_bands": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10
+                    ],
+                    "flag_masks": [
+                        1,
+                        2,
+                        4,
+                        8,
+                        16,
+                        32,
+                        64,
+                        128,
+                        256,
+                        512
+                    ],
+                    "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG DEFECTIVE_PIXEL NODATA_PIXEL PARTIALLY_CORRECTED_PIXEL SATURATED_PIXEL_L1A SATURATED_PIXEL_L1B CLOUD"
+                },
+                "dimensions": [
+                    "y_60m",
+                    "x_60m"
+                ],
+                "pack_bits": 0
+            }
+        },
+        {
+            "short_name": "msk_quality_b11",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_QUALIT_B11.jp2:value",
+            "target_path": "/quality/msk_quality_b11",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "source_bands": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10
+                    ],
+                    "flag_masks": [
+                        1,
+                        2,
+                        4,
+                        8,
+                        16,
+                        32,
+                        64,
+                        128,
+                        256,
+                        512
+                    ],
+                    "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG DEFECTIVE_PIXEL NODATA_PIXEL PARTIALLY_CORRECTED_PIXEL SATURATED_PIXEL_L1A SATURATED_PIXEL_L1B CLOUD"
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "pack_bits": 0
+            }
+        },
+        {
+            "short_name": "msk_quality_b12",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_QUALIT_B12.jp2:value",
+            "target_path": "/quality/msk_quality_b12",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "source_bands": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10
+                    ],
+                    "flag_masks": [
+                        1,
+                        2,
+                        4,
+                        8,
+                        16,
+                        32,
+                        64,
+                        128,
+                        256,
+                        512
+                    ],
+                    "flag_meanings": "ANC_LOST ANC_DEG MSI_LOST MSI_DEG DEFECTIVE_PIXEL NODATA_PIXEL PARTIALLY_CORRECTED_PIXEL SATURATED_PIXEL_L1A SATURATED_PIXEL_L1B CLOUD"
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "pack_bits": 0
+            }
+        },
+        {
+            "short_name": "msk_detfoo_b01",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_DETFOO_B01.jp2:value",
+            "target_path": "/conditions/msk_detfoo_b01",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "flag_values": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12
+                    ],
+                    "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
+                },
+                "dimensions": [
+                    "y_60m",
+                    "x_60m"
+                ],
+                "sub_array": {
+                    "dim_0": 0
+                }
+            }
+        },
+        {
+            "short_name": "msk_detfoo_b02",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_DETFOO_B02.jp2:value",
+            "target_path": "/conditions/msk_detfoo_b02",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "flag_values": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12
+                    ],
+                    "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
+                },
+                "dimensions": [
+                    "y_10m",
+                    "x_10m"
+                ],
+                "sub_array": {
+                    "dim_0": 0
+                }
+            }
+        },
+        {
+            "short_name": "msk_detfoo_b03",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_DETFOO_B03.jp2:value",
+            "target_path": "/conditions/msk_detfoo_b03",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "flag_values": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12
+                    ],
+                    "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
+                },
+                "dimensions": [
+                    "y_10m",
+                    "x_10m"
+                ],
+                "sub_array": {
+                    "dim_0": 0
+                }
+            }
+        },
+        {
+            "short_name": "msk_detfoo_b04",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_DETFOO_B04.jp2:value",
+            "target_path": "/conditions/msk_detfoo_b04",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "flag_values": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12
+                    ],
+                    "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
+                },
+                "dimensions": [
+                    "y_10m",
+                    "x_10m"
+                ],
+                "sub_array": {
+                    "dim_0": 0
+                }
+            }
+        },
+        {
+            "short_name": "msk_detfoo_b05",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_DETFOO_B05.jp2:value",
+            "target_path": "/conditions/msk_detfoo_b05",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "flag_values": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12
+                    ],
+                    "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "sub_array": {
+                    "dim_0": 0
+                }
+            }
+        },
+        {
+            "short_name": "msk_detfoo_b06",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_DETFOO_B06.jp2:value",
+            "target_path": "/conditions/msk_detfoo_b06",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "flag_values": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12
+                    ],
+                    "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "sub_array": {
+                    "dim_0": 0
+                }
+            }
+        },
+        {
+            "short_name": "msk_detfoo_b07",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_DETFOO_B07.jp2:value",
+            "target_path": "/conditions/msk_detfoo_b07",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "flag_values": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12
+                    ],
+                    "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "sub_array": {
+                    "dim_0": 0
+                }
+            }
+        },
+        {
+            "short_name": "msk_detfoo_b08",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_DETFOO_B08.jp2:value",
+            "target_path": "/conditions/msk_detfoo_b08",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "flag_values": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12
+                    ],
+                    "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
+                },
+                "dimensions": [
+                    "y_10m",
+                    "x_10m"
+                ],
+                "sub_array": {
+                    "dim_0": 0
+                }
+            }
+        },
+        {
+            "short_name": "msk_detfoo_b8a",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_DETFOO_B8A.jp2:value",
+            "target_path": "/conditions/msk_detfoo_b8a",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "flag_values": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12
+                    ],
+                    "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "sub_array": {
+                    "dim_0": 0
+                }
+            }
+        },
+        {
+            "short_name": "msk_detfoo_b09",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_DETFOO_B09.jp2:value",
+            "target_path": "/conditions/msk_detfoo_b09",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "flag_values": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12
+                    ],
+                    "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
+                },
+                "dimensions": [
+                    "y_60m",
+                    "x_60m"
+                ],
+                "sub_array": {
+                    "dim_0": 0
+                }
+            }
+        },
+        {
+            "short_name": "msk_detfoo_b10",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_DETFOO_B10.jp2:value",
+            "target_path": "/conditions/msk_detfoo_b10",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "flag_values": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12
+                    ],
+                    "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
+                },
+                "dimensions": [
+                    "y_60m",
+                    "x_60m"
+                ],
+                "sub_array": {
+                    "dim_0": 0
+                }
+            }
+        },
+        {
+            "short_name": "msk_detfoo_b11",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_DETFOO_B11.jp2:value",
+            "target_path": "/conditions/msk_detfoo_b11",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "flag_values": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12
+                    ],
+                    "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "sub_array": {
+                    "dim_0": 0
+                }
+            }
+        },
+        {
+            "short_name": "msk_detfoo_b12",
+            "source_path": "GRANULE/[^/]*/QI_DATA/MSK_DETFOO_B12.jp2:value",
+            "target_path": "/conditions/msk_detfoo_b12",
+            "item_format": "jp2",
+            "parameters": {
+                "attributes": {
+                    "flag_values": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12
+                    ],
+                    "flag_meanings": "D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12"
+                },
+                "dimensions": [
+                    "y_20m",
+                    "x_20m"
+                ],
+                "sub_array": {
+                    "dim_0": 0
+                }
+            }
+        },
+        {
+            "short_name": "saa",
+            "source_path": "GRANULE/[^/]*/MTD_TL.xml",
+            "target_path": "/conditions/geometry/saa",
+            "item_format": "xmlangles",
+            "local_path": "n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Azimuth/Values_List",
+            "accessor_config": {
+                "namespace": "xml_mapping/namespace"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "sun azimuth angle",
+                    "units": "degrees",
+                    "comment": "corrected for earth-sun distance variation"
+                },
+                "dimensions": [
+                    "y_a",
+                    "x_a"
+                ]
+            }
+        },
+        {
+            "short_name": "sza",
+            "source_path": "GRANULE/[^/]*/MTD_TL.xml",
+            "target_path": "/conditions/geometry/sza",
+            "item_format": "xmlangles",
+            "local_path": "n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/Values_List",
+            "accessor_config": {
+                "namespace": "xml_mapping/namespace"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "sun zenith angle",
+                    "units": "degrees",
+                    "comment": "corrected for earth-sun distance variation"
+                },
+                "dimensions": [
+                    "y_a",
+                    "x_a"
+                ]
+            }
+        },
+        {
+            "short_name": "vaa",
+            "source_path": "GRANULE/[^/]*/MTD_TL.xml",
+            "target_path": "/conditions/geometry/vaa",
+            "item_format": "xmlangles",
+            "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids/Azimuth/Values_List",
+            "accessor_config": {
+                "namespace": "xml_mapping/namespace"
+            },
+            "parameters": {
+                "dimensions": [
+                    "band",
+                    "detector",
+                    "y_a",
+                    "x_a"
+                ],
+                "attributes": {
+                    "long_name": "incidence azimuth angle",
+                    "units": "degrees"
+                }
+            }
+        },
+        {
+            "short_name": "vza",
+            "source_path": "GRANULE/[^/]*/MTD_TL.xml",
+            "target_path": "/conditions/geometry/vza",
+            "item_format": "xmlangles",
+            "local_path": "n1:Geometric_Info/Tile_Angles/Viewing_Incidence_Angles_Grids/Zenith/Values_List",
+            "accessor_config": {
+                "namespace": "xml_mapping/namespace"
+            },
+            "parameters": {
+                "dimensions": [
+                    "band",
+                    "detector",
+                    "y_a",
+                    "x_a"
+                ],
+                "attributes": {
+                    "long_name": "incidence zenith angle",
+                    "units": "degrees"
+                }
+            }
+        },
+        {
+            "short_name": "mean_vaa",
+            "source_path": "GRANULE/[^/]*/MTD_TL.xml",
+            "target_path": "/conditions/geometry/mean_vaa",
+            "item_format": "xmlangles",
+            "local_path": "to_mean(n1:Geometric_Info/Tile_Angles/Mean_Viewing_Incidence_Angle_List/Mean_Viewing_Incidence_Angle/AZIMUTH_ANGLE)",
+            "accessor_config": {
+                "namespace": "xml_mapping/namespace"
+            },
+            "parameters": {
+                "dimensions": [
+                    "band"
+                ],
+                "attributes": {
+                    "long_name": "mean viewing incidence azimuth angle",
+                    "units": "degrees",
+                    "comment": "average over all detectors"
+                }
+            }
+        },
+        {
+            "short_name": "mean_vza",
+            "source_path": "GRANULE/[^/]*/MTD_TL.xml",
+            "target_path": "/conditions/geometry/mean_vza",
+            "item_format": "xmlangles",
+            "local_path": "to_mean(n1:Geometric_Info/Tile_Angles/Mean_Viewing_Incidence_Angle_List/Mean_Viewing_Incidence_Angle/ZENITH_ANGLE)",
+            "accessor_config": {
+                "namespace": "xml_mapping/namespace"
+            },
+            "parameters": {
+                "dimensions": [
+                    "band"
+                ],
+                "attributes": {
+                    "long_name": "mean viewing incidence zenith angle",
+                    "units": "degrees",
+                    "comment": "average over all detectors"
+                }
+            }
+        },
+        {
+            "short_name": " total_column_water_vapour",
+            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_ECMWFT:tcwv",
+            "target_path": "/conditions/meteo/tcwv",
+            "item_format": "grib",
+            "parameters": {
+                "attributes": {
+                    "long_name": "total column water vapour TCWV",
+                    "units": "kg/m2"
+                },
+                "dimensions": [
+                    "latitude_meteo",
+                    "longitude_meteo"
+                ]
+            }
+        },
+        {
+            "short_name": "mean_sea_level_pressure",
+            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_ECMWFT:msl",
+            "target_path": "/conditions/meteo/mslp",
+            "item_format": "grib",
+            "parameters": {
+                "attributes": {
+                    "long_name": "mean sea level pressure MSLP",
+                    "units": "hPa"
+                },
+                "dimensions": [
+                    "latitude_meteo",
+                    "longitude_meteo"
+                ]
+            }
+        },
+        {
+            "short_name": "total_column_ozone",
+            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_ECMWFT:tco3",
+            "target_path": "/conditions/meteo/tco3",
+            "item_format": "grib",
+            "parameters": {
+                "attributes": {
+                    "long_name": "total column ozone TCO3",
+                    "units": "kg/m2"
+                },
+                "dimensions": [
+                    "latitude_meteo",
+                    "longitude_meteo"
+                ]
+            }
+        },
+        {
+            "short_name": "eastward_wind",
+            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_ECMWFT:u10",
+            "target_path": "/conditions/meteo/u10",
+            "item_format": "grib",
+            "parameters": {
+                "attributes": {
+                    "units": "m/s",
+                    "long_name": "10m eastward wind component"
+                },
+                "dimensions": [
+                    "latitude_meteo",
+                    "longitude_meteo"
+                ]
+            }
+        },
+        {
+            "short_name": "northward_wind",
+            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_ECMWFT:v10",
+            "target_path": "/conditions/meteo/v10",
+            "item_format": "grib",
+            "parameters": {
+                "attributes": {
+                    "long_name": "10m northward wind component",
+                    "units": "m/s"
+                },
+                "dimensions": [
+                    "latitude_meteo",
+                    "longitude_meteo"
+                ]
+            }
+        },
+        {
+            "short_name": "relative_humidity",
+            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_ECMWFT:r",
+            "target_path": "/conditions/meteo/rh",
+            "item_format": "grib",
+            "parameters": {
+                "attributes": {
+                    "long_name": "relative humidity at surface pressure",
+                    "units": "%"
+                },
+                "dimensions": [
+                    "latitude_meteo",
+                    "longitude_meteo"
+                ]
+            }
+        },
+        {
+            "short_name": "geopotential",
+            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_CAMSFO:z",
+            "target_path": "/conditions/meteo/geopotential",
+            "item_format": "grib",
+            "parameters": {
+                "attributes": {
+                    "long_name": "geopotential surface Z"
+                },
+                "dimensions": [
+                    "latitude_meteo",
+                    "longitude_meteo"
+                ]
+            }
+        },
+        {
+            "short_name": "aod469",
+            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_CAMSFO:aod469",
+            "target_path": "/conditions/meteo/aod469",
+            "item_format": "grib",
+            "parameters": {
+                "attributes": {
+                    "long_name": "total aerosol optical depth at 469nm"
+                },
+                "dimensions": [
+                    "latitude_meteo",
+                    "longitude_meteo"
+                ]
+            }
+        },
+        {
+            "short_name": "aod550",
+            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_CAMSFO:aod550",
+            "target_path": "/conditions/meteo/aod550",
+            "item_format": "grib",
+            "parameters": {
+                "attributes": {
+                    "long_name": "total aerosol optical depth at 550nm"
+                },
+                "dimensions": [
+                    "latitude_meteo",
+                    "longitude_meteo"
+                ]
+            }
+        },
+        {
+            "short_name": "aod670",
+            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_CAMSFO:aod670",
+            "target_path": "/conditions/meteo/aod670",
+            "item_format": "grib",
+            "parameters": {
+                "attributes": {
+                    "long_name": "total aerosol optical depth at 670nm"
+                },
+                "dimensions": [
+                    "latitude_meteo",
+                    "longitude_meteo"
+                ]
+            }
+        },
+        {
+            "short_name": "aod865",
+            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_CAMSFO:aod865",
+            "target_path": "/conditions/meteo/aod865",
+            "item_format": "grib",
+            "parameters": {
+                "attributes": {
+                    "long_name": "total aerosol optical depth at 865nm"
+                },
+                "dimensions": [
+                    "latitude_meteo",
+                    "longitude_meteo"
+                ]
+            }
+        },
+        {
+            "short_name": "aod1240",
+            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_CAMSFO:aod1240",
+            "target_path": "/conditions/meteo/aod1240",
+            "item_format": "grib",
+            "parameters": {
+                "attributes": {
+                    "long_name": "total aerosol optical depth at 1240nm"
+                },
+                "dimensions": [
+                    "latitude_meteo",
+                    "longitude_meteo"
+                ]
+            }
+        },
+        {
+            "short_name": "black_carbon_aod550",
+            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_CAMSFO:bcaod550",
+            "target_path": "/conditions/meteo/bcaod550",
+            "item_format": "grib",
+            "parameters": {
+                "attributes": {
+                    "long_name": "black carbon aerosol optical depth at 550nm"
+                },
+                "dimensions": [
+                    "latitude_meteo",
+                    "longitude_meteo"
+                ]
+            }
+        },
+        {
+            "short_name": "dust_aod550",
+            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_CAMSFO:duaod550",
+            "target_path": "/conditions/meteo/duaod550",
+            "item_format": "grib",
+            "parameters": {
+                "attributes": {
+                    "long_name": "dust aerosol optical depth at 550nm"
+                },
+                "dimensions": [
+                    "latitude_meteo",
+                    "longitude_meteo"
+                ]
+            }
+        },
+        {
+            "short_name": "organic_matter_aod550",
+            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_CAMSFO:omaod550",
+            "target_path": "/conditions/meteo/omaod550",
+            "item_format": "grib",
+            "parameters": {
+                "attributes": {
+                    "long_name": "organic matter aerosol optical depth at 550nm"
+                },
+                "dimensions": [
+                    "latitude_meteo",
+                    "longitude_meteo"
+                ]
+            }
+        },
+        {
+            "short_name": "sea_salt_aod550",
+            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_CAMSFO:ssaod550",
+            "target_path": "/conditions/meteo/ssaod550",
+            "item_format": "grib",
+            "parameters": {
+                "attributes": {
+                    "long_name": "sea salt aerosol optical depth at 550nm"
+                },
+                "dimensions": [
+                    "latitude_meteo",
+                    "longitude_meteo"
+                ]
+            }
+        },
+        {
+            "short_name": "sulphate_aod550",
+            "source_path": "GRANULE/[^/]*/AUX_DATA/AUX_CAMSFO:suaod550",
+            "target_path": "/conditions/meteo/suaod550",
+            "item_format": "grib",
+            "parameters": {
+                "attributes": {
+                    "long_name": "sulphate aerosol optical depth at 550nm"
+                },
+                "dimensions": [
+                    "latitude_meteo",
+                    "longitude_meteo"
+                ]
+            }
+        },
+        {
+            "short_name": "format_correctness_report",
+            "source_path": "/GRANULE/[^/]*/QI_DATA/FORMAT_CORRECTNESS.xml",
+            "target_path": "/misc/FORMAT_CORRECTNESS.xml",
+            "item_format": "misc"
+        },
+        {
+            "short_name": "general_quality_report",
+            "source_path": "/GRANULE/[^/]*/QI_DATA/GENERAL_QUALITY.xml",
+            "target_path": "/misc/GENERAL_QUALITY.xml",
+            "item_format": "misc"
+        },
+        {
+            "short_name": "geometric_quality_report",
+            "source_path": "/GRANULE/[^/]*/QI_DATA/GEOMETRIC_QUALITY.xml",
+            "target_path": "/misc/GEOMETRIC_QUALITY.xml",
+            "item_format": "misc"
+        },
+        {
+            "short_name": "sensor_quality_report",
+            "source_path": "/GRANULE/[^/]*/QI_DATA/SENSOR_QUALITY.xml",
+            "target_path": "/misc/SENSOR_QUALITY.xml",
+            "item_format": "misc"
+        },
+        {
+            "short_name": "datastrip_format_correctness_report",
+            "source_path": "/DATASTRIP/[^/]*/QI_DATA/FORMAT_CORRECTNESS.xml",
+            "target_path": "/misc/DATASTRIP_FORMAT_CORRECTNESS.xml",
+            "item_format": "misc"
+        },
+        {
+            "short_name": "datastrip_general_quality_report",
+            "source_path": "/DATASTRIP/[^/]*/QI_DATA/GENERAL_QUALITY.xml",
+            "target_path": "/misc/DATASTRIP_GENERAL_QUALITY.xml",
+            "item_format": "misc"
+        },
+        {
+            "short_name": "datastrip_geometric_quality_report",
+            "source_path": "/DATASTRIP/[^/]*/QI_DATA/GEOMETRIC_QUALITY.xml",
+            "target_path": "/misc/DATASTRIP_GEOMETRIC_QUALITY.xml",
+            "item_format": "misc"
+        },
+        {
+            "short_name": "datastrip_radiometric_quality_report",
+            "source_path": "/DATASTRIP/[^/]*/QI_DATA/RADIOMETRIC_QUALITY.xml",
+            "target_path": "/misc/DATASTRIP_RADIOMETRIC_QUALITY.xml",
+            "item_format": "misc"
+        },
+        {
+            "short_name": "datastrip_sensor_quality_report",
+            "source_path": "/DATASTRIP/[^/]*/QI_DATA/SENSOR_QUALITY.xml",
+            "target_path": "/misc/DATASTRIP_SENSOR_QUALITY.xml",
+            "item_format": "misc"
+        },
+        {
+            "short_name": "datastrip_metadata",
+            "source_path": "/DATASTRIP/[^/]*/MTD_DS.xml",
+            "target_path": "/misc/MTD_DS.xml",
+            "item_format": "misc"
+        },
+        {
+            "short_name": "banner_1",
+            "source_path": "HTML/banner_1.png",
+            "target_path": "/misc/banner_1.png",
+            "item_format": "misc"
+        },
+        {
+            "short_name": "banner_2",
+            "source_path": "HTML/banner_2.png",
+            "target_path": "/misc/banner_2.png",
+            "item_format": "misc"
+        },
+        {
+            "short_name": "banner_3",
+            "source_path": "HTML/banner_3.png",
+            "target_path": "/misc/banner_3.png",
+            "item_format": "misc"
+        },
+        {
+            "short_name": "star_bg",
+            "source_path": "HTML/star_bg.jpg",
+            "target_path": "/misc/star_bg.jpg",
+            "item_format": "misc"
+        },
+        {
+            "short_name": "mtd_msil2a_xsd",
+            "source_path": "rep_info/S2_User_Product_Level-2A_Metadata.xsd",
+            "target_path": "/misc/S2_User_Product_Level-2A_Metadata.xsd",
+            "item_format": "misc"
+        },
+        {
+            "short_name": "userproduct_index_xsl",
+            "source_path": "HTML/UserProduct_index.xsl",
+            "target_path": "/misc/UserProduct_index.xsl",
+            "item_format": "misc"
+        },
+        {
+            "short_name": "user_product_index",
+            "source_path": "HTML/UserProduct_index.html",
+            "target_path": "/misc/S2_User_Product_index.html",
+            "item_format": "misc"
+        },
+        {
+            "short_name": "ql",
+            "source_path": "HTML/(S2.*)_ql.jpg",
+            "target_path": "/misc/$1_ql.jpg",
+            "item_format": "misc"
+        },
+        {
+            "short_name": "pvi",
+            "source_path": "GRANULE/L2A_T33UUA_A034625_20220207T101202/QI_DATA/(.*)_PVI.jp2",
+            "target_path": "/misc/$1_PVI.jp2",
+            "item_format": "misc"
+        },
+        {
+            "short_name": "metadata",
+            "source_path": "(MTD_MSIL2A|Level-2A_Tile_Metadata_File).xml",
+            "target_path": "/",
+            "item_format": "xmlmetadata",
+            "accessor_config": {
+                "mapping": "top_attributes",
+                "namespaces": "metadata_mapping/namespaces"
+            }
+        }
+    ],
+    "top_attributes": {
+        "tile identification": "General_Info/TILE_ID",
+        "datastrip identification": "General_Info/DATASTRIP_ID",
+        "mean tile sensing time": "General_Info/SENSING_TIME",
+        "tile processing time": "General_Info/Archiving_Info/ARCHIVING_TIME",
+        "horizontal CRS name": "Geometric_Info/Tile_Geocoding/HORIZONTAL_CS_NAME",
+        "horizonatl CRS code": "Geometric_Info/Tile_Geocoding/HORIZONTAL_CS_CODE",
+        "tile dimensions (nrows,ncols) for each spectral band resolution": "Geometric_Info/Tile_Geocoding/Size",
+        "tile geoposition (ULX,ULY) for each spectral band resolution": "Geometric_Info/Tile_Geocoding/Geoposition",
+        "mean sun azimuth angle (all bands, all detectors)": "Geometric_Info/Tile_Angles/Mean_Sun_Angle",
+        "mean sun zenith angle (all bands, all detectors)": "Geometric_Info/Tile_Angles/Mean_Sun_Angle",
+        "cloudy coverage percentage over the tile": "Quality_Indicators_Info/CLOUDY_PIXEL_PERCENTAGE",
+        "cloudy coverage percentage over land pixels in the tile": "Quality_Indicators_Info/CLOUD_PIXEL_OVER_LAND_PERCENTAGE",
+        "percentage of degraded MSI data in the tile": "Quality_Indicators_Info/Image_Content_QI/DEGRADED_MSI_DATA_PERCENTAGE",
+        "percentage of no-data pixels in the tile": "Quality_Indicators_Info/NODATA_PIXEL_PERCENTAGE",
+        "percentage of saturated or defective pixels in the tile": "Quality_Indicators_Info/SATURATED_DEFECTIVE_PIXEL_PERCENTAGE",
+        "percentage of pixels classified as dark features or shadows in the tile": "Quality_Indicators_Info/DARK_FEATURES_PERCENTAGE",
+        "percentage of pixels classified as cloud shadow in the tile": "Quality_Indicators_Info/CLOUD_SHADOW_PERCENTAGE",
+        "percentage of pixels classified as vegetation in the tile": "Quality_Indicators_Info/VEGETATION_PERCENTAGE",
+        "percentage of pixels classified as no-vegetation in the tile": "Quality_Indicators_Info/NOT_VEGETATED_PERCENTAGE",
+        "percentage of pixels classified as water in the tile": "Quality_Indicators_Info/WATER_PERCENTAGE",
+        "percentage of pixels classified as water in the tile": "Quality_Indicators_Info/WATER_PERCENTAGE",
+        "percentage of pixels unclassified in the tile": "Quality_Indicators_Info/UNCLASSIFIED_PERCENTAGE",
+        "percentage of pixels classified as cloud with medium probability in the tile": "Quality_Indicators_Info/MEDIUM_PROBA_CLOUDS_PERCENTAGE",
+        "percentage of pixels classified as cloud with high probablility in the tile": "Quality_Indicators_Info/HIGH_PROBA_CLOUDS_PERCENTAGE",
+        "percentage of pixels classified as thin cirrus in the tile": "Quality_Indicators_Info/THIN_CIRRUS_PERCENTAGE",
+        "percentage of pixels classified as snow or ice in the tile": "Quality_Indicators_Info/SNOW_ICE_PERCENTAGE",
+        "declared accuracy of radiative transfer model": "Quality_Indicators_Info/RADIATIVE_TRANSFER_ACCURACY",
+        "declared accuracy of water vapour model": "Quality_Indicators_Info/WATER_VAPOUR_RETRIEVAL_ACCURACY",
+        "declared accuracy of AOT model": "Quality_Indicators_Info/AOT_RETRIEVAL_ACCURACY",
+        "AOT retrieval model": "Quality_Indicators_Info/AOT_RETRIEVAL_METHOD",
+        "mean value of AOT over the tile": "Quality_Indicators_Info/GRANULE_MEAN_AOT",
+        "mean value of total water vapour over the tile": "Quality_Indicators_Info/GRANULE_MEAN_WV",
+        "ozone source": "Quality_Indicators_Info/OZONE_SOURCE",
+        "ozone value": "Quality_Indicators_Info/OZONE_VALUE",
+        "sensing time of the first line of the first scene in the tile": "General_Info/PRODUCT_START_TIME",
+        "sensing time of the first line of the last scene in the tile": "General_Info/PRODUCT_STOP_TIME",
+        "processing level": "General_Info/Product_Info/PROCESSING_LEVEL",
+        "product type": "General_Info/PRODUCT_TYPE",
+        "processing baseline": "General_Info/PROCESSING_BASELINE",
+        "generation time": "General_Info/GENERATION_TIME",
+        "spacecraft name": "General_Info/Datatake/SPACECRAFT_NAME",
+        "MSI operation mode": "General_Info/Datatake/DATATAKE_TYPE",
+        "absolute sensing orbit number": "General_Info/Datatake/AbsoluteOrbitNumber",
+        "relative sensing orbit number": "General_Info/Datatake/SENSING_ORBIT_NUMBER",
+        "sensing orbit direction": "General_Info/Datatake/SENSING_ORBIT_DIRECTION",
+        "physical gain for each spectral band": "General_Info/Product_Image_Characteristics/PHYSICAL_GAIN",
+        "on-board compression flag (true or false)": "General_Info/Product_Image_Characteristics/ON_BOARD_COMPRESSION_MODE",
+        "quantification value to convert digital counts into reflectance": "General_Info/Product_Image_Characteristics/QUANTIFICATION_VALUE",
+        "radiometric offset for each spectral band": "General_Info/Product_Image_Characteristics/BOA_ADD_OFFSET_VALUES_LIST",
+        "reflectance correction from the Sun-Earth distance variation computed using the acquisition date": "General_Info/Product_Image_Characteristics/Reflectance_Conversion/U",
+        "solar irradiance for each spectral band": "General_Info/Product_Image_Characteristics/Solar_Irradiance_List",
+        "used DEM file name": "Auxiliary_Data_Info/PRODUCTION_DEM_TYPE",
+        "used GRI fine name": "Auxiliary_Data_Info/GRI_FILENAME",
+        "used IERS file name": "Auxiliary_Data_Info/IERS_BULLETIN_FILENAME",
+        "used ECMWF file names": "Auxiliary_Data_Info/ECMWF_DATA_REF",
+        "used CAMS file names": "Auxiliary_Data_Info/CAMS_DATA_REF",
+        "list of used processing parameters file names": "Auxiliary_Data_Info/GIPP_FILENAME",
+        "used snow climatology map file name": "Auxiliary_Data_Info/SNOW_CLIMATOLOGY_MAP",
+        "used ESA CCI water bodies map file name": "Auxiliary_Data_Info/ESACCI_WaterBodies_Map",
+        "used ESA CCI land cover map file name": "Auxiliary_Data_Info/ESACCI_LandCover_Map",
+        "used ESA CCI snow condition map folder name": "Auxiliary_Data_Info/ESACCI_SnowCondition_Map_Dir",
+        "used LibRadTran Look-Up Tables list": "Auxiliary_Data_Info/LUT_List"
+    },
+    "metadata_mapping": {
+        "MTD_MSIL2A": {
+            "OM_EOP": {
+                "phenomenonTime": {
+                    "beginPosition": "n1:General_Info/Product_Info/PRODUCT_START_TIME",
+                    "endPosition": "n1:General_Info/Product_Info/PRODUCT_STOP_TIME"
+                },
+                "resultTime": {
+                    "timePosition": "n1:General_Info/Product_Info/GENERATION_TIME"
+                },
+                "featureOfInterest": {
+                    "multiExtentOf": "metadataSection/metadataObject[@ID='measurementFrameSet']/metadataWrap/xmlData/sentinel-safe:frameSet/sentinel-safe:footPrint/gml:posList"
+                },
+                "metadataProperty": {
+                    "identifier": "n1:General_Info/Product_Info/PRODUCT_URI",
+                    "creationDate": "n1:General_Info/Product_Info/GENERATION_TIME",
+                    "doi": "n1:General_Info/Product_Info/PRODUCT_DOI",
+                    "acquisitionType": "n1:General_Info/Product_Info/Datatake/DATATAKE_TYPE",
+                    "productType": "n1:General_Info/Product_Info/PRODUCT_TYPE",
+                    "status": "'ARCHIVED'",
+                    "productQualityStatus": "n1:Quality_Indicators_Info/Quality_Control_Checks/Quality_Inspections/quality_check['GENERAL_QUALITY']"
+                }
+            }
+        },
+        "namespaces": {
+            "xfdu": "urn:ccsds:schema:xfdu:1",
+            "gml": "http://www.opengis.net/gml",
+            "sentinel-safe": "http://www.esa.int/safe/sentinel/1.1",
+            "safe": "http://www.esa.int/safe/sentinel/1.1",
+            "n1": "https://psd-14.sentinel2.eo.esa.int/PSD/User_Product_Level-2A.xsd",
+            "xsi": "http://www.w3.org/2001/XMLSchema-instance"
+        }
+    },
+    "xml_mapping": {
+        "namespace": {
+            "n1": "https://psd-14.sentinel2.eo.esa.int/PSD/S2_PDI_Level-2A_Tile_Metadata.xsd"
+        },
+        "xmltp_angles": {
+            "step_x_angle": "n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/COL_STEP",
+            "step_y_angle": "n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/ROW_STEP",
+            "angle_values": "n1:Geometric_Info/Tile_Angles/Sun_Angles_Grid/Zenith/Values_List/VALUES"
+        }
+    }
+}

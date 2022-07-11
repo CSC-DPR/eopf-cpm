@@ -65,3 +65,15 @@ class FormattingDecoratorMissingUri(Exception):
 
 class XmlManifestNetCDFError(Exception):
     """When trying to compile the manifest from NetCDF data (s3)"""
+
+
+class EOPCConfigFactoryNoDefaultConfiguration(Exception):
+    """When their is no default configuration for the given product type"""
+
+
+class EOPCConfigFactoryAlreadyDefaultConfiguration(Exception):
+    """When their is already a default configuration for the given product type"""
+
+
+class EOTriggeringConfigurationError(Exception):
+    """When Trigger configuration file is miss prepare"""

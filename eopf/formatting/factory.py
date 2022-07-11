@@ -1,6 +1,6 @@
 from functools import wraps
 from re import compile
-from typing import Any, Callable, Dict, Tuple, Union
+from typing import Any, Callable, Union
 
 from eopf.exceptions import FormattingDecoratorMissingUri
 from eopf.exceptions.warnings import FormatterAlreadyRegistered
@@ -18,34 +18,37 @@ class EOFormatterFactory(object):
 
     Attributes
     ----------
-    formatters: Dict[str, type[EOAbstractFormatter]]
+    formatters: dict[str, type[EOAbstractFormatter]]
         dictonary of formatters
 
     Examples
     ----------
-    def get_the_data(path):
-        ...
-
-    formatter, path = EOAbstractFormatter().get_formatter("to_str(/tmp/some_file.nc)")
-    the_data = get_the_data(path)
-    if formatter:
-        return formatter(the_data)
-    return the_data
+    >>> def get_the_data(path):
+    ...     ...
+    >>> def formatter_func():
+    >>>     formatter, path = EOAbstractFormatter().get_formatter("to_str(/tmp/some_file.nc)")
+    >>>     the_data = get_the_data(path)
+    >>>     if formatter:
+    ...         return formatter(the_data)
+    >>>     return the_data
     """
 
     def __init__(self, default_formatters: bool = True) -> None:
-        self._formatters: Dict[str, type[EOAbstractFormatter]] = dict()
+        self._formatters: dict[str, type[EOAbstractFormatter]] = dict()
         if default_formatters:
             from eopf.formatting.formatters import (
                 IsOptional,
                 Text,
+                ToBands,
                 ToBbox,
                 ToBool,
+                ToDetectors,
                 ToFloat,
                 ToGeoJson,
                 ToImageSize,
                 ToInt,
                 ToISO8601,
+                ToMean,
                 ToStr,
                 ToUNIXTimeSLSTRL1,
             )
@@ -61,6 +64,9 @@ class EOFormatterFactory(object):
             self.register_formatter(Text)
             self.register_formatter(ToImageSize)
             self.register_formatter(IsOptional)
+            self.register_formatter(ToBands)
+            self.register_formatter(ToMean)
+            self.register_formatter(ToDetectors)
         else:
             # to implement another logic of importing formatters
             pass
@@ -82,7 +88,7 @@ class EOFormatterFactory(object):
     def get_formatter(
         self,
         path: Any,
-    ) -> Tuple[Union[str, None], Union[Callable[[EOAbstractFormatter], Any], None], Any]:
+    ) -> tuple[Union[str, None], Union[Callable[[EOAbstractFormatter], Any], None], Any]:
         """
         Function retrieve a formatter and path without the formatter pattern
 
@@ -91,10 +97,9 @@ class EOFormatterFactory(object):
         path: Any
             a path to an object/file
 
-
         Returns
         ----------
-        Tuple[Union[str, None], Union[Callable[[EOAbstractFormatter], Any], None], Any]:
+        tuple[Union[str, None], Union[Callable[[EOAbstractFormatter], Any], None], Any]:
             A tuple containing the formatter name, the formatting method and
             a the path (without the formatter name)
         """
@@ -135,7 +140,7 @@ def formatable_func(fn: Callable[[Any], Any]) -> Any:
         callable function
 
     Returns
-    ----------
+    -------
     Any: formated return of the wrapped function
 
     Examples
@@ -144,7 +149,6 @@ def formatable_func(fn: Callable[[Any], Any]) -> Any:
     >>> def get_data(key, a_float):
     ...     unformatted_data = read_data(key)
     ...     return unformatted_data * a_float
-    ...
     >>> ret = get_data('to_float(/tmp/data.nc)', a_float=3.14)
     """
 
@@ -188,17 +192,16 @@ class formatable_method(object):
         the object coresponding to the decorated method
 
     Examples
-    ----------
-    class example(object):
-        def __init__(self, val:int):
-            self.d: Dict[str, int] = {"a_val": val}
-
-        @formatable_method
-        def get_val(self, url: str):
-            return self.d[url]
-
-    ex = example(2)
-    ex.get_val("to_str(a_val)")
+    --------
+    >>> class example(object):
+    ...     def __init__(self, val:int):
+    ...         self.d: Dict[str, int] = {"a_val": val}
+    ...
+    ...     @formatable_method
+    ...     def get_val(self, url: str):
+    ...         return self.d[url]
+    >>> ex = example(2)
+    >>> ex.get_val("to_str(a_val)")
     """
 
     def __init__(self, fn: Callable[[Any], Any], decorator_factory: EOFormatterFactory = None) -> None:
