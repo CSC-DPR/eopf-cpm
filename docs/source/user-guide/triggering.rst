@@ -1,3 +1,5 @@
+.. _triggering-usage:
+
 What is triggering and how to use it
 ====================================
 
@@ -13,51 +15,91 @@ Payload definition
 the payload data is a dictionary that follow the following pattern::
 
     {
-        "module": "",
-        "processing_unit": "",
-        "parameters": {
-            "kwargs_name": ""
-        },
+        "breakpoints": [
+            {
+                "related_unit": "preprocessing_unit",
+                "break_mode": "s",
+                "storage": "preprocessing_unit.zarr",
+                "store_params": {}
+            }
+        ],
+        "workflow": [
+            {
+                "module": "eopf.qualitycontrol.eo_qc_processor",
+                "processing_unit": "EOQCProcessor",
+                "name": "preprocessing_unit",
+                "inputs": [
+                    "OLCI"
+                ],
+                "parameters": {}
+            }
+        ],
         "I/O": {
             "modification_mode": "newproduct",
-            "input_product": {
-                "id": "OLCI",
-                "path": "",
-                "store_type": "safe"
-            },
+            "inputs_products": [
+                {
+                    "id": "OLCI",
+                    "path": "data/S3B_OL_1_EFR____20220119T092920_20220119T093220_20220120T142503_0179_061_321_3240_LN1_O_NT_002.zarr",
+                    "store_type": "zarr",
+                    "store_params": {}
+                }
+            ],
             "output_product": {
                 "id": "output",
                 "path": "output.zarr",
-                "store_type": "zarr"
+                "store_type": "zarr",
+                "store_params": {}
             }
         },
-        "dask_context":{}
+        "dask_context": {
+            "cluster_type": "local",
+            "cluster_config": {},
+            "client_config": {}
+        }
     }
+
 
 
 and the component respect the following rules:
 
-* **"module"**: string corresponding to the python path of the module (ex: "eopf.computing")
-* **"processing_unit"**: EOProcessingUnit class name (ex: "SumProcessor")
-* **"parameters"**: kwargs parameters to pass to the :py:meth:`~eopf.triggering.abstract.EOTrigger.run` method
-* **"I/O"**: configuration for inputs and outputs
+breakpoints:
+    configure breakpoint component :ref:`breakpoint-usage`
 
-    - **"modification_mode"**: one of the following value:
+        * **"related_unit"**: reference name of the processing unit concern by this breakpoint
+        * **"break_mode"**: one of *r* (retrieve), *s* (skip), *w* (force write).
+        * **"storage"**: uri to retrieve or write the breakpoint product
+        * **"store_params"**: parameters to give to the :py:class:`EOZarrStore`
 
-        - **"newproduct"**: Create a new product on **output_product** config path ("w" file mode)
-        - **"readonly"**: Read just the input without writting ("r" file mode)
-        - **"inplace"**: Update the input ("r+" file mode)
+workflow:
+    can be an item or a list of
 
-    - **"input_product"** and **"output_product"** (only for "newproduct" mode): dictionary used to identify input (or output) product to use
+        * **"name"**: identifier for the processing unit, can be use as `related_unit` in **"breakpoints"**
+        * **"module"**: string corresponding to the python path of the module (ex: "eopf.computing")
+        * **"processing_unit"**: EOProcessingUnit class name (ex: "SumProcessor")
+        * **"inputs"**: list of product name or processing unit identifier use as inputs.
+        * **"parameters"**: parameters to give to the processing unit at run time
 
-        - **"id"**: name to give to :py:class:`~eopf.product.core.eo_product.EOProduct`
-        - **"path"**: uri or path (relative to the runner) to the product (ex: "data/S3A_OL_1_EFR____NT_002.SEN3")
-        - **"store_type"**: :py:class:`~eopf.product.store.store_factory.EOStoreFactory` identifier of the store for the given product
+I/O:
+    configuration for inputs and outputs
 
-* **"dask_context"**: dictionary that contain one of those possible keys
+        * **"modification_mode"**: one of the following value:
 
-    - **"local"**: define that dask is use in local config (oposed to "distributed"), followed by the scheduler type (ex: "local": "processes")
-    - **"distributed"**: define that dask is use in distributed mode (oposed to "local"), followed by the scheduler name (ex: "distributed": "processes")
+            - **"newproduct"**: Create a new product on **output_product** config path ("w" file mode)
+            - **"readonly"**: Read just the input without writting ("r" file mode)
+            - **"inplace"**: Update the input ("r+" file mode)
+
+        * **"input_product"** and **"output_product"** (only for "newproduct" mode): dictionary used to identify input (or output) product to use
+
+            - **"id"**: name to give to :py:class:`~eopf.product.core.eo_product.EOProduct`
+            - **"path"**: uri or path (relative to the runner) to the product (ex: "data/S3A_OL_1_EFR____NT_002.SEN3")
+            - **"store_type"**: :py:class:`~eopf.product.store.store_factory.EOStoreFactory` identifier of the store for the given product
+
+dask_context
+    configuration for :py:class:`~eopf.triggering.conf.dask_configuration.DaskContext`
+
+        * **"cluster_type"**: type of dask cluster the should be used
+        * **"cluster_config"**: configuration to five to the dask cluster
+        * **"client_config"**: configuration for the :py:class:`~dask.distributed.Client`
 
 
 CLI triggers
