@@ -5,15 +5,22 @@ EOPF CPM: Earth Observation Platform framework for python developers
 |coverage|
 |docstr-coverage|
 
-**eopf** is a framework to help developers to manipulate Earth observation data
-by providing high level object.
+The **EOPF** is an ``"all included”`` framework for developing and using re-engineered as well as forthcoming processors.
+It includes DevOps tooling, extensive documentation including applicable rules, guidelines and tutorials, traceability and release management tools,
+and a software stack for development and orchestration.
 
-License
--------
+The **EOPF** constitutes the foundation of re-engineered processors.
+It drives how they will be implemented by software developers; how they will be used by scientists as a standalone processing solution
+or in production as a cloud-ready distributed and parallelized solution using the `dask`_ library.
 
-EOPF CPM is available under the open source `Apache License`__.
+The **Core Python Modules (CPM)** is python package gathering the best-in-class open-source python modules in
+a harmonized framework providing features such as:
 
-__ https://www.apache.org/licenses/LICENSE-2.0.html
+   * data management
+   * data conversion
+   * distributed and parallel computing
+   * logs and trace
+   * processors triggering and workflows definition.
 
 .. |pipeline| image:: https://gitlab.csc-eopf.csgroup.space/cpm/eopf-cpm/badges/main/pipeline.svg
    :target: https://github.com/CSC-DPR/eopf-cpm/tree/main
@@ -23,3 +30,5 @@ __ https://www.apache.org/licenses/LICENSE-2.0.html
 
 .. |docstr-coverage| image:: https://gitlab.csc-eopf.csgroup.space/cpm/eopf-cpm/-/jobs/artifacts/main/raw/docstrcov.svg?job=docs-cov
    :target: https://github.com/CSC-DPR/eopf-cpm/tree/main
+
+.. _dask: https://www.dask.org/

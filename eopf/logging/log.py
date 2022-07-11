@@ -18,18 +18,12 @@ from eopf.exceptions.warnings import (
 
 
 class EOLogFactory(object):
-    """A factory generating Python Logger based on given configuration
-
-    Attributes
-    ----------
-    _cfgs: dict[str, Path]
-        dictionary of logger configurations
-    cfg_dir: Path
-        path to the directory containing logger configurations
-    """
+    """A factory generating Python Logger based on given configuration"""
 
     cfg_dir = Path(__file__).parent / "conf"
+    """path to the directory containing logger configurations"""
     _cfgs: dict[str, Path] = {}
+    """dictionary of logger configurations"""
 
     def __init__(self) -> None:
         """Initializes by registering logger configurations in the cfg_dir

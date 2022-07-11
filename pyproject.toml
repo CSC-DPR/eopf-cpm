@@ -84,7 +84,6 @@ doc = [
 ]
 complexity = ["xenon >=0.8.0"]
 doc-cov = ["docstr-coverage >=2.1.1"]
-prefect = ["prefect"]
 dev = [
     "pre-commit >=2.16.0",
     "eopf[complexity,tests,doc-cov]",

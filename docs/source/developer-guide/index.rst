@@ -12,5 +12,8 @@ cpm framework.
 
    How to write a SAFE Store mapping <mapping_impl>
    How to implement a Store/Accessor <accessor_impl>
-   How to implement Computing component <computing_impl>
+   How to develop new processor based on CPM <computing_impl>
+   Intermediate Output - BreakPoint Object <breakpoint>
    How to provide new cli command <extend_cli>
+   Tracing <tracing>
+   Logging <logging>
