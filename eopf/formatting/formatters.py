@@ -15,6 +15,7 @@ from .utils import detect_pole_or_antemeridian, poly_coords_parsing, split_poly
 
 class EOAbstractFormatter(ABC):
     """Abstract formatter representation
+
     Attributes
     ----------
     name: str
