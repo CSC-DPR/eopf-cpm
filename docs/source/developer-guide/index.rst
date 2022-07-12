@@ -1,3 +1,5 @@
+.. _developer-guide:
+
 ###############
 Developer Guide
 ###############
@@ -10,10 +12,11 @@ cpm framework.
    :maxdepth: 2
    :caption: Developer guide summary
 
-   How to write a SAFE Store mapping <mapping_impl>
-   How to implement a Store/Accessor <accessor_impl>
+   How to initiate new project <setup>
    How to develop new processor based on CPM <computing_impl>
    Intermediate Output - BreakPoint Object <breakpoint>
+   How to write a SAFE Store mapping <mapping_impl>
+   How to implement a Store/Accessor <accessor_impl>
    How to provide new cli command <extend_cli>
    Tracing <tracing>
    Logging <logging>

@@ -6,40 +6,18 @@ How to use EOProduct
     :hide-output:
     :hide-code:
 
-    import os
-    import shutil
     import numpy as np
-    import xarray
-    import zarr
-    from eopf.product.store import EOZarrStore
-    from eopf.product.store.safe import EOSafeStore
-    from glob import glob
 
+Every component to work with product are given in the module :py:mod:`eopf.product`.
 
-.. jupyter-execute::
-    :hide-output:
-    :hide-code:
-
-    input_folder = "/home/cdubos_x/DPR/data"
-    output_folder="output"
-    output_filename="product_demo_sprint1.zarr"
-    try:
-        os.mkdir(output_folder)
-    except FileExistsError:
-        pass
-    try:
-        shutil.rmtree(f"{output_folder}/{output_filename}")
-    except FileNotFoundError:
-        pass
-
+The main object class is the :py:class:`~eopf.product.core.eo_product.EOProduct`, a dict-like class that aggregate group object,
+named :py:class:`~eopf.product.core.eo_group.EOGroup`, and are compliant with `Common data model`_.
 
 Create a product
 ----------------
 
-    Every component to work with product are given in the module :py:mod:`eopf.product`.
-
-    The main object class is the :py:class:`~eopf.product.core.eo_product.EOProduct`, a dict-like class that aggregate group object,
-    named :py:class:`~eopf.product.core.eo_group.EOGroup`, and are compliant with Common data model.
+    :py:class:`~eopf.product.core.eo_product.EOProduct` is class that have only one mandatory parameter corresponding to the product name
+    to identify it.
 
         .. jupyter-execute::
 
@@ -61,12 +39,13 @@ Create a product
             empty_product.add_group("coordinates")
             empty_product.is_valid()
 
-    the :py:mod:`eopf.product.conveniences` provide a simple function :py:func:`~eopf.product.conveniences.init_product` to help you to create a valid product.
+    The :py:mod:`eopf.product.conveniences` provide a function
+    :py:func:`~eopf.product.conveniences.init_product` to help you to create a valid product.
 
         .. jupyter-execute::
 
             from eopf.product.conveniences import init_product
-            product = init_product("product_written")
+            product = init_product("product_initialized")
             product
 
     Now if we check the validity of our newly created product, it must be :obj:`True`
@@ -79,26 +58,20 @@ Create a product
 Groups and Variables
 --------------------
 
+Here we describe how to interact with :py:class:`~eopf.product.core.eo_product.EOProduct`,
+:py:class:`~eopf.product.core.eo_variable.EOVariable` and :py:class:`~eopf.product.core.eo_group.EOGroup`.
+To learn more about :py:class:`~eopf.product.core.eo_variable.EOVariable`, you can go to :ref:`eovariable-usage`.
+
 Accessing Groups and Variables
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    .. jupyter-execute::
-        :hide-output:
-        :hide-code:
 
-        data_a = np.array([1,1])
-        data_b = np.array([2])
-        data_c = xarray.DataArray([[3],[3]], dims=["time", "space"])
-        data_d = np.array([[4.1],[4.2],[4.3]])
-        data_e = xarray.DataArray(np.zeros(10), dims=["dim_group/dim_10"])
+    When you use :py:class:`~eopf.product.core.eo_product.EOProduct`,
+    you can add :py:class:`~eopf.product.core.eo_group.EOGroup` (resp. :py:class:`~eopf.product.core.eo_variable.EOVariable`) from different way.
 
-        data_coord_time = np.array([1])
-        data_coord_space = [2]
-        data_coord_dim_10 = xarray.DataArray([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
-
-
-    When you use :py:class:`~eopf.product.core.eo_product.EOProduct`, you can add :py:class:`~eopf.product.core.eo_group.EOGroup` (resp. :py:class:`~eopf.product.core.eo_variable.EOVariable`) from different way.
-    the first one is to simply add them from the top level product, using :py:meth:`~eopf.product.core.eo_product.EOProduct.add_group` (resp. :py:meth:`~eopf.product.core.eo_product.EOProduct.add_variable`) method.
+    The first one is to simply add them from the top level product,
+    using method :py:meth:`~eopf.product.core.eo_product.EOProduct.add_group`
+    (resp. :py:meth:`~eopf.product.core.eo_product.EOProduct.add_variable`).
 
         .. warning::
             :py:class:`~eopf.product.core.eo_product.EOProduct` does not support variable at top level.
@@ -106,12 +79,11 @@ Accessing Groups and Variables
             .. jupyter-execute::
                 :raises: InvalidProductError
 
-                product.add_variable("my_variable", [1,2,3])
+                product.add_variable("my_variable", data=[1,2,3])
 
         .. jupyter-execute::
 
-            product.add_group("group0")
-            product.add_group("measurements/group1", dims=["time", "space"])
+            product.add_group("measurements/image")
 
 
     When you provide a full path of group, if some of them not exists, we create them.
@@ -119,64 +91,71 @@ Accessing Groups and Variables
         .. jupyter-execute::
             :hide-output:
 
-            product.add_group("measurements/group1/group2/group3") # We create both group2 and group3
+            # We create both image and radiance
+            product.add_group("measurements/image/radiance")
+
+        You can also mention dimensions name as named parameter
 
         .. jupyter-execute::
             :hide-output:
 
-            product.add_variable("measurements/group1/group2c/variable_d", dims=["c1", "c2"], data=data_d) # We create both group2c and variable_d.
+            data = np.random.sample((100, 100))
+            # We create both reflectance and oa01_reflectance.
+            product.add_variable("measurements/image/reflectance/oa01_reflectance", dims=["longitude", "latitude"], data=data)
 
-    :py:class:`~eopf.product.core.eo_product.EOProduct` are dict-like object (i.e :py:class:`~collections.abc.MutableMapping`), so you can retrieve
-    your group by index, with the fullpath for exemple, or directly with a `dot`:
+    :py:class:`~eopf.product.core.eo_product.EOProduct` are dict-like object (i.e :py:class:`~collections.abc.MutableMapping`),
+    so you can retrieve your group by index, with the fullpath for exemple, or directly with a `dot`:
 
         .. code-block:: python
 
             product["measurements"]
-            product["measurements/group1/group2/group3"]
-            product.measurements.group1
+            product["measurements/image/radiance"]
+            product.measurements.image
 
         .. code-block:: python
 
-            product["measurements/group1/group2c/variable_d"]
+            product["measurements/image/reflectance/oa01_reflectance"]
+            product.measurements.image.reflectance.oa01_reflectance
 
 
-    :py:class:`~eopf.product.core.eo_group.EOGroup` are similar to :py:class:`~eopf.product.core.eo_product.EOProduct`, and you can retrieve or create sub :py:class:`~eopf.product.core.eo_group.EOGroup` (resp. :py:class:`~eopf.product.core.eo_variable.EOVariable`) from them:
+    :py:class:`~eopf.product.core.eo_group.EOGroup` are similar to :py:class:`~eopf.product.core.eo_product.EOProduct`,
+    and you can retrieve or create sub :py:class:`~eopf.product.core.eo_group.EOGroup` (resp. :py:class:`~eopf.product.core.eo_variable.EOVariable`) from them:
 
         .. jupyter-execute::
             :hide-output:
 
-            product["measurements"].add_group("group1/group2b")
+            latitude = np.random.sample((100,100))
+            longitude = np.random.sample((100,100))
 
-            product.measurements["group1"].add_variable("variable_a", data=data_a)
-            product["measurements/group1"].add_variable("group2/variable_b", data=data_b)
+            product["coordinates"].add_group("orphans")
+
+            product.coordinates["orphans"].add_variable("latitude", data=latitude)
+            product["coordinates"].add_variable("orphans/longitude", data=longitude)
 
     If you have a sub :py:class:`~eopf.product.core.eo_group.EOGroup`, and you want to retrieve or add an other one higher in the hierarchy,
     you can path an asbolute path from the top level product:
 
         .. jupyter-execute::
 
-            subgroup = product.measurements["group1"]
-            new_group_higher = subgroup.add_group("/measurements/group1/group2b/group3")
-            subgroup["/measurements/group1/group2b/group3"] == new_group_higher
-
-        .. jupyter-execute::
-
-            subgroup.add_variable("/measurements/group1/group2/variable_c", data=data_c, dims=data_c.dims)
-
+            subgroup = product.measurements["image"]
+            new_group_higher = subgroup.add_group("/conditions/geometry")
+            product["/conditions/geometry"] == new_group_higher
 
     The last option to create a group is by directly indexing one in the :py:class:`~eopf.product.core.eo_product.EOProduct` or :py:class:`~eopf.product.core.eo_group.EOGroup`
 
         .. jupyter-execute::
 
             from eopf.product.core import EOGroup
-            subgroup["sub_new_group"] = EOGroup()
-            subgroup["sub_new_group"]
+            product["conditions/meteo"] = EOGroup()
+            product["conditions/meteo"]
 
         .. jupyter-execute::
 
+            radiance_data = np.random.sample((100,100))
+
             from eopf.product.core import EOVariable
-            product["measurements/group1"]["group2"]["variable_e"] = EOVariable(data=data_e)
-            product["measurements/group1"]["group2"]["variable_e"]
+            product["measurements/image"]["oa02_radiance"] = EOVariable(data=radiance_data)
+            product["measurements/image"]["oa02_radiance"]
 
     .. note::
 
@@ -210,9 +189,10 @@ Coordinates
 
     .. jupyter-execute::
 
-        product["coordinates/space"] = EOVariable(data=data_coord_space)
-        product.coordinates.add_variable("dim_group/dim_10",data=data_coord_dim_10, dims=("space",))
-        product.measurements.group1.coordinates
+        data_coord_latitude = np.random.sample((100,100))
+
+        product["coordinates/orphans/latitude"] = EOVariable(data=data_coord_latitude, dims=["longitude", "latitude"])
+        product["measurements/image/reflectance/oa01_reflectance"].coordinates
 
 Attibutes
 ---------
@@ -222,23 +202,47 @@ Attibutes
 
     .. jupyter-execute::
 
-        product.attrs["33"]=4.2
-        product.attrs["test_key"]="test_value"
+        product.attrs["bbox"] = [52.455, 3.16201, 39.5462, 23.1664]
+        product.attrs["id"] = "S3A_OL_1_EFR____20220116T092821_20220116T093121_20220117T134858_0179_081_036_2160_LN1_O_NT_002.SEN3"
+        product.attrs["product_type"] = "S3_OL_1_EFR"
         product.attrs
 
     .. jupyter-execute::
 
-        group = product["measurements/group1/group2"]
-        group.attrs["33"] = 4.3
-        group.attrs["test_key"] = "test_value"
+        group = product["conditions"]
+        group.attrs["meteo"] = {'source': 'ECMWF', 'type': 'ANALYSIS', 'time_relevance': 0}
+        group.attrs["orbit_reference"] = {
+            'absolute_pass_number': 61618,
+            'relative_pass_number': 72,
+            'cycle_number': 81,
+            'phase_identifier': 1,
+        }
         group.attrs
 
     .. jupyter-execute::
 
-        variable = product["measurements/group1/group2/variable_b"]
-        variable.attrs["33"] = 4.3
-        variable.attrs["test_key"] = "test_value"
+        variable = product["measurements/image/oa02_radiance"]
+        variable.attrs["ancillary_variables"] = "Oa02_radiance_err"
+        variable.attrs["coordinates"] = "time_stamp altitude latitude longitude"
         variable.attrs
+
+Product Type and short names
+----------------------------
+
+    Product can be describe with a specific code that you can retrieve with
+    :py:attr:`~eopf.product.core.eo_product.EOProduct.product_type`
+
+    .. jupyter-execute::
+
+        product.product_type
+
+    each known type of product have a list of :py:attr:`~eopf.product.core.eo_product.EOProduct.short_names`,
+    which are helpful to retrieve variables from product.
+
+    .. jupyter-execute::
+
+        product.oa02_radiance
+
 
 Tree of the product
 -------------------
@@ -264,65 +268,15 @@ Reading a Product from a store
         :hide-output:
         :hide-code:
 
-        def write_zarr_file():
-            file_name = "file://output/eoproduct_zarr_file.zarr"
-            dims = "_EOPF_DIMENSIONS"
-
-            root = zarr.open(file_name, mode="w")
-            root.attrs["top_level"] = True
-            root.create_group("coordinates")
-
-            root["coordinates"].attrs["description"] = "coordinates Data Group"
-            root["coordinates"].create_group("grid")
-            root["coordinates"].create_group("tie_point")
-            xarray.Dataset({"radiance": ["rows", "columns"], "orphan": ["depths", "length"]}).to_zarr(
-                store=f"{file_name}/coordinates/grid",
-                mode="a",
-            )
-            xarray.Dataset({"radiance": ["rows", "columns"], "orphan": ["depths", "length"]}).to_zarr(
-                store=f"{file_name}/coordinates/tie_point",
-                mode="a",
-            )
-
-            root.create_group("measurements")
-            root["measurements"].attrs["description"] = "measurements Data Group"
-            root["measurements"].create_group("geo_position")
-            root["measurements"]["geo_position"].create_group("altitude")
-            root["measurements"]["geo_position"].create_group("latitude")
-            root["measurements"]["geo_position"].create_group("longitude")
-
-            xarray.Dataset(
-                {
-                    "polar": xarray.DataArray([[12, 4], [3, 8]], attrs={dims: ["grid/radiance"]}),
-                    "cartesian": xarray.DataArray([[5, -3], [-55, 66]], attrs={dims: ["tie_point/orphan"]}),
-                },
-            ).to_zarr(store=f"{file_name}/measurements/geo_position/altitude", mode="a")
-            xarray.Dataset(
-                {
-                    "polar": xarray.DataArray([[1, 2], [3, 4]], attrs={dims: ["grid/radiance"]}),
-                    "cartesian": xarray.DataArray([[9, 7], [-12, 81]], attrs={dims: ["tie_point/orphan"]}),
-                },
-            ).to_zarr(store=f"{file_name}/measurements/geo_position/latitude", mode="a")
-            xarray.Dataset(
-                {
-                    "polar": xarray.DataArray([[6, 7], [2, 1]], attrs={dims: ["tie_point/radiance"]}),
-                    "cartesian": xarray.DataArray([[25, 0], [-5, 72]], attrs={dims: ["grid/orphan"]}),
-                },
-            ).to_zarr(store=f"{file_name}/measurements/geo_position/longitude", mode="a")
-            zarr.consolidate_metadata(root.store)
-            return file_name
-
-    .. jupyter-execute::
-        :hide-output:
-        :hide-code:
-
-        file_name = write_zarr_file()
+        file_name = "source/_data/S3_OL_1_EFR.zarr"
 
 
     To read data of a product, from a specific format, you must instantiate your :obj:`eopf.product.EOProduct` with
     the parameter **storage**, that can be a :obj:`str` or a :py:class:`~eopf.product.store.abstract.EOProductStore`.
 
     .. jupyter-execute::
+
+        from eopf.product.store import EOZarrStore
 
         product_read_from_store = EOProduct("product_read", storage=EOZarrStore(file_name))
 
@@ -339,17 +293,16 @@ Reading a Product from a store
         from eopf.product.conveniences import open_store
 
         with open_store(product_read_from_store, mode='r'):
-            product_read_from_store["/measurements/geo_position/altitude"]
+            product_read_from_store["measurements/image"]
 
     .. jupyter-execute::
 
         with open_store(product_read_from_store, mode='r'):
-            print(product_read_from_store["measurements/geo_position/altitude/cartesian"]._data)
-            print(product_read_from_store["measurements/geo_position/altitude/polar"]._data.to_numpy())
-            print(product_read_from_store["measurements/geo_position/longitude/cartesian"]._data)
-            print(product_read_from_store["measurements/geo_position/longitude/polar"]._data.to_numpy())
-            print(product_read_from_store["measurements/geo_position/latitude/cartesian"]._data)
-            print(product_read_from_store["measurements/geo_position/latitude/polar"]._data.to_numpy())
+            print(product_read_from_store["measurements/image/oa02_radiance"].data)
+            print(product_read_from_store["coordinates/tiepoint_grid/latitude"].data)
+            print(product_read_from_store["measurements/image/oa02_radiance"].compute())
+            print(product_read_from_store["coordinates/tiepoint_grid/latitude"].compute())
+
 
     If you want to load a full product in memory, you can use the :py:meth:`~eopf.product.core.eo_product.EOProduct.load` method:
 
@@ -357,7 +310,7 @@ Reading a Product from a store
 
         with open_store(product_read_from_store):
             product_read_from_store.load()
-        product_read_from_store["measurements/geo_position/latitude/polar"]
+        product_read_from_store["measurements/image/"]
 
 
 Writting Products
@@ -367,8 +320,13 @@ Writting Products
 
     .. jupyter-execute::
 
+        output_folder = "output"
+        output_filename = "S3_OL_1_EFR.zarr"
         with product.open(mode="w", storage=EOZarrStore(f"{output_folder}/{output_filename}")):
             product.write()
 
     .. warning::
         You have to **open** your store before, using :py:meth:`~eopf.product.core.eo_product.EOProduct.open` or :py:func:`~eopf.product.conveniences.open_store`
+
+
+.. _Common data model: https://docs.unidata.ucar.edu/netcdf-c/current/netcdf_data_model.html

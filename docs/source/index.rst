@@ -26,6 +26,10 @@ The **Core Python Modules ( CPM )** framework comes with the main following modu
 The :ref:`user-guide` aims to get you using eopf cpm productively as quickly as possible.
 It is designed as an entry point for new users, and it provided an introduction to eopf cpm main concepts.
 
+The :ref:`developer-guide` describe how to start and develop ``eopf`` processor or plugins.
+
+If you are a contributor to this project, please read :ref:`contributing-guide` before starting.
+
 License
 -------
 
