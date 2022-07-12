@@ -10,877 +10,2449 @@
       "short_name": "lat",
       "target_path": "/coordinates/image_grid/latitude",
       "source_path": "geolocation.nc:lat",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "DEM corrected latitude",
+        "scale_factor": 9.999999974752427e-07,
+        "standard_name": "latitude",
+        "units": "degrees_north",
+        "valid_max": 90000000,
+        "valid_min": -90000000
+      }
     },
     {
       "short_name": "lon",
       "target_path": "/coordinates/image_grid/longitude",
       "source_path": "geolocation.nc:lon",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "DEM corrected longitude",
+        "scale_factor": 9.999999974752427e-07,
+        "standard_name": "longitude",
+        "units": "degrees_east",
+        "valid_max": 180000000,
+        "valid_min": -180000000
+      }
     },
     {
       "short_name": "altitude",
       "target_path": "/coordinates/image_grid/altitude",
       "source_path": "geolocation.nc:altitude",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -32768,
+        "long_name": "DEM corrected altitude",
+        "positive": "up",
+        "standard_name": "altitude",
+        "units": "meters",
+        "valid_max": 9000,
+        "valid_min": -1000
+      }
     },
     {
       "short_name": "latitude_orphan",
       "target_path": "/coordinates/orphan/latitude",
       "source_path": "Syn_annot_rem.nc:lat",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "DEM corrected latitude for removed pixels",
+        "scale_factor": 9.999999974752427e-07,
+        "standard_name": "latitude",
+        "units": "degrees_north",
+        "valid_max": 90000000,
+        "valid_min": -90000000
+      }
     },
     {
       "short_name": "longitude_orphan",
       "target_path": "/coordinates/orphan/longitude",
       "source_path": "Syn_annot_rem.nc:lon",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "DEM corrected longitude for removed pixels",
+        "scale_factor": 9.999999974752427e-07,
+        "standard_name": "longitude",
+        "units": "degrees_east",
+        "valid_max": 180000000,
+        "valid_min": -180000000
+      }
     },
     {
       "short_name": "altitude_orphan",
       "target_path": "/coordinates/orphan/altitude",
       "source_path": "Syn_annot_rem.nc:altitude",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -32768,
+        "long_name": "DEM corrected altitude for removed pixels",
+        "positive": "up",
+        "standard_name": "altitude",
+        "units": "meters",
+        "valid_max": 9000,
+        "valid_min": -1000
+      }
     },
     {
       "short_name": "olci_tp_latitude",
       "target_path": "/coordinates/olci_tp_grid/latitude",
       "source_path": "tiepoints_olci.nc:OLC_TP_lat",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "Latitude (WGS-84)",
+        "scale_factor": 9.999999974752427e-07,
+        "standard_name": "latitude",
+        "units": "degrees_north",
+        "valid_max": 90000000,
+        "valid_min": -90000000
+      }
     },
     {
       "short_name": "olci_tp_longitude",
       "target_path": "/coordinates/olci_tp_grid/longitude",
       "source_path": "tiepoints_olci.nc:OLC_TP_lon",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "Longitude (WGS-84)",
+        "scale_factor": 9.999999974752427e-07,
+        "standard_name": "longitude",
+        "units": "degrees_east",
+        "valid_max": 180000000,
+        "valid_min": -180000000
+      }
     },
     {
       "short_name": "slstr_n_tp_latitude",
       "target_path": "/coordinates/slstr_n_tp_grid/latitude",
       "source_path": "tiepoints_slstr_n.nc:SLN_TP_lat",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Latitude (WGS-84)",
+        "standard_name": "latitude",
+        "units": "degrees_north",
+        "valid_max": 90.0,
+        "valid_min": -90.0
+      }
     },
     {
       "short_name": "slstr_n_tp_longitude",
       "target_path": "/coordinates/slstr_n_tp_grid/longitude",
       "source_path": "tiepoints_slstr_n.nc:SLN_TP_lon",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Longitude (WGS-84)",
+        "standard_name": "longitude",
+        "units": "degrees_east",
+        "valid_max": 180.0,
+        "valid_min": -180.0
+      }
     },
     {
       "short_name": "slstr_o_tp_latitude",
       "target_path": "/coordinates/slstr_o_tp_grid/latitude",
       "source_path": "tiepoints_slstr_o.nc:SLO_TP_lat",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Latitude (WGS-84)",
+        "standard_name": "latitude",
+        "units": "degrees_north",
+        "valid_max": 90.0,
+        "valid_min": -90.0
+      }
     },
     {
       "short_name": "slstr_o_tp_longitude",
       "target_path": "/coordinates/slstr_o_tp_grid/longitude",
       "source_path": "tiepoints_slstr_o.nc:SLO_TP_lon",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Longitude (WGS-84)",
+        "standard_name": "longitude",
+        "units": "degrees_east",
+        "valid_max": 180.0,
+        "valid_min": -180.0
+      }
     },
     {
       "short_name": "time",
       "target_path": "/coordinates/time/time",
       "source_path": "time.nc:Time",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1,
+        "long_name": "Time of measurement",
+        "standard_name": "time_of_measurement",
+        "units": "microseconds since 2000-01-01 00:00:00",
+        "valid_max": 4294967295,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "sdr_oa01",
       "target_path": "/measurements/olci/sdr_oa01",
       "source_path": "Syn_Oa01_reflectance.nc:SDR_Oa01",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa01_err",
+        "bandwidth": 15.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 01",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 400.0
+      }
     },
     {
       "short_name": "sdr_oa02",
       "target_path": "/measurements/olci/sdr_oa02",
       "source_path": "Syn_Oa02_reflectance.nc:SDR_Oa02",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa02_err",
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 02",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 412.5
+      }
     },
     {
       "short_name": "sdr_oa03",
       "target_path": "/measurements/olci/sdr_oa03",
       "source_path": "Syn_Oa03_reflectance.nc:SDR_Oa03",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa03_err",
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 03",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 442.5
+      }
     },
     {
       "short_name": "sdr_oa04",
       "target_path": "/measurements/olci/sdr_oa04",
       "source_path": "Syn_Oa04_reflectance.nc:SDR_Oa04",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa04_err",
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 04",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 490.0
+      }
     },
     {
       "short_name": "sdr_oa05",
       "target_path": "/measurements/olci/sdr_oa05",
       "source_path": "Syn_Oa05_reflectance.nc:SDR_Oa05",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa05_err",
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 05",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 510.0
+      }
     },
     {
       "short_name": "sdr_oa06",
       "target_path": "/measurements/olci/sdr_oa06",
       "source_path": "Syn_Oa06_reflectance.nc:SDR_Oa06",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa06_err",
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 06",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 560.0
+      }
     },
     {
       "short_name": "sdr_oa07",
       "target_path": "/measurements/olci/sdr_oa07",
       "source_path": "Syn_Oa07_reflectance.nc:SDR_Oa07",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa07_err",
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 07",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 620.0
+      }
     },
     {
       "short_name": "sdr_oa08",
       "target_path": "/measurements/olci/sdr_oa08",
       "source_path": "Syn_Oa08_reflectance.nc:SDR_Oa08",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa08_err",
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 08",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 665.0
+      }
     },
     {
       "short_name": "sdr_oa09",
       "target_path": "/measurements/olci/sdr_oa09",
       "source_path": "Syn_Oa09_reflectance.nc:SDR_Oa09",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa09_err",
+        "bandwidth": 7.5,
+        "long_name": "Surface directional reflectance associated with OLCI channel 09",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 673.75
+      }
     },
     {
       "short_name": "sdr_oa10",
       "target_path": "/measurements/olci/sdr_oa10",
       "source_path": "Syn_Oa10_reflectance.nc:SDR_Oa10",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa10_err",
+        "bandwidth": 7.5,
+        "long_name": "Surface directional reflectance associated with OLCI channel 10",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 681.25
+      }
     },
     {
       "short_name": "sdr_oa11",
       "target_path": "/measurements/olci/sdr_oa11",
       "source_path": "Syn_Oa11_reflectance.nc:SDR_Oa11",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa11_err",
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 11",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 708.75
+      }
     },
     {
       "short_name": "sdr_oa12",
       "target_path": "/measurements/olci/sdr_oa12",
       "source_path": "Syn_Oa12_reflectance.nc:SDR_Oa12",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa12_err",
+        "bandwidth": 7.5,
+        "long_name": "Surface directional reflectance associated with OLCI channel 12",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 753.75
+      }
     },
     {
       "short_name": "sdr_oa16",
       "target_path": "/measurements/olci/sdr_oa16",
       "source_path": "Syn_Oa16_reflectance.nc:SDR_Oa16",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa16_err",
+        "bandwidth": 15.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 16",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 778.75
+      }
     },
     {
       "short_name": "sdr_oa17",
       "target_path": "/measurements/olci/sdr_oa17",
       "source_path": "Syn_Oa17_reflectance.nc:SDR_Oa17",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa17_err",
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 17",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 865.0
+      }
     },
     {
       "short_name": "sdr_oa18",
       "target_path": "/measurements/olci/sdr_oa18",
       "source_path": "Syn_Oa18_reflectance.nc:SDR_Oa18",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa18_err",
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 18",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 885.0
+      }
     },
     {
       "short_name": "sdr_oa21",
       "target_path": "/measurements/olci/sdr_oa21",
       "source_path": "Syn_Oa21_reflectance.nc:SDR_Oa21",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa21_err",
+        "bandwidth": 40.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 21",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 1020.0
+      }
     },
     {
       "short_name": "sdr_s1n",
       "target_path": "/measurements/slstr_n/sdr_s1n",
       "source_path": "Syn_S1N_reflectance.nc:SDR_S1N",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_S1N_err",
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance associated with SLSTR channel 01 acquired in nadir view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 555.0
+      }
     },
     {
       "short_name": "sdr_s2n",
       "target_path": "/measurements/slstr_n/sdr_s2n",
       "source_path": "Syn_S2N_reflectance.nc:SDR_S2N",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_S2N_err",
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance associated with SLSTR channel 02 acquired in nadir view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 659.0
+      }
     },
     {
       "short_name": "sdr_s3n",
       "target_path": "/measurements/slstr_n/sdr_s3n",
       "source_path": "Syn_S3N_reflectance.nc:SDR_S3N",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_S3N_err",
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance associated with SLSTR channel 03 acquired in nadir view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 865.0
+      }
     },
     {
       "short_name": "sdr_s5n",
       "target_path": "/measurements/slstr_n/sdr_s5n",
       "source_path": "Syn_S5N_reflectance.nc:SDR_S5N",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_S5N_err",
+        "bandwidth": 60.0,
+        "long_name": "Surface directional reflectance associated with SLSTR channel 05 acquired in nadir view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 1610.0
+      }
     },
     {
       "short_name": "sdr_s6n",
       "target_path": "/measurements/slstr_n/sdr_s6n",
       "source_path": "Syn_S6N_reflectance.nc:SDR_S6N",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_S6N_err",
+        "bandwidth": 50.0,
+        "long_name": "Surface directional reflectance associated with SLSTR channel 06 acquired in nadir view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 2250.0
+      }
     },
     {
       "short_name": "sdr_s1o",
       "target_path": "/measurements/slstr_o/sdr_s1o",
       "source_path": "Syn_S1O_reflectance.nc:SDR_S1O",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_S1O_err",
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance associated with SLSTR channel 01 acquired in oblique view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 555.0
+      }
     },
     {
       "short_name": "sdr_s2o",
       "target_path": "/measurements/slstr_o/sdr_s2o",
       "source_path": "Syn_S2O_reflectance.nc:SDR_S2O",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_S2O_err",
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance associated with SLSTR channel 02 acquired in oblique view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 659.0
+      }
     },
     {
       "short_name": "sdr_s3o",
       "target_path": "/measurements/slstr_o/sdr_s3o",
       "source_path": "Syn_S3O_reflectance.nc:SDR_S3O",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_S3O_err",
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance associated with SLSTR channel 03 acquired in oblique view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 865.0
+      }
     },
     {
       "short_name": "sdr_s5o",
       "target_path": "/measurements/slstr_o/sdr_s5o",
       "source_path": "Syn_S5O_reflectance.nc:SDR_S5O",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_S5O_err",
+        "bandwidth": 60.0,
+        "long_name": "Surface directional reflectance associated with SLSTR channel 05 acquired in oblique view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 1610.0
+      }
     },
     {
       "short_name": "sdr_s6o",
       "target_path": "/measurements/slstr_o/sdr_s6o",
       "source_path": "Syn_S6O_reflectance.nc:SDR_S6O",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_S6O_err",
+        "bandwidth": 50.0,
+        "long_name": "Surface directional reflectance associated with SLSTR channel 06 acquired in oblique view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 2250.0
+      }
     },
     {
       "short_name": "amin",
       "target_path": "/measurements/meteo/amin",
       "source_path": "Syn_AMIN.nc:AMIN",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 0,
+        "long_name": "Aerosol Model Index Number",
+        "standard_name": "aerosol_model_index_number",
+        "valid_max": 40,
+        "valid_min": 1
+      }
     },
     {
       "short_name": "a550",
       "target_path": "/measurements/meteo/a550",
       "source_path": "Syn_Angstrom_exp550.nc:A550",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 0,
+        "add_offset": -1.0,
+        "long_name": "Aerosol Angstrom exponent at 550 nm",
+        "scale_factor": 0.014999999664723873,
+        "standard_name": "atmosphere_angstrom_exponent",
+        "valid_max": 255,
+        "valid_min": 1,
+        "wavelength": 550.0
+      }
     },
     {
       "short_name": "t550",
       "target_path": "/measurements/meteo/t550",
       "source_path": "Syn_AOT550.nc:T550",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "T550_err",
+        "long_name": "Aerosol optical Thickness",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "atmosphere_optical_thickness_due_to_aerosol",
+        "valid_max": 32767,
+        "valid_min": 0,
+        "wavelength": 550.0
+      }
     },
     {
       "short_name": "sdr_oa01_orphan",
       "target_path": "/measurements/orphan/sdr_oa01",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa01",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa01_err",
+        "bandwidth": 15.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 01",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 400.0
+      }
     },
     {
       "short_name": "sdr_oa02_orphan",
       "target_path": "/measurements/orphan/sdr_oa02",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa02",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa02_err",
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 02",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 412.5
+      }
     },
     {
       "short_name": "sdr_oa03_orphan",
       "target_path": "/measurements/orphan/sdr_oa03",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa03",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa03_err",
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 03",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 442.5
+      }
     },
     {
       "short_name": "sdr_oa04_orphan",
       "target_path": "/measurements/orphan/sdr_oa04",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa04",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa04_err",
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 04",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 490.0
+      }
     },
     {
       "short_name": "sdr_oa05_orphan",
       "target_path": "/measurements/orphan/sdr_oa05",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa05",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa05_err",
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 05",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 510.0
+      }
     },
     {
       "short_name": "sdr_oa06_orphan",
       "target_path": "/measurements/orphan/sdr_oa06",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa06",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa06_err",
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 06",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 560.0
+      }
     },
     {
       "short_name": "sdr_oa07_orphan",
       "target_path": "/measurements/orphan/sdr_oa07",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa07",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa07_err",
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 07",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 620.0
+      }
     },
     {
       "short_name": "sdr_oa08_orphan",
       "target_path": "/measurements/orphan/sdr_oa08",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa08",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa08_err",
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 08",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 665.0
+      }
     },
     {
       "short_name": "sdr_oa09_orphan",
       "target_path": "/measurements/orphan/sdr_oa09",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa09",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa09_err",
+        "bandwidth": 7.5,
+        "long_name": "Surface directional reflectance associated with OLCI channel 09",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 673.75
+      }
     },
     {
       "short_name": "sdr_oa10_orphan",
       "target_path": "/measurements/orphan/sdr_oa10",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa10",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa10_err",
+        "bandwidth": 7.5,
+        "long_name": "Surface directional reflectance associated with OLCI channel 10",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 681.25
+      }
     },
     {
       "short_name": "sdr_oa11_orphan",
       "target_path": "/measurements/orphan/sdr_oa11",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa11",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa11_err",
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 11",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 708.75
+      }
     },
     {
       "short_name": "sdr_oa12_orphan",
       "target_path": "/measurements/orphan/sdr_oa12",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa12",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa12_err",
+        "bandwidth": 7.5,
+        "long_name": "Surface directional reflectance associated with OLCI channel 12",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 753.75
+      }
     },
     {
       "short_name": "sdr_oa16_orphan",
       "target_path": "/measurements/orphan/sdr_oa16",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa16",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa16_err",
+        "bandwidth": 15.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 16",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 778.75
+      }
     },
     {
       "short_name": "sdr_oa17_orphan",
       "target_path": "/measurements/orphan/sdr_oa17",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa17",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa17_err",
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 17",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 865.0
+      }
     },
     {
       "short_name": "sdr_oa18_orphan",
       "target_path": "/measurements/orphan/sdr_oa18",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa18",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa18_err",
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 18",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 885.0
+      }
     },
     {
       "short_name": "sdr_oa21_orphan",
       "target_path": "/measurements/orphan/sdr_oa21",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa21",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_Oa21_err",
+        "bandwidth": 40.0,
+        "long_name": "Surface directional reflectance associated with OLCI channel 21",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 1020.0
+      }
     },
     {
       "short_name": "sdr_s1n_orphan",
       "target_path": "/measurements/orphan/sdr_s1n",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_S1N",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_S1N_err",
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance associated with SLSTR channel 01 acquired in nadir view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 555.0
+      }
     },
     {
       "short_name": "sdr_s1o_orphan",
       "target_path": "/measurements/orphan/sdr_s1o",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_S1O",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_S1O_err",
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance associated with SLSTR channel 01 acquired in oblique view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 555.0
+      }
     },
     {
       "short_name": "sdr_s2n_orphan",
       "target_path": "/measurements/orphan/sdr_s2n",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_S2N",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_S2N_err",
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance associated with SLSTR channel 02 acquired in nadir view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 659.0
+      }
     },
     {
       "short_name": "sdr_s2o_orphan",
       "target_path": "/measurements/orphan/sdr_s2o",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_S2O",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_S2O_err",
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance associated with SLSTR channel 02 acquired in oblique view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 659.0
+      }
     },
     {
       "short_name": "sdr_s3n_orphan",
       "target_path": "/measurements/orphan/sdr_s3n",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_S3N",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_S3N_err",
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance associated with SLSTR channel 03 acquired in nadir view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 865.0
+      }
     },
     {
       "short_name": "sdr_s3o_orphan",
       "target_path": "/measurements/orphan/sdr_s3o",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_S3O",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_S3O_err",
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance associated with SLSTR channel 03 acquired in oblique view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 865.0
+      }
     },
     {
       "short_name": "sdr_s5n_orphan",
       "target_path": "/measurements/orphan/sdr_s5n",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_S5N",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_S5N_err",
+        "bandwidth": 60.0,
+        "long_name": "Surface directional reflectance associated with SLSTR channel 05 acquired in nadir view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 1610.0
+      }
     },
     {
       "short_name": "sdr_s5o_orphan",
       "target_path": "/measurements/orphan/sdr_s5o",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_S5O",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_S5O_err",
+        "bandwidth": 60.0,
+        "long_name": "Surface directional reflectance associated with SLSTR channel 05 acquired in oblique view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 1610.0
+      }
     },
     {
       "short_name": "sdr_s6n_orphan",
       "target_path": "/measurements/orphan/sdr_s6n",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_S6N",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_S6N_err",
+        "bandwidth": 50.0,
+        "long_name": "Surface directional reflectance associated with SLSTR channel 06 acquired in nadir view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 2250.0
+      }
     },
     {
       "short_name": "sdr_s6o_orphan",
       "target_path": "/measurements/orphan/sdr_s6o",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_S6O",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "SDR_S6O_err",
+        "bandwidth": 50.0,
+        "long_name": "Surface directional reflectance associated with SLSTR channel 06 acquired in oblique view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 2250.0
+      }
     },
     {
       "short_name": "a550_orphan",
       "target_path": "/measurements/orphan/a550",
       "source_path": "Syn_SDR_removed_pixel.nc:A550",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 0,
+        "add_offset": -1.0,
+        "long_name": "Aerosol Angstrom exponent at 550 nm for removed pixels",
+        "scale_factor": 0.014999999664723873,
+        "standard_name": "atmosphere_angstrom_exponent_for_removed_pixels",
+        "valid_max": 255,
+        "valid_min": 1,
+        "wavelength": 550.0
+      }
     },
     {
       "short_name": "t550_orphan",
       "target_path": "/measurements/orphan/t550",
       "source_path": "Syn_SDR_removed_pixel.nc:T550",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "ancillary_variables": "T550_err",
+        "long_name": "Aerosol optical Thickness for removed pixels",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "atmosphere_optical_thickness_due_to_aerosol_for_removed_pixels",
+        "valid_max": 32767,
+        "valid_min": 0,
+        "wavelength": 550.0
+      }
     },
     {
       "short_name": "cloud_flags",
       "target_path": "/quality/flags/cloud_flags",
       "source_path": "flags.nc:CLOUD_flags",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "flag_masks": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "flag_meanings": "CLOUD CLOUD_AMBIGUOUS CLOUD_MARGIN SNOW_ICE",
+        "long_name": "Synergy cloud flags",
+        "standard_name": "synergy_cloud_flags"
+      }
     },
     {
       "short_name": "olci_flags",
       "target_path": "/quality/flags/olci_flags",
       "source_path": "flags.nc:OLC_flags",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "flag_masks": [
+          4096,
+          2048,
+          1024,
+          512,
+          256,
+          16,
+          8,
+          4,
+          2,
+          1
+        ],
+        "flag_meanings": "OLC_land OLC_coastline OLC_fresh_inland_water OLC_tidal_region OLC_bright OLC_invalid OLC_cosmetic OLC_sun_glint_risk OLC_dubious OLC_summary_saturated ",
+        "long_name": "Selected quality and classification flags for OLCI SYN channels",
+        "standard_name": "Selected_quality_and_classification_flags_for_olci_syn_channels"
+      }
     },
     {
       "short_name": "slstr_n_flags",
       "target_path": "/quality/flags/slstr_n_flags",
       "source_path": "flags.nc:SLN_flags",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "flag_masks": [
+          8388608,
+          4194304,
+          2097152,
+          1048576,
+          524288,
+          262144,
+          65536,
+          4096,
+          2048,
+          1024,
+          512,
+          256,
+          128,
+          64,
+          32,
+          16,
+          8,
+          4,
+          2,
+          1
+        ],
+        "flag_meanings": "SLN_summary_pointing SLN_summary_cloud SLN_snow SLN_sun_glint SLN_twilight SLN_day SLN_cosmetic SLN_inland_water SLN_land SLN_tidal SLN_ocean SLN_coastline SLN_summary_unfilled_pixel SLN_summary_no_parameters SLN_summary_invalid_radiance SLN_summary_saturation SLN_summary_no_signal SLN_summary_not_decompressed SLN_summary_pixel_absent SLN_summary_ISP_absent",
+        "long_name": "Exception summary and confidence flags for SLSTR nadir-view SYN channels",
+        "standard_name": "exception_summary_and_confidence_flags_for_slstr_nadir_view_syn_channels"
+      }
     },
     {
       "short_name": "slstr_o_flags",
       "target_path": "/quality/flags/slstr_o_flags",
       "source_path": "flags.nc:SLO_flags",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "flag_masks": [
+          8388608,
+          4194304,
+          2097152,
+          1048576,
+          524288,
+          262144,
+          65536,
+          4096,
+          2048,
+          1024,
+          512,
+          256,
+          128,
+          64,
+          32,
+          16,
+          8,
+          4,
+          2,
+          1
+        ],
+        "flag_meanings": "SLO_summary_pointing SLO_summary_cloud SLO_snow SLO_sun_glint SLO_twilight SLO_day SLO_cosmetic SLO_inland_water SLO_land SLO_tidal SLO_ocean SLO_coastline SLO_summary_unfilled_pixel SLO_summary_no_parameters SLO_summary_invalid_radiance SLO_summary_saturation SLO_summary_no_signal SLO_summary_not_decompressed SLO_summary_pixel_absent SLO_summary_ISP_absent",
+        "long_name": "Exception summary and confidence flags for SLSTR oblique-view SYN channels",
+        "standard_name": "exception_summary_and_confidence_flags_for_slstr_oblique_view_syn_channels"
+      }
     },
     {
       "short_name": "syn_flags",
       "target_path": "/quality/flags/syn_flags",
       "source_path": "flags.nc:SYN_flags",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "flag_masks": [
+          32768,
+          16384,
+          8192,
+          4096,
+          2048,
+          1024,
+          512,
+          256,
+          128,
+          64,
+          32,
+          16,
+          8,
+          4,
+          2,
+          1
+        ],
+        "flag_meanings": "SYN_high_error SYN_too_low SYN_negative_curvature SYN_success SYN_aerosol_filled SYN_border SYN_partly_water SYN_partly_cloudy SYN_no_slo SYN_no_sln SYN_no_olc SYN_land SYN_AOT_climato SYN_SDR_OOR SYN_snow_risk SYN_cloud",
+        "long_name": "Synergy classification and aerosol retrieval flags",
+        "standard_name": "synergy_classification_and_aerosol_retrieval_flags"
+      }
     },
     {
       "short_name": "sdr_oa01_err",
       "target_path": "/quality/err/sdr_oa01_err",
       "source_path": "Syn_Oa01_reflectance.nc:SDR_Oa01_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 15.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 01",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 400.0
+      }
     },
     {
       "short_name": "sdr_oa02_err",
       "target_path": "/quality/err/sdr_oa02_err",
       "source_path": "Syn_Oa02_reflectance.nc:SDR_Oa02_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 02",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 412.5
+      }
     },
     {
       "short_name": "sdr_oa03_err",
       "target_path": "/quality/err/sdr_oa03_err",
       "source_path": "Syn_Oa03_reflectance.nc:SDR_Oa03_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 03",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 442.5
+      }
     },
     {
       "short_name": "sdr_oa04_err",
       "target_path": "/quality/err/sdr_oa04_err",
       "source_path": "Syn_Oa04_reflectance.nc:SDR_Oa04_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 04",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 490.0
+      }
     },
     {
       "short_name": "sdr_oa05_err",
       "target_path": "/quality/err/sdr_oa05_err",
       "source_path": "Syn_Oa05_reflectance.nc:SDR_Oa05_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 05",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 510.0
+      }
     },
     {
       "short_name": "sdr_oa06_err",
       "target_path": "/quality/err/sdr_oa06_err",
       "source_path": "Syn_Oa06_reflectance.nc:SDR_Oa06_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 06",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 560.0
+      }
     },
     {
       "short_name": "sdr_oa07_err",
       "target_path": "/quality/err/sdr_oa07_err",
       "source_path": "Syn_Oa07_reflectance.nc:SDR_Oa07_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 07",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 620.0
+      }
     },
     {
       "short_name": "sdr_oa08_err",
       "target_path": "/quality/err/sdr_oa08_err",
       "source_path": "Syn_Oa08_reflectance.nc:SDR_Oa08_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 08",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 665.0
+      }
     },
     {
       "short_name": "sdr_oa09_err",
       "target_path": "/quality/err/sdr_oa09_err",
       "source_path": "Syn_Oa09_reflectance.nc:SDR_Oa09_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 7.5,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 09",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 673.75
+      }
     },
     {
       "short_name": "sdr_oa10_err",
       "target_path": "/quality/err/sdr_oa10_err",
       "source_path": "Syn_Oa10_reflectance.nc:SDR_Oa10_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 7.5,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 10",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 681.25
+      }
     },
     {
       "short_name": "sdr_oa11_err",
       "target_path": "/quality/err/sdr_oa11_err",
       "source_path": "Syn_Oa11_reflectance.nc:SDR_Oa11_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 11",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 708.75
+      }
     },
     {
       "short_name": "sdr_oa12_err",
       "target_path": "/quality/err/sdr_oa12_err",
       "source_path": "Syn_Oa12_reflectance.nc:SDR_Oa12_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 7.5,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 12",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 753.75
+      }
     },
     {
       "short_name": "sdr_oa16_err",
       "target_path": "/quality/err/sdr_oa16_err",
       "source_path": "Syn_Oa16_reflectance.nc:SDR_Oa16_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 15.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 16",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 778.75
+      }
     },
     {
       "short_name": "sdr_oa17_err",
       "target_path": "/quality/err/sdr_oa17_err",
       "source_path": "Syn_Oa17_reflectance.nc:SDR_Oa17_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 17",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 865.0
+      }
     },
     {
       "short_name": "sdr_oa18_err",
       "target_path": "/quality/err/sdr_oa18_err",
       "source_path": "Syn_Oa18_reflectance.nc:SDR_Oa18_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 18",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 885.0
+      }
     },
     {
       "short_name": "sdr_oa21_err",
       "target_path": "/quality/err/sdr_oa21_err",
       "source_path": "Syn_Oa21_reflectance.nc:SDR_Oa21_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 40.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 21",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 1020.0
+      }
     },
     {
       "short_name": "sdr_s1n_err",
       "target_path": "/quality/err/sdr_s1n_err",
       "source_path": "Syn_S1N_reflectance.nc:SDR_S1N_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 01 acquired in nadir view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 555.0
+      }
     },
     {
       "short_name": "sdr_s1o_err",
       "target_path": "/quality/err/sdr_s1o_err",
       "source_path": "Syn_S1O_reflectance.nc:SDR_S1O_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 01 acquired in oblique view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 555.0
+      }
     },
     {
       "short_name": "sdr_s2n_err",
       "target_path": "/quality/err/sdr_s2n_err",
       "source_path": "Syn_S2N_reflectance.nc:SDR_S2N_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 02 acquired in nadir view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 659.0
+      }
     },
     {
       "short_name": "sdr_s2o_err",
       "target_path": "/quality/err/sdr_s2o_err",
       "source_path": "Syn_S2O_reflectance.nc:SDR_S2O_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 02 acquired in oblique view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 659.0
+      }
     },
     {
       "short_name": "sdr_s3n_err",
       "target_path": "/quality/err/sdr_s3n_err",
       "source_path": "Syn_S3N_reflectance.nc:SDR_S3N_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 03 acquired in nadir view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 865.0
+      }
     },
     {
       "short_name": "sdr_s3o_err",
       "target_path": "/quality/err/sdr_s3o_err",
       "source_path": "Syn_S3O_reflectance.nc:SDR_S3O_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 03 acquired in oblique view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 865.0
+      }
     },
     {
       "short_name": "sdr_s5n_err",
       "target_path": "/quality/err/sdr_s5n_err",
       "source_path": "Syn_S5N_reflectance.nc:SDR_S5N_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 60.0,
+        "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 05 acquired in nadir view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 1610.0
+      }
     },
     {
       "short_name": "sdr_s5o_err",
       "target_path": "/quality/err/sdr_s5o_err",
       "source_path": "Syn_S5O_reflectance.nc:SDR_S5O_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 60.0,
+        "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 05 acquired in oblique view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 1610.0
+      }
     },
     {
       "short_name": "sdr_s6n_err",
       "target_path": "/quality/err/sdr_s6n_err",
       "source_path": "Syn_S6N_reflectance.nc:SDR_S6N_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 50.0,
+        "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 06 acquired in nadir view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 2250.0
+      }
     },
     {
       "short_name": "sdr_s6o_err",
       "target_path": "/quality/err/sdr_s6o_err",
       "source_path": "Syn_S6O_reflectance.nc:SDR_S6O_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 50.0,
+        "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 06 acquired in oblique view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_error_estimate",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 2250.0
+      }
     },
     {
       "short_name": "t550_err",
       "target_path": "/quality/err/t550_err",
       "source_path": "Syn_AOT550.nc:T550_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "long_name": "Aerosol optical Thickness standard error",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "atmosphere_optical_thickness_due_to_aerosol_standard_error",
+        "valid_max": 32767,
+        "valid_min": 0,
+        "wavelength": 550.0
+      }
     },
     {
       "short_name": "amin_orphan",
       "target_path": "/quality/orphan/amin",
       "source_path": "Syn_annot_rem.nc:AMIN",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 0,
+        "long_name": "Aerosol Model Index Number for removed pixels",
+        "standard_name": "aerosol_model_index_number_for_removed_pixels",
+        "valid_max": 40,
+        "valid_min": 1
+      }
     },
     {
       "short_name": "cloud_flags_orphan",
       "target_path": "/quality/orphan/cloud_flags",
       "source_path": "Syn_annot_rem.nc:CLOUD_flags",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "flag_masks": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "flag_meanings": "CLOUD CLOUD_AMBIGUOUS CLOUD_MARGIN SNOW_ICE",
+        "long_name": "Synergy cloud flags for removed pixels",
+        "standard_name": "synergy_cloud_flags_for_removed_pixels"
+      }
     },
     {
       "short_name": "olc_flags_orphan",
       "target_path": "/quality/orphan/olc_flags",
       "source_path": "Syn_annot_rem.nc:OLC_flags",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "flag_masks": [
+          4096,
+          2048,
+          1024,
+          512,
+          256,
+          16,
+          8,
+          4,
+          2,
+          1
+        ],
+        "flag_meanings": "OLC_land OLC_coastline OLC_fresh_inland_water OLC_tidal_region OLC_bright OLC_invalid OLC_cosmetic OLC_sun_glint_risk OLC_dubious OLC_summary_saturated ",
+        "long_name": "Selected quality and classification flags for OLCI SYN channels and removed pixels",
+        "standard_name": "Selected_quality_and_classification_flags_for_olci_syn_channels_and_removed_pixels"
+      }
     },
     {
       "short_name": "sln_flags_orphan",
       "target_path": "/quality/orphan/sln_flags",
       "source_path": "Syn_annot_rem.nc:SLN_flags",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "flag_masks": [
+          8388608,
+          4194304,
+          2097152,
+          1048576,
+          524288,
+          262144,
+          65536,
+          4096,
+          2048,
+          1024,
+          512,
+          256,
+          128,
+          64,
+          32,
+          16,
+          8,
+          4,
+          2,
+          1
+        ],
+        "flag_meanings": "SLN_summary_pointing SLN_summary_cloud SLN_snow SLN_sun_glint SLN_twilight SLN_day SLN_cosmetic SLN_inland_water SLN_land SLN_tidal SLN_ocean SLN_coastline SLN_summary_unfilled_pixel SLN_summary_no_parameters SLN_summary_invalid_radiance SLN_summary_saturation SLN_summary_no_signal SLN_summary_not_decompressed SLN_summary_pixel_absent SLN_summary_ISP_absent",
+        "long_name": "Exception summary and confidence flags for SLSTR nadir-view SYN channels and removed pixels",
+        "standard_name": "exception_summary_and_confidence_flags_for_slstr_nadir_view_syn_channels_and_removed_pixels"
+      }
     },
     {
       "short_name": "slo_flags_orphan",
       "target_path": "/quality/orphan/slo_flags",
       "source_path": "Syn_annot_rem.nc:SLO_flags",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "flag_masks": [
+          8388608,
+          4194304,
+          2097152,
+          1048576,
+          524288,
+          262144,
+          65536,
+          4096,
+          2048,
+          1024,
+          512,
+          256,
+          128,
+          64,
+          32,
+          16,
+          8,
+          4,
+          2,
+          1
+        ],
+        "flag_meanings": "SLO_summary_pointing SLO_summary_cloud SLO_snow SLO_sun_glint SLO_twilight SLO_day SLO_cosmetic SLO_inland_water SLO_land SLO_tidal SLO_ocean SLO_coastline SLO_summary_unfilled_pixel SLO_summary_no_parameters SLO_summary_invalid_radiance SLO_summary_saturation SLO_summary_no_signal SLO_summary_not_decompressed SLO_summary_pixel_absent SLO_summary_ISP_absent",
+        "long_name": "Exception summary and confidence flags for SLSTR oblique-view SYN channels and removed pixels",
+        "standard_name": "exception_summary_and_confidence_flags_for_slstr_oblique_view_syn_channels_and_removed_pixels"
+      }
     },
     {
       "short_name": "syn_flags_orphan",
       "target_path": "/quality/orphan/syn_flags",
       "source_path": "Syn_annot_rem.nc:SYN_flags",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "flag_masks": [
+          32768,
+          16384,
+          8192,
+          4096,
+          2048,
+          1024,
+          512,
+          256,
+          128,
+          64,
+          32,
+          16,
+          8,
+          4,
+          2,
+          1
+        ],
+        "flag_meanings": "SYN_high_error SYN_too_low SYN_negative_curvature SYN_success SYN_aerosol_filled SYN_border SYN_partly_water SYN_partly_cloudy SYN_no_slo SYN_no_sln SYN_no_olc SYN_land SYN_AOT_climato SYN_SDR_OOR SYN_snow_risk SYN_cloud",
+        "long_name": "Synergy classification and aerosol retrieval flags for removed pixels",
+        "standard_name": "synergy_classification_and_aerosol_retrieval_flags_for_removed_pixels"
+      }
     },
     {
       "short_name": "sdr_oa01_err_orphan",
       "target_path": "/quality/orphan/sdr_oa01_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa01_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 15.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 01",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 400.0
+      }
     },
     {
       "short_name": "sdr_oa02_err_orphan",
       "target_path": "/quality/orphan/sdr_oa02_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa02_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 02",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 412.5
+      }
     },
     {
       "short_name": "sdr_oa03_err_orphan",
       "target_path": "/quality/orphan/sdr_oa03_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa03_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 03",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 442.5
+      }
     },
     {
       "short_name": "sdr_oa04_err_orphan",
       "target_path": "/quality/orphan/sdr_oa04_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa04_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 04",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 490.0
+      }
     },
     {
       "short_name": "sdr_oa05_err_orphan",
       "target_path": "/quality/orphan/sdr_oa05_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa05_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 05",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 510.0
+      }
     },
     {
       "short_name": "sdr_oa06_err_orphan",
       "target_path": "/quality/orphan/sdr_oa06_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa06_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 06",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 560.0
+      }
     },
     {
       "short_name": "sdr_oa07_err_orphan",
       "target_path": "/quality/orphan/sdr_oa07_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa07_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 07",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 620.0
+      }
     },
     {
       "short_name": "sdr_oa08_err_orphan",
       "target_path": "/quality/orphan/sdr_oa08_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa08_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 08",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 665.0
+      }
     },
     {
       "short_name": "sdr_oa09_err_orphan",
       "target_path": "/quality/orphan/sdr_oa09_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa09_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 7.5,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 09",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 673.75
+      }
     },
     {
       "short_name": "sdr_oa10_err_orphan",
       "target_path": "/quality/orphan/sdr_oa10_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa10_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 7.5,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 10",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 681.25
+      }
     },
     {
       "short_name": "sdr_oa11_err_orphan",
       "target_path": "/quality/orphan/sdr_oa11_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa11_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 11",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 708.75
+      }
     },
     {
       "short_name": "sdr_oa12_err_orphan",
       "target_path": "/quality/orphan/sdr_oa12_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa12_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 7.5,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 12",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 753.75
+      }
     },
     {
       "short_name": "sdr_oa16_err_orphan",
       "target_path": "/quality/orphan/sdr_oa16_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa16_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 15.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 16",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 778.75
+      }
     },
     {
       "short_name": "sdr_oa17_err_orphan",
       "target_path": "/quality/orphan/sdr_oa17_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa17_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 17",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 865.0
+      }
     },
     {
       "short_name": "sdr_oa18_err_orphan",
       "target_path": "/quality/orphan/sdr_oa18_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa18_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 10.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 18",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 885.0
+      }
     },
     {
       "short_name": "sdr_oa21_err_orphan",
       "target_path": "/quality/orphan/sdr_oa21_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_Oa21_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 40.0,
+        "long_name": "Surface directional reflectance error estimate associated with OLCI channel 21",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 1020.0
+      }
     },
     {
       "short_name": "sdr_s1n_err_orphan",
       "target_path": "/quality/orphan/sdr_s1n_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_S1N_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 01 acquired in nadir view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 555.0
+      }
     },
     {
       "short_name": "sdr_s1o_err_orphan",
       "target_path": "/quality/orphan/sdr_s1o_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_S1O_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 01 acquired in oblique view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 555.0
+      }
     },
     {
       "short_name": "sdr_s2n_err_orphan",
       "target_path": "/quality/orphan/sdr_s2n_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_S2N_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 02 acquired in nadir view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 659.0
+      }
     },
     {
       "short_name": "sdr_s2o_err_orphan",
       "target_path": "/quality/orphan/sdr_s2o_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_S2O_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 02 acquired in oblique view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 659.0
+      }
     },
     {
       "short_name": "sdr_s3n_err_orphan",
       "target_path": "/quality/orphan/sdr_s3n_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_S3N_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 03 acquired in nadir view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 865.0
+      }
     },
     {
       "short_name": "sdr_s3o_err_orphan",
       "target_path": "/quality/orphan/sdr_s3o_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_S3O_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 20.0,
+        "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 03 acquired in oblique view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 865.0
+      }
     },
     {
       "short_name": "sdr_s5n_err_orphan",
       "target_path": "/quality/orphan/sdr_s5n_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_S5N_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 60.0,
+        "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 05 acquired in nadir view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 1610.0
+      }
     },
     {
       "short_name": "sdr_s5o_err_orphan",
       "target_path": "/quality/orphan/sdr_s5o_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_S5O_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 60.0,
+        "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 05 acquired in oblique view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 1610.0
+      }
     },
     {
       "short_name": "sdr_s6n_err_orphan",
       "target_path": "/quality/orphan/sdr_s6n_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_S6N_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 50.0,
+        "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 06 acquired in nadir view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 2250.0
+      }
     },
     {
       "short_name": "sdr_s6o_err_orphan",
       "target_path": "/quality/orphan/sdr_s6o_err",
       "source_path": "Syn_SDR_removed_pixel.nc:SDR_S6O_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "bandwidth": 50.0,
+        "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 06 acquired in oblique view",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "surface_directional_reflectance_standad_error",
+        "valid_max": 10000,
+        "valid_min": 0,
+        "wavelength": 2250.0
+      }
     },
     {
       "short_name": "t550_err_orphan",
       "target_path": "/quality/orphan/t550_err",
       "source_path": "Syn_SDR_removed_pixel.nc:T550_err",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -10000,
+        "long_name": "Aerosol optical Thickness for removed pixels standard error",
+        "scale_factor": 9.999999747378752e-05,
+        "standard_name": "atmosphere_optical_thickness_due_to_aerosol_standard_error_for_removed_pixels",
+        "valid_max": 32767,
+        "valid_min": 0,
+        "wavelength": 550.0
+      }
     },
     {
       "short_name": "saa",
       "target_path": "/conditions/geometry/saa",
       "source_path": "tiepoints_olci.nc:SAA",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "Sun Azimuth Angle",
+        "scale_factor": 9.999999974752427e-07,
+        "standard_name": "solar_azimuth_angle",
+        "units": "degrees",
+        "valid_max": 180000000,
+        "valid_min": -180000000
+      }
     },
     {
       "short_name": "sza",
       "target_path": "/conditions/geometry/sza",
       "source_path": "tiepoints_olci.nc:SZA",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "Sun Zenith Angle",
+        "scale_factor": 9.999999974752427e-07,
+        "standard_name": "solar_zenith_angle",
+        "units": "degrees",
+        "valid_max": 90000000,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "olci_vaa",
       "target_path": "/conditions/geometry/olci_vaa",
       "source_path": "tiepoints_olci.nc:OLC_VAA",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "OLCI view azimuth angle",
+        "scale_factor": 9.999999974752427e-07,
+        "standard_name": "olci_view_azimuth_angle",
+        "units": "degrees",
+        "valid_max": 180000000,
+        "valid_min": -180000000
+      }
     },
     {
       "short_name": "olci_vza",
       "target_path": "/conditions/geometry/olci_vza",
       "source_path": "tiepoints_olci.nc:OLC_VZA",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "OLCI view zenith angle",
+        "scale_factor": 9.999999974752427e-07,
+        "standard_name": "OLCI_view_zenith_angle",
+        "units": "degrees",
+        "valid_max": 90000000,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "slstr_n_vaa",
       "target_path": "/conditions/geometry/slstr_n_vaa",
       "source_path": "tiepoints_slstr_n.nc:SLN_VAA",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "SLSTR nadir view azimuth angle",
+        "units": "degrees",
+        "valid_max": 180.0,
+        "valid_min": -180.0
+      }
     },
     {
       "short_name": "slstr_n_vza",
       "target_path": "/conditions/geometry/slstr_n_vza",
       "source_path": "tiepoints_slstr_n.nc:SLN_VZA",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "SLSTR nadir view zenith angle",
+        "units": "degrees",
+        "valid_max": 90.0,
+        "valid_min": 0.0
+      }
     },
     {
       "short_name": "slstr_o_vaa",
       "target_path": "/conditions/geometry/slstr_o_vaa",
       "source_path": "tiepoints_slstr_o.nc:SLO_VAA",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "SLSTR oblique view azimuth angle",
+        "standard_name": "slstr_oblique_view_azimuth_angle",
+        "units": "degrees",
+        "valid_max": 180.0,
+        "valid_min": -180.0
+      }
     },
     {
       "short_name": "slstr_o_vza",
       "target_path": "/conditions/geometry/slstr_o_vza",
       "source_path": "tiepoints_slstr_o.nc:SLO_VZA",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "SLSTR oblique view zenith angle",
+        "standard_name": "slstr_oblique_view_zenith_angle",
+        "units": "degrees",
+        "valid_max": 90.0,
+        "valid_min": 0.0
+      }
     },
     {
       "short_name": "air_pressure",
       "target_path": "/conditions/meteo/air_pressure",
       "source_path": "tiepoints_meteo.nc:air_pressure",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1.0,
+        "long_name": "Mean air pressure at sea-level",
+        "standard_name": "air_pressure_at_sea_level",
+        "units": "hPa",
+        "valid_max": 1100.0,
+        "valid_min": 850.0
+      }
     },
     {
       "short_name": "ozone",
       "target_path": "/conditions/meteo/ozone",
       "source_path": "tiepoints_meteo.nc:ozone",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1.0,
+        "long_name": "Total columnar ozone",
+        "standard_name": "atmosphere_mass_content_of_ozone",
+        "units": "Kg.m-2"
+      }
     },
     {
       "short_name": "water_vapour",
       "target_path": "/conditions/meteo/water_vapour",
       "source_path": "tiepoints_meteo.nc:water_vapour",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1.0,
+        "long_name": "Total column water vapour",
+        "standard_name": "atmosphere_water_vapor_content",
+        "units": "g.cm-2"
+      }
     },
     {
       "short_name": "stac_discovery",
