@@ -24,7 +24,7 @@ for higher granularity.
 * :py:class:`~eopf.computing.abstract.EOBlockProcessingStep`
 * :py:class:`~eopf.computing.abstract.EOOverlapProcessingStep`
 
-that are direct mapping of :py:func:`~dask.array.map_blocks` (resp. :py:func:`~dask.array.map_overlap`) that let you define only
+that are direct mapping of :py:func:`dask.array.map_blocks` (resp. :py:func:`dask.array.map_overlap`) that let you define only
 the low level function passed into the corresponding dask function.
 
 

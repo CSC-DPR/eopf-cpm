@@ -50,3 +50,8 @@ store_params:
             new_eo_product.add_variable("measurements/a_variable", eoproduct["measurements/image/oa10_radiance"])
             new_eo_product.add_variable("measurements/an_other_variable", data=eoproduct["measurements/orphans/oa10_radiance"])
             return eo_product
+
+.. toctree::
+    :maxdepth: 3
+
+    ../_notebooks/demo_breakpoint
