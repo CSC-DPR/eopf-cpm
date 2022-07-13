@@ -1,11 +1,11 @@
-# import concurrent.futures
+import concurrent.futures
 import json
 import logging
 import os
 import shutil
 from datetime import timedelta
 
-# import fsspec
+import fsspec
 import pytest
 
 # import required dask fixtures :
@@ -19,9 +19,11 @@ from distributed.utils_test import (  # noqa # pylint: disable=unused-import
 )
 from hypothesis import HealthCheck, settings
 
-from .utils import (  # S3_CONFIG_REAL,; S3_TEST_DATA_PATH,
+from .utils import (
     EMBEDED_TEST_DATA_PATH,
     MAPPING_PATH,
+    S3_CONFIG_REAL,
+    S3_TEST_DATA_PATH,
     S3_TEST_DATA_PROTOCOL,
     TEST_DATA_PATH,
     glob_fixture,
@@ -308,11 +310,10 @@ def load_file_from_s3(filename, data_mapper, dest_path):
 
 @pytest.fixture(scope="session", autouse=True)
 def load_data():
-    pass
-    # if S3_TEST_DATA_PROTOCOL == "s3":
-    #     data_mapper = fsspec.get_mapper(f"{S3_TEST_DATA_PROTOCOL}://{S3_TEST_DATA_PATH}", **S3_CONFIG_REAL)
-    #     os.makedirs(TEST_DATA_PATH, exist_ok=True)
-    #     with concurrent.futures.ThreadPoolExecutor() as executor:
-    #         pool = [executor.submit(load_file_from_s3, file, data_mapper, TEST_DATA_PATH) for file in data_mapper]
-    #         concurrent.futures.wait(pool)
-    #     yield
+    if S3_TEST_DATA_PROTOCOL == "s3":
+        data_mapper = fsspec.get_mapper(f"{S3_TEST_DATA_PROTOCOL}://{S3_TEST_DATA_PATH}", **S3_CONFIG_REAL)
+        os.makedirs(TEST_DATA_PATH, exist_ok=True)
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            pool = [executor.submit(load_file_from_s3, file, data_mapper, TEST_DATA_PATH) for file in data_mapper]
+            concurrent.futures.wait(pool)
+        yield
