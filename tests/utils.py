@@ -169,8 +169,8 @@ def _glob_to_url(input_dir: str, file_name_pattern: str, protocols: Optional[lis
     return [f"{protocols_string}://{matched_file}" for matched_file in matched_files]
 
 
-PARENT_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..")
-TEST_DATA_PATH = os.environ.get("TEST_DATA_FOLDER", os.path.join(PARENT_DATA_PATH, "data"))
+PARENT_DATA_PATH = os.path.abspath(os.path.join(os.path.abspath(os.path.dirname(__file__)), ".."))
+TEST_DATA_PATH = os.path.abspath(os.environ.get("TEST_DATA_FOLDER", os.path.join(PARENT_DATA_PATH, "data")))
 EMBEDED_TEST_DATA_PATH = os.path.join(PARENT_DATA_PATH, "tests", "data")
 MAPPING_PATH = os.path.join(PARENT_DATA_PATH, "eopf", "product", "store", "mapping")
 TEST_ONLY_ONE_PRODUCT = os.environ.get("TEST_ONLY_ONE_PRODUCT") in [True, "True", "true", 1, "1"]

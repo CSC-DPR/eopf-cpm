@@ -79,6 +79,8 @@ unit-tests:
     --cov-report=xml:${REPORTS}/coverage.xml
     --s3
     -m unit
+    --log-level DEBUG
+    --error-for-skips
   artifacts:
     expire_in: 1h
     reports:
@@ -109,6 +111,8 @@ integration-tests:
     --cov-append
     --s3
     -m integration
+    --log-level DEBUG
+    --error-for-skips
   coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
 
 security:
