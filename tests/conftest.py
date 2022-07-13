@@ -317,6 +317,7 @@ def load_data():
         with concurrent.futures.ThreadPoolExecutor() as executor:
             pool = [executor.submit(load_file_from_s3, file, data_mapper, TEST_DATA_PATH) for file in data_mapper]
             concurrent.futures.wait(pool)
-        yield
     else:
         logging.debug("No Data folder configuration for S3 storage.")
+    print(os.listdir(TEST_DATA_PATH))
+    yield
