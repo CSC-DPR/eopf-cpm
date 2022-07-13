@@ -192,5 +192,7 @@ def glob_fixture(
     glob_pattern: str, input_dir: str = TEST_DATA_PATH, protocols: Optional[list[str]] = None, **kwargs: Any
 ):
     params = kwargs.setdefault("params", [])
-    params.extend(_glob_to_url(input_dir, glob_pattern, protocols=protocols))
+    globs_data = _glob_to_url(input_dir, glob_pattern, protocols=protocols)
+    logging.info(globs_data)
+    params.extend(globs_data)
     return pytest.fixture(**kwargs)

@@ -319,5 +319,4 @@ def load_data():
             concurrent.futures.wait(pool)
     else:
         logging.debug("No Data folder configuration for S3 storage.")
-    print(os.listdir(TEST_DATA_PATH))
     yield
