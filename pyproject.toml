@@ -116,3 +116,4 @@ markers = [
     "unit",
     "need_files",
 ]
+log_cli = true

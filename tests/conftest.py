@@ -311,9 +311,12 @@ def load_file_from_s3(filename, data_mapper, dest_path):
 @pytest.fixture(scope="session", autouse=True)
 def load_data():
     if S3_TEST_DATA_PROTOCOL == "s3":
+        logging.debug("Data folder configuration found for S3 storage.")
         data_mapper = fsspec.get_mapper(f"{S3_TEST_DATA_PROTOCOL}://{S3_TEST_DATA_PATH}", **S3_CONFIG_REAL)
         os.makedirs(TEST_DATA_PATH, exist_ok=True)
         with concurrent.futures.ThreadPoolExecutor() as executor:
             pool = [executor.submit(load_file_from_s3, file, data_mapper, TEST_DATA_PATH) for file in data_mapper]
             concurrent.futures.wait(pool)
         yield
+    else:
+        logging.debug("No Data folder configuration for S3 storage.")
