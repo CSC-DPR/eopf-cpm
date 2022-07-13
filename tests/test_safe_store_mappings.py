@@ -40,6 +40,13 @@ from tests.utils import assert_eovariable_equal
         (lazy_fixture("S1_IM_OCN_ZIP"), "/coordinates/owi/owiPolarisationName"),
         # "item_format": "attribute_element_to_float_variable",
         (lazy_fixture("S1_IM_OCN_ZIP"), "/conditions/state_vector/sv_x"),
+
+        # "item_format": "attribute_element_to_flag_variable", "netcdf"
+        (lazy_fixture("S1_SM_OCN_ZIP"), "/coordinates/owi/longitude"),
+        (lazy_fixture("S1_SM_OCN_ZIP"), "/conditions/owi/polarisation"),
+        (lazy_fixture("S1_VW_OCN_ZIP"), "/coordinates/owi/longitude"),
+        (lazy_fixture("S1_VW_OCN_ZIP"), "/conditions/owi/polarisation"),
+
         # TODO: do we test "item_format": "xmlmetadata", misc ?
         # "item_format": "xmlangles",
         # (lazy_fixture("S2_MSIL1C_ZIP"), "/conditions/geometry/saa"),
@@ -100,6 +107,8 @@ def test_read_product(dask_client_all, input_path, key_path):
         # lazy_fixture("S2_MSIL1C_ZIP"),
         # lazy_fixture("S2_MSIL1C"),
         # lazy_fixture("S1_IM_OCN_ZIP"),
+        lazy_fixture("S1_SM_OCN_ZIP"),
+        lazy_fixture("S1_VW_OCN_ZIP"),
     ],
 )
 def test_load_product(dask_client_all, input_path):
@@ -212,7 +221,7 @@ def test_convert_test_mapping(
 
         # ####################### S3 product type conversions ########################
         # ---> S3/Level 0 - tests -> NO PRODUCTS AVAILABLE
-        # ---> S2/Level 1/2 - tests
+        # ---> S3/Level 1/2 - tests
         # S3_OL_1 product type conversions
         (lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("S3_OL_1_EFR_MAPPING"), ".SEN3", EOSafeStore, 1),
         (lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("S3_OL_1_EFR_MAPPING"), ".zarr", EOZarrStore, 1),
