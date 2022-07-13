@@ -1,3 +1,4 @@
+import concurrent.futures
 import glob
 import logging
 import os
@@ -194,3 +195,29 @@ def glob_fixture(
     params = kwargs.setdefault("params", [])
     params.extend(_glob_to_url(input_dir, glob_pattern, protocols=protocols))
     return pytest.fixture(**kwargs)
+
+
+def load_file_from_s3(filename, data_mapper, dest_path):
+    real_path = os.path.join(data_mapper.root, filename)
+    real_dest_path = os.path.join(dest_path, filename)
+    dir_file_name = os.path.dirname(real_path)
+    if not os.path.isfile(real_dest_path):
+        os.makedirs(dir_file_name, exist_ok=True)
+        data_mapper.fs.get(real_path, real_dest_path)
+        logging.debug(f"COPY {S3_TEST_DATA_PROTOCOL}://{real_path} IN {real_dest_path}")
+
+
+def load_data():
+    if S3_TEST_DATA_PROTOCOL == "s3":
+        logging.debug("Data folder configuration found for S3 storage.")
+        data_mapper = fsspec.get_mapper(f"{S3_TEST_DATA_PROTOCOL}://{S3_TEST_DATA_PATH}", **S3_CONFIG_REAL)
+        os.makedirs(TEST_DATA_PATH, exist_ok=True)
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            pool = [executor.submit(load_file_from_s3, file, data_mapper, TEST_DATA_PATH) for file in data_mapper]
+            concurrent.futures.wait(pool)
+    else:
+        logging.debug("No Data folder configuration for S3 storage.")
+
+
+# used at import time to prevent @glob_fixture to be loaded before the data is loaded
+load_data()

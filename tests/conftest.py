@@ -1,11 +1,8 @@
-import concurrent.futures
 import json
-import logging
 import os
 import shutil
 from datetime import timedelta
 
-import fsspec
 import pytest
 
 # import required dask fixtures :
@@ -19,15 +16,7 @@ from distributed.utils_test import (  # noqa # pylint: disable=unused-import
 )
 from hypothesis import HealthCheck, settings
 
-from .utils import (
-    EMBEDED_TEST_DATA_PATH,
-    MAPPING_PATH,
-    S3_CONFIG_REAL,
-    S3_TEST_DATA_PATH,
-    S3_TEST_DATA_PROTOCOL,
-    TEST_DATA_PATH,
-    glob_fixture,
-)
+from .utils import EMBEDED_TEST_DATA_PATH, MAPPING_PATH, TEST_DATA_PATH, glob_fixture
 
 # ----------------------------------#
 # --- pytest command line options --#
@@ -296,29 +285,3 @@ def TRIGGER_JSON_FILE(dask_client_all, EMBEDED_TEST_DATA_FOLDER, OUTPUT_DIR, S3_
         json.dump(data, f)
 
     return output_name
-
-
-def load_file_from_s3(filename, data_mapper, dest_path):
-    real_path = os.path.join(data_mapper.root, filename)
-    real_dest_path = os.path.join(dest_path, filename)
-    dir_file_name = os.path.dirname(real_path)
-    if not os.path.isfile(real_dest_path):
-        os.makedirs(dir_file_name, exist_ok=True)
-        data_mapper.fs.get(real_path, real_dest_path)
-        logging.debug(f"COPY {S3_TEST_DATA_PROTOCOL}://{real_path} IN {real_dest_path}")
-
-
-def load_data():
-    if S3_TEST_DATA_PROTOCOL == "s3":
-        logging.debug("Data folder configuration found for S3 storage.")
-        data_mapper = fsspec.get_mapper(f"{S3_TEST_DATA_PROTOCOL}://{S3_TEST_DATA_PATH}", **S3_CONFIG_REAL)
-        os.makedirs(TEST_DATA_PATH, exist_ok=True)
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            pool = [executor.submit(load_file_from_s3, file, data_mapper, TEST_DATA_PATH) for file in data_mapper]
-            concurrent.futures.wait(pool)
-    else:
-        logging.debug("No Data folder configuration for S3 storage.")
-
-
-# used at import time to prevent @glob_fixture to be loaded before the data is loaded
-load_data()
