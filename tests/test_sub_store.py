@@ -238,7 +238,7 @@ def test_fromattributestovarstore(
 @pytest.mark.integration
 @pytest.mark.parametrize(
     "path, mapping",
-    [(lazy_fixture("S3_OL_1_EFR"), lazy_fixture("S3_OL_1_EFR_MAPPING"))],
+    [(lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("S3_OL_1_EFR_MAPPING"))],
 )
 def test_extended_xml_manifest_accessor(path: str, mapping: str, tmp_path: pathlib.Path):
     fsmap = fsspec.get_mapper(path)

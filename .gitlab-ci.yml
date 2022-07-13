@@ -72,13 +72,13 @@ unit-tests:
   - pip install .[tests] .[notebook]
   script:
   - >-
-    TEST_DATA_FOLDER=${TEST_DATA_FOLDER}
     python -m pytest
     --cov=${SOURCES}
     --junit-xml=${REPORTS}/TEST-pytests.xml
     --cov-report=xml:${REPORTS}/coverage.xml
     --s3
     -m unit
+    --error-for-skips
   artifacts:
     expire_in: 1h
     reports:
@@ -102,13 +102,13 @@ integration-tests:
   - unit-tests
   script:
   - >-
-    TEST_DATA_FOLDER=${TEST_DATA_FOLDER}
     python -m pytest
     --cov=${SOURCES}
     --cov-report=term-missing
     --cov-append
     --s3
     -m integration
+    --error-for-skips
   coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
 
 security:
