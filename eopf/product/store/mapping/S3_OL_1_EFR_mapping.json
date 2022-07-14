@@ -145,7 +145,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "TOA radiance for OLCI acquisition band Oa01",
         "scale_factor": 0.013946459628641605,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -163,7 +162,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "TOA radiance for OLCI acquisition band Oa02",
         "scale_factor": 0.013387260027229786,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -181,7 +179,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "TOA radiance for OLCI acquisition band Oa03",
         "scale_factor": 0.012148120440542698,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -199,7 +196,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "TOA radiance for OLCI acquisition band Oa04",
         "scale_factor": 0.011519820429384708,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -217,7 +213,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "TOA radiance for OLCI acquisition band Oa05",
         "scale_factor": 0.010095260106027126,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -235,7 +230,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "TOA radiance for OLCI acquisition band Oa06",
         "scale_factor": 0.012353800237178802,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -253,7 +247,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "TOA radiance for OLCI acquisition band Oa07",
         "scale_factor": 0.008791609667241573,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -271,7 +264,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "TOA radiance for OLCI acquisition band Oa08",
         "scale_factor": 0.008765390142798424,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -289,7 +281,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "TOA radiance for OLCI acquisition band Oa09",
         "scale_factor": 0.009510300122201443,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -307,7 +298,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "TOA radiance for OLCI acquisition band Oa10",
         "scale_factor": 0.007733779959380627,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -325,7 +315,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "TOA radiance for OLCI acquisition band Oa11",
         "scale_factor": 0.006755230017006397,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -343,7 +332,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "TOA radiance for OLCI acquisition band Oa12",
         "scale_factor": 0.007199599873274565,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -361,7 +349,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "TOA radiance for OLCI acquisition band Oa13",
         "scale_factor": 0.007496839854866266,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -379,7 +366,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "TOA radiance for OLCI acquisition band Oa14",
         "scale_factor": 0.008651199750602245,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -397,7 +383,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "TOA radiance for OLCI acquisition band Oa15",
         "scale_factor": 0.005267790053039789,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -415,7 +400,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "TOA radiance for OLCI acquisition band Oa16",
         "scale_factor": 0.005302669946104288,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -433,7 +417,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "TOA radiance for OLCI acquisition band Oa17",
         "scale_factor": 0.004930039867758751,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -451,7 +434,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "TOA radiance for OLCI acquisition band Oa18",
         "scale_factor": 0.0054996199905872345,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -469,7 +451,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "TOA radiance for OLCI acquisition band Oa19",
         "scale_factor": 0.005028469953685999,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -487,7 +468,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "TOA radiance for OLCI acquisition band Oa20",
         "scale_factor": 0.003263779915869236,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -505,7 +485,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "TOA radiance for OLCI acquisition band Oa21",
         "scale_factor": 0.0032411799766123295,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -523,7 +502,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "Radiance for removed pixels for OLCI acquisition band Oa01",
         "scale_factor": 0.013946459628641605,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -541,7 +519,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "Radiance for removed pixels for OLCI acquisition band Oa02",
         "scale_factor": 0.013387260027229786,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -559,7 +536,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "Radiance for removed pixels for OLCI acquisition band Oa03",
         "scale_factor": 0.012148120440542698,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -577,7 +553,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "Radiance for removed pixels for OLCI acquisition band Oa04",
         "scale_factor": 0.011519820429384708,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -595,7 +570,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "Radiance for removed pixels for OLCI acquisition band Oa05",
         "scale_factor": 0.010095260106027126,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -613,7 +587,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "Radiance for removed pixels for OLCI acquisition band Oa06",
         "scale_factor": 0.012353800237178802,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -631,7 +604,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "Radiance for removed pixels for OLCI acquisition band Oa07",
         "scale_factor": 0.008791609667241573,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -649,7 +621,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "Radiance for removed pixels for OLCI acquisition band Oa08",
         "scale_factor": 0.008765390142798424,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -667,7 +638,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "Radiance for removed pixels for OLCI acquisition band Oa09",
         "scale_factor": 0.009510300122201443,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -685,7 +655,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "Radiance for removed pixels for OLCI acquisition band Oa10",
         "scale_factor": 0.007733779959380627,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -703,7 +672,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "Radiance for removed pixels for OLCI acquisition band Oa11",
         "scale_factor": 0.006755230017006397,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -721,7 +689,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "Radiance for removed pixels for OLCI acquisition band Oa12",
         "scale_factor": 0.007199599873274565,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -739,7 +706,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "Radiance for removed pixels for OLCI acquisition band Oa13",
         "scale_factor": 0.007496839854866266,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -757,7 +723,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "Radiance for removed pixels for OLCI acquisition band Oa14",
         "scale_factor": 0.008651199750602245,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -775,7 +740,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "Radiance for removed pixels for OLCI acquisition band Oa15",
         "scale_factor": 0.005267790053039789,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -793,7 +757,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "Radiance for removed pixels for OLCI acquisition band Oa16",
         "scale_factor": 0.005302669946104288,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -811,7 +774,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "Radiance for removed pixels for OLCI acquisition band Oa17",
         "scale_factor": 0.004930039867758751,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -829,7 +791,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "Radiance for removed pixels for OLCI acquisition band Oa18",
         "scale_factor": 0.0054996199905872345,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -847,7 +808,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "Radiance for removed pixels for OLCI acquisition band Oa19",
         "scale_factor": 0.005028469953685999,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -865,7 +825,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "Radiance for removed pixels for OLCI acquisition band Oa20",
         "scale_factor": 0.003263779915869236,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -883,7 +842,6 @@
         "coordinates": "time_stamp altitude latitude longitude",
         "long_name": "Radiance for removed pixels for OLCI acquisition band Oa21",
         "scale_factor": 0.0032411799766123295,
-        "standard_name": "toa_upwelling_spectral_radiance",
         "units": "mW.m-2.sr-1.nm-1",
         "valid_max": 65534,
         "valid_min": 0
@@ -1297,17 +1255,8 @@
       "start_datetime": "metadataSection/metadataObject[@ID='acquisitionPeriod']/metadataWrap/xmlData/sentinel-safe:acquisitionPeriod/sentinel-safe:startTime",
       "end_datetime": "metadataSection/metadataObject[@ID='acquisitionPeriod']/metadataWrap/xmlData/sentinel-safe:acquisitionPeriod/sentinel-safe:stopTime",
       "created": "to_ISO8601(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:creationTime)",
-      "eopf:platform": {
-        "nssdc_identifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:nssdcIdentifier",
-        "family": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:familyName",
-        "number": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:number"
-      },
-      "eopf:instrument": {
-        "name": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName",
-        "short_name": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/@abbreviation",
-        "mode": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode",
-        "identifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode/@identifier"
-      },
+      "platform": "concat(metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:familyName, metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:number)",
+      "instrument": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/@abbreviation",
       "providers": [
         {
           "name": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:resource[@role='L1 Product']/sentinel-safe:processing/sentinel-safe:facility/@name",
@@ -1331,17 +1280,13 @@
         "timeliness": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:timeliness",
         "collection": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:baselineCollection",
         "processing_baseline": "is_optional(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:processingBaseline)",
-        "disposition": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dispositionMode",
-        "orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber)",
+        "instrument_mode": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode",
+        "absolute_orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber)",
         "relative_orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:relativeOrbitNumber)",
         "ground_track_direction": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber/@groundTrackDirection",
-        "downlink_information": {
-          "granule_number": "is_optional(to_int(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:granuleNumber))",
-          "granule_position": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:granulePosition",
-          "dump_start": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:dumpStart",
-          "receiving_station": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingGroundStation",
-          "receiving_start": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingStartTime",
-          "receiving_stop": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingStopTime"
+        "image_size": {
+          "rows": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:imageSize/sentinel3:rows)",
+          "columns": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:imageSize/sentinel3:columns)"
         },
         "pixel_classification": {
           "invalid": {
@@ -1379,23 +1324,6 @@
           "tidal": {
             "percent": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:classificationSummary/sentinel3:tidalRegionPixels/@percentage)"
           }
-        },
-        "data_information": {
-          "measurement_accuracy": "metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:measurementAccuracy",
-          "accuracy_reference": "metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:accuracyReference",
-          "image_size": {
-            "rows": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:imageSize/sentinel3:rows)",
-            "columns": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:imageSize/sentinel3:columns)"
-          },
-          "earth_sun_distance": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:earthSunDistance)",
-          "ocl_status": "metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:oclStatus",
-          "sampling": {
-            "along_track_time": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:samplingParameters/olci:alTimeSampling)",
-            "along_track_spatial": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:samplingParameters/olci:alSpatialSampling)",
-            "across_track_spatial": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:samplingParameters/olci:acSpatialSampling)",
-            "rows_per_tiepoint": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:samplingParameters/olci:rowsPerTiePoint)",
-            "cols_per_tiepoint": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:samplingParameters/olci:columnsPerTiePoint)"
-          }
         }
       }
     },
@@ -1409,6 +1337,19 @@
     "assets": []
   },
   "conditions_metadata": {
+    "data_information": {
+      "measurement_accuracy": "metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:measurementAccuracy",
+      "accuracy_reference": "metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:accuracyReference",
+      "earth_sun_distance": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:earthSunDistance)",
+      "ocl_status": "metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:oclStatus",
+      "sampling": {
+        "along_track_time": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:samplingParameters/olci:alTimeSampling)",
+        "along_track_spatial": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:samplingParameters/olci:alSpatialSampling)",
+        "across_track_spatial": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:samplingParameters/olci:acSpatialSampling)",
+        "rows_per_tiepoint": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:samplingParameters/olci:rowsPerTiePoint)",
+        "cols_per_tiepoint": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:samplingParameters/olci:columnsPerTiePoint)"
+      }
+    },
     "band_descriptions": {
       "Oa01": {
         "units": "Text(nm)",
@@ -1564,6 +1505,9 @@
       "source": "Text(ECMWF)",
       "type": "metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:ecmwfType",
       "time_relevance": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:ecmwfType/@timeRelevance)"
+    },
+    "platform": {
+      "nssdc_identifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:nssdcIdentifier"
     }
   },
   "namespaces": {

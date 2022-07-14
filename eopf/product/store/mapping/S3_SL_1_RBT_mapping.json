@@ -1875,7 +1875,6 @@
         "add_offset": 0.0,
         "long_name": "TOA radiance for channel S1 (A stripe grid, nadir view)",
         "scale_factor": 0.01785,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -1895,7 +1894,6 @@
         "add_offset": 0.0,
         "long_name": "TOA radiance for channel S2 (A stripe grid, nadir view)",
         "scale_factor": 0.0145,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -1915,7 +1913,6 @@
         "add_offset": 0.0,
         "long_name": "TOA radiance for channel S3 (A stripe grid, nadir view)",
         "scale_factor": 0.009,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -1935,7 +1932,6 @@
         "add_offset": 0.0,
         "long_name": "TOA radiance for channel S4 (A stripe grid, nadir view)",
         "scale_factor": 0.003452,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -1955,7 +1951,6 @@
         "add_offset": 0.0,
         "long_name": "TOA radiance for channel S5 (A stripe grid, nadir view)",
         "scale_factor": 0.002258,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -1975,7 +1970,6 @@
         "add_offset": 0.0,
         "long_name": "TOA radiance for channel S6 (A stripe grid, nadir view)",
         "scale_factor": 0.000742,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -1995,7 +1989,6 @@
         "add_offset": 0.0,
         "long_name": "TOA radiance for channel S4 (B stripe grid, nadir view)",
         "scale_factor": 0.003452,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2015,7 +2008,6 @@
         "add_offset": 0.0,
         "long_name": "TOA radiance for channel S5 (B stripe grid, nadir view)",
         "scale_factor": 0.002258,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2035,7 +2027,6 @@
         "add_offset": 0.0,
         "long_name": "TOA radiance for channel S6 (B stripe grid, nadir view)",
         "scale_factor": 0.000742,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2155,7 +2146,6 @@
         "add_offset": 0.0,
         "long_name": "TOA radiance for channel S1 (A stripe grid, oblique view)",
         "scale_factor": 0.01785,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2175,7 +2165,6 @@
         "add_offset": 0.0,
         "long_name": "TOA radiance for channel S2 (A stripe grid, oblique view)",
         "scale_factor": 0.0145,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2195,7 +2184,6 @@
         "add_offset": 0.0,
         "long_name": "TOA radiance for channel S3 (A stripe grid, oblique view)",
         "scale_factor": 0.009,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2215,7 +2203,6 @@
         "add_offset": 0.0,
         "long_name": "TOA radiance for channel S4 (A stripe grid, oblique view)",
         "scale_factor": 0.003452,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2235,7 +2222,6 @@
         "add_offset": 0.0,
         "long_name": "TOA radiance for channel S5 (A stripe grid, oblique view)",
         "scale_factor": 0.002258,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2255,7 +2241,6 @@
         "add_offset": 0.0,
         "long_name": "TOA radiance for channel S6 (A stripe grid, oblique view)",
         "scale_factor": 0.000742,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2275,7 +2260,6 @@
         "add_offset": 0.0,
         "long_name": "TOA radiance for channel S4 (B stripe grid, oblique view)",
         "scale_factor": 0.003452,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2295,7 +2279,6 @@
         "add_offset": 0.0,
         "long_name": "TOA radiance for channel S5 (B stripe grid, oblique view)",
         "scale_factor": 0.002258,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2315,7 +2298,6 @@
         "add_offset": 0.0,
         "long_name": "TOA radiance for channel S6 (B stripe grid, oblique view)",
         "scale_factor": 0.000742,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2435,7 +2417,6 @@
         "add_offset": 0.0,
         "long_name": "Radiances for orphaned pixels for channel S1 (A stripe grid, nadir view)",
         "scale_factor": 0.01785,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2455,7 +2436,6 @@
         "add_offset": 0.0,
         "long_name": "Radiances for orphaned pixels for channel S2 (A stripe grid, nadir view)",
         "scale_factor": 0.0145,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2475,7 +2455,6 @@
         "add_offset": 0.0,
         "long_name": "Radiances for orphaned pixels for channel S3 (A stripe grid, nadir view)",
         "scale_factor": 0.009,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2495,7 +2474,6 @@
         "add_offset": 0.0,
         "long_name": "Radiances for orphaned pixels for channel S4 (A stripe grid, nadir view)",
         "scale_factor": 0.003452,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2515,7 +2493,6 @@
         "add_offset": 0.0,
         "long_name": "Radiances for orphaned pixels for channel S4 (B stripe grid, nadir view)",
         "scale_factor": 0.003452,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2535,7 +2512,6 @@
         "add_offset": 0.0,
         "long_name": "Radiances for orphaned pixels for channel S5 (A stripe grid, nadir view)",
         "scale_factor": 0.002258,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2555,7 +2531,6 @@
         "add_offset": 0.0,
         "long_name": "Radiances for orphaned pixels for channel S5 (B stripe grid, nadir view)",
         "scale_factor": 0.002258,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2575,7 +2550,6 @@
         "add_offset": 0.0,
         "long_name": "Radiances for orphaned pixels for channel S6 (A stripe grid, nadir view)",
         "scale_factor": 0.000742,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2595,7 +2569,6 @@
         "add_offset": 0.0,
         "long_name": "Radiances for orphaned pixels for channel S6 (B stripe grid, nadir view)",
         "scale_factor": 0.000742,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2615,7 +2588,6 @@
         "add_offset": 0.0,
         "long_name": "Radiances for orphaned pixels for channel S1 (A stripe grid, oblique view)",
         "scale_factor": 0.01785,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2635,7 +2607,6 @@
         "add_offset": 0.0,
         "long_name": "Radiances for orphaned pixels for channel S2 (A stripe grid, oblique view)",
         "scale_factor": 0.0145,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2655,7 +2626,6 @@
         "add_offset": 0.0,
         "long_name": "Radiances for orphaned pixels for channel S3 (A stripe grid, oblique view)",
         "scale_factor": 0.009,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2675,7 +2645,6 @@
         "add_offset": 0.0,
         "long_name": "Radiances for orphaned pixels for channel S4 (A stripe grid, oblique view)",
         "scale_factor": 0.003452,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2695,7 +2664,6 @@
         "add_offset": 0.0,
         "long_name": "Radiances for orphaned pixels for channel S4 (B stripe grid, oblique view)",
         "scale_factor": 0.003452,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2715,7 +2683,6 @@
         "add_offset": 0.0,
         "long_name": "Radiances for orphaned pixels for channel S5 (A stripe grid, oblique view)",
         "scale_factor": 0.002258,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2735,7 +2702,6 @@
         "add_offset": 0.0,
         "long_name": "Radiances for orphaned pixels for channel S5 (B stripe grid, oblique view)",
         "scale_factor": 0.002258,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2755,7 +2721,6 @@
         "add_offset": 0.0,
         "long_name": "Radiances for orphaned pixels for channel S6 (A stripe grid, oblique view)",
         "scale_factor": 0.000742,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -2775,7 +2740,6 @@
         "add_offset": 0.0,
         "long_name": "Radiances for orphaned pixels for channel S6 (B stripe grid, oblique view)",
         "scale_factor": 0.000742,
-        "standard_name": "toa_radiance",
         "units": "mW.m-2.sr-1.nm-1"
       }
     },
@@ -4009,8 +3973,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_radiance_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -4694,8 +4657,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_brightness_temperature_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -4720,8 +4682,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_radiance_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -4746,8 +4707,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_radiance_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -4772,8 +4732,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_radiance_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -4798,8 +4757,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_radiance_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -4824,8 +4782,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_radiance_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -4850,8 +4807,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_radiance_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -4876,8 +4832,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_radiance_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -4902,8 +4857,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_radiance_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -4928,8 +4882,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_radiance_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -4954,8 +4907,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_radiance_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -4980,8 +4932,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_radiance_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -5006,8 +4957,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_radiance_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -5032,8 +4982,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_radiance_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -5058,8 +5007,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_radiance_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -5084,8 +5032,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_radiance_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -5110,8 +5057,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_radiance_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -5136,8 +5082,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_radiance_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -5162,8 +5107,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_radiance_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -5188,8 +5132,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_brightness_temperature_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -5214,8 +5157,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_brightness_temperature_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -5240,8 +5182,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_brightness_temperature_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -5266,8 +5207,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_brightness_temperature_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -5292,8 +5232,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_brightness_temperature_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -5318,8 +5257,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_brightness_temperature_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -5344,8 +5282,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_brightness_temperature_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -5370,8 +5307,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_brightness_temperature_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -5396,8 +5332,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_brightness_temperature_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -5422,8 +5357,7 @@
           64,
           128
         ],
-        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel",
-        "standard_name": "toa_brightness_temperature_status_flag"
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel"
       }
     },
     {
@@ -6368,7 +6302,7 @@
       "attributes": {
         "_FillValue": "to_float(NaN)",
         "long_name": "Satellite azimuth angle",
-        "standard_name": "satellite_azimuth_angle",
+        "standard_name": "sensor_azimuth_angle",
         "units": "degrees"
       }
     },
@@ -6403,7 +6337,7 @@
       "attributes": {
         "_FillValue": "to_float(NaN)",
         "long_name": "Satellite zenith angle",
-        "standard_name": "satellite_zenith_angle",
+        "standard_name": "sensor_zenith_angle",
         "units": "degrees"
       }
     },
@@ -6474,7 +6408,7 @@
       "attributes": {
         "_FillValue": "to_float(NaN)",
         "long_name": "Satellite azimuth angle",
-        "standard_name": "satellite_azimuth_angle",
+        "standard_name": "sensor_azimuth_angle",
         "units": "degrees"
       }
     },
@@ -6509,7 +6443,7 @@
       "attributes": {
         "_FillValue": "to_float(NaN)",
         "long_name": "Satellite zenith angle",
-        "standard_name": "satellite_zenith_angle",
+        "standard_name": "sensor_zenith_angle",
         "units": "degrees"
       }
     },
@@ -6625,7 +6559,6 @@
         "long_name": "East-west integrated surface wind stress",
         "model": "ECMWF_F",
         "parameter": "180",
-        "standard_name": "integral_of_surface_downward_eastward_stress_wrt_time",
         "units": "N m-2 s"
       }
     },
@@ -6646,7 +6579,6 @@
         "long_name": "Integrated surface latent heat flux",
         "model": "ECMWF_F",
         "parameter": "147",
-        "standard_name": "integral_of_surface_downward_latent_heat_flux_wrt_time",
         "units": "W m-2 s"
       }
     },
@@ -6667,7 +6599,6 @@
         "long_name": "North-south integrated surface wind stress",
         "model": "ECMWF_F",
         "parameter": "181",
-        "standard_name": "integral_of_surface_downward_northward_stress_wrt_time",
         "units": "N m-2 s"
       }
     },
@@ -6747,7 +6678,6 @@
         "long_name": "Integrated surface sensible heat flux",
         "model": "ECMWF_F",
         "parameter": "146",
-        "standard_name": "integral_of_surface_downward_sensible_heat_flux_wrt_time",
         "units": "W m-2 s"
       }
     },
@@ -6851,7 +6781,6 @@
         "long_name": "Integrated surface solar radiation",
         "model": "ECMWF_F",
         "parameter": "176",
-        "standard_name": "integral_of_surface_net_downward_shortwave_flux_wrt_time",
         "units": "W m-2 s"
       }
     },
@@ -7015,7 +6944,6 @@
         "long_name": "Integrated surface thermal radiation",
         "model": "ECMWF_F",
         "parameter": "177",
-        "standard_name": "integral_of_surface_net_downward_longwave_flux_wrt_time",
         "units": "W m-2 s"
       }
     },
@@ -19597,17 +19525,8 @@
       "start_datetime": "metadataSection/metadataObject[@ID='acquisitionPeriod']/metadataWrap/xmlData/sentinel-safe:acquisitionPeriod/sentinel-safe:startTime",
       "end_datetime": "metadataSection/metadataObject[@ID='acquisitionPeriod']/metadataWrap/xmlData/sentinel-safe:acquisitionPeriod/sentinel-safe:stopTime",
       "created": "to_ISO8601(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:creationTime)",
-      "eopf:platform": {
-        "nssdc_identifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:nssdcIdentifier",
-        "family": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:familyName",
-        "number": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:number"
-      },
-      "eopf:instrument": {
-        "name": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName",
-        "short_name": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/@abbreviation",
-        "mode": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode",
-        "identifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode/@identifier"
-      },
+      "platform": "concat(metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:familyName, metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:number)",
+      "instrument": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/@abbreviation",
       "providers": [
         {
           "name": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:resource[@role='L1 Product']/sentinel-safe:processing/sentinel-safe:facility/@name",
@@ -19634,165 +19553,63 @@
         "type": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productType",
         "timeliness": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:timeliness",
         "collection": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:baselineCollection",
-        "disposition": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dispositionMode",
-        "orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber)",
+        "instrument_mode": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode",
+        "absolute_orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber)",
         "relative_orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:relativeOrbitNumber)",
         "ground_track_direction": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber/@groundTrackDirection",
-        "downlink_information": {
-          "granule_number": "is_optional(to_int(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:granuleNumber))",
-          "granule_position": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:granulePosition",
-          "dump_start": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:dumpStart",
-          "receiving_station": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingGroundStation",
-          "receiving_start": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingStartTime",
-          "receiving_stop": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingStopTime"
+        "image_size": {
+          "rows": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize[@grid='0.5 km stripe A']/sentinel3:rows)",
+          "columns": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize[@grid='0.5 km stripe A']/sentinel3:columns)"
         },
-        "pixel_classifications": {
-          "1 km": {
-            "cosmetic": {
-              "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='1 km']/slstr:cosmeticPixels/@value)",
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='1 km']/slstr:cosmeticPixels/@percentage)"
-            },
-            "duplicated": {
-              "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='1 km']/slstr:duplicatedPixels/@value)",
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='1 km']/slstr:duplicatedPixels/@percentage)"
-            },
-            "saturated": {
-              "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='1 km']/slstr:saturatedPixels/@value)",
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='1 km']/slstr:saturatedPixels/@percentage)"
-            },
-            "out_of_range": {
-              "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='1 km']/slstr:outOfRangePixels/@value)",
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='1 km']/slstr:outOfRangePixels/@percentage)"
-            },
-            "saline_water": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='1 km']/sentinel3:salineWaterPixels)"
-            },
-            "land": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='1 km']/sentinel3:landPixels)"
-            },
-            "coastal": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='1 km']/sentinel3:coastalPixels)"
-            },
-            "inland_water": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='1 km']/sentinel3:freshInlandWaterPixels)"
-            },
-            "tidal": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='1 km']/sentinel3:tidalRegionPixels)"
-            },
-            "cloud": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='1 km']/sentinel3:cloudyPixels)"
-            }
+        "pixel_classification": {
+          "cosmetic": {
+            "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:cosmeticPixels/@value)",
+            "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:cosmeticPixels/@percentage)"
           },
-          "0.5 km stripe A": {
-            "cosmetic": {
-              "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:cosmeticPixels/@value)",
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:cosmeticPixels/@percentage)"
-            },
-            "duplicated": {
-              "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:duplicatedPixels/@value)",
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:duplicatedPixels/@percentage)"
-            },
-            "saturated": {
-              "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:saturatedPixels/@value)",
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:saturatedPixels/@percentage)"
-            },
-            "out_of_range": {
-              "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:outOfRangePixels/@value)",
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:outOfRangePixels/@percentage)"
-            },
-            "saline_water": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe A']/sentinel3:salineWaterPixels)"
-            },
-            "land": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe A']/sentinel3:landPixels)"
-            },
-            "coastal": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe A']/sentinel3:coastalPixels)"
-            },
-            "inland_water": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe A']/sentinel3:freshInlandWaterPixels)"
-            },
-            "tidal": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe A']/sentinel3:tidalRegionPixels)"
-            },
-            "cloud": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe A']/sentinel3:cloudyPixels)"
-            }
+          "duplicated": {
+            "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:duplicatedPixels/@value)",
+            "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:duplicatedPixels/@percentage)"
           },
-          "0.5 km stripe B": {
-            "cosmetic": {
-              "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe B']/slstr:cosmeticPixels/@value)",
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe B']/slstr:cosmeticPixels/@percentage)"
-            },
-            "duplicated": {
-              "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe B']/slstr:duplicatedPixels/@value)",
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe B']/slstr:duplicatedPixels/@percentage)"
-            },
-            "saturated": {
-              "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe B']/slstr:saturatedPixels/@value)",
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe B']/slstr:saturatedPixels/@percentage)"
-            },
-            "out_of_range": {
-              "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe B']/slstr:outOfRangePixels/@value)",
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe B']/slstr:outOfRangePixels/@percentage)"
-            },
-            "saline_water": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe B']/sentinel3:salineWaterPixels)"
-            },
-            "land": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe B']/sentinel3:landPixels)"
-            },
-            "coastal": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe B']/sentinel3:coastalPixels)"
-            },
-            "inland_water": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe B']/sentinel3:freshInlandWaterPixels)"
-            },
-            "tidal": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe B']/sentinel3:tidalRegionPixels)"
-            },
-            "cloud": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe B']/sentinel3:cloudyPixels)"
-            }
+          "saturated": {
+            "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:saturatedPixels/@value)",
+            "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:saturatedPixels/@percentage)"
           },
-          "F1": {
-            "cosmetic": {
-              "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='F1']/slstr:cosmeticPixels/@value)",
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='F1']/slstr:cosmeticPixels/@percentage)"
-            },
-            "duplicated": {
-              "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='F1']/slstr:duplicatedPixels/@value)",
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='F1']/slstr:duplicatedPixels/@percentage)"
-            },
-            "saturated": {
-              "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='F1']/slstr:saturatedPixels/@value)",
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='F1']/slstr:saturatedPixels/@percentage)"
-            },
-            "out_of_range": {
-              "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='F1']/slstr:outOfRangePixels/@value)",
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='F1']/slstr:outOfRangePixels/@percentage)"
-            },
-            "saline_water": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='F1']/sentinel3:salineWaterPixels)"
-            },
-            "land": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='F1']/sentinel3:landPixels)"
-            },
-            "coastal": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='F1']/sentinel3:coastalPixels)"
-            },
-            "inland_water": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='F1']/sentinel3:freshInlandWaterPixels)"
-            },
-            "tidal": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='F1']/sentinel3:tidalRegionPixels)"
-            },
-            "cloud": {
-              "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='F1']/sentinel3:cloudyPixels)"
-            }
+          "out_of_range": {
+            "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:outOfRangePixels/@value)",
+            "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:outOfRangePixels/@percentage)"
+          },
+          "saline_water": {
+            "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe A']/sentinel3:salineWaterPixels)"
+          },
+          "land": {
+            "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe A']/sentinel3:landPixels)"
+          },
+          "coastal": {
+            "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe A']/sentinel3:coastalPixels)"
+          },
+          "inland_water": {
+            "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe A']/sentinel3:freshInlandWaterPixels)"
+          },
+          "tidal": {
+            "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe A']/sentinel3:tidalRegionPixels)"
+          },
+          "cloud": {
+            "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe A']/sentinel3:cloudyPixels)"
           }
-        },
-        "data_information": {
+        }
+      },
+      "links": [
+        {
+          "rel": "Text(self)",
+          "href": "Text(./.zattrs.json)",
+          "type": "Text(application/json)"
+        }
+      ],
+      "assets": []
+    }
+  },
+  "conditions_metadata": {
+    "data_information": {
           "measurement_accuracy": "metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:measurementAccuracy",
           "accuracy_reference": "metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:accuracyReference",
           "nadir_image_sizes": {
@@ -19859,164 +19676,301 @@
               "columns": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:obliqueImageSize[@grid='Tie Points']/sentinel3:columns)"
             }
           }
+        },
+    "pixel_classifications": {
+      "1 km": {
+        "cosmetic": {
+          "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='1 km']/slstr:cosmeticPixels/@value)",
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='1 km']/slstr:cosmeticPixels/@percentage)"
+        },
+        "duplicated": {
+          "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='1 km']/slstr:duplicatedPixels/@value)",
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='1 km']/slstr:duplicatedPixels/@percentage)"
+        },
+        "saturated": {
+          "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='1 km']/slstr:saturatedPixels/@value)",
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='1 km']/slstr:saturatedPixels/@percentage)"
+        },
+        "out_of_range": {
+          "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='1 km']/slstr:outOfRangePixels/@value)",
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='1 km']/slstr:outOfRangePixels/@percentage)"
+        },
+        "saline_water": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='1 km']/sentinel3:salineWaterPixels)"
+        },
+        "land": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='1 km']/sentinel3:landPixels)"
+        },
+        "coastal": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='1 km']/sentinel3:coastalPixels)"
+        },
+        "inland_water": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='1 km']/sentinel3:freshInlandWaterPixels)"
+        },
+        "tidal": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='1 km']/sentinel3:tidalRegionPixels)"
+        },
+        "cloud": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='1 km']/sentinel3:cloudyPixels)"
         }
       },
-      "links": [
-        {
-          "rel": "Text(self)",
-          "href": "Text(./.zattrs.json)",
-          "type": "Text(application/json)"
-        }
-      ],
-      "assets": []
-    }
-  },
-  "conditions_metadata": {
-      "band_descriptions": {
-        "S1": {
-          "units": "Text(nm)",
-          "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S1']/sentinel3:centralWavelength)",
-          "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S1']/sentinel3:bandwidth)"
+      "0.5 km stripe A": {
+        "cosmetic": {
+          "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:cosmeticPixels/@value)",
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:cosmeticPixels/@percentage)"
         },
-        "S2": {
-          "units": "Text(nm)",
-          "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S2']/sentinel3:centralWavelength)",
-          "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S2']/sentinel3:bandwidth)"
+        "duplicated": {
+          "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:duplicatedPixels/@value)",
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:duplicatedPixels/@percentage)"
         },
-        "S3": {
-          "units": "Text(nm)",
-          "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S3']/sentinel3:centralWavelength)",
-          "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S3']/sentinel3:bandwidth)"
+        "saturated": {
+          "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:saturatedPixels/@value)",
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:saturatedPixels/@percentage)"
         },
-        "S4": {
-          "units": "Text(nm)",
-          "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S4']/sentinel3:centralWavelength)",
-          "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S4']/sentinel3:bandwidth)"
+        "out_of_range": {
+          "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:outOfRangePixels/@value)",
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe A']/slstr:outOfRangePixels/@percentage)"
         },
-        "S5": {
-          "units": "Text(nm)",
-          "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S5']/sentinel3:centralWavelength)",
-          "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S5']/sentinel3:bandwidth)"
+        "saline_water": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe A']/sentinel3:salineWaterPixels)"
         },
-        "S6": {
-          "units": "Text(nm)",
-          "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S6']/sentinel3:centralWavelength)",
-          "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S6']/sentinel3:bandwidth)"
+        "land": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe A']/sentinel3:landPixels)"
         },
-        "S7": {
-          "units": "Text(nm)",
-          "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S7']/sentinel3:centralWavelength)",
-          "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S7']/sentinel3:bandwidth)"
+        "coastal": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe A']/sentinel3:coastalPixels)"
         },
-        "S8": {
-          "units": "Text(nm)",
-          "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S8']/sentinel3:centralWavelength)",
-          "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S8']/sentinel3:bandwidth)"
+        "inland_water": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe A']/sentinel3:freshInlandWaterPixels)"
         },
-        "S9": {
-          "units": "Text(nm)",
-          "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S9']/sentinel3:centralWavelength)",
-          "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S9']/sentinel3:bandwidth)"
+        "tidal": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe A']/sentinel3:tidalRegionPixels)"
         },
-        "F1": {
-          "units": "Text(nm)",
-          "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='F1']/sentinel3:centralWavelength)",
-          "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='F1']/sentinel3:bandwidth)"
-        },
-        "F2": {
-          "units": "Text(nm)",
-          "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='F2']/sentinel3:centralWavelength)",
-          "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='F2']/sentinel3:bandwidth)"
+        "cloud": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe A']/sentinel3:cloudyPixels)"
         }
       },
-      "detector_temperatures": {
-        "S1_Detector": {
-          "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S1_Detector']/slstr:min)",
-          "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S1_Detector']/slstr:max)"
+      "0.5 km stripe B": {
+        "cosmetic": {
+          "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe B']/slstr:cosmeticPixels/@value)",
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe B']/slstr:cosmeticPixels/@percentage)"
         },
-        "S2_Detector": {
-          "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S2_Detector']/slstr:min)",
-          "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S2_Detector']/slstr:max)"
+        "duplicated": {
+          "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe B']/slstr:duplicatedPixels/@value)",
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe B']/slstr:duplicatedPixels/@percentage)"
         },
-        "S3_Detector": {
-          "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S3_Detector']/slstr:min)",
-          "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S3_Detector']/slstr:max)"
+        "saturated": {
+          "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe B']/slstr:saturatedPixels/@value)",
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe B']/slstr:saturatedPixels/@percentage)"
         },
-        "S4_Detector": {
-          "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S4_Detector']/slstr:min)",
-          "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S4_Detector']/slstr:max)"
+        "out_of_range": {
+          "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe B']/slstr:outOfRangePixels/@value)",
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='0.5 km stripe B']/slstr:outOfRangePixels/@percentage)"
         },
-        "S5_Detector": {
-          "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S5_Detector']/slstr:min)",
-          "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S5_Detector']/slstr:max)"
+        "saline_water": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe B']/sentinel3:salineWaterPixels)"
         },
-        "S6_Detector": {
-          "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S6_Detector']/slstr:min)",
-          "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S6_Detector']/slstr:max)"
+        "land": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe B']/sentinel3:landPixels)"
         },
-        "S7_Detector": {
-          "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S7_Detector']/slstr:min)",
-          "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S7_Detector']/slstr:max)"
+        "coastal": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe B']/sentinel3:coastalPixels)"
         },
-        "S8_Detector": {
-          "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S8_Detector']/slstr:min)",
-          "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S8_Detector']/slstr:max)"
+        "inland_water": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe B']/sentinel3:freshInlandWaterPixels)"
         },
-        "S9_Detector": {
-          "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S9_Detector']/slstr:min)",
-          "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S9_Detector']/slstr:max)"
+        "tidal": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe B']/sentinel3:tidalRegionPixels)"
+        },
+        "cloud": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='0.5 km stripe B']/sentinel3:cloudyPixels)"
         }
       },
-      "orbit_reference": {
-        "absolute_pass_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:passNumber)",
-        "relative_pass_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:relativePassNumber)",
-        "cycle_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:cycleNumber)",
-        "phase_identifier": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:phaseIdentifier)",
-        "type": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber/@type",
-        "ephemeris": {
-          "start": {
-            "TAI": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:epoch[@type='TAI']",
-            "UTC": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:epoch[@type='UTC']",
-            "UT1": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:epoch[@type='UT1']",
-            "position": {
-              "x": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:position/sentinel-safe:x)",
-              "y": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:position/sentinel-safe:y)",
-              "z": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:position/sentinel-safe:z)"
-            },
-            "velocity": {
-              "x": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:velocity/sentinel-safe:x)",
-              "y": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:velocity/sentinel-safe:y)",
-              "z": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:velocity/sentinel-safe:z)"
-            }
-          },
-          "stop": {
-            "TAI": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:epoch[@type='TAI']",
-            "UTC": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:epoch[@type='UTC']",
-            "UT1": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:epoch[@type='UT1']",
-            "position": {
-              "x": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:position/sentinel-safe:x)",
-              "y": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:position/sentinel-safe:y)",
-              "z": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:position/sentinel-safe:z)"
-            },
-            "velocity": {
-              "x": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:velocity/sentinel-safe:x)",
-              "y": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:velocity/sentinel-safe:y)",
-              "z": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:velocity/sentinel-safe:z)"
-            }
-          }
+      "F1": {
+        "cosmetic": {
+          "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='F1']/slstr:cosmeticPixels/@value)",
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='F1']/slstr:cosmeticPixels/@percentage)"
+        },
+        "duplicated": {
+          "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='F1']/slstr:duplicatedPixels/@value)",
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='F1']/slstr:duplicatedPixels/@percentage)"
+        },
+        "saturated": {
+          "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='F1']/slstr:saturatedPixels/@value)",
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='F1']/slstr:saturatedPixels/@percentage)"
+        },
+        "out_of_range": {
+          "count": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='F1']/slstr:outOfRangePixels/@value)",
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:pixelQualitySummary[@grid='F1']/slstr:outOfRangePixels/@percentage)"
+        },
+        "saline_water": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='F1']/sentinel3:salineWaterPixels)"
+        },
+        "land": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='F1']/sentinel3:landPixels)"
+        },
+        "coastal": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='F1']/sentinel3:coastalPixels)"
+        },
+        "inland_water": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='F1']/sentinel3:freshInlandWaterPixels)"
+        },
+        "tidal": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='F1']/sentinel3:tidalRegionPixels)"
+        },
+        "cloud": {
+          "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary[@grid='F1']/sentinel3:cloudyPixels)"
         }
-      },
-      "product_unit": {
-        "type": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productUnit/sentinel3:type",
-        "duration": "to_int(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productUnit/sentinel3:duration)",
-        "alongtrack_coordinate": "to_int(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productUnit/sentinel3:alongtrackCoordinate)"
-      },
-      "meteo": {
-        "source": "Text(ECMWF)",
-        "type": "metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:ecmwfType",
-        "time_relevance": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:ecmwfType/@timeRelevance)"
       }
     },
+    "band_descriptions": {
+      "S1": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S1']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S1']/sentinel3:bandwidth)"
+      },
+      "S2": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S2']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S2']/sentinel3:bandwidth)"
+      },
+      "S3": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S3']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S3']/sentinel3:bandwidth)"
+      },
+      "S4": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S4']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S4']/sentinel3:bandwidth)"
+      },
+      "S5": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S5']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S5']/sentinel3:bandwidth)"
+      },
+      "S6": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S6']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S6']/sentinel3:bandwidth)"
+      },
+      "S7": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S7']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S7']/sentinel3:bandwidth)"
+      },
+      "S8": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S8']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S8']/sentinel3:bandwidth)"
+      },
+      "S9": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S9']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='S9']/sentinel3:bandwidth)"
+      },
+      "F1": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='F1']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='F1']/sentinel3:bandwidth)"
+      },
+      "F2": {
+        "units": "Text(nm)",
+        "central_wavelength": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='F2']/sentinel3:centralWavelength)",
+        "bandwidth": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:bandDescriptions/sentinel3:band[@name='F2']/sentinel3:bandwidth)"
+      }
+    },
+    "detector_temperatures": {
+      "S1_Detector": {
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S1_Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S1_Detector']/slstr:max)"
+      },
+      "S2_Detector": {
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S2_Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S2_Detector']/slstr:max)"
+      },
+      "S3_Detector": {
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S3_Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S3_Detector']/slstr:max)"
+      },
+      "S4_Detector": {
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S4_Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S4_Detector']/slstr:max)"
+      },
+      "S5_Detector": {
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S5_Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S5_Detector']/slstr:max)"
+      },
+      "S6_Detector": {
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S6_Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S6_Detector']/slstr:max)"
+      },
+      "S7_Detector": {
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S7_Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S7_Detector']/slstr:max)"
+      },
+      "S8_Detector": {
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S8_Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S8_Detector']/slstr:max)"
+      },
+      "S9_Detector": {
+        "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S9_Detector']/slstr:min)",
+        "max": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S9_Detector']/slstr:max)"
+      }
+    },
+    "orbit_reference": {
+      "absolute_pass_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:passNumber)",
+      "relative_pass_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:relativePassNumber)",
+      "cycle_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:cycleNumber)",
+      "phase_identifier": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:phaseIdentifier)",
+      "type": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber/@type",
+      "ephemeris": {
+        "start": {
+          "TAI": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:epoch[@type='TAI']",
+          "UTC": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:epoch[@type='UTC']",
+          "UT1": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:epoch[@type='UT1']",
+          "position": {
+            "x": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:position/sentinel-safe:x)",
+            "y": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:position/sentinel-safe:y)",
+            "z": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:position/sentinel-safe:z)"
+          },
+          "velocity": {
+            "x": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:velocity/sentinel-safe:x)",
+            "y": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:velocity/sentinel-safe:y)",
+            "z": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[1]/sentinel-safe:velocity/sentinel-safe:z)"
+          }
+        },
+        "stop": {
+          "TAI": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:epoch[@type='TAI']",
+          "UTC": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:epoch[@type='UTC']",
+          "UT1": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:epoch[@type='UT1']",
+          "position": {
+            "x": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:position/sentinel-safe:x)",
+            "y": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:position/sentinel-safe:y)",
+            "z": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:position/sentinel-safe:z)"
+          },
+          "velocity": {
+            "x": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:velocity/sentinel-safe:x)",
+            "y": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:velocity/sentinel-safe:y)",
+            "z": "to_float(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:elementSet/sentinel-safe:ephemeris[2]/sentinel-safe:velocity/sentinel-safe:z)"
+          }
+        }
+      }
+    },
+    "product_unit": {
+      "type": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productUnit/sentinel3:type",
+      "duration": "to_int(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productUnit/sentinel3:duration)",
+      "alongtrack_coordinate": "to_int(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productUnit/sentinel3:alongtrackCoordinate)"
+    },
+    "meteo": {
+      "source": "Text(ECMWF)",
+      "type": "metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:ecmwfType",
+      "time_relevance": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:ecmwfType/@timeRelevance)"
+    },
+    "platform": {
+      "nssdc_identifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:nssdcIdentifier"
+    }
+  },
   "namespaces": {
     "xfdu": "urn:ccsds:schema:xfdu:1",
     "gml": "http://www.opengis.net/gml",
