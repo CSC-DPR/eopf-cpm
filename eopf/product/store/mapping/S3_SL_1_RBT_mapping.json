@@ -19556,7 +19556,7 @@
         "instrument_mode": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode",
         "absolute_orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber)",
         "relative_orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:relativeOrbitNumber)",
-        "ground_track_direction": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber/@groundTrackDirection",
+        "ground_track_direction": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber[@type='start']/@groundTrackDirection",
         "image_size": {
           "rows": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize[@grid='0.5 km stripe A']/sentinel3:rows)",
           "columns": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize[@grid='0.5 km stripe A']/sentinel3:columns)"

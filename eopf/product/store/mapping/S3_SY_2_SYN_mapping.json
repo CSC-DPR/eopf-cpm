@@ -190,7 +190,7 @@
       "attributes": {
         "_FillValue": -1,
         "long_name": "Time of measurement",
-        "standard_name": "time_of_measurement",
+        "standard_name": "time",
         "units": "microseconds since 2000-01-01 00:00:00",
         "valid_max": 4294967295,
         "valid_min": 0
@@ -207,7 +207,6 @@
         "bandwidth": 15.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 01",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 400.0
@@ -224,7 +223,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 02",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 412.5
@@ -241,7 +239,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 03",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 442.5
@@ -258,7 +255,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 04",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 490.0
@@ -275,7 +271,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 05",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 510.0
@@ -292,7 +287,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 06",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 560.0
@@ -309,7 +303,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 07",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 620.0
@@ -326,7 +319,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 08",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 665.0
@@ -343,7 +335,6 @@
         "bandwidth": 7.5,
         "long_name": "Surface directional reflectance associated with OLCI channel 09",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 673.75
@@ -360,7 +351,6 @@
         "bandwidth": 7.5,
         "long_name": "Surface directional reflectance associated with OLCI channel 10",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 681.25
@@ -377,7 +367,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 11",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 708.75
@@ -394,7 +383,6 @@
         "bandwidth": 7.5,
         "long_name": "Surface directional reflectance associated with OLCI channel 12",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 753.75
@@ -411,7 +399,6 @@
         "bandwidth": 15.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 16",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 778.75
@@ -428,7 +415,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 17",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 865.0
@@ -445,7 +431,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 18",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 885.0
@@ -462,7 +447,6 @@
         "bandwidth": 40.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 21",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 1020.0
@@ -479,7 +463,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance associated with SLSTR channel 01 acquired in nadir view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 555.0
@@ -496,7 +479,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance associated with SLSTR channel 02 acquired in nadir view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 659.0
@@ -513,7 +495,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance associated with SLSTR channel 03 acquired in nadir view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 865.0
@@ -530,7 +511,6 @@
         "bandwidth": 60.0,
         "long_name": "Surface directional reflectance associated with SLSTR channel 05 acquired in nadir view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 1610.0
@@ -547,7 +527,6 @@
         "bandwidth": 50.0,
         "long_name": "Surface directional reflectance associated with SLSTR channel 06 acquired in nadir view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 2250.0
@@ -564,7 +543,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance associated with SLSTR channel 01 acquired in oblique view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 555.0
@@ -581,7 +559,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance associated with SLSTR channel 02 acquired in oblique view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 659.0
@@ -598,7 +575,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance associated with SLSTR channel 03 acquired in oblique view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 865.0
@@ -615,7 +591,6 @@
         "bandwidth": 60.0,
         "long_name": "Surface directional reflectance associated with SLSTR channel 05 acquired in oblique view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 1610.0
@@ -632,7 +607,6 @@
         "bandwidth": 50.0,
         "long_name": "Surface directional reflectance associated with SLSTR channel 06 acquired in oblique view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 2250.0
@@ -646,7 +620,6 @@
       "attributes": {
         "_FillValue": 0,
         "long_name": "Aerosol Model Index Number",
-        "standard_name": "aerosol_model_index_number",
         "valid_max": 40,
         "valid_min": 1
       }
@@ -661,7 +634,6 @@
         "add_offset": -1.0,
         "long_name": "Aerosol Angstrom exponent at 550 nm",
         "scale_factor": 0.014999999664723873,
-        "standard_name": "atmosphere_angstrom_exponent",
         "valid_max": 255,
         "valid_min": 1,
         "wavelength": 550.0
@@ -677,7 +649,6 @@
         "ancillary_variables": "T550_err",
         "long_name": "Aerosol optical Thickness",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "atmosphere_optical_thickness_due_to_aerosol",
         "valid_max": 32767,
         "valid_min": 0,
         "wavelength": 550.0
@@ -694,7 +665,6 @@
         "bandwidth": 15.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 01",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 400.0
@@ -711,7 +681,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 02",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 412.5
@@ -728,7 +697,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 03",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 442.5
@@ -745,7 +713,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 04",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 490.0
@@ -762,7 +729,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 05",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 510.0
@@ -779,7 +745,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 06",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 560.0
@@ -796,7 +761,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 07",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 620.0
@@ -813,7 +777,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 08",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 665.0
@@ -830,7 +793,6 @@
         "bandwidth": 7.5,
         "long_name": "Surface directional reflectance associated with OLCI channel 09",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 673.75
@@ -847,7 +809,6 @@
         "bandwidth": 7.5,
         "long_name": "Surface directional reflectance associated with OLCI channel 10",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 681.25
@@ -864,7 +825,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 11",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 708.75
@@ -881,7 +841,6 @@
         "bandwidth": 7.5,
         "long_name": "Surface directional reflectance associated with OLCI channel 12",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 753.75
@@ -898,7 +857,6 @@
         "bandwidth": 15.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 16",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 778.75
@@ -915,7 +873,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 17",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 865.0
@@ -932,7 +889,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 18",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 885.0
@@ -949,7 +905,6 @@
         "bandwidth": 40.0,
         "long_name": "Surface directional reflectance associated with OLCI channel 21",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 1020.0
@@ -966,7 +921,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance associated with SLSTR channel 01 acquired in nadir view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 555.0
@@ -983,7 +937,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance associated with SLSTR channel 01 acquired in oblique view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 555.0
@@ -1000,7 +953,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance associated with SLSTR channel 02 acquired in nadir view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 659.0
@@ -1017,7 +969,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance associated with SLSTR channel 02 acquired in oblique view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 659.0
@@ -1034,7 +985,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance associated with SLSTR channel 03 acquired in nadir view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 865.0
@@ -1051,7 +1001,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance associated with SLSTR channel 03 acquired in oblique view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 865.0
@@ -1068,7 +1017,6 @@
         "bandwidth": 60.0,
         "long_name": "Surface directional reflectance associated with SLSTR channel 05 acquired in nadir view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 1610.0
@@ -1085,7 +1033,6 @@
         "bandwidth": 60.0,
         "long_name": "Surface directional reflectance associated with SLSTR channel 05 acquired in oblique view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 1610.0
@@ -1102,7 +1049,6 @@
         "bandwidth": 50.0,
         "long_name": "Surface directional reflectance associated with SLSTR channel 06 acquired in nadir view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 2250.0
@@ -1119,7 +1065,6 @@
         "bandwidth": 50.0,
         "long_name": "Surface directional reflectance associated with SLSTR channel 06 acquired in oblique view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 2250.0
@@ -1135,7 +1080,6 @@
         "add_offset": -1.0,
         "long_name": "Aerosol Angstrom exponent at 550 nm for removed pixels",
         "scale_factor": 0.014999999664723873,
-        "standard_name": "atmosphere_angstrom_exponent_for_removed_pixels",
         "valid_max": 255,
         "valid_min": 1,
         "wavelength": 550.0
@@ -1151,7 +1095,6 @@
         "ancillary_variables": "T550_err",
         "long_name": "Aerosol optical Thickness for removed pixels",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "atmosphere_optical_thickness_due_to_aerosol_for_removed_pixels",
         "valid_max": 32767,
         "valid_min": 0,
         "wavelength": 550.0
@@ -1170,8 +1113,7 @@
           8
         ],
         "flag_meanings": "CLOUD CLOUD_AMBIGUOUS CLOUD_MARGIN SNOW_ICE",
-        "long_name": "Synergy cloud flags",
-        "standard_name": "synergy_cloud_flags"
+        "long_name": "Synergy cloud flags"
       }
     },
     {
@@ -1193,8 +1135,7 @@
           1
         ],
         "flag_meanings": "OLC_land OLC_coastline OLC_fresh_inland_water OLC_tidal_region OLC_bright OLC_invalid OLC_cosmetic OLC_sun_glint_risk OLC_dubious OLC_summary_saturated ",
-        "long_name": "Selected quality and classification flags for OLCI SYN channels",
-        "standard_name": "Selected_quality_and_classification_flags_for_olci_syn_channels"
+        "long_name": "Selected quality and classification flags for OLCI SYN channels"
       }
     },
     {
@@ -1226,8 +1167,7 @@
           1
         ],
         "flag_meanings": "SLN_summary_pointing SLN_summary_cloud SLN_snow SLN_sun_glint SLN_twilight SLN_day SLN_cosmetic SLN_inland_water SLN_land SLN_tidal SLN_ocean SLN_coastline SLN_summary_unfilled_pixel SLN_summary_no_parameters SLN_summary_invalid_radiance SLN_summary_saturation SLN_summary_no_signal SLN_summary_not_decompressed SLN_summary_pixel_absent SLN_summary_ISP_absent",
-        "long_name": "Exception summary and confidence flags for SLSTR nadir-view SYN channels",
-        "standard_name": "exception_summary_and_confidence_flags_for_slstr_nadir_view_syn_channels"
+        "long_name": "Exception summary and confidence flags for SLSTR nadir-view SYN channels"
       }
     },
     {
@@ -1259,8 +1199,7 @@
           1
         ],
         "flag_meanings": "SLO_summary_pointing SLO_summary_cloud SLO_snow SLO_sun_glint SLO_twilight SLO_day SLO_cosmetic SLO_inland_water SLO_land SLO_tidal SLO_ocean SLO_coastline SLO_summary_unfilled_pixel SLO_summary_no_parameters SLO_summary_invalid_radiance SLO_summary_saturation SLO_summary_no_signal SLO_summary_not_decompressed SLO_summary_pixel_absent SLO_summary_ISP_absent",
-        "long_name": "Exception summary and confidence flags for SLSTR oblique-view SYN channels",
-        "standard_name": "exception_summary_and_confidence_flags_for_slstr_oblique_view_syn_channels"
+        "long_name": "Exception summary and confidence flags for SLSTR oblique-view SYN channels"
       }
     },
     {
@@ -1288,8 +1227,7 @@
           1
         ],
         "flag_meanings": "SYN_high_error SYN_too_low SYN_negative_curvature SYN_success SYN_aerosol_filled SYN_border SYN_partly_water SYN_partly_cloudy SYN_no_slo SYN_no_sln SYN_no_olc SYN_land SYN_AOT_climato SYN_SDR_OOR SYN_snow_risk SYN_cloud",
-        "long_name": "Synergy classification and aerosol retrieval flags",
-        "standard_name": "synergy_classification_and_aerosol_retrieval_flags"
+        "long_name": "Synergy classification and aerosol retrieval flags"
       }
     },
     {
@@ -1302,7 +1240,6 @@
         "bandwidth": 15.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 01",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 400.0
@@ -1318,7 +1255,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 02",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 412.5
@@ -1334,7 +1270,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 03",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 442.5
@@ -1350,7 +1285,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 04",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 490.0
@@ -1366,7 +1300,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 05",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 510.0
@@ -1382,7 +1315,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 06",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 560.0
@@ -1398,7 +1330,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 07",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 620.0
@@ -1414,7 +1345,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 08",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 665.0
@@ -1430,7 +1360,6 @@
         "bandwidth": 7.5,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 09",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 673.75
@@ -1446,7 +1375,6 @@
         "bandwidth": 7.5,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 10",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 681.25
@@ -1462,7 +1390,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 11",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 708.75
@@ -1478,7 +1405,6 @@
         "bandwidth": 7.5,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 12",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 753.75
@@ -1494,7 +1420,6 @@
         "bandwidth": 15.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 16",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 778.75
@@ -1510,7 +1435,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 17",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 865.0
@@ -1526,7 +1450,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 18",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 885.0
@@ -1542,7 +1465,6 @@
         "bandwidth": 40.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 21",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 1020.0
@@ -1558,7 +1480,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 01 acquired in nadir view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 555.0
@@ -1574,7 +1495,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 01 acquired in oblique view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 555.0
@@ -1590,7 +1510,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 02 acquired in nadir view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 659.0
@@ -1606,7 +1525,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 02 acquired in oblique view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 659.0
@@ -1622,7 +1540,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 03 acquired in nadir view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 865.0
@@ -1638,7 +1555,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 03 acquired in oblique view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 865.0
@@ -1654,7 +1570,6 @@
         "bandwidth": 60.0,
         "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 05 acquired in nadir view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 1610.0
@@ -1670,7 +1585,6 @@
         "bandwidth": 60.0,
         "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 05 acquired in oblique view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 1610.0
@@ -1686,7 +1600,6 @@
         "bandwidth": 50.0,
         "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 06 acquired in nadir view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 2250.0
@@ -1702,7 +1615,6 @@
         "bandwidth": 50.0,
         "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 06 acquired in oblique view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_error_estimate",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 2250.0
@@ -1717,7 +1629,6 @@
         "_FillValue": -10000,
         "long_name": "Aerosol optical Thickness standard error",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "atmosphere_optical_thickness_due_to_aerosol_standard_error",
         "valid_max": 32767,
         "valid_min": 0,
         "wavelength": 550.0
@@ -1731,7 +1642,6 @@
       "attributes": {
         "_FillValue": 0,
         "long_name": "Aerosol Model Index Number for removed pixels",
-        "standard_name": "aerosol_model_index_number_for_removed_pixels",
         "valid_max": 40,
         "valid_min": 1
       }
@@ -1749,8 +1659,7 @@
           8
         ],
         "flag_meanings": "CLOUD CLOUD_AMBIGUOUS CLOUD_MARGIN SNOW_ICE",
-        "long_name": "Synergy cloud flags for removed pixels",
-        "standard_name": "synergy_cloud_flags_for_removed_pixels"
+        "long_name": "Synergy cloud flags for removed pixels"
       }
     },
     {
@@ -1772,8 +1681,7 @@
           1
         ],
         "flag_meanings": "OLC_land OLC_coastline OLC_fresh_inland_water OLC_tidal_region OLC_bright OLC_invalid OLC_cosmetic OLC_sun_glint_risk OLC_dubious OLC_summary_saturated ",
-        "long_name": "Selected quality and classification flags for OLCI SYN channels and removed pixels",
-        "standard_name": "Selected_quality_and_classification_flags_for_olci_syn_channels_and_removed_pixels"
+        "long_name": "Selected quality and classification flags for OLCI SYN channels and removed pixels"
       }
     },
     {
@@ -1805,8 +1713,7 @@
           1
         ],
         "flag_meanings": "SLN_summary_pointing SLN_summary_cloud SLN_snow SLN_sun_glint SLN_twilight SLN_day SLN_cosmetic SLN_inland_water SLN_land SLN_tidal SLN_ocean SLN_coastline SLN_summary_unfilled_pixel SLN_summary_no_parameters SLN_summary_invalid_radiance SLN_summary_saturation SLN_summary_no_signal SLN_summary_not_decompressed SLN_summary_pixel_absent SLN_summary_ISP_absent",
-        "long_name": "Exception summary and confidence flags for SLSTR nadir-view SYN channels and removed pixels",
-        "standard_name": "exception_summary_and_confidence_flags_for_slstr_nadir_view_syn_channels_and_removed_pixels"
+        "long_name": "Exception summary and confidence flags for SLSTR nadir-view SYN channels and removed pixels"
       }
     },
     {
@@ -1838,8 +1745,7 @@
           1
         ],
         "flag_meanings": "SLO_summary_pointing SLO_summary_cloud SLO_snow SLO_sun_glint SLO_twilight SLO_day SLO_cosmetic SLO_inland_water SLO_land SLO_tidal SLO_ocean SLO_coastline SLO_summary_unfilled_pixel SLO_summary_no_parameters SLO_summary_invalid_radiance SLO_summary_saturation SLO_summary_no_signal SLO_summary_not_decompressed SLO_summary_pixel_absent SLO_summary_ISP_absent",
-        "long_name": "Exception summary and confidence flags for SLSTR oblique-view SYN channels and removed pixels",
-        "standard_name": "exception_summary_and_confidence_flags_for_slstr_oblique_view_syn_channels_and_removed_pixels"
+        "long_name": "Exception summary and confidence flags for SLSTR oblique-view SYN channels and removed pixels"
       }
     },
     {
@@ -1867,8 +1773,7 @@
           1
         ],
         "flag_meanings": "SYN_high_error SYN_too_low SYN_negative_curvature SYN_success SYN_aerosol_filled SYN_border SYN_partly_water SYN_partly_cloudy SYN_no_slo SYN_no_sln SYN_no_olc SYN_land SYN_AOT_climato SYN_SDR_OOR SYN_snow_risk SYN_cloud",
-        "long_name": "Synergy classification and aerosol retrieval flags for removed pixels",
-        "standard_name": "synergy_classification_and_aerosol_retrieval_flags_for_removed_pixels"
+        "long_name": "Synergy classification and aerosol retrieval flags for removed pixels"
       }
     },
     {
@@ -1881,7 +1786,6 @@
         "bandwidth": 15.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 01",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 400.0
@@ -1897,7 +1801,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 02",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 412.5
@@ -1913,7 +1816,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 03",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 442.5
@@ -1929,7 +1831,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 04",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 490.0
@@ -1945,7 +1846,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 05",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 510.0
@@ -1961,7 +1861,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 06",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 560.0
@@ -1977,7 +1876,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 07",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 620.0
@@ -1993,7 +1891,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 08",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 665.0
@@ -2009,7 +1906,6 @@
         "bandwidth": 7.5,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 09",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 673.75
@@ -2025,7 +1921,6 @@
         "bandwidth": 7.5,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 10",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 681.25
@@ -2041,7 +1936,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 11",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 708.75
@@ -2057,7 +1951,6 @@
         "bandwidth": 7.5,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 12",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 753.75
@@ -2073,7 +1966,6 @@
         "bandwidth": 15.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 16",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 778.75
@@ -2089,7 +1981,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 17",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 865.0
@@ -2105,7 +1996,6 @@
         "bandwidth": 10.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 18",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 885.0
@@ -2121,7 +2011,6 @@
         "bandwidth": 40.0,
         "long_name": "Surface directional reflectance error estimate associated with OLCI channel 21",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 1020.0
@@ -2137,7 +2026,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 01 acquired in nadir view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 555.0
@@ -2153,7 +2041,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 01 acquired in oblique view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 555.0
@@ -2169,7 +2056,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 02 acquired in nadir view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 659.0
@@ -2185,7 +2071,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 02 acquired in oblique view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 659.0
@@ -2201,7 +2086,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 03 acquired in nadir view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 865.0
@@ -2217,7 +2101,6 @@
         "bandwidth": 20.0,
         "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 03 acquired in oblique view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 865.0
@@ -2233,7 +2116,6 @@
         "bandwidth": 60.0,
         "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 05 acquired in nadir view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 1610.0
@@ -2249,7 +2131,6 @@
         "bandwidth": 60.0,
         "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 05 acquired in oblique view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 1610.0
@@ -2265,7 +2146,6 @@
         "bandwidth": 50.0,
         "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 06 acquired in nadir view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 2250.0
@@ -2281,7 +2161,6 @@
         "bandwidth": 50.0,
         "long_name": "Surface directional reflectance error estimate associated with SLSTR channel 06 acquired in oblique view",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "surface_directional_reflectance_standad_error",
         "valid_max": 10000,
         "valid_min": 0,
         "wavelength": 2250.0
@@ -2296,7 +2175,6 @@
         "_FillValue": -10000,
         "long_name": "Aerosol optical Thickness for removed pixels standard error",
         "scale_factor": 9.999999747378752e-05,
-        "standard_name": "atmosphere_optical_thickness_due_to_aerosol_standard_error_for_removed_pixels",
         "valid_max": 32767,
         "valid_min": 0,
         "wavelength": 550.0
@@ -2341,7 +2219,7 @@
         "_FillValue": -2147483648,
         "long_name": "OLCI view azimuth angle",
         "scale_factor": 9.999999974752427e-07,
-        "standard_name": "olci_view_azimuth_angle",
+        "standard_name": "sensor_azimuth_angle",
         "units": "degrees",
         "valid_max": 180000000,
         "valid_min": -180000000
@@ -2356,7 +2234,7 @@
         "_FillValue": -2147483648,
         "long_name": "OLCI view zenith angle",
         "scale_factor": 9.999999974752427e-07,
-        "standard_name": "OLCI_view_zenith_angle",
+        "standard_name": "sensor_zenith_angle",
         "units": "degrees",
         "valid_max": 90000000,
         "valid_min": 0
@@ -2396,7 +2274,7 @@
       "attributes": {
         "_FillValue": "to_float(NaN)",
         "long_name": "SLSTR oblique view azimuth angle",
-        "standard_name": "slstr_oblique_view_azimuth_angle",
+        "standard_name": "sensor_azimuth_angle",
         "units": "degrees",
         "valid_max": 180.0,
         "valid_min": -180.0
@@ -2410,7 +2288,7 @@
       "attributes": {
         "_FillValue": "to_float(NaN)",
         "long_name": "SLSTR oblique view zenith angle",
-        "standard_name": "slstr_oblique_view_zenith_angle",
+        "standard_name": "sensor_zenith_angle",
         "units": "degrees",
         "valid_max": 90.0,
         "valid_min": 0.0
@@ -2489,17 +2367,8 @@
       "start_datetime": "metadataSection/metadataObject[@ID='acquisitionPeriod']/metadataWrap/xmlData/sentinel-safe:acquisitionPeriod/sentinel-safe:startTime",
       "end_datetime": "metadataSection/metadataObject[@ID='acquisitionPeriod']/metadataWrap/xmlData/sentinel-safe:acquisitionPeriod/sentinel-safe:stopTime",
       "created": "to_ISO8601(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:creationTime)",
-      "eopf:platform": {
-        "nssdc_identifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:nssdcIdentifier",
-        "family": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:familyName",
-        "number": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:number"
-      },
-      "eopf:instrument": {
-        "name": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName",
-        "short_name": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/@abbreviation",
-        "mode": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode",
-        "identifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode/@identifier"
-      },
+      "platform": "concat(metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:familyName, metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:number)",
+      "instrument": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/@abbreviation",
       "providers": [
         {
           "name": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:resource[@role='L2 Product']/sentinel-safe:processing/sentinel-safe:facility/@name",
@@ -2523,18 +2392,11 @@
         "timeliness": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:timeliness",
         "collection": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:baselineCollection",
         "processing_baseline": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:processingBaseline",
-        "disposition": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dispositionMode",
-        "orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber)",
+        "instrument_mode": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode",
+        "absolute_orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber)",
         "relative_orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:relativeOrbitNumber)",
         "ground_track_direction": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber/@groundTrackDirection",
-        "downlink_information": {
-          "granule_number": "to_int(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:granuleNumber)",
-          "granule_position": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:granulePosition",
-          "dump_start": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:dumpStart",
-          "receiving_station": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingGroundStation",
-          "receiving_start": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingStartTime",
-          "receiving_stop": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingStopTime"
-        },
+        "image_size": "to_imageSize(Syn_Oa01_reflectance.nc:rows,columns)",
         "pixel_classification": {
           "saline_water": {
             "percent": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:classificationSummary/sentinel3:salineWaterPixels/@percentage)"
@@ -2554,9 +2416,6 @@
           "cloud": {
             "percent": "to_float(metadataSection/metadataObject[@ID='synProductInformation']/metadataWrap/xmlData/syn:synProductInformation/syn:classificationSummary/sentinel3:cloudyPixels/@percentage)"
           }
-        },
-        "data_information": {
-          "image_size": "to_imageSize(Syn_Oa01_reflectance.nc:rows,columns)"
         }
       }
     }
@@ -2742,6 +2601,9 @@
       "source": "Text(ECMWF)",
       "type": "metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:ecmwfType",
       "time_relevance": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:ecmwfType/@timeRelevance)"
+    },
+    "eopf:platform": {
+      "nssdc_identifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:nssdcIdentifier"
     }
   },
   "namespaces": {
