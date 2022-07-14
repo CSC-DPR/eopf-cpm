@@ -23,7 +23,7 @@ def poly_coords_parsing(a_string: str) -> List[List[float]]:
     clean_string = filter(None, a_string.split(" "))
     iter_string = iter(clean_string)
     # Create pairs [float, float] with latitudes and longitudes
-    return [[float(lat), float(lon)] for lat, lon in zip(iter_string, iter_string)]
+    return [[float(lon), float(lat)] for lat, lon in zip(iter_string, iter_string)]
 
 
 def detect_pole_or_antemeridian(coordinates: List[List[float]]) -> bool:
