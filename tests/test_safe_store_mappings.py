@@ -54,9 +54,9 @@ from tests.utils import assert_eovariable_equal
         # # "item_format": "xmlangles",
         # (lazy_fixture("S2_MSIL1C_ZIP"), "/conditions/geometry/saa"),
         # "item_format": "netcdf"
-        (lazy_fixture("S3_SY_2_SYN_ZIP"), "/coordinates/image_grid/longitude"),
-        (lazy_fixture("S3_SY_2_SYN_ZIP"), "/conditions/geometry/saa"),
-        (lazy_fixture("S3_SY_2_SYN_ZIP"), "/measurements/olci/sdr_oa01"),
+        (lazy_fixture("S3_SY_2_SYN"), "/coordinates/image_grid/longitude"),
+        (lazy_fixture("S3_SY_2_SYN"), "/conditions/geometry/saa"),
+        (lazy_fixture("S3_SY_2_SYN"), "/measurements/olci/sdr_oa01"),
         # "item_format": "netcdf"
         (lazy_fixture("S3_OL_1_EFR_ZIP"), "/coordinates/image_grid/longitude"),
         (lazy_fixture("S3_OL_1_EFR_ZIP"), "/conditions/geometry/oza"),
@@ -95,7 +95,7 @@ def test_read_product(dask_client_all, input_path, key_path):
         lazy_fixture("S3_OL_2_LFR_ZIP"),
         lazy_fixture("S3_SL_1_RBT_ZIP"),
         lazy_fixture("S3_SL_2_LST_ZIP"),
-        lazy_fixture("S3_SY_2_SYN_ZIP"),
+        # lazy_fixture("S3_SY_2_SYN_ZIP"),
         # not working 04.07
         # lazy_fixture("S2_MSIL1C_ZIP"),
         # lazy_fixture("S2_MSIL1C"),

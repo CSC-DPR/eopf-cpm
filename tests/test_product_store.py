@@ -697,7 +697,7 @@ def test_s3_reading_cog_store(dask_client_all, store: type, path: str, storage_o
     [
         (
             EOCogStore,
-            lazy_fixture("S3_OL_1_EFR"),
+            lazy_fixture("S3_OL_1_EFR_ZIP"),
             "data/test_cog",
         ),
     ],
