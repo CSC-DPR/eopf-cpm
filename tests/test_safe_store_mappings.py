@@ -44,8 +44,8 @@ from tests.utils import assert_eovariable_equal
         # "item_format": "attribute_element_to_flag_variable", "netcdf"
         (lazy_fixture("S1_SM_OCN_ZIP"), "/coordinates/owi/longitude"),
         (lazy_fixture("S1_SM_OCN_ZIP"), "/conditions/owi/polarisation"),
-        (lazy_fixture("S1_VW_OCN_ZIP"), "/coordinates/owi/longitude"),
-        (lazy_fixture("S1_VW_OCN_ZIP"), "/conditions/owi/polarisation"),
+        (lazy_fixture("S1_WV_OCN_ZIP"), "/coordinates/owi/longitude"),
+        (lazy_fixture("S1_WV_OCN_ZIP"), "/conditions/owi/polarisation"),
 
         # TODO: do we test "item_format": "xmlmetadata", misc ?
         # "item_format": "xmlangles",
@@ -108,7 +108,7 @@ def test_read_product(dask_client_all, input_path, key_path):
         # lazy_fixture("S2_MSIL1C"),
         # lazy_fixture("S1_IM_OCN_ZIP"),
         lazy_fixture("S1_SM_OCN_ZIP"),
-        lazy_fixture("S1_VW_OCN_ZIP"),
+        lazy_fixture("S1_WV_OCN_ZIP"),
     ],
 )
 def test_load_product(dask_client_all, input_path):
@@ -193,10 +193,10 @@ def test_convert_test_mapping(
         #(lazy_fixture("S1_SM_OCN_ZIP"), lazy_fixture("S1_SM_OCN_MAPPING"), ".cog", EOCogStore, 0),
         (lazy_fixture("S1_SM_OCN_ZIP"), lazy_fixture("S1_SM_OCN_MAPPING"), ".nc", EONetCDFStore, 0),
 
-        (lazy_fixture("S1_VW_OCN_ZIP"), lazy_fixture("S1_VW_OCN_MAPPING"), ".SAFE", EOSafeStore, 0),
-        (lazy_fixture("S1_VW_OCN_ZIP"), lazy_fixture("S1_VW_OCN_MAPPING"), ".zarr", EOZarrStore, 0),
-        #(lazy_fixture("S1_VW_OCN_ZIP"), lazy_fixture("S1_VW_OCN_MAPPING"), ".cog", EOCogStore, 0),
-        (lazy_fixture("S1_VW_OCN_ZIP"), lazy_fixture("S1_VW_OCN_MAPPING"), ".nc", EONetCDFStore, 0),
+        (lazy_fixture("S1_WV_OCN_ZIP"), lazy_fixture("S1_WV_OCN_MAPPING"), ".SAFE", EOSafeStore, 0),
+        (lazy_fixture("S1_WV_OCN_ZIP"), lazy_fixture("S1_WV_OCN_MAPPING"), ".zarr", EOZarrStore, 0),
+        #(lazy_fixture("S1_WV_OCN_ZIP"), lazy_fixture("S1_WV_OCN_MAPPING"), ".cog", EOCogStore, 0),
+        (lazy_fixture("S1_WV_OCN_ZIP"), lazy_fixture("S1_WV_OCN_MAPPING"), ".nc", EONetCDFStore, 0),
                 
         # ####################### S2 product type conversions ########################
         # ---> S2/Level 0 - tests -> NO PRODUCTS AVAILABLE
