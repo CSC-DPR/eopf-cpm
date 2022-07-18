@@ -44,6 +44,7 @@ dependencies = [
     "pytz ==2021.03",
     "Shapely ==1.8.2",
     "importlib-metadata ==4.12.0",
+    "rio-cogeo == 3.3.0", 
 ]
 license = {file = "LICENSE"}
 
