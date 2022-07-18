@@ -510,13 +510,10 @@ class EOCogStoreLOCAL(EOProductStore):
         # set suffix .cog and transfrom to absolute path
         cog_path = file_path.with_suffix(".cog")
         abs_cog_path = cog_path.resolve()
-        #print("WRITE COG", sorted(value.attrs.keys()))
         # if the dimension names are not x,y we need to let
         # rioxarray know which dimension is x and y
         if len(value.dims) == 2 and (value.dims[0] != "y" or value.dims[1] != "x"):
-            #print("IN", value.dims)
             value._data.rio.set_spatial_dims(x_dim=value.dims[1], y_dim=value.dims[0], inplace=True)
-            #print("OUT", value.dims)
         # write the COG file
         if isinstance(value, xarray.DataArray):
             value.rio.to_raster(abs_cog_path, tiled=True, lock=self._lock, driver="COG")
@@ -538,7 +535,6 @@ class EOCogStoreLOCAL(EOProductStore):
             Name of EOVariable
         """
         # set suffix .nc and transfrom to absolute path (path-like string)
-        #print("WRITE_NETCDF", sorted(value.attrs.keys()))
         nc_path = file_path.with_suffix(".nc")
         abs_nc_path = str(nc_path.resolve())
 
