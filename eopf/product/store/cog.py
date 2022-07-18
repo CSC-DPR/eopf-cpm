@@ -260,7 +260,6 @@ class EOCogStore(EOProductStore):
         with self._raster_env:
             try:
                 variable_data = xarray.open_dataset(full_file_path, engine="rasterio", chunks="auto")
-                print(variable_data)
                 return variable_name, variable_data["band"]
             except (ValueError, rasterio.errors.RasterioIOError):
                 # Use netcdf for files that cannot be read with xarray

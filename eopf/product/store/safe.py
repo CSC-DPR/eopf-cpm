@@ -588,14 +588,11 @@ class SafeMappingManager:
                         file_path = file_path.replace(".*", "FILL.")
                         file_path = file_path.replace("*", "STAR")
                     accessor_file = self._fs_map_access.fs.sep.join([self._fs_map_access.root, file_path])
-                print(self._mode)
                 if self._mode[0] not in ["r", "R", "c", "C"]:
                     # We are writing
                     parent_path, _ = upsplit_eo_path(file_path)
                     accessor_parent = self._fs_map_access.fs.sep.join([self._fs_map_access.root, parent_path])
                     self._fs_map_access.fs.makedirs(accessor_parent, exist_ok=True)
-                    print(accessor_parent)
-                print(accessor_file)
 
                 mapped_store = self._store_factory.get_store(
                     accessor_file,
