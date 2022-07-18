@@ -4,10 +4,11 @@ from collections.abc import MutableMapping
 from json import loads
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Iterator, Optional
-import rio_cogeo
+
 import boto3
 import fsspec
 import rasterio
+import rio_cogeo
 import rioxarray
 import xarray
 from rasterio.session import AWSSession
