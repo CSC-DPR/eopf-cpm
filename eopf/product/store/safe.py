@@ -587,7 +587,7 @@ class SafeMappingManager:
                     if self._mode[0] in ["w", "W"]:
                         file_path = file_path.replace(".*", "FILL.")
                         file_path = file_path.replace("*", "STAR")
-                        accessor_file = self._fs_map_access.fs.sep.join([self._fs_map_access.root, file_path])
+                    accessor_file = self._fs_map_access.fs.sep.join([self._fs_map_access.root, file_path])
                 print(self._mode)
                 if self._mode[0] not in ["r", "R", "c", "C"]:
                     # We are writing
