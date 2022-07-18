@@ -232,7 +232,7 @@ class formatable_method:
 
 
 class unformatable_method(formatable_method):
-    """Decorator class to allow class methods to ingnore formating of the return\
+    """Decorator class to allow class methods to ignore formating of the return\
 
     Parameters
     ----------

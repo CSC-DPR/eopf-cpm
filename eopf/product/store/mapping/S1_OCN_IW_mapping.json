@@ -38,7 +38,7 @@
         {
             "short_name": "time_start_owi",
             "target_path": "/coordinates/owi/time_start",
-            "source_path": "measurement/.*nc:to_unix_time_slstr_l1(/)",
+            "source_path": "measurement/.*nc:to_unix_time(/)",
             "item_format": "attribute_element_to_float_variable",
             "parameters": {
                 "dimensions": [
@@ -53,7 +53,7 @@
         {
             "short_name": "time_stop_owi",
             "target_path": "/coordinates/owi/time_stop",
-            "source_path": "measurement/.*nc:to_unix_time_slstr_l1(/)",
+            "source_path": "measurement/.*nc:to_unix_time(/)",
             "item_format": "attribute_element_to_float_variable",
             "parameters": {
                 "dimensions": [
@@ -117,7 +117,7 @@
         {
             "short_name": "time_start_osw",
             "target_path": "/coordinates/osw/time_start",
-            "source_path": "measurement/.*nc:to_unix_time_slstr_l1(/)",
+            "source_path": "measurement/.*nc:to_unix_time(/)",
             "item_format": "attribute_element_to_float_variable",
             "parameters": {
                 "dimensions": [
@@ -132,7 +132,7 @@
         {
             "short_name": "time_stop_osw",
             "target_path": "/coordinates/osw/time_stop",
-            "source_path": "measurement/.*nc:to_unix_time_slstr_l1(/)",
+            "source_path": "measurement/.*nc:to_unix_time(/)",
             "item_format": "attribute_element_to_float_variable",
             "parameters": {
                 "dimensions": [
@@ -218,7 +218,7 @@
         {
             "short_name": "time_start_rvl",
             "target_path": "/coordinates/rvl/time_start",
-            "source_path": "measurement/.*nc:to_unix_time_slstr_l1(/)",
+            "source_path": "measurement/.*nc:to_unix_time(/)",
             "item_format": "attribute_element_to_float_variable",
             "parameters": {
                 "dimensions": [
@@ -233,7 +233,7 @@
         {
             "short_name": "time_stop_rvl",
             "target_path": "/coordinates/rvl/time_stop",
-            "source_path": "measurement/.*nc:to_unix_time_slstr_l1(/)",
+            "source_path": "measurement/.*nc:to_unix_time(/)",
             "item_format": "attribute_element_to_float_variable",
             "parameters": {
                 "dimensions": [
@@ -248,7 +248,7 @@
         {
             "short_name": "sv_time",
             "target_path": "/coordinates/state_vector/sv_time",
-            "source_path": "measurement/.*nc:to_unix_time_slstr_l1(/)",
+            "source_path": "measurement/.*nc:to_unix_time(/)",
             "item_format": "attribute_element_to_float_variable",
             "parameters": {
                 "dimensions": [

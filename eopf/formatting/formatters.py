@@ -151,7 +151,7 @@ class ToUNIXTimeSLSTRL1(EOAbstractFormatter):
     """Formatter for unix time conversion for SLSTR L1 ANX_time and calibration_time variables"""
 
     # docstr-coverage: inherited
-    name = "to_unix_time_slstr_l1"
+    name = "to_unix_time"
 
     def format(self, input: Any) -> "EOVariable":
         """Convert input to unix time
