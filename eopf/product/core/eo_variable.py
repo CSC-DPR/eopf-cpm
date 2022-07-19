@@ -66,7 +66,7 @@ class EOVariable(EOObject, EOVariableOperatorsMixin["EOVariable"]):
             try:
                 lazy_data = da.asarray(data)
             except NotImplementedError:
-                # Some types of data don't support a method used by dask 
+                # Some types of data don't support a method used by dask
                 # when it ask the data size in order to choose the optimal chunk size.
                 lazy_data = da.asarray(data, chunks=2000)
             if not hasattr(data, "dtype"):
