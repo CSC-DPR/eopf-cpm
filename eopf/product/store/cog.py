@@ -594,20 +594,19 @@ class EOCogStoreLOCAL(EOProductStore):
         xarray.DataArray
         """
 
-        _, extension = str(file).split(".")
-        if extension == "cog":
+        if str(file).endswith(".cog"):
             # Return rasterio dataset for .cog and .nc files.
             data = rioxarray.open_rasterio(file, lock=False, chunks="auto")
             cogeo_attrs = rio_cogeo.cog_info(file)
             data.attrs = cogeo_attrs.Tags["Image Metadata"]
             data.attrs["scale_factor"] = cogeo_attrs.Profile.Scales[0]
             return data
-        elif extension == "nc":
+        elif str(file).endswith(".nc"):
             data = EONetCDFStore(str(file))
             data.open()
             return data[eov_name]
         else:
-            raise TypeError(f"Can NOT read: {file}")
+            raise IOError(f"Can NOT read: {file}")
 
     def _read_attrs(self, dir_path: Path) -> dict[str, Any]:
         """
