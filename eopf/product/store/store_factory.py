@@ -19,10 +19,7 @@ class EOStoreFactory:
                 FixedMemMapAccessor,
                 MemMapAccessor,
             )
-            from eopf.product.store.netcdf import (
-                EONetCDFStore,
-                EONetcdfStringToTimeAccessor,
-            )
+            from eopf.product.store.netcdf import EONetCDFStore
             from eopf.product.store.safe import EOSafeStore
             from eopf.product.store.wrappers import (
                 FromAttributesToFlagValueAccessor,
@@ -42,7 +39,6 @@ class EOStoreFactory:
             self.register_store(FilenameToVariableAccessor, "filename_to_subswath")
             self.register_store(EONetCDFStore, "netcdf")
             self.register_store(EONetCDFStoreNCpy, "netcdf-netCDF4py")
-            self.register_store(EONetcdfStringToTimeAccessor, "netcdf_string_to_time")
             self.register_store(XMLManifestAccessor, "xmlmetadata")
             self.register_store(EOGribAccessor, "grib")
             self.register_store(EORasterIOAccessor, "jp2")

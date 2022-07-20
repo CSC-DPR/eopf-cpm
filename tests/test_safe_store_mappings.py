@@ -177,7 +177,7 @@ def test_convert_test_mapping(
         # (lazy_fixture("S1_IM_OCN_ZIP"), lazy_fixture("S1_IM_OCN_MAPPING"), ".SAFE", EOSafeStore, 0),
         # (lazy_fixture("S1_IM_OCN_ZIP"), lazy_fixture("S1_IM_OCN_MAPPING"), ".zarr", EOZarrStore, 0),
         # (lazy_fixture("S1_IM_OCN_ZIP"), lazy_fixture("S1_IM_OCN_MAPPING"), ".cog", EOCogStore, 0),
-        # (lazy_fixture("S1_IM_OCN_ZIP"), lazy_fixture("S1_IM_OCN_MAPPING"), ".nc", EONetCDFStore, 0),
+        (lazy_fixture("S1_IM_OCN_ZIP"), lazy_fixture("S1_IM_OCN_MAPPING"), ".nc", EONetCDFStore, 0),
 
         # ####################### S2 product type conversions ########################
         # ---> S2/Level 0 - tests -> NO PRODUCTS AVAILABLE
@@ -273,6 +273,7 @@ def impl_test_convert_safe_mapping(
     OUTPUT_DIR: str,
     mapping_factory=None,
 ):
+    read_only_format = ("xmlmetadata",)
     source_store = EOSafeStore(input_path, mapping_factory=mapping_factory)
     output_name = os.path.basename(input_path)
     # switch extension of output_name
@@ -309,7 +310,7 @@ def impl_test_convert_safe_mapping(
                 target_object = target_product
             assert type(source_object) == type(target_object)
 
-            if output_store != EOSafeStore or data_path not in ["", "/"]:
+            if output_store != EOSafeStore or item["item_format"] not in read_only_format:
                 # Manifest accessor set item not yet implemented
                 if item["item_format"] != "xmlmetadata":
                     np.testing.assert_equal(conv(source_object.attrs), conv(target_object.attrs))
