@@ -705,7 +705,7 @@ class SafeMappingManager:
                 self._add_data_mapping(config[self.CONFIG_TARGET], config, json_data)
         self._product_type = json_data[self._mapping_factory.RECO][self._mapping_factory.TYPE_RECO]
 
-    def _uncompress_file(self, file_path) -> str:
+    def _uncompress_file(self, file_path: str) -> str:
         """Uncompress a file form a zip safe into a temporary folder, and return the uncompressed local path.
 
         Parameters
@@ -716,6 +716,8 @@ class SafeMappingManager:
         -------
 
         """
+        if self._fs_map_access is None:
+            raise StoreNotOpenError("Store must be open before access to it")
         if self._temp_dir is None:
             # We need to unzip everything as some accessor indirectly open files.
             self._temp_dir = tempfile.TemporaryDirectory()
