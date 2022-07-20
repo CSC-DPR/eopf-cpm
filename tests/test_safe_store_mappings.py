@@ -33,13 +33,13 @@ from tests.utils import assert_eovariable_equal
         # fmt: off
         # At least One test per each product type and accessor used in the mapping file
         # "item_format": "filename_to_subswath",
-        (lazy_fixture("S1_IM_OCN_ZIP"), "/coordinates/osw/sub_swath"),
+        (lazy_fixture("S1_IW_OCN_ZIP"), "/coordinates/osw/sub_swath"),
         # "item_format": "netcdf"
-        (lazy_fixture("S1_IM_OCN_ZIP"), "/coordinates/owi/owiLon"),
+        (lazy_fixture("S1_IW_OCN_ZIP"), "/coordinates/owi/owiLon"),
         # "item_format": "attribute_element_to_flag_variable",
-        (lazy_fixture("S1_IM_OCN_ZIP"), "/coordinates/owi/owiPolarisationName"),
+        (lazy_fixture("S1_IW_OCN_ZIP"), "/coordinates/owi/owiPolarisationName"),
         # "item_format": "attribute_element_to_float_variable",
-        (lazy_fixture("S1_IM_OCN_ZIP"), "/conditions/state_vector/sv_x"),
+        (lazy_fixture("S1_IW_OCN_ZIP"), "/conditions/state_vector/sv_x"),
 
         # "item_format": "attribute_element_to_flag_variable", "netcdf"
         (lazy_fixture("S1_SM_OCN_ZIP"), "/coordinates/owi/longitude"),
@@ -80,6 +80,11 @@ from tests.utils import assert_eovariable_equal
         (lazy_fixture("S3_SL_2_LST_ZIP"), "/coordinates/in/latitude_in"),
         (lazy_fixture("S3_SL_2_LST_ZIP"), "/conditions/orphan/elevation_orphan_in"),
         (lazy_fixture("S3_SL_2_LST_ZIP"), "/measurements/in/LST"),
+
+        # "item_format": "netcdf"
+        (lazy_fixture("S3_SR_2_LAN_ZIP"), "/coordinates/attitude/c/alt_20"),
+        (lazy_fixture("S3_SR_2_LAN_ZIP"), "/measurements/geophysical/inv_bar_cor_01"),
+        (lazy_fixture("S3_SR_2_LAN_ZIP"), "/quality/l1b/ku/oper_instr_20"),
         # fmt: on
     ],
 )
@@ -98,6 +103,7 @@ def test_read_product(dask_client_all, input_path, key_path):
 @pytest.mark.parametrize(
     "input_path",
     [
+         lazy_fixture("S3_SR_2_LAN_ZIP"),
         lazy_fixture("S3_OL_1_EFR_ZIP"),
         lazy_fixture("S3_OL_2_LFR_ZIP"),
         lazy_fixture("S3_SL_1_RBT_ZIP"),
@@ -106,7 +112,7 @@ def test_read_product(dask_client_all, input_path, key_path):
         # not working 04.07
         # lazy_fixture("S2_MSIL1C_ZIP"),
         # lazy_fixture("S2_MSIL1C"),
-        # lazy_fixture("S1_IM_OCN_ZIP"),
+        # lazy_fixture("S1_IW_OCN_ZIP"),
         lazy_fixture("S1_SM_OCN_ZIP"),
         lazy_fixture("S1_WV_OCN_ZIP"),
     ],
@@ -172,10 +178,10 @@ def test_convert_test_mapping(
         # (lazy_fixture("S1_IW_RAW_ZIP"), lazy_fixture("S1_IW_RAW_MAPPING"), ".zarr", EOZarrStore, 0,),
 
         # ---> S1/Level 1 - tests -> MAPPING not available
-        # (lazy_fixture("S1_IW_SLC_ZIP"), lazy_fixture("S1_IW_SLC_MAPPING"), ".SAFE", EOSafeStore, 0,),
-        # (lazy_fixture("S1_IW_SLC_ZIP"), lazy_fixture("S1_IW_SLC_MAPPING"), ".zarr", EOZarrStore, 0,),
-        # (lazy_fixture("S1_IW_SLC_ZIP"), lazy_fixture("S1_IW_SLC_MAPPING"), ".cog", EOCogStore, 0,),
-        # (lazy_fixture("S1_IW_SLC_ZIP"), lazy_fixture("S1_IW_SLC_MAPPING"), ".nc", EONetCDFStore, 0,),
+        #(lazy_fixture("S1_IW_SLC_ZIP"), lazy_fixture("S1_IW_SLC_MAPPING"), ".SAFE", EOSafeStore, 0,),
+        #(lazy_fixture("S1_IW_SLC_ZIP"), lazy_fixture("S1_IW_SLC_MAPPING"), ".zarr", EOZarrStore, 0,),
+        #(lazy_fixture("S1_IW_SLC_ZIP"), lazy_fixture("S1_IW_SLC_MAPPING"), ".cog", EOCogStore, 0,),
+        #(lazy_fixture("S1_IW_SLC_ZIP"), lazy_fixture("S1_IW_SLC_MAPPING"), ".nc", EONetCDFStore, 0,),
         # (lazy_fixture("S1_IW_GRD_ZIP"), lazy_fixture("S1_IW_GRD_MAPPING"), ".SAFE", EOSafeStore, 0,),
         # (lazy_fixture("S1_IW_GRD_ZIP"), lazy_fixture("S1_IW_GRD_MAPPING"), ".zarr", EOZarrStore, 0,),
         # (lazy_fixture("S1_IW_GRD_ZIP"), lazy_fixture("S1_IW_GRD_MAPPING"), ".cog", EOCogStore, 0,),
@@ -183,10 +189,10 @@ def test_convert_test_mapping(
 
         # ---> S1/Level 2 - tests
         # not working 04.07 -> SEE ISSUE #71
-        # (lazy_fixture("S1_IM_OCN_ZIP"), lazy_fixture("S1_IM_OCN_MAPPING"), ".SAFE", EOSafeStore, 0),
-        # (lazy_fixture("S1_IM_OCN_ZIP"), lazy_fixture("S1_IM_OCN_MAPPING"), ".zarr", EOZarrStore, 0),
-        # (lazy_fixture("S1_IM_OCN_ZIP"), lazy_fixture("S1_IM_OCN_MAPPING"), ".cog", EOCogStore, 0),
-        # (lazy_fixture("S1_IM_OCN_ZIP"), lazy_fixture("S1_IM_OCN_MAPPING"), ".nc", EONetCDFStore, 0),
+        (lazy_fixture("S1_IW_OCN_ZIP"), lazy_fixture("S1_IW_OCN_MAPPING"), ".SAFE", EOSafeStore, 0),
+        (lazy_fixture("S1_IW_OCN_ZIP"), lazy_fixture("S1_IW_OCN_MAPPING"), ".zarr", EOZarrStore, 0),
+        # (lazy_fixture("S1_IW_OCN_ZIP"), lazy_fixture("S1_IW_OCN_MAPPING"), ".cog", EOCogStore, 0),
+        (lazy_fixture("S1_IW_OCN_ZIP"), lazy_fixture("S1_IW_OCN_MAPPING"), ".nc", EONetCDFStore, 0),
 
         (lazy_fixture("S1_SM_OCN_ZIP"), lazy_fixture("S1_SM_OCN_MAPPING"), ".SAFE", EOSafeStore, 0),
         (lazy_fixture("S1_SM_OCN_ZIP"), lazy_fixture("S1_SM_OCN_MAPPING"), ".zarr", EOZarrStore, 0),
@@ -234,16 +240,16 @@ def test_convert_test_mapping(
         (lazy_fixture("S3_OL_2_LFR_ZIP"), lazy_fixture("S3_OL_2_LFR_MAPPING"), ".nc", EONetCDFStore, 0),
         # S3_SL_1_RBT product type conversions
         # NOT WORKING -> SEE ISSUE 74
-        # (lazy_fixture("S3_SL_1_RBT_ZIP"), lazy_fixture("S3_SL_1_RBT_MAPPING"), ".SEN3", EOSafeStore, 0),
+        #(lazy_fixture("S3_SL_1_RBT_ZIP"), lazy_fixture("S3_SL_1_RBT_MAPPING"), ".SEN3", EOSafeStore, 0),
         (lazy_fixture("S3_SL_1_RBT_ZIP"), lazy_fixture("S3_SL_1_RBT_MAPPING"), ".zarr", EOZarrStore, 0),
         # (lazy_fixture("S3_SL_1_RBT_ZIP"), lazy_fixture("S3_SL_1_RBT_MAPPING"), ".cog", EOCogStore, 0),
-        # (lazy_fixture("S3_SL_1_RBT_ZIP"), lazy_fixture("S3_SL_1_RBT_MAPPING"), ".nc", EONetCDFStore, 0),
+        #(lazy_fixture("S3_SL_1_RBT_ZIP"), lazy_fixture("S3_SL_1_RBT_MAPPING"), ".nc", EONetCDFStore, 0),
         # S3_SL_2_LST product type conversions
         # NOT WORKING -> SEE ISSUE 75
         # (lazy_fixture("S3_SL_2_LST_ZIP"), lazy_fixture("S3_SL_2_LST_MAPPING"), ".SEN3", EOSafeStore, 0),
         (lazy_fixture("S3_SL_2_LST_ZIP"), lazy_fixture("S3_SL_2_LST_MAPPING"), ".zarr", EOZarrStore, 0),
         # (lazy_fixture("S3_SL_2_LST_ZIP"), lazy_fixture("S3_SL_2_LST_MAPPING"), ".cog", EOCogStore, 0),
-        # (lazy_fixture("S3_SL_2_LST_ZIP"), lazy_fixture("S3_SL_2_LST_MAPPING"), ".nc", EONetCDFStore, 0),
+        #(lazy_fixture("S3_SL_2_LST_ZIP"), lazy_fixture("S3_SL_2_LST_MAPPING"), ".nc", EONetCDFStore, 0),
         # NOT WORKING -> SEE ISSUE 70
         # S3_SY_2_SYN product type conversions
         # (lazy_fixture("S3_SY_2_SYN_ZIP"), lazy_fixture("S3_SY_2_SYN_MAPPING"), ".SEN3", EOSafeStore, 0),
@@ -256,10 +262,10 @@ def test_convert_test_mapping(
         # (lazy_fixture("S3_SR_1_SRA_ZIP"), lazy_fixture("S3_SR_1_SRA_MAPPING"), ".cog", EOCogStore, 0,),
         # (lazy_fixture("S3_SR_1_SRA_ZIP"), lazy_fixture("S3_SR_1_SRA_MAPPING"), ".nc", EONetCDFStore, 0,),
         # S3_SR_2_LAN product type conversions -> MAPPING NOT AVAILABLE
-        # (lazy_fixture("S3_SR_2_LAN_ZIP"), lazy_fixture("S3_SR_2_LAN_MAPPING"), ".SAFE", EOSafeStore, 0,),
-        # (lazy_fixture("S3_SR_2_LAN_ZIP"), lazy_fixture("S3_SR_2_LAN_MAPPING"), ".zarr", EOZarrStore, 0,),
+        (lazy_fixture("S3_SR_2_LAN_ZIP"), lazy_fixture("S3_SR_2_LAN_MAPPING"), ".SAFE", EOSafeStore, 0,),
+        (lazy_fixture("S3_SR_2_LAN_ZIP"), lazy_fixture("S3_SR_2_LAN_MAPPING"), ".zarr", EOZarrStore, 0,),
         # (lazy_fixture("S3_SR_2_LAN_ZIP"), lazy_fixture("S3_SR_2_LAN_MAPPING"), ".cog", EOCogStore, 0,),
-        # (lazy_fixture("S3_SR_2_LAN_ZIP"), lazy_fixture("S3_SR_2_LAN_MAPPING"), ".nc", EONetCDFStore, 0,),
+        (lazy_fixture("S3_SR_2_LAN_ZIP"), lazy_fixture("S3_SR_2_LAN_MAPPING"), ".nc", EONetCDFStore, 0,),
         # TODO: ?? OL_1_ERR, OL_2_LRR, S3_SY_2_V10, S3_SY_2_VGP, S3_SY_2_VG1, S3_SY_2_AOD
         # fmt: on
     ],
@@ -333,7 +339,8 @@ def impl_test_convert_safe_mapping(
                 if item["item_format"] != "xmlmetadata":
                     np.testing.assert_equal(conv(source_object.attrs), conv(target_object.attrs))
             if isinstance(source_object, EOVariable):
-                assert_eovariable_equal(source_object, target_object)
+                if item["item_format"] != "netcdf_string_to_time":
+                    assert_eovariable_equal(source_object, target_object)
     assert max_optional_miss >= optional_miss
 
 
@@ -341,7 +348,7 @@ def impl_test_convert_safe_mapping(
 @pytest.mark.parametrize(
     "mapping_filename",
     [
-        lazy_fixture("S1_IM_OCN_MAPPING"),
+        lazy_fixture("S1_IW_OCN_MAPPING"),
         lazy_fixture("S2_MSIL1C_MAPPING"),
         lazy_fixture("S3_OL_1_EFR_MAPPING"),
         lazy_fixture("S3_OL_1_EFR_MAPPING"),
@@ -349,6 +356,7 @@ def impl_test_convert_safe_mapping(
         lazy_fixture("S3_SL_1_RBT_MAPPING"),
         lazy_fixture("S3_SL_2_LST_MAPPING"),
         lazy_fixture("S3_SY_2_SYN_MAPPING"),
+        lazy_fixture("S3_SR_2_LAN_MAPPING"),
     ],
 )
 def test_short_name_conflict(mapping_filename):

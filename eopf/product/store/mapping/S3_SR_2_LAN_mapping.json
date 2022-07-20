@@ -1,7 +1,7 @@
 {
   "recognition": {
-    "filename_pattern": "S3._OL_2_E[FR]R.*SEN3",
-    "product_type": "SR_2_LAN___",
+    "filename_pattern": "S3._SR_2_LAN.*SEN3",
+    "product_type": "S3_SR_2_LAN___",
     "product_type_pattern": "SR_2_LAN___"
   },
   "data_mapping": [

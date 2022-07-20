@@ -93,7 +93,7 @@ def EMBEDED_TEST_DATA_FOLDER():
 
 
 @pytest.fixture
-def S1_IM_OCN_MAPPING(MAPPING_FOLDER: str):
+def S1_IW_OCN_MAPPING(MAPPING_FOLDER: str):
     """Path to a S1 OCN IW 1 mapping"""
     return os.path.join(MAPPING_FOLDER, "S1_OCN_IW_mapping.json")
 
@@ -146,6 +146,12 @@ def S3_SY_2_SYN_MAPPING(MAPPING_FOLDER: str):
     return os.path.join(MAPPING_FOLDER, "S3_SY_2_SYN_mapping.json")
 
 
+@pytest.fixture
+def S3_SR_2_LAN_MAPPING(MAPPING_FOLDER: str):
+    """Path to a S3 SR 2 LAN mapping"""
+    return os.path.join(MAPPING_FOLDER, "S3_SR_2_LAN_mapping.json")
+
+
 # ----------------------------------#
 # ------------ PRODUCT -------------#
 # ----------------------------------#
@@ -165,13 +171,13 @@ def TEST_PRODUCT_ZIP(request):
 
 # ############# S1 ##############
 @glob_fixture("S1*_IW_OCN*[!.zarr]")
-def S1_IM_OCN(request):
+def S1_IW_OCN(request):
     """Path to a S1 OCN LEVEL 1 product"""
     return request.param
 
 
 @glob_fixture("S1*_IW_OCN*[!.zarr][!.SAFE].zip", protocols=["zip"])
-def S1_IM_OCN_ZIP(request):
+def S1_IW_OCN_ZIP(request):
     """Path to a S1 OCN LEVEL 1 product"""
     return request.param
 
@@ -270,6 +276,18 @@ def S3_SY_2_SYN(request):
 
 @glob_fixture("S3*_SY_2_SYN*[!.zarr][!.SAFE].zip", protocols=["zip"])
 def S3_SY_2_SYN_ZIP(request):
+    """Path to a S3 SY 2 SYN product"""
+    return request.param
+
+
+@glob_fixture("S3*_SR_2_LAN*.SEN3")
+def S3_SR_2_LAN(request):
+    """Path to a S3 SY 2 SYN product"""
+    return request.param
+
+
+@glob_fixture("S3*_SR_2_LAN*[!.zarr][!.SAFE].zip", protocols=["zip"])
+def S3_SR_2_LAN_ZIP(request):
     """Path to a S3 SY 2 SYN product"""
     return request.param
 
