@@ -582,7 +582,7 @@
       "attributes": {
         "_FillValue": "to_float(NaN)",
         "long_name": "Satellite azimuth angle",
-        "standard_name": "satellite_azimuth_angle",
+        "standard_name": "sensor_azimuth_angle",
         "units": "degrees"
       }
     },
@@ -617,7 +617,7 @@
       "attributes": {
         "_FillValue": "to_float(NaN)",
         "long_name": "Satellite zenith angle",
-        "standard_name": "satellite_zenith_angle",
+        "standard_name": "sensor_zenith_angle",
         "units": "degrees"
       }
     },
@@ -801,7 +801,6 @@
         "add_offset": 0.0,
         "long_name": "Gridded locally correlated LST uncertainties due to atmospheric fitting",
         "scale_factor": 0.0020000000949949026,
-        "standard_name": "surface_temperature_standard_error",
         "units": "K",
         "valid_max": 4000,
         "valid_min": 0
@@ -823,7 +822,6 @@
         "add_offset": 0.0,
         "long_name": "Gridded locally correlated LST uncertainties due to geolocation",
         "scale_factor": 0.0020000000949949026,
-        "standard_name": "surface_temperature_standard_error",
         "units": "K",
         "valid_max": 4000,
         "valid_min": 0
@@ -845,7 +843,6 @@
         "add_offset": 0.0,
         "long_name": "Gridded locally correlated LST uncertainties due to fractional vegetation",
         "scale_factor": 0.0020000000949949026,
-        "standard_name": "surface_temperature_standard_error",
         "units": "K",
         "valid_max": 4000,
         "valid_min": 0
@@ -867,7 +864,6 @@
         "add_offset": 0.0,
         "long_name": "Gridded locally correlated LST uncertainties from pre-launch calibration",
         "scale_factor": 0.0020000000949949026,
-        "standard_name": "surface_temperature_standard_error",
         "units": "K",
         "valid_max": 4000,
         "valid_min": 0
@@ -889,7 +885,6 @@
         "add_offset": 0.0,
         "long_name": "Gridded uncorrelated LST uncertainties from on-board calibration",
         "scale_factor": 0.0020000000949949026,
-        "standard_name": "surface_temperature_standard_error",
         "units": "K",
         "valid_max": 4000,
         "valid_min": 0
@@ -911,7 +906,6 @@
         "add_offset": 0.0,
         "long_name": "Gridded large systematic LST uncertainties",
         "scale_factor": 0.0020000000949949026,
-        "standard_name": "surface_temperature_standard_error",
         "units": "K",
         "valid_max": 4000,
         "valid_min": 0
@@ -933,7 +927,6 @@
         "add_offset": 0.0,
         "long_name": "Ungridded locally correlated LST uncertainties due to atmospheric fitting",
         "scale_factor": 0.0020000000949949026,
-        "standard_name": "surface_temperature_standard_error",
         "units": "K",
         "valid_max": 4000,
         "valid_min": 0
@@ -955,7 +948,6 @@
         "add_offset": 0.0,
         "long_name": "Ungridded locally correlated LST uncertainties due to geolocation",
         "scale_factor": 0.0020000000949949026,
-        "standard_name": "surface_temperature_standard_error",
         "units": "K",
         "valid_max": 4000,
         "valid_min": 0
@@ -977,7 +969,6 @@
         "add_offset": 0.0,
         "long_name": "Ungridded locally correlated LST uncertainties due to fractional vegetation",
         "scale_factor": 0.0020000000949949026,
-        "standard_name": "surface_temperature_standard_error",
         "units": "K",
         "valid_max": 4000,
         "valid_min": 0
@@ -999,7 +990,6 @@
         "add_offset": 0.0,
         "long_name": "Ungridded locally correlated LST uncertainties from pre-lauch calibration",
         "scale_factor": 0.0020000000949949026,
-        "standard_name": "surface_temperature_standard_error",
         "units": "K",
         "valid_max": 4000,
         "valid_min": 0
@@ -1021,7 +1011,6 @@
         "add_offset": 0.0,
         "long_name": "Ungridded uncorrelated LST uncertainties from on-board calibration",
         "scale_factor": 0.0020000000949949026,
-        "standard_name": "surface_temperature_standard_error",
         "units": "K",
         "valid_max": 4000,
         "valid_min": 0
@@ -1043,7 +1032,6 @@
         "add_offset": 0.0,
         "long_name": "Ungridded large systematic LST uncertainties",
         "scale_factor": 0.0020000000949949026,
-        "standard_name": "surface_temperature_standard_error",
         "units": "K",
         "valid_max": 4000,
         "valid_min": 0
@@ -1321,7 +1309,6 @@
         "long_name": "East-west integrated surface wind stress",
         "model": "ECMWF_F",
         "parameter": "180",
-        "standard_name": "integral_of_surface_downward_eastward_stress_wrt_time",
         "units": "N m-2 s"
       }
     },
@@ -1342,7 +1329,6 @@
         "long_name": "Integrated surface latent heat flux",
         "model": "ECMWF_F",
         "parameter": "147",
-        "standard_name": "integral_of_surface_downward_latent_heat_flux_wrt_time",
         "units": "W m-2 s"
       }
     },
@@ -1363,7 +1349,6 @@
         "long_name": "North-south integrated surface wind stress",
         "model": "ECMWF_F",
         "parameter": "181",
-        "standard_name": "integral_of_surface_downward_northward_stress_wrt_time",
         "units": "N m-2 s"
       }
     },
@@ -1425,7 +1410,6 @@
         "long_name": "Integrated surface sensible heat flux",
         "model": "ECMWF_F",
         "parameter": "146",
-        "standard_name": "integral_of_surface_downward_sensible_heat_flux_wrt_time",
         "units": "W m-2 s"
       }
     },
@@ -1529,7 +1513,6 @@
         "long_name": "Integrated surface solar radiation",
         "model": "ECMWF_F",
         "parameter": "176",
-        "standard_name": "integral_of_surface_net_downward_shortwave_flux_wrt_time",
         "units": "W m-2 s"
       }
     },
@@ -1637,7 +1620,6 @@
         "long_name": "Integrated surface thermal radiation",
         "model": "ECMWF_F",
         "parameter": "177",
-        "standard_name": "integral_of_surface_net_downward_longwave_flux_wrt_time",
         "units": "W m-2 s"
       }
     },
@@ -1765,7 +1747,6 @@
         "add_offset": 0.0,
         "long_name": "Gridded Land Surface Temperature estimated total uncertainty",
         "scale_factor": 0.0020000000949949026,
-        "standard_name": "surface_temperature_standard_error",
         "units": "K",
         "valid_max": 4000,
         "valid_min": 0
@@ -1797,8 +1778,7 @@
           1024
         ],
         "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel LST_underflow LST_overflow biome",
-        "long_name": "Gridded LST pixel exception flags",
-        "standard_name": "surface_temperature status_flags"
+        "long_name": "Gridded LST pixel exception flags"
       }
     },
     {
@@ -1839,7 +1819,6 @@
         "add_offset": 0.0,
         "long_name": "Ungridded Land Surface Temperature estimated total uncertainty",
         "scale_factor": 0.0020000000949949026,
-        "standard_name": "surface_temperature_standard_error",
         "units": "K",
         "valid_max": 4000,
         "valid_min": 0
@@ -1871,8 +1850,7 @@
           1024
         ],
         "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel LST_underflow LST_overflow biome",
-        "long_name": "Ungridded LST pixel exception flags",
-        "standard_name": "surface_temperature status_flags"
+        "long_name": "Ungridded LST pixel exception flags"
       }
     },
     {
@@ -2125,17 +2103,8 @@
       "start_datetime": "metadataSection/metadataObject[@ID='acquisitionPeriod']/metadataWrap/xmlData/sentinel-safe:acquisitionPeriod/sentinel-safe:startTime",
       "end_datetime": "metadataSection/metadataObject[@ID='acquisitionPeriod']/metadataWrap/xmlData/sentinel-safe:acquisitionPeriod/sentinel-safe:stopTime",
       "created": "to_ISO8601(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:creationTime)",
-      "eopf:platform": {
-        "nssdc_identifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:nssdcIdentifier",
-        "family": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:familyName",
-        "number": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:number"
-      },
-      "eopf:instrument": {
-        "name": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName",
-        "short_name": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/@abbreviation",
-        "mode": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode",
-        "identifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode/@identifier"
-      },
+      "platform": "concat(metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:familyName, metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:number)",
+      "instrument": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/@abbreviation",
       "providers": [
         {
           "name": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:resource[@role='L2 Product']/sentinel-safe:processing/sentinel-safe:facility/@name",
@@ -2158,17 +2127,13 @@
         "type": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productType",
         "timeliness": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:timeliness",
         "collection": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:baselineCollection",
-        "disposition": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dispositionMode",
-        "orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber)",
+        "instrument_mode": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode",
+        "absolute_orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber)",
         "relative_orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:relativeOrbitNumber)",
-        "ground_track_direction": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber/@groundTrackDirection",
-        "downlink_information": {
-          "granule_number": "is_optional(to_int(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:granuleNumber))",
-          "granule_position": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:granulePosition",
-          "dump_start": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:dumpStart",
-          "receiving_station": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingGroundStation",
-          "receiving_start": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingStartTime",
-          "receiving_stop": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingStopTime"
+        "ground_track_direction": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber[@type='start']/@groundTrackDirection",
+        "image_size": {
+          "rows": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:rows)",
+          "columns": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:columns)"
         },
         "pixel_classification": {
           "cosmetic": {
@@ -2205,27 +2170,27 @@
           "cloud": {
             "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary/sentinel3:cloudyPixels/@percentage)"
           }
-        },
-        "data_information": {
-          "measurement_accuracy": "metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:measurementAccuracy",
-          "accuracy_reference": "metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:accuracyReference",
-          "nadir_image_size": {
-            "start_offset": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:startOffset)",
-            "track_offset": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:trackOffset)",
-            "rows": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:rows)",
-            "columns": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:columns)"
-          },
-          "oblique_image_size": {
-            "start_offset": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:obliqueImageSize/sentinel3:startOffset)",
-            "track_offset": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:obliqueImageSize/sentinel3:trackOffset)",
-            "rows": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:obliqueImageSize/sentinel3:rows)",
-            "columns": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:obliqueImageSize/sentinel3:columns)"
-          }
         }
       }
     }
   },
   "conditions_metadata": {
+    "data_information": {
+      "measurement_accuracy": "metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:measurementAccuracy",
+      "accuracy_reference": "metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:accuracyReference",
+      "nadir_image_size": {
+        "start_offset": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:startOffset)",
+        "track_offset": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:trackOffset)",
+        "rows": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:rows)",
+        "columns": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:columns)"
+      },
+      "oblique_image_size": {
+        "start_offset": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:obliqueImageSize/sentinel3:startOffset)",
+        "track_offset": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:obliqueImageSize/sentinel3:trackOffset)",
+        "rows": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:obliqueImageSize/sentinel3:rows)",
+        "columns": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:obliqueImageSize/sentinel3:columns)"
+      }
+    },
     "detector_temperatures": {
       "S1_Detector": {
         "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S1_Detector']/slstr:min)",
@@ -2312,6 +2277,9 @@
       "source": "Text(ECMWF)",
       "type": "metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:ecmwfType",
       "time_relevance": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:ecmwfType/@timeRelevance)"
+    },
+    "platform": {
+      "nssdc_identifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:nssdcIdentifier"
     }
   },
   "namespaces": {

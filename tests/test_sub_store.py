@@ -254,17 +254,12 @@ def test_extended_xml_manifest_accessor(path: str, mapping: str, tmp_path: pathl
         assert isinstance(eog, EOGroup)
         stac_discovery = eog.attrs
         expected_type = "Feature"
-        expected_instruments = {
-            "name": "Ocean Land Colour Instrument",
-            "short_name": "OLCI",
-            "mode": "Earth Observation",
-            "identifier": "EO",
-        }
+        expected_instrument = "OLCI"
         expected_FR_res = 270
         expected_bright_percent = 3.586159
         expected_links = [{"rel": "self", "href": "./.zattrs.json", "type": "application/json"}]
         assert stac_discovery["type"] == expected_type
-        assert stac_discovery["properties"]["eopf:instrument"] == expected_instruments
+        assert stac_discovery["properties"]["instrument"] == expected_instrument
         assert isinstance(stac_discovery["properties"]["eopf:resolutions"]["FR"], int)
         assert stac_discovery["properties"]["eopf:resolutions"]["FR"] == expected_FR_res
         assert isinstance(
