@@ -184,11 +184,8 @@ build-doc:
   - pip install .[doc]
   - |-
       if [[ $CI_PIPELINE_SOURCE == "merge_request_event" ]]; then
-        cd docs
-        make html
-        mkdir -p ../../docs/build/html
-        mv build/html ../../docs/build/html
-        mv source/_redirects ../../docs/build/html
+        sphinx-build docs/source ../docs/build/html
+        mv docs/source/_redirects ../docs/build/html
       else
         sphinx-multiversion docs/source ../docs/build/html
         mv docs/source/_redirects ../docs/build/html

@@ -268,7 +268,7 @@ Reading a Product from a store
         :hide-output:
         :hide-code:
 
-        file_name = "source/_data/S3_OL_1_EFR.zarr"
+        file_name = "docs/source/_data/S3_OL_1_EFR.zarr"
 
 
     To read data of a product, from a specific format, you must instantiate your :obj:`eopf.product.EOProduct` with
