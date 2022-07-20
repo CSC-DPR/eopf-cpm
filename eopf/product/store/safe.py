@@ -388,7 +388,7 @@ class EOSafeStore(EOProductStore):
                 count_eovar += 1
                 data = eo_obj._data.variable
             if count_eovar > 1:
-                raise NotImplementedError()
+                raise NotImplementedError("More than one variable were found with the same target path !")
             dims = dims.union(eo_obj.dims)
             attrs.update(eo_obj.attrs)
 
