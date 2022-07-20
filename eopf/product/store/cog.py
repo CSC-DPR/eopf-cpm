@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Any, Iterator, Optional
 import boto3
 import fsspec
 import rasterio
+import rio_cogeo
 import rioxarray
 import xarray
 from rasterio.session import AWSSession
@@ -510,7 +511,6 @@ class EOCogStoreLOCAL(EOProductStore):
         # set suffix .cog and transfrom to absolute path
         cog_path = file_path.with_suffix(".cog")
         abs_cog_path = cog_path.resolve()
-
         # if the dimension names are not x,y we need to let
         # rioxarray know which dimension is x and y
         if len(value.dims) == 2 and (value.dims[0] != "y" or value.dims[1] != "x"):
@@ -593,16 +593,20 @@ class EOCogStoreLOCAL(EOProductStore):
         ----------
         xarray.DataArray
         """
-        try:
+
+        if str(file).endswith(".cog"):
             # Return rasterio dataset for .cog and .nc files.
-            return rioxarray.open_rasterio(file, lock=False, chunks="auto")
-        except rasterio.errors.RasterioIOError:
-            # try to reopen using netcdf scheme identifier
-            # Maybe try use netcdfstore
-            return rioxarray.open_rasterio(f"netcdf:{file}:{eov_name}", lock=False, chunks="auto")
-        except Exception as e:
-            # this should be another error type
-            raise TypeError(f"Can NOT read: {file}", e)
+            data = rioxarray.open_rasterio(file, lock=False, chunks="auto")
+            cogeo_attrs = rio_cogeo.cog_info(file)
+            data.attrs = cogeo_attrs.Tags["Image Metadata"]
+            data.attrs["scale_factor"] = cogeo_attrs.Profile.Scales[0]
+            return data
+        elif str(file).endswith(".nc"):
+            data = EONetCDFStore(str(file))
+            data.open()
+            return data[eov_name]
+        else:
+            raise IOError(f"Can NOT read: {file}")
 
     def _read_attrs(self, dir_path: Path) -> dict[str, Any]:
         """
