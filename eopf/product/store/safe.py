@@ -570,19 +570,7 @@ class SafeMappingManager:
                 mapped_store = SafeHierarchy()
             else:
                 if self._is_compressed:
-                    if self._temp_dir is None:
-                        self._temp_dir = tempfile.TemporaryDirectory()
-                    accessor_file = os.path.join(self._temp_dir.name, file_path)
-                    if not os.path.exists(accessor_file):
-                        # create parent directory (needed if the file is in a subfolder of the zip)
-                        os.makedirs(os.path.split(accessor_file)[0], exist_ok=True)
-                        if file_path in self._fs_map_access:  # For file
-                            with open(accessor_file, mode="wb") as file_:
-                                file_.write(self._fs_map_access[file_path])
-                        elif not any(
-                            path.startswith(file_path) for path in self._fs_map_access
-                        ):  # check directory level
-                            raise FileNotFoundError()
+                    accessor_file = self._uncompress_file(file_path)
                 else:
                     if self._mode[0] in ["w", "W"]:
                         file_path = file_path.replace(".*", "FILL.")
@@ -716,3 +704,26 @@ class SafeMappingManager:
             if config[self.CONFIG_FORMAT] != "misc":
                 self._add_data_mapping(config[self.CONFIG_TARGET], config, json_data)
         self._product_type = json_data[self._mapping_factory.RECO][self._mapping_factory.TYPE_RECO]
+
+    def _uncompress_file(self, file_path) -> str:
+        """Uncompress a file form a zip safe into a temporary folder, and return the uncompressed local path.
+
+        Parameters
+        ----------
+        file_path
+
+        Returns
+        -------
+
+        """
+        if self._temp_dir is None:
+            # We need to unzip everything as some accessor indirectly open files.
+            self._temp_dir = tempfile.TemporaryDirectory()
+            for path_zip, file_zip in self._fs_map_access.items():
+                file_unzip = os.path.join(self._temp_dir.name, path_zip)
+                # create parent directory (needed if the file is in a subfolder of the zip)
+                os.makedirs(os.path.split(file_unzip)[0], exist_ok=True)
+                with open(file_unzip, mode="wb") as file_:
+                    file_.write(file_zip)
+        accessor_file = os.path.join(self._temp_dir.name, file_path)
+        return accessor_file
