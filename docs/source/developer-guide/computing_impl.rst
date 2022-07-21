@@ -1,7 +1,8 @@
-How to implement Computing component
-====================================
+How to develop new processor based on CPM
+=========================================
 
-EOPF-CPM provide abstract classes to help users to write algorithm with EO object (:py:class:`~eopf.product.core.eo_product.EOProduct`, :py:class:`~eopf.product.core.eo_group.EOGroup`, :py:class:`~eopf.product.core.eo_variable.EOVariable`).
+EOPF-CPM provide abstract classes to help users to write algorithm with EO Object
+(:py:class:`~eopf.product.core.eo_product.EOProduct`, :py:class:`~eopf.product.core.eo_group.EOGroup`, :py:class:`~eopf.product.core.eo_variable.EOVariable`).
 
 
 Concepts
@@ -23,57 +24,17 @@ for higher granularity.
 * :py:class:`~eopf.computing.abstract.EOBlockProcessingStep`
 * :py:class:`~eopf.computing.abstract.EOOverlapProcessingStep`
 
-that are direct mapping of :py:func:`~dask.array.map_blocks` (resp. :py:func:`~dask.array.map_overlap`) that let you define only
+that are direct mapping of :py:func:`dask.array.map_blocks` (resp. :py:func:`dask.array.map_overlap`) that let you define only
 the low level function passed into the corresponding dask function.
 
 
 Examples
 --------
 
-.. code-block:: python
+Examples of processors are available in those projects:
 
-    class SumProcessStep(EOProcessingStep):
-        def apply(self, *args: da.Array, dtype: DTypeLike = float, **kwargs: Any) -> da.Array:
-            arg = args[0]
-            for a in args[1:]:
-                arg += a
-            return arg
+* `S3 OLCI L2 Processor`_
+* `S2 Processor`_
 
-.. code-block:: python
-
-    class SumProcessingUnit(EOProcessingUnit):
-        def run(self, product: EOProduct, **kwargs: Any) -> EOProduct:
-            paths = kwargs.get("variables_paths", [])
-            dest_path = kwargs.get("dest_path", "/variable")
-            step = SumProcessStep()
-            new_da = step.apply(*[product[path].data for path in paths])
-            new_product = EOProduct("new_product")
-            new_product.add_variable(dest_path, data=new_da)
-            return new_product
-
-.. code-block:: python
-
-    class SumProcessor(EOProcessor):
-        def run(self, product: EOProduct, **kwargs: Any) -> EOProduct:
-            with contextlib.ExitStack() as stack:
-                if product.store is not None:
-                    stack.enter_context(product.open(mode="r"))
-                paths = kwargs.get("variables_paths", [])
-                dest_path = kwargs.get("dest_path", "/variable")
-                step = SumProcessStep()
-                new_da = step.apply(*[product[path].data for path in paths])
-                new_product = init_product("new_product")
-                new_product.add_variable(dest_path, data=new_da)
-            return new_product
-
-.. code-block:: python
-
-    class SumBlockProcessingStep(EOBlockProcessingStep):
-        def func(self, *args: np.ndarray[Any, np.dtype[Any]], **kwargs: Any) -> np.ndarray[Any, np.dtype[Any]]:
-            return sum(args)
-
-.. code-block:: python
-
-    class SumOverlapProcessingStep(EOOverlapProcessingStep):
-        def func(self, *args: np.ndarray[Any, np.dtype[Any]], **kwargs: Any) -> np.ndarray[Any, np.dtype[Any]]:
-            return sum(args)
+.. _S3 OLCI L2 Processor: https://gitlab.csc-eopf.csgroup.space/cpm/s3-olci-l2
+.. _S2 Processor: https://gitlab.csc-eopf.csgroup.space/eopf-s2-proc/eopf-s2-proc

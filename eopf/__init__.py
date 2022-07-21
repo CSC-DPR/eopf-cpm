@@ -1,2 +1,2 @@
-"""Earth Observation Platform Core python module"""
-__version__ = "0.6.0"
+"""Earth Observation Platform Core Python Modules"""
+__version__ = "0.7.0"

@@ -1,3 +1,5 @@
+.. _user-guide:
+
 ###########
 User Guide
 ###########
@@ -13,3 +15,4 @@ examples that describe many common tasks that you can accomplish with the eopf c
    Using Variable for computing <variable>
    How to use Store and Accessors <stores>
    What is triggering and how to use it <triggering>
+   Tutorial <tutorial>

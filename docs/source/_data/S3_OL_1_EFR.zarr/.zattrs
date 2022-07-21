@@ -1,0 +1,325 @@
+{
+    "assets": [],
+    "bbox": [
+        31.4669,
+        -10.6835,
+        18.513,
+        4.53553
+    ],
+    "geometry": {
+        "coordinates": [
+            [
+                [
+                    20.9433,
+                    -10.6835
+                ],
+                [
+                    20.8354,
+                    -10.0248
+                ],
+                [
+                    20.7263,
+                    -9.37138
+                ],
+                [
+                    20.6145,
+                    -8.71718
+                ],
+                [
+                    20.5009,
+                    -8.06782
+                ],
+                [
+                    20.3845,
+                    -7.41715
+                ],
+                [
+                    20.2659,
+                    -6.76811
+                ],
+                [
+                    20.1445,
+                    -6.1183
+                ],
+                [
+                    20.0212,
+                    -5.47326
+                ],
+                [
+                    19.8947,
+                    -4.82477
+                ],
+                [
+                    19.7713,
+                    -4.17966
+                ],
+                [
+                    19.6403,
+                    -3.53473
+                ],
+                [
+                    19.51,
+                    -2.89205
+                ],
+                [
+                    19.3718,
+                    -2.24937
+                ],
+                [
+                    19.2346,
+                    -1.60894
+                ],
+                [
+                    19.0923,
+                    -0.968598
+                ],
+                [
+                    18.9517,
+                    -0.329523
+                ],
+                [
+                    18.808,
+                    0.307983
+                ],
+                [
+                    18.6615,
+                    0.94649
+                ],
+                [
+                    18.513,
+                    1.58295
+                ],
+                [
+                    21.1536,
+                    2.2777
+                ],
+                [
+                    23.7956,
+                    2.99949
+                ],
+                [
+                    26.4344,
+                    3.75074
+                ],
+                [
+                    29.0688,
+                    4.53553
+                ],
+                [
+                    29.2284,
+                    3.84923
+                ],
+                [
+                    29.385,
+                    3.15794
+                ],
+                [
+                    29.5367,
+                    2.46989
+                ],
+                [
+                    29.6846,
+                    1.7763
+                ],
+                [
+                    29.8328,
+                    1.08054
+                ],
+                [
+                    29.9743,
+                    0.38391
+                ],
+                [
+                    30.1149,
+                    -0.3129
+                ],
+                [
+                    30.2467,
+                    -1.01316
+                ],
+                [
+                    30.3771,
+                    -1.71348
+                ],
+                [
+                    30.4997,
+                    -2.42105
+                ],
+                [
+                    30.6225,
+                    -3.12531
+                ],
+                [
+                    30.7419,
+                    -3.83364
+                ],
+                [
+                    30.8566,
+                    -4.54105
+                ],
+                [
+                    30.9674,
+                    -5.24906
+                ],
+                [
+                    31.0734,
+                    -5.95232
+                ],
+                [
+                    31.1771,
+                    -6.66744
+                ],
+                [
+                    31.2756,
+                    -7.37524
+                ],
+                [
+                    31.3738,
+                    -8.11174
+                ],
+                [
+                    31.4669,
+                    -8.8395
+                ],
+                [
+                    28.8363,
+                    -9.28791
+                ],
+                [
+                    26.2042,
+                    -9.74467
+                ],
+                [
+                    23.5717,
+                    -10.21
+                ],
+                [
+                    20.9433,
+                    -10.6835
+                ]
+            ]
+        ],
+        "type": "Polygon"
+    },
+    "id": "S3A_OL_1_EFR____20200101T101517_20200101T101817_20200102T141102_0179_053_179_2520_LN1_O_NT_002.SEN3",
+    "links": [
+        {
+            "href": "./.zattrs.json",
+            "rel": "self",
+            "type": "application/json"
+        }
+    ],
+    "product_type": "S3_OL_1_EFR",
+    "properties": {
+        "created": 1577974262000000,
+        "datetime": "null",
+        "end_datetime": 1577873896825486,
+        "eopf:instrument": {
+            "identifier": "EO",
+            "mode": "Earth Observation",
+            "name": "Ocean Land Colour Instrument",
+            "short_name": "OLCI"
+        },
+        "eopf:platform": {
+            "family": "Sentinel-3",
+            "nssdc_identifier": "2016-011A",
+            "number": "A"
+        },
+        "eopf:product": {
+            "collection": "002",
+            "data_information": {
+                "accuracy_reference": "0",
+                "earth_sun_distance": 147099526567,
+                "image_size": {
+                    "columns": 4865,
+                    "rows": 4091
+                },
+                "measurement_accuracy": "2.000000",
+                "ocl_status": "true",
+                "sampling": {
+                    "across_track_spatial": 270,
+                    "along_track_spatial": 294,
+                    "along_track_time": 44001,
+                    "cols_per_tiepoint": 64,
+                    "rows_per_tiepoint": 1
+                }
+            },
+            "disposition": "Operational",
+            "downlink_information": {
+                "dump_start": 1577873267033531,
+                "granule_number": 1,
+                "granule_position": "FIRST",
+                "receiving_start": 1577878709698213,
+                "receiving_station": "CGS",
+                "receiving_stop": 1577878730678360
+            },
+            "ground_track_direction": "descending",
+            "name": "S3A_OL_1_EFR____20200101T101517_20200101T101817_20200102T141102_0179_053_179_2520_LN1_O_NT_002.SEN3",
+            "orbit_number": 20172,
+            "pixel_classification": {
+                "bright": {
+                    "percent": 3.586159
+                },
+                "coastal": {
+                    "percent": 0.0
+                },
+                "cosmetic": {
+                    "count": 0,
+                    "percent": 0.0
+                },
+                "dubious": {
+                    "count": 0,
+                    "percent": 0.0
+                },
+                "duplicated": {
+                    "count": 4415554,
+                    "percent": 22.0
+                },
+                "inland_water": {
+                    "percent": 0.0
+                },
+                "invalid": {
+                    "count": 835775,
+                    "percent": 4.0
+                },
+                "saline_water": {
+                    "percent": 0.0
+                },
+                "saturated": {
+                    "count": 0,
+                    "percent": 0.0
+                },
+                "tidal": {
+                    "percent": 0.0
+                }
+            },
+            "processing_baseline": "N/A",
+            "relative_orbit_number": 179,
+            "timeliness": "NT",
+            "type": "OL_1_EFR___"
+        },
+        "eopf:resolutions": {
+            "FR": 270
+        },
+        "providers": [
+            {
+                "name": "European Space Agency",
+                "roles": [
+                    "producer"
+                ]
+            },
+            {
+                "name": "European Space Agency",
+                "roles": [
+                    "producer"
+                ]
+            }
+        ],
+        "start_datetime": 1577873716825486
+    },
+    "stac_extensions": [
+        "https://stac-extensions.github.io/eopf/v1.0.0/schema.json"
+    ],
+    "stac_version": "1.0.0",
+    "type": "Feature"
+}

@@ -1,0 +1,241 @@
+{
+    "recognition": {
+        "filename_pattern": "S2.?_.+_0_.*SEN3",
+        "product_type_pattern": "S2_L0",
+        "version": "TODO"
+    },
+    "data_mapping": [
+		{
+            "short_name": "packet_version",
+            "source_path": "ISPData.dat:(0,3,3)",
+            "target_path": "/conditions/packet_version",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/scalar_uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "packet version number"
+                },
+                "dimensions": [ "one"]
+            }
+        },
+        {
+            "short_name": "packet_type",
+            "source_path": "ISPData.dat:(3,4,1)",
+            "target_path": "/conditions/packet_type",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/scalar_bool"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "packet type"
+                },
+                "dimensions": [ "one"]
+            }
+        },
+        {
+            "short_name": "secondary_header_flag",
+            "source_path": "ISPData.dat:(4,5,1)",
+            "target_path": "/conditions/secondary_header_flag",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/scalar_bool"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "secondary header flag"
+                },
+                "dimensions": [ "one"]
+            }
+        },
+		{
+            "short_name": "vmc_board",
+            "source_path": "ISPData.dat:(7,8,1)",
+            "target_path": "/conditions/vmc_board",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/bool"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "application process PID"
+                },
+                "dimensions": [ "vmc board number"]
+            }
+        },
+        {
+            "short_name": "wicom_number",
+            "source_path": "ISPData.dat:(9,11,2)",
+            "target_path": "/conditions/wicom_number",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "wicom number"
+                },
+                "dimensions": [ "packet_number"]
+            }
+        },
+		{
+            "short_name": "detector",
+            "source_path": "ISPData.dat:(11,12,1)",
+            "target_path": "/conditions/detector",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/bool"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "detector number"
+                },
+                "dimensions": [ "packet_number"]
+            }
+        },
+        {
+            "short_name": "band",
+            "source_path": "ISPData.dat:(12,15,3)",
+            "target_path": "/conditions/band",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "band number"
+                },
+                "dimensions": [ "packet_number"]
+            }
+        },
+        {
+            "short_name": "sequence_flag",
+            "source_path": "ISPData.dat:(16,18,2)",
+            "target_path": "/conditions/sequence_flag",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/scalar_uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "sequence flag"
+                },
+                "dimensions": [ "one"]
+            }
+        },
+        {
+            "short_name": "packet_sequence_count",
+            "source_path": "ISPData.dat:(18,32,14)",
+            "target_path": "/conditions/packet_sequence_count",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "packet sequence count"
+                },
+                "dimensions": [ "packet_number"]
+            }
+        },
+		{
+            "short_name": "packet_data_length",
+            "source_path": "ISPData.dat:(32,48,16)",
+            "target_path": "/conditions/packet_data_length",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "packet data length"
+                },
+                "dimensions": [ "packet_number"]
+            }
+        },
+        {
+            "short_name": "system",
+            "source_path": "ISPData.dat:(48,128,80)",
+            "target_path": "/conditions/system",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/bytearray"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "system ancillary data"
+                },
+                "dimensions": [ "packet_number" ]
+            }
+        },
+		{
+            "short_name": "compression_status",
+            "source_path": "ISPData.dat:(128, 144 ,16)",
+            "target_path": "/conditions/compression_status",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "compression status"
+                },
+                "dimensions": [ "packet_number"]
+            }
+        },
+        {
+            "short_name": "instrument",
+            "source_path": "ISPData.dat:(144, 912 ,768)",
+            "target_path": "/conditions/instrument",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/bytearray"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "instrument ancillary data"
+                },
+                "dimensions": [ "packet_number"]
+            }
+        },
+        {
+            "short_name": "user_data",
+            "source_path": "ISPData.dat:(912 ,None, -1)",
+            "target_path": "/measurements/user_data",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/var_bytearray"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "user data packet"
+                },
+                "dimensions": [ "packet_number", "max_data_length"]
+            }
+        }
+    ],
+    "l0_mapping": {
+        "types": {
+            "bool": "bool",
+            "uint8": "uint8",
+            "scalar_uint8": "s_uint8",
+            "uint16": "uint16",
+            "uint32": "uint32",
+            "var_bytearray": "var_bytearray",
+            "bytearray": "bytearray"
+        }
+    },
+	"annotation_mapping": {
+	    "types": {
+            "bool": "bool",
+            "uint8": "uint8",
+            "scalar_uint8": "s_uint8",
+            "uint16": "uint16",
+            "uint32": "uint32",
+            "var_bytearray": "var_bytearray",
+            "bytearray": "bytearray"
+        }
+    }
+}

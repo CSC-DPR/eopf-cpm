@@ -1,3 +1,5 @@
+.. _eovariable-usage:
+
 Using Variable
 ==============
 
@@ -26,7 +28,7 @@ In this case, the variable is not computed, to apply operation, you have to use 
         variable.compute()
 
 
-The data of a variable is accessible direcly with the :py:attr:`eopf.product.core.eo_variable.EOVariable.data` property:
+The data of a variable is accessible direcly with the :py:attr:`~eopf.product.core.eo_variable.EOVariable.data` property:
 
     .. jupyter-execute::
 
@@ -34,6 +36,7 @@ The data of a variable is accessible direcly with the :py:attr:`eopf.product.cor
 
 
 You can also create mask variable using comparison:
+
     .. jupyter-execute::
 
         mask = (variable > 0.5).compute().data
@@ -49,6 +52,26 @@ You can also create mask variable using comparison:
     .. jupyter-execute::
 
         variable[mask[1,:]].compute().data
+
+
+Chunking of EOVariable
+----------------------
+
+As :py:class:`xarray.DataArray`, we provide some convenience way to work with chunks over EOVariable.
+
+You can retrieve the chunking of :py:class:`~eopf.product.core.eo_variable.EOVariable`
+with the property :py:attr:`~eopf.product.core.eo_variable.EOVariable.chunks`
+
+    .. jupyter-execute::
+
+        variable.chunks
+
+you also can set the chunking with :py:meth:`~eopf.product.core.eo_variable.EOVariable.chunk`
+
+    .. jupyter-execute::
+
+        variable.chunk((2,))
+
 
 Plotting an EOVariable
 -----------------------

@@ -70,6 +70,8 @@ instance/
 
 # Sphinx documentation
 docs/_build/
+docs/source/api
+docs/output
 
 # PyBuilder
 target/
@@ -132,4 +134,3 @@ dmypy.json
 
 /data
 /notebooks
-*.ipynb

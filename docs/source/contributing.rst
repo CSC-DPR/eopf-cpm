@@ -1,5 +1,7 @@
-################
-Contributing
-################
+.. _contributing-guide:
+
+##################
+Contributing Guide
+##################
 
 .. include:: ../../CONTRIBUTING.rst

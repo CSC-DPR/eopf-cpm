@@ -1,0 +1,2048 @@
+{
+    "recognition": {
+        "filename_pattern": "S1.*_RAW_.*SAFE",
+        "product_type_pattern": "S1_L0",
+        "version": "TODO"
+    },
+        "data_mapping": [
+		{
+            "short_name": "packet_version",
+            "source_path": "s1*-??-*[!annot|index].dat:(0,3,3)",
+            "target_path": "/conditions/packet_version",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/scalar_uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "packet version number"
+                },
+                "dimensions": [ "one"]
+            }
+        },
+        {
+            "short_name": "packet_type",
+            "source_path": "s1*-??-*[!annot|index].dat:(3,4,1)",
+            "target_path": "/conditions/packet_type",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/scalar_bool"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "packet type"
+                },
+                "dimensions": [ "one"]
+            }
+        },
+        {
+            "short_name": "secondary_header_flag",
+            "source_path": "s1*-??-*[!annot|index].dat:(4,5,1)",
+            "target_path": "/conditions/secondary_header_flag",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/scalar_bool"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "secondary  header flag"
+                },
+                "dimensions": [ "one"]
+            }
+        },
+		{
+            "short_name": "PID",
+            "source_path": "s1*-??-*[!annot|index].dat:(5,12,7)",
+            "target_path": "/conditions/PID",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/scalar_uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "application process PID"
+                },
+                "dimensions": [ "one"]
+            }
+        },
+		{
+            "short_name": "PCAT",
+            "source_path": "s1*-??-*[!annot|index].dat:(12,16,4)",
+            "target_path": "/conditions/pcat",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/scalar_uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "pcat"
+                },
+                "dimensions": [ "one"]
+            }
+        },
+        {
+            "short_name": "sequence_flag",
+            "source_path": "s1*-??-*[!annot|index].dat:(16,18,2)",
+            "target_path": "/conditions/sequence_flag",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/scalar_uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "sequence flag"
+                },
+                "dimensions": [ "one"]
+            }
+        },
+        {
+            "short_name": "packet_sequence_count_hh",
+            "source_path": "s1*-hh-*[!annot|index].dat:(18,32,14)",
+            "target_path": "/conditions/hh/packet_sequence_count",
+            "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "packet sequence count"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },
+		{
+            "short_name": "packet_data_length_hh",
+            "source_path": "s1*-hh-*[!annot|index].dat:(32,48,16)",
+            "target_path": "/conditions/hh/packet_data_length",
+            "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "packet data length"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },
+            {
+            "short_name": "packet_sequence_count_hv",
+            "source_path": "s1*-hv-*[!annot|index].dat:(18,32,14)",
+            "target_path": "/conditions/hv/packet_sequence_count",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "packet sequence count"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },
+		{
+            "short_name": "packet_data_length_hv",
+            "source_path": "s1*-hv-*[!annot|index].dat:(32,48,16)",
+            "target_path": "/conditions/hv/packet_data_length",
+            "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "packet data length"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },
+            {
+            "short_name": "packet_sequence_count_vv",
+            "source_path": "s1*-vv-*[!annot|index].dat:(18,32,14)",
+            "target_path": "/conditions/hh/packet_sequence_count",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "packet sequence count"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },
+		{
+            "short_name": "packet_data_length_vv",
+            "source_path": "s1*-vv-*[!annot|index].dat:(32,48,16)",
+            "target_path": "/conditions/vv/packet_data_length",
+            "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "packet data length"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },
+            {
+            "short_name": "packet_sequence_count_vh",
+            "source_path": "s1*-vh-*[!annot|index].dat:(18,32,14)",
+            "target_path": "/conditions/vh/packet_sequence_count",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "packet sequence count"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+		{
+            "short_name": "packet_data_length_vh",
+            "source_path": "s1*-vh-*[!annot|index].dat:(32,48,16)",
+            "target_path": "/conditions/hh/packet_data_length",
+            "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "packet data length"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+            {
+            "short_name": "coarse_time_hh",
+            "source_path": "s1*-hh-*[!annot|index].dat:(48,80,32)",
+            "target_path": "/coordinates/hh/coarse_time",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "coarse time"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },
+		{
+            "short_name": "fine_time_hh",
+            "source_path": "s1*-hh-*[!annot|index].dat:(80,96,16)",
+            "target_path": "/coordinates/hh/fine_time",
+            "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "fine time"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },
+            {
+            "short_name": "coarse_time_hv",
+            "source_path": "s1*-hv-*[!annot|index].dat:(48,80,32)",
+            "target_path": "/coordinates/hv/coarse_time",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "coarse time"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },
+		{
+            "short_name": "fine_time_hv",
+            "source_path": "s1*-hv-*[!annot|index].dat:(80,96,16)",
+            "target_path": "/coordinates/hv/fine_time",
+            "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "fine time"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },
+            {
+            "short_name": "coarse_time_vv",
+            "source_path": "s1*-vv-*[!annot|index].dat:(48,80,32)",
+            "target_path": "/coordinates/vv/coarse_time",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "coarse time"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },
+		{
+            "short_name": "fine_time_vv",
+            "source_path": "s1*-vv-*[!annot|index].dat:(80,96,16)",
+            "target_path": "/coordinates/vv/fine_time",
+            "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "fine time"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },            {
+            "short_name": "coarse_time_vh",
+            "source_path": "s1*-vh-*[!annot|index].dat:(48,80,32)",
+            "target_path": "/coordinates/vh/coarse_time",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "coarse time"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+		{
+            "short_name": "fine_time_vh",
+            "source_path": "s1*-vh-*[!annot|index].dat:(80,96,16)",
+            "target_path": "/coordinates/vh/fine_time",
+            "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "fine time"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+		{
+            "short_name": "sync_marker",
+            "source_path": "s1*-??-*[!annot|index].dat:(96,128,32)",
+            "target_path": "/conditions/sync_marker",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/scalar_uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "sync marker"
+                },
+                "dimensions": [ "one"]
+            }
+        },
+        {
+            "short_name": "datatake_id",
+            "source_path": "s1*-??-*[!annot|index].dat:(128,160,32)",
+            "target_path": "/conditions/datatake_id",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/scalar_uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "datatake id"
+                },
+                "dimensions": [ "one"]
+            }
+        },
+        {
+            "short_name": "ecc_number",
+            "source_path": "s1*-??-*[!annot|index].dat:(160,168,8)",
+            "target_path": "/conditions/ecc_number",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/scalar_uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "ecc number"
+                },
+                "dimensions": [ "one"]
+            }
+        },
+        {
+            "short_name": "test_mode",
+            "source_path": "s1*-??-*[!annot|index].dat:(169,172,3)",
+            "target_path": "/coonditions/test_mode",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/scalar_uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "test mode"
+                },
+                "dimensions": [ "one"]
+            }
+        },
+            {
+            "short_name": "rx_channel_id",
+            "source_path": "s1*-??-*[!annot|index].dat:(172,176,4)",
+            "target_path": "/conditions/rx_channel_id",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/scalar_uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "rxchannel id"
+                },
+                "dimensions": [ "one"]
+            }
+        },
+           {
+            "short_name": "instrument_configuration_id",
+            "source_path": "s1*-??-*[!annot|index].dat:(176,208,32)",
+            "target_path": "/conditions/instrument_configuration_id",
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/scalar_uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "instrument configuration id"
+                },
+                "dimensions": [ "one"]
+            }
+        },
+          {
+            "short_name": "dataword_index_hh",
+            "source_path": "s1*-hh-*[!annot|index].dat:(208,216,8)",
+            "target_path": "/coordinates/hh/dataword_index",
+              "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "dataword index"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        }, {
+            "short_name": "dataword_index_hv",
+            "source_path": "s1*-hv-*[!annot|index].dat:(208,216,8)",
+            "target_path": "/coordinates/hv/dataword_index",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "dataword index"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        }, {
+            "short_name": "dataword_index_vv",
+            "source_path": "s1*-vv-*[!annot|index].dat:(208,216,8)",
+            "target_path": "/coordinates/vv/dataword_index",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "dataword index"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        }, {
+            "short_name": "dataword_index_vh",
+            "source_path": "s1*-vh-*[!annot|index].dat:(208,216,8)",
+            "target_path": "/coordinates/vh/dataword_index",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "dataword index"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+          {
+            "short_name": "dataword_hh",
+            "source_path": "s1*-hh-*[!annot|index].dat:(216,232,16)",
+            "target_path": "/coordinates/hh/dataword",
+              "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "dataword"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },{
+            "short_name": "dataword_hv",
+            "source_path": "s1*-hv-*[!annot|index].dat:(216,232,16)",
+            "target_path": "/coordinates/hv/dataword",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "dataword"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },{
+            "short_name": "dataword_vv",
+            "source_path": "s1*-vv-*[!annot|index].dat:(216,232,16)",
+            "target_path": "/coordinates/vv/dataword",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "dataword"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },{
+            "short_name": "dataword_vh",
+            "source_path": "s1*-vh-*[!annot|index].dat:(216,232,16)",
+            "target_path": "/coordinates/hh/dataword",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "dataword"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+         {
+            "short_name": "space_packet_count_hh",
+            "source_path": "s1*-hh-*[!annot|index].dat:(232,264,32)",
+            "target_path": "/conditions/hh/space_packet_count",
+             "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "space packet count"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },{
+            "short_name": "space_packet_count_hv",
+            "source_path": "s1*-hv-*[!annot|index].dat:(232,264,32)",
+            "target_path": "/conditions/hv/space_packet_count",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "space packet count"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },{
+            "short_name": "space_packet_count_vv",
+            "source_path": "s1*-vv-*[!annot|index].dat:(232,264,32)",
+            "target_path": "/conditions/vv/space_packet_count",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "space packet count"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },{
+            "short_name": "space_packet_count_vh",
+            "source_path": "s1*-vh-*[!annot|index].dat:(232,264,32)",
+            "target_path": "/conditions/vh/space_packet_count",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "space packet count"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+         {
+            "short_name": "pri_count_hh",
+            "source_path": "s1*-hh-*[!annot|index].dat:(264,296,32)",
+            "target_path": "/conditions/hh/pri_count",
+             "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "pri count"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },
+            {
+            "short_name": "pri_count_hv",
+            "source_path": "s1*-hv-*[!annot|index].dat:(264,296,32)",
+            "target_path": "/conditions/hv/pri_count",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "pri count"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },
+            {
+            "short_name": "pri_count_vv",
+            "source_path": "s1*-vv-*[!annot|index].dat:(264,296,32)",
+            "target_path": "/conditions/vv/pri_count",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "pri count"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },
+            {
+            "short_name": "pri_count_vh",
+            "source_path": "s1*-vh-*[!annot|index].dat:(264,296,32)",
+            "target_path": "/conditions/vh/pri_count",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "pri count"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+            {
+            "short_name": "error_flag_hh",
+            "source_path": "s1*-hh-*[!annot|index].dat:(296,297,1)",
+            "target_path": "/conditions/hh/error_flag",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/bool"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "error flag"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },{
+            "short_name": "error_flag_hv",
+            "source_path": "s1*-hv-*[!annot|index].dat:(296,297,1)",
+            "target_path": "/conditions/hv/error_flag",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/bool"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "error flag"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },{
+            "short_name": "error_flag_vv",
+            "source_path": "s1*-vv-*[!annot|index].dat:(296,297,1)",
+            "target_path": "/conditions/vv/error_flag",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/bool"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "error flag"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },{
+            "short_name": "error_flag_vh",
+            "source_path": "s1*-vh-*[!annot|index].dat:(296,297,1)",
+            "target_path": "/conditions/vh/error_flag",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/bool"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "error flag"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+
+            {
+            "short_name": "baq_mode_hh",
+            "source_path": "s1*-hh-*[!annot|index].dat:(299,304,5)",
+            "target_path": "/conditions/hh/baq_mode",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "baq mode"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },
+            {
+            "short_name": "baq_length_hh",
+            "source_path": "s1*-hh-*[!annot|index].dat:(304,312,8)",
+            "target_path": "/cconditions/hh/baq_length",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "baq length"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },
+            {
+            "short_name": "baq_mode_hv",
+            "source_path": "s1*-hv-*[!annot|index].dat:(299,304,5)",
+            "target_path": "/conditions/hv/baq_mode",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "baq mode"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },
+            {
+            "short_name": "baq_length_hv",
+            "source_path": "s1*-hv-*[!annot|index].dat:(304,312,8)",
+            "target_path": "/conditions/hv/baq_length",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "baq length"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },
+            {
+            "short_name": "baq_mode_vv",
+            "source_path": "s1*-vv-*[!annot|index].dat:(299,304,5)",
+            "target_path": "/conditions/vv/baq_mode",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "baq mode"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },
+            {
+            "short_name": "baq_length_vv",
+            "source_path": "s1*-vv-*[!annot|index].dat:(304,312,8)",
+            "target_path": "/conditions/vv/baq_length",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "baq length"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },
+            {
+            "short_name": "baq_mode_vh",
+            "source_path": "s1*-vh-*[!annot|index].dat:(299,304,5)",
+            "target_path": "/conditions/vh/baq_mode",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "baq mode"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+            {
+            "short_name": "baq_length_vh",
+            "source_path": "s1*-vh-*[!annot|index].dat:(304,312,8)",
+            "target_path": "/conditions/vh/baq_length",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "baq length"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+            {
+            "short_name": "range_decimation_hh",
+            "source_path": "s1*-hh-*[!annot|index].dat:(320,328,8)",
+            "target_path": "/conditions/hh/range_decimation",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "range decimation"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },
+            {
+            "short_name": "range_decimation_hv",
+            "source_path": "s1*-hv-*[!annot|index].dat:(320,328,8)",
+            "target_path": "/conditions/hv/range_decimation",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "range decimation"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },
+            {
+            "short_name": "range_decimation_vv",
+            "source_path": "s1*-vv-*[!annot|index].dat:(320,328,8)",
+            "target_path": "/conditions/vv/range_decimation",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "range decimation"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },
+            {
+            "short_name": "range_decimation_vh",
+            "source_path": "s1*-vh-*[!annot|index].dat:(320,328,8)",
+            "target_path": "/conditions/vh/range_decimation",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "range decimation"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+            {
+            "short_name": "rx_gain_hh",
+            "source_path": "s1*-hh-*[!annot|index].dat:(328,336,8)",
+            "target_path": "/conditions/hh/rx_gain",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "rx_gain"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },
+            {
+            "short_name": "rx_gain_hv",
+            "source_path": "s1*-hv-*[!annot|index].dat:(328,336,8)",
+            "target_path": "/conditions/hv/rx_gain",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "rx_gain"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },
+            {
+            "short_name": "rx_gain_vv",
+            "source_path": "s1*-vv-*[!annot|index].dat:(328,336,8)",
+            "target_path": "/conditions/vv/rx_gain",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "rx_gain"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },
+            {
+            "short_name": "rx_gain_vh",
+            "source_path": "s1*-vh-*[!annot|index].dat:(328,336,8)",
+            "target_path": "/conditions/vh/rx_gain",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "rx_gain"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+            {
+            "short_name": "tx_ramp_rate_hh",
+            "source_path": "s1*-hh-*[!annot|index].dat:(336,352,16)",
+            "target_path": "/conditions/hh/tx_ramp_rate",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "tx ramp rate"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },
+            {
+            "short_name": "tx_ramp_rate_hv",
+            "source_path": "s1*-hv-*[!annot|index].dat:(336,352,16)",
+            "target_path": "/conditions/hv/tx_ramp_rate",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "tx ramp rate"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },
+            {
+            "short_name": "tx_ramp_rate_vv",
+            "source_path": "s1*-vv-*[!annot|index].dat:(336,352,16)",
+            "target_path": "/conditions/vv/tx_ramp_rate",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "tx ramp rate"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },
+            {
+            "short_name": "tx_ramp_rate_vh",
+            "source_path": "s1*-vh-*[!annot|index].dat:(336,352,16)",
+            "target_path": "/conditions/vh/tx_ramp_rate",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "tx ramp rate"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+            {
+            "short_name": "tx_pulse_start_freq_hh",
+            "source_path": "s1*-hh-*[!annot|index].dat:(352,368,16)",
+            "target_path": "/conditions/hh/tx_pulse_start_freq",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "tx pulse start frequency"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },
+            {
+            "short_name": "tx_pulse_start_freq_hv",
+            "source_path": "s1*-hv-*[!annot|index].dat:(352,368,16)",
+            "target_path": "/conditions/hv/tx_pulse_start_freq",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "tx pulse start frequency"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },{
+            "short_name": "tx_pulse_start_freq_vv",
+            "source_path": "s1*-vv-*[!annot|index].dat:(352,368,16)",
+            "target_path": "/conditions/vv/tx_pulse_start_freq",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "tx pulse start frequency"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },{
+            "short_name": "tx_pulse_start_freq_vh",
+            "source_path": "s1*-vh-*[!annot|index].dat:(352,368,16)",
+            "target_path": "/conditions/vh/tx_pulse_start_freq",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "tx pulse start frequency"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+            {
+            "short_name": "tx_pulse_length_hh",
+            "source_path": "s1*-hh-*[!annot|index].dat:(368,392,24)",
+            "target_path": "/conditions/hh/tx_pulse_length",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "tx pulse length"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },
+             {
+            "short_name": "tx_pulse_length_hv",
+            "source_path": "s1*-hv-*[!annot|index].dat:(368,392,24)",
+            "target_path": "/conditions/hv/tx_pulse_length",
+                 "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "tx pulse length"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        }, {
+            "short_name": "tx_pulse_length_vv",
+            "source_path": "s1*-vv-*[!annot|index].dat:(368,392,24)",
+            "target_path": "/conditions/vv/tx_pulse_length",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "tx pulse length"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        }, {
+            "short_name": "tx_pulse_length_vh",
+            "source_path": "s1*-vh-*[!annot|index].dat:(368,392,24)",
+            "target_path": "/conditions/vh/tx_pulse_length",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "tx pulse length"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+            {
+            "short_name": "rank_hh",
+            "source_path": "s1*-hh-*[!annot|index].dat:(395,400,5)",
+            "target_path": "/conditions/hh/rank",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "rank"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },
+            {
+            "short_name": "rank_hv",
+            "source_path": "s1*-hv-*[!annot|index].dat:(395,400,5)",
+            "target_path": "/conditions/hv/rank",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "rank"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },
+            {
+            "short_name": "rank_vv",
+            "source_path": "s1*-vv-*[!annot|index].dat:(395,400,5)",
+            "target_path": "/conditions/vv/rank",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "rank"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },
+            {
+            "short_name": "rank_vh",
+            "source_path": "s1*-vh-*[!annot|index].dat:(395,400,5)",
+            "target_path": "/conditions/vh/rank",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint8"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "rank"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+             {
+            "short_name": "pri_hh",
+            "source_path": "s1*-hh-*[!annot|index].dat:(400,424,24)",
+            "target_path": "/conditions/hh/pri",
+                 "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "pri"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },
+            {
+            "short_name": "pri_hv",
+            "source_path": "s1*-hv-*[!annot|index].dat:(400,424,24)",
+            "target_path": "/conditions/hv/pri",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "pri"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        }, {
+            "short_name": "pri_vv",
+            "source_path": "s1*-vv-*[!annot|index].dat:(400,424,24)",
+            "target_path": "/conditions/vv/pri",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "pri"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        }, {
+            "short_name": "pri_vh",
+            "source_path": "s1*-vh-*[!annot|index].dat:(400,424,24)",
+            "target_path": "/conditions/vh/pri",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "pri"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+            {
+            "short_name": "swst_hh",
+            "source_path": "s1*-hh-*[!annot|index].dat:(424,448,24)",
+            "target_path": "/conditions/hh/swst",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "swst"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },
+            {
+            "short_name": "swst_hv",
+            "source_path": "s1*-hv-*[!annot|index].dat:(424,448,24)",
+            "target_path": "/conditions/hv/swst",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "swst"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },  {
+            "short_name": "swst_vv",
+            "source_path": "s1*-vv-*[!annot|index].dat:(424,448,24)",
+            "target_path": "/conditions/vv/swst",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "swst"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },  {
+            "short_name": "swst_vh",
+            "source_path": "s1*-vh-*[!annot|index].dat:(424,448,24)",
+            "target_path": "/conditions/vh/swst",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "swst"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+            {
+            "short_name": "swl_hh",
+            "source_path": "s1*-hh-*[!annot|index].dat:(448,472,24)",
+            "target_path": "/conditions/hh/swl",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "swl"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },
+            {
+            "short_name": "swl_hv",
+            "source_path": "s1*-hv-*[!annot|index].dat:(448,472,24)",
+            "target_path": "/conditions/hv/swl",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "swl"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },   {
+            "short_name": "swl_vv",
+            "source_path": "s1*-vv-*[!annot|index].dat:(448,472,24)",
+            "target_path": "/conditions/vv/swl",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "swl"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },   {
+            "short_name": "swl_vh",
+            "source_path": "s1*-vh-*[!annot|index].dat:(448,472,24)",
+            "target_path": "/conditions/vh/swl",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "swl"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+            {
+            "short_name": "ssb_message_hh",
+            "source_path": "s1*-hh-*[!annot|index].dat:(472,520,48)",
+            "target_path": "/conditions/hh/ssb_message",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/bytearray"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "ssb message"
+                },
+                "dimensions": [ "packet_number_hh", "sbb_msg_num"]
+            }
+        },
+            {
+            "short_name": "ssb_message_hv",
+            "source_path": "s1*-hv-*[!annot|index].dat:(472,520,48)",
+            "target_path": "/conditions/hv/ssb_message",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/bytearray"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "ssb message"
+                },
+                "dimensions": [ "packet_number_hv" , "sbb_msg_num"]
+            }
+        },
+            {
+            "short_name": "ssb_message_vv",
+            "source_path": "s1*-vv-*[!annot|index].dat:(472,520,48)",
+            "target_path": "/conditions/vv/ssb_message",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/bytearray"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "ssb message"
+                },
+                "dimensions": [ "packet_number_vv" , "sbb_msg_num"]
+            }
+        }, {
+            "short_name": "ssb_message_vh",
+            "source_path": "s1*-vh-*[!annot|index].dat:(472,520,48)",
+            "target_path": "/conditions/vh/ssb_message",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/bytearray"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "ssb message"
+                },
+                "dimensions": [ "packet_number_vh" , "sbb_msg_num"]
+            }
+        },
+        {
+            "short_name": "number_of_quads_hh",
+            "source_path": "s1*-hh-*[!annot|index].dat:(520,536,16)",
+            "target_path": "/conditions/vh/number_of_quads",
+            "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "number_of_quads"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },
+            {
+            "short_name": "number_of_quads_hv",
+            "source_path": "s1*-hv-*[!annot|index].dat:(520,536,16)",
+            "target_path": "/conditions/hv/number_of_quads",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "number_of_quads"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },
+            {
+            "short_name": "number_of_quads_vv",
+            "source_path": "s1*-vv-*[!annot|index].dat:(520,536,16)",
+            "target_path": "/conditions/vv/number_of_quads",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "number_of_quads"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },
+            {
+            "short_name": "number_of_quads_vh",
+            "source_path": "s1*-vh-*[!annot|index].dat:(520,536,16)",
+            "target_path": "/conditions/vh/number_of_quads",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "number_of_quads"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+            {
+            "short_name": "user_data_hh",
+            "source_path": "s1*-hh-*[!annot|index].dat:(544,None,-1)",
+            "target_path": "/measurements/hh/user_data",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/var_bytearray"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "user data packet"
+                },
+                "dimensions": [ "packet_number_hh", "max_data_length_hh"]
+            }
+        },
+            {
+            "short_name": "user_data_hv",
+            "source_path": "s1*-hv-*[!annot|index].dat:(544,None,-1)",
+            "target_path": "/measurements/hv/user_data",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/var_bytearray"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "user data packet"
+                },
+                "dimensions": [ "packet_number_hv", "max_data_length_hv"]
+            }
+        },
+            {
+            "short_name": "user_data_vv",
+            "source_path": "s1*-vv-*[!annot|index].dat:(544,None,-1)",
+            "target_path": "/measurements/vv/user_data",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/var_bytearray"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "user data packet"
+                },
+                "dimensions": [ "packet_number_vv", "max_data_length_vv"]
+            }
+        },
+            {
+            "short_name": "user_data_vh",
+            "source_path": "s1*-vh-*[!annot|index].dat:(544,None,-1)",
+            "target_path": "/measurements/vh/user_data",
+                "is_optional": true,
+            "item_format": "L0packetlist",
+            "accessor_config": {
+                "target_type": "l0_mapping/types/var_bytearray"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "user data packet"
+                },
+                "dimensions": [ "packet_number_vh", "max_data_length_vh"]
+            }
+        },
+            {
+            "short_name": "sensing_time_days_hh",
+            "source_path": "s1*-hh-*-annot.dat:(0,16,26)",
+            "target_path": "/coordinates/sensing_time/hh/days",
+                "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "sensing time days"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },
+            {
+            "short_name": "sensing_time_days_hv",
+            "source_path": "s1*-hv-*-annot.dat:(0,16,26)",
+            "target_path": "/coordinates/sensing_time/hv/days",
+                "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "sensing time days"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },
+            {
+            "short_name": "sensing_time_days_vv",
+            "source_path": "s1*-vv-*-annot.dat:(0,16,26)",
+            "target_path": "/coordinates/sensing_time/vv/days",
+                "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "sensing time days"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },
+            {
+            "short_name": "sensing_time_days_vh",
+            "source_path": "s1*-vh-*-annot.dat:(0,16,26)",
+            "target_path": "/coordinates/sensing_time/vh/days",
+                "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "sensing time days"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+             {
+            "short_name": "sensing_time_millisec_hh",
+            "source_path": "s1*-hh-*-annot.dat:(16,48,26)",
+            "target_path": "/coordinates/sensing_time/hh/millisec",
+                 "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "sensing time millisec"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },
+            {
+            "short_name": "sensing_time_millisec_hv",
+            "source_path": "s1*-hv-*-annot.dat:(16,48,26)",
+            "target_path": "/coordinates/sensing_time/hv/millisec",
+                "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "sensing time millisec"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },
+            {
+            "short_name": "sensing_time_millisec_vv",
+            "source_path": "s1*-vv-*-annot.dat:(16,48,26)",
+            "target_path": "/coordinates/sensing_time/vv/millisec",
+                "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "sensing time millisec"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },{
+            "short_name": "sensing_time_millisec_vh",
+            "source_path": "s1*-vh-*-annot.dat:(16,48,26)",
+            "target_path": "/coordinates/sensing_time/vh/millisec",
+                "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "sensing time millisec"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+            {
+            "short_name": "sensing_time_microsec_hh",
+            "source_path": "s1*-hh-*-annot.dat:(48,64,26)",
+            "target_path": "/coordinates/sensing_time/hh/microsec",
+                "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "sensing time microsec"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },
+            {
+            "short_name": "sensing_time_microsec_hv",
+            "source_path": "s1*-hv-*-annot.dat:(48,64,26)",
+            "target_path": "/coordinates/sensing_time/hv/microsec",
+                "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "sensing time microsec"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },
+            {
+            "short_name": "sensing_time_microsec_vv",
+            "source_path": "s1*-vv-*-annot.dat:(48,64,26)",
+            "target_path": "/coordinates/sensing_time/vv/microsec",
+                "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "sensing time microsec"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },
+            {
+            "short_name": "sensing_time_microsec_vh",
+            "source_path": "s1*-vh-*-annot.dat:(48,64,26)",
+            "target_path": "/coordinates/sensing_time/vh/microsec",
+                "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "sensing time microsec"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },{
+            "short_name": "downlink_time_days_hh",
+            "source_path": "s1*-hh-*-annot.dat:(64,80,26)",
+            "target_path": "/coordinates/downlink_time/hh/days",
+                "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "downlink time days"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },
+            {
+            "short_name": "downlink_time_days_hv",
+            "source_path": "s1*-hv-*-annot.dat:(64,80,26)",
+            "target_path": "/coordinates/downlink_time/hv/days",
+                "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "downlink time days"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },
+            {
+            "short_name": "downlink_time_days_vv",
+            "source_path": "s1*-vv-*-annot.dat:(64,80,26)",
+            "target_path": "/coordinates/downlink_time/vv/days",
+                "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "downlink time days"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },
+            {
+            "short_name": "downlink_time_days_vh",
+            "source_path": "s1*-vh-*-annot.dat:(64,80,26)",
+            "target_path": "/coordinates/downlink_time/vh/days",
+                "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "downlink time days"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+             {
+            "short_name": "downlink_time_millisec_hh",
+            "source_path": "s1*-hh-*-annot.dat:(80,112,26)",
+            "target_path": "/coordinates/downlink_time/hh/millisec",
+                 "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "downlink time millisec"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },
+            {
+            "short_name": "downlink_time_millisec_hv",
+            "source_path": "s1*-hv-*-annot.dat:(80,112,26)",
+            "target_path": "/coordinates/downlink_time/hv/millisec",
+                "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "downlink time millisec"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },
+            {
+            "short_name": "downlink_time_millisec_vv",
+            "source_path": "s1*-vv-*-annot.dat:(80,112,26)",
+            "target_path": "/coordinates/downlink_time/vv/millisec",
+                "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "downlink time millisec"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },{
+            "short_name": "downlink_time_millisec_vh",
+            "source_path": "s1*-vh-*-annot.dat:(80,112,26)",
+            "target_path": "/coordinates/downlink_time/vh/millisec",
+                "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint32"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "sensing time millisec"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        },
+            {
+            "short_name": "downlink_time_microsec_hh",
+            "source_path": "s1*-hh-*-annot.dat:(112,128,26)",
+            "target_path": "/coordinates/downlink_time/hh/microsec",
+                "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "sensing time microsec"
+                },
+                "dimensions": [ "packet_number_hh"]
+            }
+        },
+            {
+            "short_name": "downlink_time_microsec_hv",
+            "source_path": "s1*-hv-*-annot.dat:(112,128,26)",
+            "target_path": "/coordinates/downlink_time/hv/microsec",
+                "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "downlink time microsec"
+                },
+                "dimensions": [ "packet_number_hv"]
+            }
+        },
+            {
+            "short_name": "downlink_time_microsec_vv",
+            "source_path": "s1*-vv-*-annot.dat:(112,128,26)",
+            "target_path": "/coordinates/downlink_time/vv/microsec",
+                "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "downlink time microsec"
+                },
+                "dimensions": [ "packet_number_vv"]
+            }
+        },
+            {
+            "short_name": "downlink_time_microsec_vh",
+            "source_path": "s1*-vh-*-annot.dat:(112,128,26)",
+            "target_path": "/coordinates/downlink_time/vh/microsec",
+                "is_optional": true,
+            "item_format": "L0annotationlist",
+            "accessor_config": {
+                "target_type": "annotation_mapping/types/uint16"
+            },
+            "parameters": {
+                "attributes": {
+                    "long_name": "downlink time microsec"
+                },
+                "dimensions": [ "packet_number_vh"]
+            }
+        }
+
+        ],
+    "l0_mapping": {
+        "types": {
+            "bool": "bool",
+            "scalar_bool": "s_bool",
+            "uint8": "uint8",
+            "scalar_uint8": "s_uint8",
+            "uint16": "uint16",
+            "scalar_uint16": "s_uint16",
+            "uint32": "uint32",
+            "scalar_uint32": "s_uint32",
+            "var_bytearray": "var_bytearray",
+            "bytearray": "bytearray"
+        }
+    },
+	"annotation_mapping": {
+	    "types": {
+            "bool": "bool",
+            "scalar_bool": "s_bool",
+            "uint8": "uint8",
+            "scalar_uint8": "s_uint8",
+            "uint16": "uint16",
+            "scalar_uint16": "s_uint16",
+            "uint32": "uint32",
+            "scalar_uint32": "s_uint32",
+            "var_bytearray": "var_bytearray",
+            "bytearray": "bytearray"
+        }
+    }
+}

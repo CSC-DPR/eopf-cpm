@@ -32,9 +32,6 @@ class EOQC(ABC):
         The message if the quality check pass.
     message_if_failed: str
         The message if the quality check fail.
-    status: bool
-        Status of the quality check, true if it's ok, false if not ot if the quality check was not executed.
-
     """
 
     def __init__(self, check_id: str, check_version: str, message_if_passed: str, message_if_failed: str) -> None:

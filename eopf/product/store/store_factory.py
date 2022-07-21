@@ -15,10 +15,11 @@ class EOStoreFactory:
                 FilenameToVariableAccessor,
             )
             from eopf.product.store.grib import EOGribAccessor
-            from eopf.product.store.netcdf import (
-                EONetCDFStore,
-                EONetcdfStringToTimeAccessor,
+            from eopf.product.store.memmap_accessors import (
+                FixedMemMapAccessor,
+                MemMapAccessor,
             )
+            from eopf.product.store.netcdf import EONetCDFStore
             from eopf.product.store.safe import EOSafeStore
             from eopf.product.store.wrappers import (
                 FromAttributesToFlagValueAccessor,
@@ -38,7 +39,6 @@ class EOStoreFactory:
             self.register_store(FilenameToVariableAccessor, "filename_to_subswath")
             self.register_store(EONetCDFStore, "netcdf")
             self.register_store(EONetCDFStoreNCpy, "netcdf-netCDF4py")
-            self.register_store(EONetcdfStringToTimeAccessor, "netcdf_string_to_time")
             self.register_store(XMLManifestAccessor, "xmlmetadata")
             self.register_store(EOGribAccessor, "grib")
             self.register_store(EORasterIOAccessor, "jp2")
@@ -46,6 +46,8 @@ class EOStoreFactory:
             self.register_store(XMLTPAccessor, "xmltp")
             self.register_store(FromAttributesToVariableAccessor, "attribute_element_to_float_variable")
             self.register_store(FromAttributesToFlagValueAccessor, "attribute_element_to_flag_variable")
+            self.register_store(MemMapAccessor, "L0packetlist")
+            self.register_store(FixedMemMapAccessor, "L0annotationlist")
 
     def register_store(self, store_class: type[EOProductStore], *args: str) -> None:
         self.store_types.add(store_class)

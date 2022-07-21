@@ -61,9 +61,9 @@ from tests.utils import assert_eovariable_equal
         # # "item_format": "xmlangles",
         # (lazy_fixture("S2_MSIL1C_ZIP"), "/conditions/geometry/saa"),
         # "item_format": "netcdf"
-        (lazy_fixture("S3_SY_2_SYN_ZIP"), "/coordinates/image_grid/longitude"),
-        (lazy_fixture("S3_SY_2_SYN_ZIP"), "/conditions/geometry/saa"),
-        (lazy_fixture("S3_SY_2_SYN_ZIP"), "/measurements/olci/sdr_oa01"),
+        (lazy_fixture("S3_SY_2_SYN"), "/coordinates/image_grid/longitude"),
+        (lazy_fixture("S3_SY_2_SYN"), "/conditions/geometry/saa"),
+        (lazy_fixture("S3_SY_2_SYN"), "/measurements/olci/sdr_oa01"),
         # "item_format": "netcdf"
         (lazy_fixture("S3_OL_1_EFR_ZIP"), "/coordinates/image_grid/longitude"),
         (lazy_fixture("S3_OL_1_EFR_ZIP"), "/conditions/geometry/oza"),
@@ -108,7 +108,7 @@ def test_read_product(dask_client_all, input_path, key_path):
         lazy_fixture("S3_OL_2_LFR_ZIP"),
         lazy_fixture("S3_SL_1_RBT_ZIP"),
         lazy_fixture("S3_SL_2_LST_ZIP"),
-        lazy_fixture("S3_SY_2_SYN_ZIP"),
+        # lazy_fixture("S3_SY_2_SYN_ZIP"),
         # not working 04.07
         # lazy_fixture("S2_MSIL1C_ZIP"),
         # lazy_fixture("S2_MSIL1C"),
@@ -298,6 +298,7 @@ def impl_test_convert_safe_mapping(
     OUTPUT_DIR: str,
     mapping_factory=None,
 ):
+    read_only_format = ("xmlmetadata",)
     source_store = EOSafeStore(input_path, mapping_factory=mapping_factory)
     output_name = os.path.basename(input_path)
     # switch extension of output_name
@@ -334,7 +335,7 @@ def impl_test_convert_safe_mapping(
                 target_object = target_product
             assert type(source_object) == type(target_object)
 
-            if output_store != EOSafeStore or data_path not in ["", "/"]:
+            if output_store != EOSafeStore or item["item_format"] not in read_only_format:
                 # Manifest accessor set item not yet implemented
                 if item["item_format"] != "xmlmetadata":
                     np.testing.assert_equal(conv(source_object.attrs), conv(target_object.attrs))

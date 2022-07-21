@@ -23,7 +23,11 @@ def load_json_file(file_name: str) -> dict[str, Any]:
     dict[str, Any]
     """
     with open(file_name) as f:
-        return json.load(f)
+        data = json.load(f)
+    for key in ["workflow", "breakpoints", "I/O", "dask_context"]:
+        if isinstance(data.get(key), str):
+            data[key] = load_json_file(data[key])
+    return data
 
 
 @click_callback

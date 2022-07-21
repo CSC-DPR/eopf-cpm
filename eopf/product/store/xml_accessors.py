@@ -1,3 +1,4 @@
+import warnings
 from pathlib import Path
 from typing import (
     TYPE_CHECKING,
@@ -382,6 +383,7 @@ class XMLManifestAccessor(EOProductStore):
                     continue
                 else:
                     # If xpath is invalid, and doesn't containt a conversion function reference
+                    warnings.warn(f"{key}:{value} is an invalid binding")
                     raise KeyError(f"{value} is an invalid xpath expression!")
         return internal_dict
 
@@ -399,9 +401,9 @@ class XMLManifestAccessor(EOProductStore):
             A list of dictionaries containing converted values in the same nesting as input list.
         """
         local_list_of_dicts = []
-        local_dict = dict()
         # Iterate through input list
         for idx in attributes_list:
+            local_dict = dict()
             if isinstance(idx, str):
                 converted_value = self.stac_mapper(idx)
                 return [converted_value] if converted_value is not None else [idx]

@@ -1,3 +1,6 @@
+"""eopf.cli define abstracts classes to add new command over eopf-cpm cli command.
+"""
+
 import asyncio
 from abc import ABC, abstractmethod
 from functools import wraps

@@ -213,7 +213,7 @@ def test_EOQCProcessor_init(sample_config_path):
 
 @pytest.mark.need_files
 @pytest.mark.unit
-@pytest.mark.parametrize("store_type", [(lazy_fixture("S3_OL_1_EFR"))])
+@pytest.mark.parametrize("store_type", [(lazy_fixture("S3_OL_1_EFR_ZIP"))])
 def test_EOQCProcessor_productType(store_type, eoqcProcessor):
     store = EOSafeStore(store_type)
     product = EOProduct("my_product", storage=store)

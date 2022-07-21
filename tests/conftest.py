@@ -1,30 +1,22 @@
-# import concurrent.futures
 import json
-import logging
 import os
 import shutil
 from datetime import timedelta
 
-# import fsspec
 import pytest
 
 # import required dask fixtures :
 # dask_solomulti require client.
 # client require loop and cluster_fixture.
 from distributed.utils_test import (  # noqa # pylint: disable=unused-import
+    cleanup,
     client,
     cluster_fixture,
     loop,
 )
 from hypothesis import HealthCheck, settings
 
-from .utils import (  # S3_CONFIG_REAL,; S3_TEST_DATA_PATH,
-    EMBEDED_TEST_DATA_PATH,
-    MAPPING_PATH,
-    S3_TEST_DATA_PROTOCOL,
-    TEST_DATA_PATH,
-    glob_fixture,
-)
+from .utils import EMBEDED_TEST_DATA_PATH, MAPPING_PATH, TEST_DATA_PATH, glob_fixture
 
 # ----------------------------------#
 # --- pytest command line options --#
@@ -336,34 +328,14 @@ def TRIGGER_JSON_FILE(dask_client_all, EMBEDED_TEST_DATA_FOLDER, OUTPUT_DIR, S3_
     filepath = os.path.join(EMBEDED_TEST_DATA_FOLDER, trigger_filename)
     with open(filepath) as f:
         data = json.load(f)
-    data["I/O"]["input_product"]["path"] = S3_OL_1_EFR
+    data["I/O"]["inputs_products"][0]["path"] = S3_OL_1_EFR
     data["I/O"]["output_product"]["path"] = os.path.join(OUTPUT_DIR, data["I/O"]["output_product"]["path"])
     if dask_client_all:
-        data["dask_context"] = {"distributed": "processes"}
+        data["dask_context"] = {"cluster_type": "local", "cluster_config": {"processes": True}, "client_config": {}}
+    else:
+        data["dask_context"] = {}
     output_name = os.path.join(OUTPUT_DIR, trigger_filename)
     with open(os.path.join(OUTPUT_DIR, trigger_filename), mode="w") as f:
         json.dump(data, f)
 
     return output_name
-
-
-def load_file_from_s3(filename, data_mapper, dest_path):
-    real_path = os.path.join(data_mapper.root, filename)
-    real_dest_path = os.path.join(dest_path, filename)
-    dir_file_name = os.path.dirname(real_path)
-    if not os.path.isfile(real_dest_path):
-        os.makedirs(dir_file_name, exist_ok=True)
-        data_mapper.fs.get(real_path, real_dest_path)
-        logging.debug(f"COPY {S3_TEST_DATA_PROTOCOL}://{real_path} IN {real_dest_path}")
-
-
-@pytest.fixture(scope="session", autouse=True)
-def load_data():
-    pass
-    # if S3_TEST_DATA_PROTOCOL == "s3":
-    #     data_mapper = fsspec.get_mapper(f"{S3_TEST_DATA_PROTOCOL}://{S3_TEST_DATA_PATH}", **S3_CONFIG_REAL)
-    #     os.makedirs(TEST_DATA_PATH, exist_ok=True)
-    #     with concurrent.futures.ThreadPoolExecutor() as executor:
-    #         pool = [executor.submit(load_file_from_s3, file, data_mapper, TEST_DATA_PATH) for file in data_mapper]
-    #         concurrent.futures.wait(pool)
-    #     yield
