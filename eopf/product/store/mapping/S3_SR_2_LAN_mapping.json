@@ -17,18 +17,7 @@
         "comment": "Number of 20-Hz measurements associated to the 1-Hz measurement."
       }
     },
-    {
-      "short_name": "num_20hz_meas_01_ku",
-      "target_path": "coordinates/num_20hz_meas_01",
-      "source_path": "enhanced_measurement.nc:num_20hz_meas_01_ku",
-      "item_format": "netcdf",
-      "attributes": {
-        "_FillValue": 32767,
-        "long_name": "Number of 20Hz measurements : 01 Hz ku band",
-        "units": "count",
-        "comment": "Number of 20-Hz measurements associated to the 1-Hz measurement."
-      }
-    },
+
     {
       "short_name": "alt_20_c",
       "target_path": "coordinates/attitude/c/alt_20",

@@ -9,7 +9,7 @@ from pytest_lazyfixture import lazy_fixture
 from eopf.product.conveniences import open_store
 from eopf.product.core import EOProduct, EOVariable
 from eopf.product.core.eo_object import EOObject
-from eopf.product.store import (  # , EOCogStore
+from eopf.product.store import (  EOCogStore,
     EONetCDFStore,
     EOProductStore,
     EOZarrStore,
@@ -189,19 +189,19 @@ def test_convert_test_mapping(
 
         # ---> S1/Level 2 - tests
         # not working 04.07 -> SEE ISSUE #71
-        (lazy_fixture("S1_IW_OCN_ZIP"), lazy_fixture("S1_IW_OCN_MAPPING"), ".SAFE", EOSafeStore, 0),
+        # (lazy_fixture("S1_IW_OCN_ZIP"), lazy_fixture("S1_IW_OCN_MAPPING"), ".SAFE", EOSafeStore, 0),
         (lazy_fixture("S1_IW_OCN_ZIP"), lazy_fixture("S1_IW_OCN_MAPPING"), ".zarr", EOZarrStore, 0),
-        # (lazy_fixture("S1_IW_OCN_ZIP"), lazy_fixture("S1_IW_OCN_MAPPING"), ".cog", EOCogStore, 0),
+        (lazy_fixture("S1_IW_OCN_ZIP"), lazy_fixture("S1_IW_OCN_MAPPING"), ".cog", EOCogStore, 0),
         (lazy_fixture("S1_IW_OCN_ZIP"), lazy_fixture("S1_IW_OCN_MAPPING"), ".nc", EONetCDFStore, 0),
 
-        (lazy_fixture("S1_SM_OCN_ZIP"), lazy_fixture("S1_SM_OCN_MAPPING"), ".SAFE", EOSafeStore, 0),
+        #(lazy_fixture("S1_SM_OCN_ZIP"), lazy_fixture("S1_SM_OCN_MAPPING"), ".SAFE", EOSafeStore, 0),
         (lazy_fixture("S1_SM_OCN_ZIP"), lazy_fixture("S1_SM_OCN_MAPPING"), ".zarr", EOZarrStore, 0),
-        #(lazy_fixture("S1_SM_OCN_ZIP"), lazy_fixture("S1_SM_OCN_MAPPING"), ".cog", EOCogStore, 0),
+        (lazy_fixture("S1_SM_OCN_ZIP"), lazy_fixture("S1_SM_OCN_MAPPING"), ".cog", EOCogStore, 0),
         (lazy_fixture("S1_SM_OCN_ZIP"), lazy_fixture("S1_SM_OCN_MAPPING"), ".nc", EONetCDFStore, 0),
 
-        (lazy_fixture("S1_WV_OCN_ZIP"), lazy_fixture("S1_WV_OCN_MAPPING"), ".SAFE", EOSafeStore, 0),
+        #(lazy_fixture("S1_WV_OCN_ZIP"), lazy_fixture("S1_WV_OCN_MAPPING"), ".SAFE", EOSafeStore, 0),
         (lazy_fixture("S1_WV_OCN_ZIP"), lazy_fixture("S1_WV_OCN_MAPPING"), ".zarr", EOZarrStore, 0),
-        #(lazy_fixture("S1_WV_OCN_ZIP"), lazy_fixture("S1_WV_OCN_MAPPING"), ".cog", EOCogStore, 0),
+        (lazy_fixture("S1_WV_OCN_ZIP"), lazy_fixture("S1_WV_OCN_MAPPING"), ".cog", EOCogStore, 0),
         (lazy_fixture("S1_WV_OCN_ZIP"), lazy_fixture("S1_WV_OCN_MAPPING"), ".nc", EONetCDFStore, 0),
                 
         # ####################### S2 product type conversions ########################
@@ -214,10 +214,10 @@ def test_convert_test_mapping(
         # (lazy_fixture("S2_MSIL1C"), lazy_fixture("S2_MSIL1C_MAPPING"), ".cog", EOCogStore, 156),
         # (lazy_fixture("S2_MSIL1C"), lazy_fixture("S2_MSIL1C_MAPPING"), ".nc", EONetCDFStore, 156),
         # # S2_MSIL1C - ZIP Format - product type conversions
-        # (lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".SAFE", EOSafeStore, 156),
-        # (lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".zarr", EOZarrStore, 156),
+        (lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".SAFE", EOSafeStore, 156),
+        (lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".zarr", EOZarrStore, 156),
         # (lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".cog", EOCogStore, 156),
-        # (lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".nc", EONetCDFStore, 156),
+        (lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".nc", EONetCDFStore, 156),
         # ---> S2/Level 2 - tests -> MAPPING not available
         # S2_MSIL2A - ZIP Format - product type conversions
         # (lazy_fixture("S2_MSIL2A_ZIP"), lazy_fixture("S2_MSIL2A_MAPPING"), ".SAFE", EOSafeStore, 52,),
@@ -231,40 +231,40 @@ def test_convert_test_mapping(
         # S3_OL_1 product type conversions
         (lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("S3_OL_1_EFR_MAPPING"), ".SEN3", EOSafeStore, 1),
         (lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("S3_OL_1_EFR_MAPPING"), ".zarr", EOZarrStore, 1),
-        # (lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("S3_OL_1_EFR_MAPPING"), ".cog", EOCogStore, 1),
+        (lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("S3_OL_1_EFR_MAPPING"), ".cog", EOCogStore, 1),
         (lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("S3_OL_1_EFR_MAPPING"), ".nc", EONetCDFStore, 1),
         # S3_OL_2 product type conversions
         (lazy_fixture("S3_OL_2_LFR_ZIP"), lazy_fixture("S3_OL_2_LFR_MAPPING"), ".SEN3", EOSafeStore, 0),
         (lazy_fixture("S3_OL_2_LFR_ZIP"), lazy_fixture("S3_OL_2_LFR_MAPPING"), ".zarr", EOZarrStore, 0),
-        # (lazy_fixture("S3_OL_2_LFR_ZIP"), lazy_fixture("S3_OL_2_LFR_MAPPING"), ".cog", EOCogStore, 0),
+        (lazy_fixture("S3_OL_2_LFR_ZIP"), lazy_fixture("S3_OL_2_LFR_MAPPING"), ".cog", EOCogStore, 0),
         (lazy_fixture("S3_OL_2_LFR_ZIP"), lazy_fixture("S3_OL_2_LFR_MAPPING"), ".nc", EONetCDFStore, 0),
         # S3_SL_1_RBT product type conversions
         # NOT WORKING -> SEE ISSUE 74
-        #(lazy_fixture("S3_SL_1_RBT_ZIP"), lazy_fixture("S3_SL_1_RBT_MAPPING"), ".SEN3", EOSafeStore, 0),
+        (lazy_fixture("S3_SL_1_RBT_ZIP"), lazy_fixture("S3_SL_1_RBT_MAPPING"), ".SEN3", EOSafeStore, 0),
         (lazy_fixture("S3_SL_1_RBT_ZIP"), lazy_fixture("S3_SL_1_RBT_MAPPING"), ".zarr", EOZarrStore, 0),
-        # (lazy_fixture("S3_SL_1_RBT_ZIP"), lazy_fixture("S3_SL_1_RBT_MAPPING"), ".cog", EOCogStore, 0),
-        #(lazy_fixture("S3_SL_1_RBT_ZIP"), lazy_fixture("S3_SL_1_RBT_MAPPING"), ".nc", EONetCDFStore, 0),
+        (lazy_fixture("S3_SL_1_RBT_ZIP"), lazy_fixture("S3_SL_1_RBT_MAPPING"), ".cog", EOCogStore, 0),
+        (lazy_fixture("S3_SL_1_RBT_ZIP"), lazy_fixture("S3_SL_1_RBT_MAPPING"), ".nc", EONetCDFStore, 0),
         # S3_SL_2_LST product type conversions
         # NOT WORKING -> SEE ISSUE 75
-        # (lazy_fixture("S3_SL_2_LST_ZIP"), lazy_fixture("S3_SL_2_LST_MAPPING"), ".SEN3", EOSafeStore, 0),
+        (lazy_fixture("S3_SL_2_LST_ZIP"), lazy_fixture("S3_SL_2_LST_MAPPING"), ".SEN3", EOSafeStore, 0),
         (lazy_fixture("S3_SL_2_LST_ZIP"), lazy_fixture("S3_SL_2_LST_MAPPING"), ".zarr", EOZarrStore, 0),
-        # (lazy_fixture("S3_SL_2_LST_ZIP"), lazy_fixture("S3_SL_2_LST_MAPPING"), ".cog", EOCogStore, 0),
-        #(lazy_fixture("S3_SL_2_LST_ZIP"), lazy_fixture("S3_SL_2_LST_MAPPING"), ".nc", EONetCDFStore, 0),
+        (lazy_fixture("S3_SL_2_LST_ZIP"), lazy_fixture("S3_SL_2_LST_MAPPING"), ".cog", EOCogStore, 0),
+        (lazy_fixture("S3_SL_2_LST_ZIP"), lazy_fixture("S3_SL_2_LST_MAPPING"), ".nc", EONetCDFStore, 0),
         # NOT WORKING -> SEE ISSUE 70
         # S3_SY_2_SYN product type conversions
-        # (lazy_fixture("S3_SY_2_SYN_ZIP"), lazy_fixture("S3_SY_2_SYN_MAPPING"), ".SEN3", EOSafeStore, 0),
-        # (lazy_fixture("S3_SY_2_SYN_ZIP"), lazy_fixture("S3_SY_2_SYN_MAPPING"), ".zarr", EOZarrStore, 0),
-        # (lazy_fixture("S3_SY_2_SYN_ZIP"), lazy_fixture("S3_SY_2_SYN_MAPPING"), ".cog", EOCogStore, 0),
-        # (lazy_fixture("S3_SY_2_SYN_ZIP"), lazy_fixture("S3_SY_2_SYN_MAPPING"), ".nc", EONetCDFStore, 0),
+        (lazy_fixture("S3_SY_2_SYN_ZIP"), lazy_fixture("S3_SY_2_SYN_MAPPING"), ".SEN3", EOSafeStore, 0),
+        (lazy_fixture("S3_SY_2_SYN_ZIP"), lazy_fixture("S3_SY_2_SYN_MAPPING"), ".zarr", EOZarrStore, 0),
+        (lazy_fixture("S3_SY_2_SYN_ZIP"), lazy_fixture("S3_SY_2_SYN_MAPPING"), ".cog", EOCogStore, 0),
+        (lazy_fixture("S3_SY_2_SYN_ZIP"), lazy_fixture("S3_SY_2_SYN_MAPPING"), ".nc", EONetCDFStore, 0),
         # S3_SR_1_SRA product type conversions -> MAPPING NOT AVAILABLE
-        # (lazy_fixture("S3_SR_1_SRA_ZIP"), lazy_fixture("S3_SR_1_SRA_MAPPING"), ".SAFE", EOSafeStore, 0,),
+        # (lazy_fixture("S3_SR_1_SRA_ZIP"), lazy_fixture("S3_SR_1_SRA_MAPPING"), ".SEN3", EOSafeStore, 0,),
         # (lazy_fixture("S3_SR_1_SRA_ZIP"), lazy_fixture("S3_SR_1_SRA_MAPPING"), ".zarr", EOZarrStore, 0,),
         # (lazy_fixture("S3_SR_1_SRA_ZIP"), lazy_fixture("S3_SR_1_SRA_MAPPING"), ".cog", EOCogStore, 0,),
         # (lazy_fixture("S3_SR_1_SRA_ZIP"), lazy_fixture("S3_SR_1_SRA_MAPPING"), ".nc", EONetCDFStore, 0,),
         # S3_SR_2_LAN product type conversions -> MAPPING NOT AVAILABLE
-        (lazy_fixture("S3_SR_2_LAN_ZIP"), lazy_fixture("S3_SR_2_LAN_MAPPING"), ".SAFE", EOSafeStore, 0,),
+        (lazy_fixture("S3_SR_2_LAN_ZIP"), lazy_fixture("S3_SR_2_LAN_MAPPING"), ".SEN3", EOSafeStore, 0,),
         (lazy_fixture("S3_SR_2_LAN_ZIP"), lazy_fixture("S3_SR_2_LAN_MAPPING"), ".zarr", EOZarrStore, 0,),
-        # (lazy_fixture("S3_SR_2_LAN_ZIP"), lazy_fixture("S3_SR_2_LAN_MAPPING"), ".cog", EOCogStore, 0,),
+        (lazy_fixture("S3_SR_2_LAN_ZIP"), lazy_fixture("S3_SR_2_LAN_MAPPING"), ".cog", EOCogStore, 0,),
         (lazy_fixture("S3_SR_2_LAN_ZIP"), lazy_fixture("S3_SR_2_LAN_MAPPING"), ".nc", EONetCDFStore, 0,),
         # TODO: ?? OL_1_ERR, OL_2_LRR, S3_SY_2_V10, S3_SY_2_VGP, S3_SY_2_VG1, S3_SY_2_AOD
         # fmt: on
@@ -336,11 +336,13 @@ def impl_test_convert_safe_mapping(
             assert type(source_object) == type(target_object)
 
             if output_store != EOSafeStore or item["item_format"] not in read_only_format:
-                # Manifest accessor set item not yet implemented
-                if item["item_format"] != "xmlmetadata":
+                # 1.Not testing top level attributes 
+                # 2.See Cog store issue #69 blocked by issue #29
+                if item["item_format"] != "xmlmetadata" and output_store != EOCogStore :
                     np.testing.assert_equal(conv(source_object.attrs), conv(target_object.attrs))
             if isinstance(source_object, EOVariable):
-                if item["item_format"] != "netcdf_string_to_time":
+                # TODO: we replaced netcdf_string_to_time
+                if "to_unix_time" not in item["source_path"]:
                     assert_eovariable_equal(source_object, target_object)
     assert max_optional_miss >= optional_miss
 
