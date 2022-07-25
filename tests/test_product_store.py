@@ -813,17 +813,16 @@ def test_convert_cog_store(store, legacy_product_path, write_target):
     # $write_target should be removed
 
 
-@pytest.mark.real_s3
 @pytest.mark.need_files
 @pytest.mark.unit
 @pytest.mark.parametrize(
     "store_cls, target, store_params",
     [
         (EOSafeStore, lazy_fixture("S3_OL_1_EFR_ZIP"), {}),
-        (EOCogStore, "s3://eopf/cpm/test_data/OLCI_COG", S3_CONFIG_REAL),
+        (EOZarrStore, lazy_fixture("S3_OL_1_EFR_ZARR"), {}),
     ],
 )
-def test_iterate_over_variables(store_cls, target, store_params):
+def test_iterate_variables_and_groups(store_cls, target, store_params):
     store = store_cls(target)
     product = EOProduct("opened_product", storage=store)
     with product.open(**store_params):
@@ -832,12 +831,12 @@ def test_iterate_over_variables(store_cls, target, store_params):
                 # initial condition: nothing loaded
                 assert len(item._groups) == 0
                 assert len(item._variables) == 0
-                for _ in item.groups:
-                    ...
+                for _, gr in item.groups:
+                    assert isinstance(gr, EOGroup)
                 # groups should not load variables
                 assert len(item._variables) == 0
-                for _ in item.variables:
-                    ...
+                for _, variable in item.variables:
+                    assert isinstance(variable, EOVariable)
                 # after calling .groups and .variables, everything should be loaded
                 print(item.path, [_ for _ in item.keys()])
                 assert len(item._variables) + len(item._groups) == len(item)

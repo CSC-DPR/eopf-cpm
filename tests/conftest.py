@@ -178,7 +178,13 @@ def S3_OL_1_EFR_ZIP(request):
 
 @glob_fixture("S3*_OL_1_E*R*.SEN3")
 def S3_OL_1_EFR(request):
-    """Path to a S3 OL LEVEL 2 product"""
+    """Path to a S3 OL LEVEL 1 product"""
+    return request.param
+
+
+@glob_fixture("S3*_OL_1_E*R*.zarr")
+def S3_OL_1_EFR_ZARR(request):
+    """Path to a S3 OL LEVEL 1 product"""
     return request.param
 
 
