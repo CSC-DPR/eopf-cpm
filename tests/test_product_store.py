@@ -838,5 +838,4 @@ def test_iterate_variables_and_groups(store_cls, target, store_params):
                 for _, variable in item.variables:
                     assert isinstance(variable, EOVariable)
                 # after calling .groups and .variables, everything should be loaded
-                print(item.path, [_ for _ in item.keys()])
                 assert len(item._variables) + len(item._groups) == len(item)
