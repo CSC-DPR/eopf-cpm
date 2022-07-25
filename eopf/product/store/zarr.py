@@ -204,7 +204,7 @@ class EOZarrStore(EOProductStore):
         var_data = da.where(
             fill and var_data == obj.attrs["_FillValue"],
             var_data,
-            var_data * scale_factor + offset,
+            var_data * da.asarray(scale_factor) + offset,
         )
 
         return EOVariable(data=var_data, attrs=obj.attrs)

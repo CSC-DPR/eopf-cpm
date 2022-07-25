@@ -246,7 +246,7 @@ class EONetCDFStoreNCpy(EOProductStore):
                 complevel=self.complevel,
                 shuffle=self.shuffle,
             )
-            variable.set_auto_scale(False)
+            #variable.set_auto_scale(False)
             self.write_attrs(key, value.attrs, value.data.dtype)
             variable[:] = value.data
         else:
