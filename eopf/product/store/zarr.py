@@ -194,18 +194,7 @@ class EOZarrStore(EOProductStore):
             offset = obj.attrs["add_offset"]
         else:
             offset = 0
-        fill = False
-        try:
-            if "_FillValue" in obj.attrs.keys() and not da.isnan(obj.attrs["_FillValue"]):
-                fill = True
-        except TypeError:
-            # avoid printing warnings about not beeing able to detect and convert NaN
-            pass
-        var_data = da.where(
-            fill and var_data == obj.attrs["_FillValue"],
-            var_data,
-            var_data * da.asarray(scale_factor) + offset,
-        )
+        var_data = var_data * da.asarray(scale_factor) + offset
 
         return EOVariable(data=var_data, attrs=obj.attrs)
 
@@ -228,18 +217,7 @@ class EOZarrStore(EOProductStore):
                 offset = value.attrs["add_offset"]
             else:
                 offset = 0
-            fill = False
-            try:
-                if "_FillValue" in value.attrs.keys() and not da.isnan(value.attrs["_FillValue"]):
-                    fill = True
-            except TypeError:
-                # avoid printing warnings about not beeing able to detect and convert NaN
-                pass
-            data = da.where(
-                fill and data == value.attrs["_FillValue"],
-                data,
-                (data - offset) / scale_factor,
-            )
+            data = (data - offset) / scale_factor
 
             dask_array = da.asarray(data, dtype=value.data.dtype)  # .data is generally already a dask array.
             if dask_array.size > 0:
