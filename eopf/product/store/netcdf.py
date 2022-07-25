@@ -236,7 +236,6 @@ class EONetCDFStoreNCpy(EOProductStore):
                     raise ValueError(
                         "Netdf4 format does not support mutiples dimensions with the same name and different size.",
                     )
-
             # Create and write EOVariable
             variable = self._root.createVariable(
                 key,
@@ -246,7 +245,6 @@ class EONetCDFStoreNCpy(EOProductStore):
                 complevel=self.complevel,
                 shuffle=self.shuffle,
             )
-            #variable.set_auto_scale(False)
             self.write_attrs(key, value.attrs, value.data.dtype)
             variable[:] = value.data
         else:
