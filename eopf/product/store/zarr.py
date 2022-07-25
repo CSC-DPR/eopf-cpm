@@ -185,16 +185,12 @@ class EOZarrStore(EOProductStore):
         # - read in parallel
         var_data = da.from_zarr(self.url, component=key, storage_options=self._dask_kwargs["storage_options"])
 
-        # apply scale, offset and fill value masking
+        # apply scale and offset
         if "scale_factor" in obj.attrs:
-            scale_factor = obj.attrs["scale_factor"]
-        else:
-            scale_factor = 1
+            var_data *= obj.attrs["scale_factor"]
+
         if "add_offset" in obj.attrs:
-            offset = obj.attrs["add_offset"]
-        else:
-            offset = 0
-        var_data = var_data * da.asarray(scale_factor) + offset
+            var_data += obj.attrs["add_offset"]
 
         return EOVariable(data=var_data, attrs=obj.attrs)
 
@@ -208,16 +204,11 @@ class EOZarrStore(EOProductStore):
         elif isinstance(value, EOVariable):
             data = value.data
 
-            # apply scale, offset and fill value masking
-            if "scale_factor" in value.attrs:
-                scale_factor = value.attrs["scale_factor"]
-            else:
-                scale_factor = 1
+            # apply scale and offset
             if "add_offset" in value.attrs:
-                offset = value.attrs["add_offset"]
-            else:
-                offset = 0
-            data = (data - offset) / scale_factor
+                data -= value.attrs["add_offset"]
+            if "scale_factor" in value.attrs:
+                data /= value.attrs["scale_factor"]
 
             dask_array = da.asarray(data, dtype=value.data.dtype)  # .data is generally already a dask array.
             if dask_array.size > 0:
