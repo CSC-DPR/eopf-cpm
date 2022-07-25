@@ -451,26 +451,30 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
         """Iterator over the sub EOGroup of this EOGroup"""
         for key, value in self._groups.items():
             yield key, value
-        if self.store is not None:
+        if self.store is not None and self.store.status == StorageStatus.OPEN:
             for key in self.store.iter(self.path):
                 path = join_path(self.path, key)
                 if key not in self._groups and self.store.is_group(path):
                     item = self.store[path]
                     self[path] = item
                     yield key, item
+        elif self.store is not None and self.store.status == StorageStatus.CLOSE:
+            warnings.warn("`for in` statement can't check store")
 
     @property
     def variables(self) -> Iterator[tuple[str, "EOVariable"]]:
         """Iterator over the couples variable_name, EOVariable of this EOGroup"""
         for key, value in self._variables.items():
             yield key, value
-        if self.store is not None:
+        if self.store is not None and self.store.status == StorageStatus.OPEN:
             for key in self.store.iter(self.path):
                 path = join_path(self.path, key)
                 if key not in self._variables and self.store.is_variable(path):
                     item = self.store[path]
                     self[path] = item
                     yield key, item
+        elif self.store is not None and self.store.status == StorageStatus.CLOSE:
+            warnings.warn("`for in` statement can't check store")
 
     def _ipython_key_completions_(self) -> list[str]:  # pragma: no cover
         return [key for key in self.keys()]
