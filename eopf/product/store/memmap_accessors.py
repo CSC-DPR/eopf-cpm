@@ -108,8 +108,7 @@ class MemMapAccessor(EOProductStore):
         k = 0
         while k < len(pool._buffer):
             if pool._buffer[k] != 12:
-                print("error!", k)
-                break
+                raise ValueError(f"Buffered value {pool._buffer[k]} != 12.")
 
             if pool._n_packets == pool._packet_length.shape[0]:
                 (pool._packet_length).resize(pool._n_packets + self.incr_step, refcheck=False)

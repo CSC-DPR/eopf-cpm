@@ -23,7 +23,6 @@ class FilePart(NamedTuple):
     def from_string(cls, string: str) -> "FilePart":
         """Create instance of FilePart from the filename as a string"""
         time_format = "%Y%m%dt%H%M%S"
-        print(string)
         times = re.findall(
             r"[\d]+t[\d]+",
             string,

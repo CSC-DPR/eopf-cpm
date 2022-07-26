@@ -89,6 +89,3 @@ class EOGroup(EOContainer, EOObject):
         for path in self:
             var_found += self[path]._find_by_dim(dims, shape)
         return var_found
-
-    def __len__(self) -> int:
-        return super().__len__() + len(set(self._variables))
