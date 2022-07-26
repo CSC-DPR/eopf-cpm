@@ -139,10 +139,7 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
             del sub_container[keys]
 
     def __len__(self) -> int:
-        keys = set(self._groups) | set(self._variables)
-        if self.store is not None:
-            keys |= set(_ for _ in self.store.iter(self.path))
-        return len(keys)
+        return len(set(self))
 
     def __getattr__(self, attr: str) -> "EOObject":
         if attr in self:
@@ -455,9 +452,7 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
             for key in self.store.iter(self.path):
                 path = join_path(self.path, key)
                 if key not in self._groups and self.store.is_group(path):
-                    item = self.store[path]
-                    self[path] = item
-                    yield key, item
+                    yield key, self[path]
         elif self.store is not None and self.store.status == StorageStatus.CLOSE:
             warnings.warn("`for in` statement can't check store")
 
@@ -470,9 +465,7 @@ class EOContainer(EOAbstract, MutableMapping[str, "EOObject"]):
             for key in self.store.iter(self.path):
                 path = join_path(self.path, key)
                 if key not in self._variables and self.store.is_variable(path):
-                    item = self.store[path]
-                    self[path] = item
-                    yield key, item
+                    yield key, self[path]
         elif self.store is not None and self.store.status == StorageStatus.CLOSE:
             warnings.warn("`for in` statement can't check store")
 
