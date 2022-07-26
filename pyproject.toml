@@ -95,7 +95,6 @@ dev = [
     "eopf[cluster-plugin]",
 ]
 
-
 [project.scripts]
 eopf = "eopf.cli:eopf_cli"
 
@@ -103,6 +102,9 @@ eopf = "eopf.cli:eopf_cli"
 trigger = "eopf.triggering.cli:EOCLITrigger"
 web-server = "eopf.triggering.web:EOWebTrigger"
 kafka-consumer = "eopf.triggering.event:EOEventTrigger"
+
+[project.entry-points."eopf.store.mapping_folder"]
+default = "eopf.product.store.mapping"
 
 [tool.isort]
 profile = "black"

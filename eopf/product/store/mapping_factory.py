@@ -3,6 +3,10 @@ import re
 from pathlib import Path
 from typing import Any
 
+import pkg_resources
+
+from eopf.conf import conf_loader
+
 
 class EOMappingFactory:
     FILENAME_RECO = "filename_pattern"
@@ -12,7 +16,17 @@ class EOMappingFactory:
     def __init__(self, default_mappings: bool = True) -> None:
         self.mapping_set: set[str] = set()
         if default_mappings:
-            path_directory = Path(__file__).parent / "mapping"
+            self.load_default_mapping()
+
+    def load_default_mapping(self):
+        conf = conf_loader()
+        path_directory = Path(conf.mapping)
+        for mapping_path in path_directory.glob("*.json"):
+            self.register_mapping(str(mapping_path))
+
+        for resource in pkg_resources.iter_entry_points("eopf.store.mapping_folder"):
+            module, _, folder = resource.module_name.rpartition(".")
+            path_directory = Path(pkg_resources.resource_filename(module, folder))
             for mapping_path in path_directory.glob("*.json"):
                 self.register_mapping(str(mapping_path))
 

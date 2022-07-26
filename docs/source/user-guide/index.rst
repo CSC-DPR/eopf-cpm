@@ -16,3 +16,4 @@ examples that describe many common tasks that you can accomplish with the eopf c
    How to use Store and Accessors <stores>
    What is triggering and how to use it <triggering>
    Tutorial <tutorial>
+   How to configure <configuration>
