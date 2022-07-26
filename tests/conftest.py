@@ -109,6 +109,12 @@ def S2_MSIL1C_MAPPING(MAPPING_FOLDER: str):
 
 
 @pytest.fixture
+def S2_MSIL2A_MAPPING(MAPPING_FOLDER: str):
+    """Path to a S2 MSIL1C mapping"""
+    return os.path.join(MAPPING_FOLDER, "S2_MSIL2A_mapping.json")
+
+
+@pytest.fixture
 def S3_OL_1_EFR_MAPPING(MAPPING_FOLDER: str):
     """Path to a S3 OL LEVEL 1 mapping"""
     return os.path.join(MAPPING_FOLDER, "S3_OL_1_EFR_mapping.json")
@@ -208,6 +214,18 @@ def S2_MSIL1C(request):
 @glob_fixture("S2*_MSIL1C*[!.zarr][!.SAFE].zip", protocols=["zip"])
 def S2_MSIL1C_ZIP(request):
     """Path to a S2 MSIL1C LEVEL 1 product in zip format"""
+    return request.param
+
+
+@glob_fixture("S2*_MSIL2A*.SAFE")
+def S2_MSIL2A(request):
+    """Path to a S2 MSIL2A LEVEL 2 product"""
+    return request.param
+
+
+@glob_fixture("S2*_MSIL2A*[!.zarr][!.SAFE].zip", protocols=["zip"])
+def S2_MSIL2A_ZIP(request):
+    """Path to a S2 MSIL2A LEVEL 2 product in zip format"""
     return request.param
 
 
