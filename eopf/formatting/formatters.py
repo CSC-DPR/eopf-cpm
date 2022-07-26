@@ -400,4 +400,4 @@ class ToMean(EOAbstractFormatter):
     name = "to_mean"
 
     def format(self, xpath_input: List[lxml.etree._Element]) -> Any:
-        return [float(element.text) for element in xpath_input]
+        return numpy.mean([float(element.text) for element in xpath_input])
