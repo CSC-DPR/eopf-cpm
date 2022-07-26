@@ -1967,6 +1967,7 @@
       "target_path": "measurements/waveforms/wf_sample_ind",
       "source_path": "enhanced_measurement.nc:wf_sample_ind",
       "item_format": "netcdf",
+      "is_optional": true,
       "attributes": {
         "long_name": "number of samples in I2+Q2 waveforms",
         "units": "count",
