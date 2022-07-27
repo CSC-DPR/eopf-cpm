@@ -127,7 +127,7 @@ class EOPFConfiguration:
         self._load_dict(base_config_data)
 
     def setup(self) -> None:
-        """Generate all the hierarchy of folder for the configuration
+        """Generate all folder hierarchy's for each configuration
         per module
         """
         os.makedirs(self.configuration_folder)

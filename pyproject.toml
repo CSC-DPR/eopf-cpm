@@ -103,6 +103,24 @@ trigger = "eopf.triggering.cli:EOCLITrigger"
 web-server = "eopf.triggering.web:EOWebTrigger"
 kafka-consumer = "eopf.triggering.event:EOEventTrigger"
 
+[project.entry-points."eopf.accessors"]
+default = "eopf.product.store.zarr:EOZarrStore"
+zarr = "eopf.product.store.zarr:EOZarrStore"
+safe = "eopf.product.store.safe:EOSafeStore"
+cogs = "eopf.product.store.cog:EOCogStore"
+netcdf = "eopf.product.store.netcdf:EONetCDFStore"
+netcdf-netCDF4py = "eopf.product.store.netcdf:EONetCDFStoreNCpy"
+xmlmetadata = "eopf.product.store.xml_accessors:XMLManifestAccessor"
+xmlangles = "eopf.product.store.xml_accessors:XMLAnglesAccessor"
+xmltp = "eopf.product.store.xml_accessors:XMLTPAccessor"
+grib = "eopf.product.store.grib:EOGribAccessor"
+jp2 = "eopf.product.store.rasterio:EORasterIOAccessor"
+attribute_element_to_float_variable = "eopf.product.store.wrappers:FromAttributesToVariableAccessor"
+attribute_element_to_flag_variable = "eopf.product.store.wrappers:FromAttributesToFlagValueAccessor"
+L0packetlist = "eopf.product.store.memmap_accessors:MemMapAccessor"
+L0annotationlist = "eopf.product.store.memmap_accessors:FixedMemMapAccessor"
+filename_to_subswath = "eopf.product.store.filename_to_variable:FilenameToVariableAccessor"
+
 [project.entry-points."eopf.store.mapping_folder"]
 default = "eopf.product.store.mapping"
 
