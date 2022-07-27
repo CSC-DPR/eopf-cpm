@@ -112,7 +112,11 @@ class EOPFConfiguration:
 
     def _load_environ(self) -> None:
         self._load_dict(
-            dict((env_var[5:].lower(), value) for env_var, value in os.environ.items() if env_var.startswith("EOPF_")),
+            dict(
+                (env_var[5:].lower().replace("_", "-"), value)
+                for env_var, value in os.environ.items()
+                if env_var.startswith("EOPF_")
+            ),
         )
 
     def _load_ini(self, filename: str) -> None:
