@@ -47,7 +47,7 @@ class EOQCConfig(MutableMapping[str, EOQC]):
             self.default = qc_config["default"]
             self.product_type = qc_config["product_type"]
             if qc_config.get("common_qc", False) is not False:
-                common_qc_paths = os.path.join(conf.qualitycontrol, "configs", "common_qc.json")
+                common_qc_paths = os.path.join(conf.qualitycontrol, "common_qc.json")
                 with open(common_qc_paths, "r") as w:
                     common_qc = json.load(w)
                     for qc_type in common_qc["quality_checks"]:
