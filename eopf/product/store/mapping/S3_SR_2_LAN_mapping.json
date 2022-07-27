@@ -1851,6 +1851,7 @@
       "target_path": "measurements/doppler/max_multi_stack_ind",
       "source_path": "enhanced_measurement.nc:max_multi_stack_ind",
       "item_format": "netcdf",
+      "is_optional": true,
       "attributes": {
         "long_name": "maximum number of multilook beams per stack",
         "units": "count",
@@ -1939,6 +1940,7 @@
       "target_path": "measurements/doppler/ku/skew_stack_20",
       "source_path": "enhanced_measurement.nc:skew_stack_20_ku",
       "item_format": "netcdf",
+      "is_optional": true,
       "attributes": {
         "_FillValue": 2147483647,
         "long_name": "skewness of stack : 20 Hz Ku band",

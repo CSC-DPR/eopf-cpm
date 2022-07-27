@@ -200,7 +200,7 @@
           "attr_name": "attr_name/polarisation"
         }
       },
-      
+
       {
         "short_name": "owi_auxiliary_wind_direction",
         "target_path": "/conditions/owi/auxiliary_wind_direction",

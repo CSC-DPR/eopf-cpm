@@ -190,8 +190,8 @@ def S1_SM_OCN(request):
 def S1_SM_OCN_ZIP(request):
     """Path to a S1 OCN LEVEL 1 product"""
     return request.param
-    
-    
+
+
 @glob_fixture("S1*_WV_OCN*[!.zarr]")
 def S1_WV_OCN(request):
     """Path to a S1 OCN LEVEL 1 product"""
@@ -202,8 +202,8 @@ def S1_WV_OCN(request):
 def S1_WV_OCN_ZIP(request):
     """Path to a S1 OCN LEVEL 1 product"""
     return request.param
-    
-    
+
+
 # ############# S2 ##############
 @glob_fixture("S2*_MSIL1C*.SAFE")
 def S2_MSIL1C(request):

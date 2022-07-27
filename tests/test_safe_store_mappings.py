@@ -9,11 +9,7 @@ from pytest_lazyfixture import lazy_fixture
 from eopf.product.conveniences import open_store
 from eopf.product.core import EOProduct, EOVariable
 from eopf.product.core.eo_object import EOObject
-from eopf.product.store import (  EOCogStore,
-    EONetCDFStore,
-    EOProductStore,
-    EOZarrStore,
-)
+from eopf.product.store import EOCogStore, EONetCDFStore, EOProductStore, EOZarrStore
 from eopf.product.store.conveniences import convert
 from eopf.product.store.mapping_factory import EOMappingFactory
 from eopf.product.store.safe import EOSafeStore
@@ -83,7 +79,6 @@ from tests.utils import assert_eovariable_equal
         (lazy_fixture("S3_SL_2_LST_ZIP"), "/coordinates/in/latitude_in"),
         (lazy_fixture("S3_SL_2_LST_ZIP"), "/conditions/orphan/elevation_orphan_in"),
         (lazy_fixture("S3_SL_2_LST_ZIP"), "/measurements/in/LST"),
-
         # see issues #84, #85
         # "item_format": "netcdf"
         # (lazy_fixture("S3_SR_2_LAN_ZIP"), "/coordinates/attitude/c/alt_20"),
@@ -184,10 +179,10 @@ def test_convert_test_mapping(
         # (lazy_fixture("S1_IW_RAW_ZIP"), lazy_fixture("S1_IW_RAW_MAPPING"), ".zarr", EOZarrStore, 0,),
 
         # ---> S1/Level 1 - tests -> MAPPING not available
-        #(lazy_fixture("S1_IW_SLC_ZIP"), lazy_fixture("S1_IW_SLC_MAPPING"), ".SAFE", EOSafeStore, 0,),
-        #(lazy_fixture("S1_IW_SLC_ZIP"), lazy_fixture("S1_IW_SLC_MAPPING"), ".zarr", EOZarrStore, 0,),
-        #(lazy_fixture("S1_IW_SLC_ZIP"), lazy_fixture("S1_IW_SLC_MAPPING"), ".cog", EOCogStore, 0,),
-        #(lazy_fixture("S1_IW_SLC_ZIP"), lazy_fixture("S1_IW_SLC_MAPPING"), ".nc", EONetCDFStore, 0,),
+        # (lazy_fixture("S1_IW_SLC_ZIP"), lazy_fixture("S1_IW_SLC_MAPPING"), ".SAFE", EOSafeStore, 0,),
+        # (lazy_fixture("S1_IW_SLC_ZIP"), lazy_fixture("S1_IW_SLC_MAPPING"), ".zarr", EOZarrStore, 0,),
+        # (lazy_fixture("S1_IW_SLC_ZIP"), lazy_fixture("S1_IW_SLC_MAPPING"), ".cog", EOCogStore, 0,),
+        # (lazy_fixture("S1_IW_SLC_ZIP"), lazy_fixture("S1_IW_SLC_MAPPING"), ".nc", EONetCDFStore, 0,),
         # (lazy_fixture("S1_IW_GRD_ZIP"), lazy_fixture("S1_IW_GRD_MAPPING"), ".SAFE", EOSafeStore, 0,),
         # (lazy_fixture("S1_IW_GRD_ZIP"), lazy_fixture("S1_IW_GRD_MAPPING"), ".zarr", EOZarrStore, 0,),
         # (lazy_fixture("S1_IW_GRD_ZIP"), lazy_fixture("S1_IW_GRD_MAPPING"), ".cog", EOCogStore, 0,),
@@ -200,16 +195,16 @@ def test_convert_test_mapping(
         (lazy_fixture("S1_IW_OCN_ZIP"), lazy_fixture("S1_IW_OCN_MAPPING"), ".cog", EOCogStore, 0),
         (lazy_fixture("S1_IW_OCN_ZIP"), lazy_fixture("S1_IW_OCN_MAPPING"), ".nc", EONetCDFStore, 0),
 
-        #(lazy_fixture("S1_SM_OCN_ZIP"), lazy_fixture("S1_SM_OCN_MAPPING"), ".SAFE", EOSafeStore, 0),
+        # (lazy_fixture("S1_SM_OCN_ZIP"), lazy_fixture("S1_SM_OCN_MAPPING"), ".SAFE", EOSafeStore, 0),
         (lazy_fixture("S1_SM_OCN_ZIP"), lazy_fixture("S1_SM_OCN_MAPPING"), ".zarr", EOZarrStore, 0),
         (lazy_fixture("S1_SM_OCN_ZIP"), lazy_fixture("S1_SM_OCN_MAPPING"), ".cog", EOCogStore, 0),
         (lazy_fixture("S1_SM_OCN_ZIP"), lazy_fixture("S1_SM_OCN_MAPPING"), ".nc", EONetCDFStore, 0),
 
-        #(lazy_fixture("S1_WV_OCN_ZIP"), lazy_fixture("S1_WV_OCN_MAPPING"), ".SAFE", EOSafeStore, 0),
+        # (lazy_fixture("S1_WV_OCN_ZIP"), lazy_fixture("S1_WV_OCN_MAPPING"), ".SAFE", EOSafeStore, 0),
         (lazy_fixture("S1_WV_OCN_ZIP"), lazy_fixture("S1_WV_OCN_MAPPING"), ".zarr", EOZarrStore, 0),
         (lazy_fixture("S1_WV_OCN_ZIP"), lazy_fixture("S1_WV_OCN_MAPPING"), ".cog", EOCogStore, 0),
         (lazy_fixture("S1_WV_OCN_ZIP"), lazy_fixture("S1_WV_OCN_MAPPING"), ".nc", EONetCDFStore, 0),
-                
+
         # ####################### S2 product type conversions ########################
         # ---> S2/Level 0 - tests -> NO PRODUCTS AVAILABLE
         # ---> S2/Level 1 - tests
@@ -221,10 +216,10 @@ def test_convert_test_mapping(
         # (lazy_fixture("S2_MSIL1C"), lazy_fixture("S2_MSIL1C_MAPPING"), ".nc", EONetCDFStore, 156),
         # # S2_MSIL1C - ZIP Format - product type conversions
         # Not working -> see issue #76
-        #(lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".SAFE", EOSafeStore, 156),
+        # (lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".SAFE", EOSafeStore, 156),
         (lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".zarr", EOZarrStore, 156),
         (lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".cog", EOCogStore, 156),
-        #(lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".nc", EONetCDFStore, 156),
+        # (lazy_fixture("S2_MSIL1C_ZIP"), lazy_fixture("S2_MSIL1C_MAPPING"), ".nc", EONetCDFStore, 156),
         # ---> S2/Level 2 - tests -> MAPPING not available
         # S2_MSIL2A - ZIP Format - product type conversions
         # Not working -> see issue #82
@@ -273,7 +268,7 @@ def test_convert_test_mapping(
         # (lazy_fixture("S3_SR_2_LAN_ZIP"), lazy_fixture("S3_SR_2_LAN_MAPPING"), ".zarr", EOZarrStore, 1,),
         # (lazy_fixture("S3_SR_2_LAN_ZIP"), lazy_fixture("S3_SR_2_LAN_MAPPING"), ".cog", EOCogStore, 1,),
         # (lazy_fixture("S3_SR_2_LAN_ZIP"), lazy_fixture("S3_SR_2_LAN_MAPPING"), ".nc", EONetCDFStore, 1,),
-        # TODO: ?? OL_1_ERR, OL_2_LRR, 
+        # TODO: ?? OL_1_ERR, OL_2_LRR,
         # not neccesary for project : S3_SY_2_V10, S3_SY_2_VGP, S3_SY_2_VG1, S3_SY_2_AOD
         # fmt: on
     ],
@@ -344,9 +339,9 @@ def impl_test_convert_safe_mapping(
             assert type(source_object) == type(target_object)
 
             if output_store != EOSafeStore or item["item_format"] not in read_only_format:
-                # 1.Not testing top level attributes 
+                # 1.Not testing top level attributes
                 # 2.See Cog store issue #69 blocked by issue #29
-                if item["item_format"] != "xmlmetadata" and output_store != EOCogStore :
+                if item["item_format"] != "xmlmetadata" and output_store != EOCogStore:
                     np.testing.assert_equal(conv(source_object.attrs), conv(target_object.attrs))
             if isinstance(source_object, EOVariable):
                 # TODO: we replaced netcdf_string_to_time
