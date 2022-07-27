@@ -2,7 +2,7 @@ import configparser
 import enum
 import os
 from functools import cache
-from typing import Any
+from typing import Any, Mapping
 
 import toml
 
@@ -105,7 +105,7 @@ class EOPFConfiguration:
         else:
             self._load_ini(config_file)
 
-    def _load_dict(self, entry_dict: dict[str, Any]) -> None:
+    def _load_dict(self, entry_dict: Mapping[str, Any]) -> None:
         for config_value in self.configurable_values:
             if config_value in entry_dict:
                 setattr(self, config_value.replace("-", "_"), entry_dict[config_value])

@@ -18,7 +18,7 @@ class EOMappingFactory:
         if default_mappings:
             self.load_default_mapping()
 
-    def load_default_mapping(self):
+    def load_default_mapping(self) -> None:
         conf = conf_loader()
         path_directory = Path(conf.mapping)
         for mapping_path in path_directory.glob("*.json"):

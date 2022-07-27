@@ -127,9 +127,10 @@ class EOPFCLI(click.MultiCommand):
         return sorted(entry.name for entry in pkg_resources.iter_entry_points("eopf.cli"))
 
     def get_command(self, ctx: click.Context, cmd_name: str) -> Optional[click.Command]:
+        cmd = None
         for entry in pkg_resources.iter_entry_points("eopf.cli", cmd_name):
-            cmd = entry.load()
-            return cmd()
+            cmd = entry.load()()
+        return cmd
 
 
 @click.command(name="eopf", cls=EOPFCLI, add_help_option=True)

@@ -39,7 +39,7 @@ class EOLogFactory(object):
         if self.cfg_dir is None:
             self.set_default_cfg_dir()
 
-        if not self.cfg_dir.is_dir():
+        if not (self.cfg_dir and self.cfg_dir.is_dir()):
             raise LoggingConfigurationDirDoesNotExist("The logging configuration directory must exist")
 
         self.register_cfg_dir()
@@ -194,9 +194,10 @@ class EOLogFactory(object):
 
         # register the configurations in the cfg_dir
         no_configuration_present = True
-        for cfg_path in self.cfg_dir.glob("*.json"):
-            no_configuration_present = False
-            self.register_cfg(cfg_path.stem, cfg_path)
+        if self.cfg_dir is not None:
+            for cfg_path in self.cfg_dir.glob("*.json"):
+                no_configuration_present = False
+                self.register_cfg(cfg_path.stem, cfg_path)
 
         if no_configuration_present:
             raise NoLoggingConfigurationFile(f"No logging configuration file .json is present in {self.cfg_dir}")
