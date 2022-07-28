@@ -139,8 +139,8 @@ in my **setup.cfg** or **pyproject.toml**,
 or if you use it as a standalone you can create and add your own mapping in your configuration folder
 (see :ref:`configuration`)
 
-Use your store (without modifying the eopf sources)
----------------------------------------------------
+Use your own EOSafeStore
+------------------------
 Create a EOMappingFactory, register your mapping to it and initialise your SafeStore with it as *mapping_factory*.
 
 .. note:: You can also provide custom accessors or parameter transformations to the SAFE Store with *store_factory* and *parameters_transformations*
