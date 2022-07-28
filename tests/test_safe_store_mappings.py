@@ -266,7 +266,7 @@ def test_convert_test_mapping(
         # S3_SR_2_LAN product type conversions
         # Not working -> #84, #85
         # (lazy_fixture("S3_SR_2_LAN_ZIP"), lazy_fixture("S3_SR_2_LAN_MAPPING"), ".SEN3", EOSafeStore, 1,),
-        (lazy_fixture("S3_SR_2_LAN_ZIP"), lazy_fixture("S3_SR_2_LAN_MAPPING"), ".zarr", EOZarrStore, 1),
+        # (lazy_fixture("S3_SR_2_LAN_ZIP"), lazy_fixture("S3_SR_2_LAN_MAPPING"), ".zarr", EOZarrStore, 1),
         # (lazy_fixture("S3_SR_2_LAN_ZIP"), lazy_fixture("S3_SR_2_LAN_MAPPING"), ".cog", EOCogStore, 1,),
         # (lazy_fixture("S3_SR_2_LAN_ZIP"), lazy_fixture("S3_SR_2_LAN_MAPPING"), ".nc", EONetCDFStore, 1,),
         # TODO: ?? OL_1_ERR, OL_2_LRR,
