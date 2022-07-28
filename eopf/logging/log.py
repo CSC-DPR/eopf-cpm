@@ -193,11 +193,11 @@ class EOLogFactory(object):
         self._cfgs = {}
 
         # register the configurations in the cfg_dir
-        no_configuration_present = True
+        configuration_present = False
         if self.cfg_dir is not None:
             for cfg_path in self.cfg_dir.glob("*.json"):
-                no_configuration_present = False
+                configuration_present = True
                 self.register_cfg(cfg_path.stem, cfg_path)
 
-        if no_configuration_present:
+        if not configuration_present:
             raise NoLoggingConfigurationFile(f"No logging configuration file .json is present in {self.cfg_dir}")
