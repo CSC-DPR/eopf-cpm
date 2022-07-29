@@ -1,0 +1,4127 @@
+{
+  "recognition": {
+    "filename_pattern": "S3._SR_2_LAN.*SEN3",
+    "product_type": "S3_SR_2_LAN___",
+    "product_type_pattern": "SR_2_LAN___"
+  },
+  "data_mapping": [
+    {
+      "short_name": "num_20hz_meas_01_c",
+      "target_path": "coordinates/num_20hz_meas_01",
+      "source_path": "enhanced_measurement.nc:num_20hz_meas_01_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Number of 20Hz measurements : 01 Hz C band",
+        "units": "count",
+        "comment": "Number of 20-Hz measurements associated to the 1-Hz measurement."
+      }
+    },
+
+    {
+      "short_name": "alt_20_c",
+      "target_path": "coordinates/attitude/c/alt_20",
+      "source_path": "enhanced_measurement.nc:alt_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "altitude of the satellite : 20 Hz C band",
+        "units": "m",
+        "standard_name": "height_above_reference_ellipsoid",
+        "add_offset": 700000.0,
+        "scale_factor": 0.0001,
+        "comment": "Altitude of satellite above the reference ellipsoid"
+      }
+    },
+    {
+      "short_name": "orb_alt_rate_20_c",
+      "target_path": "coordinates/attitude/c/orb_alt_rate_20",
+      "source_path": "enhanced_measurement.nc:orb_alt_rate_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "orbital altitude rate : 20 Hz C band",
+        "units": "m/s",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "The reference surface for the orbital altitude rate is the combined mean_sea_surface/geoid surface. It is used to compute the Doppler correction on the altimeter range"
+      }
+    },
+    {
+      "short_name": "alt_20_ku",
+      "target_path": "coordinates/attitude/ku/alt_20",
+      "source_path": "enhanced_measurement.nc:alt_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "altitude of the satellite : 20 Hz Ku band",
+        "units": "m",
+        "standard_name": "height_above_reference_ellipsoid",
+        "add_offset": 700000.0,
+        "scale_factor": 0.0001,
+        "comment": "Altitude of satellite above the reference ellipsoid"
+      }
+    },
+    {
+      "short_name": "orb_alt_rate_20_ku",
+      "target_path": "coordinates/attitude/ku/orb_alt_rate_20",
+      "source_path": "enhanced_measurement.nc:orb_alt_rate_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "orbital altitude rate : 20 Hz Ku band",
+        "units": "m/s",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "The reference surface for the orbital altitude rate is the combined mean_sea_surface/geoid surface. It is used to compute the Doppler correction on the altimeter range"
+      }
+    },
+    {
+      "short_name": "time_01",
+      "target_path": "coordinates/time/time_01",
+      "source_path": "enhanced_measurement.nc:time_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "UTC: 1 Hz",
+        "units": "seconds since 2000-01-01 00:00:00.0",
+        "standard_name": "time",
+        "calendar": "gregorian"
+      }
+    },
+    {
+      "short_name": "utc_day_01",
+      "target_path": "coordinates/time/UTC_day_01",
+      "source_path": "enhanced_measurement.nc:UTC_day_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "day UTC : 1 Hz",
+        "units": "days since 2000-01-01 00:00:00.0"
+      }
+    },
+    {
+      "short_name": "utc_sec_01",
+      "target_path": "coordinates/time/UTC_sec_01",
+      "source_path": "enhanced_measurement.nc:UTC_sec_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "Second in the day UTC : 1 Hz",
+        "units": "s"
+      }
+    },
+    {
+      "short_name": "index_1hz_meas_20_c",
+      "target_path": "coordinates/time/c/index_1hz_meas_20",
+      "source_path": "enhanced_measurement.nc:index_1hz_meas_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Index of the 1Hz measurement : 20 Hz C band",
+        "units": "count",
+        "comment": "Index of the 1-Hz measurement associated to the 20-Hz measurement, zero index corresponding to the first 1-Hz measurement of the dataset."
+      }
+    },
+    {
+      "short_name": "index_first_20hz_meas_01_c",
+      "target_path": "coordinates/time/c/index_first_20hz_meas_01",
+      "source_path": "enhanced_measurement.nc:index_first_20hz_meas_01_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Index of the first 20Hz measurement : 01 Hz C band",
+        "units": "count",
+        "comment": "Index of the first 20-Hz measurement associated to the 1-Hz measurement, zero index corresponding to the first 20-Hz measurement of the dataset."
+      }
+    },
+    {
+      "short_name": "time_20_c",
+      "target_path": "coordinates/time/c/time_20",
+      "source_path": "enhanced_measurement.nc:time_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "UTC: 20 Hz C band",
+        "units": "seconds since 2000-01-01 00:00:00.0",
+        "standard_name": "time",
+        "calendar": "gregorian"
+      }
+    },
+    {
+      "short_name": "utc_day_20_c",
+      "target_path": "coordinates/time/c/UTC_day_20",
+      "source_path": "enhanced_measurement.nc:UTC_day_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "day UTC : 20 Hz C band",
+        "units": "days since 2000-01-01 00:00:00.0"
+      }
+    },
+    {
+      "short_name": "utc_time_1hz_20_c",
+      "target_path": "coordinates/time/c/UTC_time_1hz_20",
+      "source_path": "enhanced_measurement.nc:UTC_time_1hz_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "UTC of the 1 Hz measurement",
+        "units": "seconds since 2000-01-01 00:00:00.0",
+        "calendar": "gregorian"
+      }
+    },
+    {
+      "short_name": "index_1hz_meas_20_ku",
+      "target_path": "coordinates/time/ku/index_1hz_meas_20",
+      "source_path": "enhanced_measurement.nc:index_1hz_meas_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Index of the 1Hz measurement : 20 Hz ku band",
+        "units": "count",
+        "comment": "Index of the 1-Hz measurement associated to the 20-Hz measurement, zero index corresponding to the first 1-Hz measurement of the dataset."
+      }
+    },
+    {
+      "short_name": "index_first_20hz_meas_01_ku",
+      "target_path": "coordinates/time/ku/index_first_20hz_meas_01",
+      "source_path": "enhanced_measurement.nc:index_first_20hz_meas_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Index of the first 20Hz measurement : 01 Hz ku band",
+        "units": "count",
+        "comment": "Index of the first 20-Hz measurement associated to the 1-Hz measurement, zero index corresponding to the first 20-Hz measurement of the dataset."
+      }
+    },
+    {
+      "short_name": "time_20_ku",
+      "target_path": "coordinates/time/ku/time_20",
+      "source_path": "enhanced_measurement.nc:time_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "UTC: 20 Hz Ku band",
+        "units": "seconds since 2000-01-01 00:00:00.0",
+        "standard_name": "time",
+        "calendar": "gregorian"
+      }
+    },
+    {
+      "short_name": "utc_day_20_ku",
+      "target_path": "coordinates/time/ku/UTC_day_20",
+      "source_path": "enhanced_measurement.nc:UTC_day_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "day UTC : 20 Hz Ku band",
+        "units": "days since 2000-01-01 00:00:00.0"
+      }
+    },
+    {
+      "short_name": "utc_time_1hz_20_ku",
+      "target_path": "coordinates/time/ku/UTC_time_1hz_20",
+      "source_path": "enhanced_measurement.nc:UTC_time_1hz_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "UTC of the 1 Hz measurement",
+        "units": "seconds since 2000-01-01 00:00:00.0",
+        "calendar": "gregorian"
+      }
+    },
+    {
+      "short_name": "lat_01",
+      "target_path": "coordinates/location/lat_01",
+      "source_path": "enhanced_measurement.nc:lat_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "latitude : 1 Hz",
+        "units": "degrees_north",
+        "standard_name": "latitude",
+        "add_offset": 0.0,
+        "scale_factor": 1e-06,
+        "comment": "Positive latitude is North latitude, negative latitude is South latitude"
+      }
+    },
+    {
+      "short_name": "lon_01",
+      "target_path": "coordinates/location/lon_01",
+      "source_path": "enhanced_measurement.nc:lon_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "longitude : 1 Hz",
+        "units": "degrees_east",
+        "standard_name": "longitude",
+        "add_offset": 0.0,
+        "scale_factor": 1e-06,
+        "comment": "East longitude relative to Greenwich meridian"
+      }
+    },
+    {
+      "short_name": "lat_20_c",
+      "target_path": "coordinates/location/c/lat_20",
+      "source_path": "enhanced_measurement.nc:lat_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "latitude : 20 Hz C band",
+        "units": "degrees_north",
+        "standard_name": "latitude",
+        "add_offset": 0.0,
+        "scale_factor": 1e-06,
+        "comment": "Positive latitude is North latitude, negative latitude is South latitude"
+      }
+    },
+    {
+      "short_name": "lon_20_c",
+      "target_path": "coordinates/location/c/lon_20",
+      "source_path": "enhanced_measurement.nc:lon_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "longitude : 20 Hz C band",
+        "units": "degrees_east",
+        "standard_name": "longitude",
+        "add_offset": 0.0,
+        "scale_factor": 1e-06,
+        "comment": "East longitude relative to Greenwich meridian"
+      }
+    },
+    {
+      "short_name": "lat_20_ku",
+      "target_path": "coordinates/location/ku/lat_20",
+      "source_path": "enhanced_measurement.nc:lat_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "latitude : 20 Hz Ku band",
+        "units": "degrees_north",
+        "standard_name": "latitude",
+        "add_offset": 0.0,
+        "scale_factor": 1e-06,
+        "comment": "Positive latitude is North latitude, negative latitude is South latitude"
+      }
+    },
+    {
+      "short_name": "lon_20_ku",
+      "target_path": "coordinates/location/ku/lon_20",
+      "source_path": "enhanced_measurement.nc:lon_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "longitude : 20 Hz Ku band",
+        "units": "degrees_east",
+        "standard_name": "longitude",
+        "add_offset": 0.0,
+        "scale_factor": 1e-06,
+        "comment": "East longitude relative to Greenwich meridian"
+      }
+    },
+    {
+      "short_name": "agc_20_c",
+      "target_path": "measurements/tracker/c/agc_20",
+      "source_path": "enhanced_measurement.nc:agc_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "corrected AGC : 20 Hz C band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "AGC corrected for instrumental errors (agc_cor_20_C). For SAR mode, value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "agc_qual_20_c",
+      "target_path": "measurements/tracker/c/agc_qual_20",
+      "source_path": "enhanced_measurement.nc:agc_qual_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "quality flag for AGC : 20 Hz C band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "Yes No",
+        "comment": "Flag indicating the use or not of the 20-Hz estimate of AGC in the computation of 1Hz estimate"
+      }
+    },
+    {
+      "short_name": "scale_factor_20_c",
+      "target_path": "measurements/tracker/c/scale_factor_20",
+      "source_path": "enhanced_measurement.nc:scale_factor_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "scaling factor for backscatter coefficient evaluation : 20 Hz C band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "This scaling factor represents the backscatter coefficient for a waveform amplitude equal to 1. It is corrected for AGC instrumental errors (agc_cor_20_c) and internal calibration (sig0_cal_20_c)"
+      }
+    },
+    {
+      "short_name": "tracker_range_20_c",
+      "target_path": "measurements/tracker/c/tracker_range_20",
+      "source_path": "enhanced_measurement.nc:tracker_range_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "corrected tracker range for : 20 Hz C band",
+        "units": "m",
+        "add_offset": 700000.0,
+        "scale_factor": 0.0001,
+        "comment": "LRM mode : tracker range corrected for USO frequency drift (uso_cor_20_c), internal path and Doppler corrections (int_path_cor_20_c) and Doppler correction (dop_cor_l1b_20_c) SAR mode : reference range corrected for USO frequency drift (uso_cor_20_c) and internal path corrections (int_path_cor_20_c)"
+      }
+    },
+    {
+      "short_name": "agc_20_ku",
+      "target_path": "measurements/tracker/ku/agc_20",
+      "source_path": "enhanced_measurement.nc:agc_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "corrected AGC : 20 Hz Ku band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "AGC corrected for instrumental errors (agc_cor_20_ku). For SAR mode, value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "agc_qual_20_ku",
+      "target_path": "measurements/tracker/ku/agc_qual_20",
+      "source_path": "enhanced_measurement.nc:agc_qual_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "quality flag for AGC : 20 Hz Ku band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "Yes No",
+        "comment": "Flag indicating the use or not of the 20-Hz estimate of AGC in the computation of 1Hz estimate"
+      }
+    },
+    {
+      "short_name": "h0_nav_dem_20_ku",
+      "target_path": "measurements/tracker/ku/h0_nav_dem_20",
+      "source_path": "enhanced_measurement.nc:h0_nav_dem_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 4294967295,
+        "long_name": "altitude command H0 computed with nav / DEM : 20 Hz Ku band",
+        "units": "3.125/64*10^-9s",
+        "comment": "SAR mode : value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "scale_factor_20_ku",
+      "target_path": "measurements/tracker/ku/scale_factor_20",
+      "source_path": "enhanced_measurement.nc:scale_factor_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "scaling factor for backscatter coefficient evaluation : 20 Hz Ku band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "This scaling factor represents the backscatter coefficient for a waveform amplitude equal to 1. It is corrected for AGC instrumental errors (agc_cor_20_ku) and internal calibration (sig0_cal_20_ku)"
+      }
+    },
+    {
+      "short_name": "tracker_range_20_ku",
+      "target_path": "measurements/tracker/ku/tracker_range_20",
+      "source_path": "enhanced_measurement.nc:tracker_range_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "corrected tracker range for : 20 Hz Ku band",
+        "units": "m",
+        "add_offset": 700000.0,
+        "scale_factor": 0.0001,
+        "comment": "LRM mode : tracker range corrected for USO frequency drift (uso_cor_20_ku), internal path and Doppler corrections (int_path_cor_20_ku) and Doppler correction (dop_cor_l1b_20_ku) SAR mode : reference range corrected for USO frequency drift (uso_cor_20_ku) and internal path corrections (int_path_cor_20_ku)"
+      }
+    },
+    {
+      "short_name": "agc_20_plrm_ku",
+      "target_path": "measurements/tracker/plrm_ku/agc_20",
+      "source_path": "enhanced_measurement.nc:agc_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "corrected AGC : 20 Hz Plrm Ku band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "AGC corrected for instrumental errors (agc_cor_20_plrm_ku). For SAR mode, value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "agc_qual_20_plrm_ku",
+      "target_path": "measurements/tracker/plrm_ku/agc_qual_20",
+      "source_path": "enhanced_measurement.nc:agc_qual_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "quality flag for AGC : 20 Hz Plrm Ku band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "Yes No",
+        "comment": "Flag indicating the use or not of the 20-Hz estimate of AGC in the computation of 1Hz estimate"
+      }
+    },
+    {
+      "short_name": "scale_factor_20_plrm_ku",
+      "target_path": "measurements/tracker/plrm_ku/scale_factor_20",
+      "source_path": "enhanced_measurement.nc:scale_factor_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "scaling factor for backscatter coefficient evaluation : 20 Hz Plrm Ku band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "This scaling factor represents the backscatter coefficient for a waveform amplitude equal to 1. It is corrected for AGC instrumental errors (agc_cor_20_plrm_ku) and internal calibration (sig0_cal_20_plrm_ku)"
+      }
+    },
+    {
+      "short_name": "tracker_range_20_plrm_ku",
+      "target_path": "measurements/tracker/plrm_ku/tracker_range_20",
+      "source_path": "enhanced_measurement.nc:tracker_range_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "corrected tracker range for : 20 Hz PLRM Ku band",
+        "units": "m",
+        "add_offset": 700000.0,
+        "scale_factor": 0.0001,
+        "comment": "LRM/PLRM mode : tracker range corrected for USO frequency drift (uso_cor_20_c), internal path and Doppler corrections (int_path_cor_20_plrm_ku) and Doppler correction (dop_cor_l1b_20_plrm_ku) SAR mode : reference range corrected for USO frequency drift (uso_cor_20_c) and internal path corrections (int_path_cor_20_plrm_ku)"
+      }
+    },
+    {
+      "short_name": "amplitude_ocean_20_c",
+      "target_path": "measurements/retracking/water/c/amplitude_ocean_20",
+      "source_path": "enhanced_measurement.nc:amplitude_ocean_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Amplitude / ocean retracking (FFT power unit): 20 Hz C band",
+        "units": "count",
+        "add_offset": 0.0,
+        "scale_factor": 1e-06,
+        "comment": "LRM mode : ocean retracking, SAR mode : N.A."
+      }
+    },
+    {
+      "short_name": "epoch_ocean_20_c",
+      "target_path": "measurements/retracking/water/c/epoch_ocean_20",
+      "source_path": "enhanced_measurement.nc:epoch_ocean_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Epoch / ocean retracking : 20 Hz C band",
+        "units": "s",
+        "add_offset": 0.0,
+        "scale_factor": 1e-15,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking."
+      }
+    },
+    {
+      "short_name": "mqe_ocean_20_c",
+      "target_path": "measurements/retracking/water/c/mqe_ocean_20",
+      "source_path": "enhanced_measurement.nc:mqe_ocean_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Mean quadratic error between waveform and model / 'ocean' retracking : 20 Hz C band",
+        "units": "count",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking"
+      }
+    },
+    {
+      "short_name": "number_of_iterations_ocean_20_c",
+      "target_path": "measurements/retracking/water/c/number_of_iterations_ocean_20",
+      "source_path": "enhanced_measurement.nc:number_of_iterations_ocean_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Number of iterations / 'ocean' retracking : 20 Hz C band",
+        "units": "count",
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking"
+      }
+    },
+    {
+      "short_name": "range_ocean_20_c",
+      "target_path": "measurements/retracking/water/c/range_ocean_20",
+      "source_path": "enhanced_measurement.nc:range_ocean_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "corrected 'ocean' altimeter range : 20 Hz C band",
+        "units": "m",
+        "quality_flag": "range_ocean_qual_20",
+        "add_offset": 700000.0,
+        "scale_factor": 0.0001,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Instrumental corrections included : USO drift correction (uso_cor_20_c), internal path correction (int_path_cor_20_c), distance antenna-COG (cog_cor_01), Doppler correction (dop_cor_20_c), modeled instrumental errors correction (mod_instr_cor_range_01_c) and system bias"
+      }
+    },
+    {
+      "short_name": "range_ocean_numval_01_c",
+      "target_path": "measurements/retracking/water/c/range_ocean_numval_01",
+      "source_path": "enhanced_measurement.nc:range_ocean_numval_01_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "number of valid points used to compute the 'ocean' altimeter range : 1 Hz C band",
+        "units": "count",
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking"
+      }
+    },
+    {
+      "short_name": "range_ocean_qual_20_c",
+      "target_path": "measurements/retracking/water/c/range_ocean_qual_20",
+      "source_path": "enhanced_measurement.nc:range_ocean_qual_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "quality flag for the 'ocean' altimeter range : 20 Hz C band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "Yes No",
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Flag indicating the use or not of the 20-Hz estimate of the ocean altimeter range in the computation of 1Hz estimate"
+      }
+    },
+    {
+      "short_name": "range_ocean_rms_01_c",
+      "target_path": "measurements/retracking/water/c/range_ocean_rms_01",
+      "source_path": "enhanced_measurement.nc:range_ocean_rms_01_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "RMS of the 'ocean' altimeter range : 1 Hz C band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Compression of high rate elements is preceded by a detection of outliers. Only valid high-rate values are used to compute this element"
+      }
+    },
+    {
+      "short_name": "sig0_ocean_01_c",
+      "target_path": "measurements/retracking/water/c/sig0_ocean_01",
+      "source_path": "enhanced_measurement.nc:sig0_ocean_01_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "corrected 'ocean' backscatter coefficient : 1 Hz C band",
+        "units": "dB",
+        "standard_name": "surface_backwards_scattering_coefficient_of_radar_wave",
+        "quality_flag": "sig0_ocean_qual_01_c",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Instrumental corrections included : AGC instrumental errors correction, internal calibration correction, modeled instrumental errors correction, atmospheric attenuation correction and system bias."
+      }
+    },
+    {
+      "short_name": "sig0_ocean_20_c",
+      "target_path": "measurements/retracking/water/c/sig0_ocean_20",
+      "source_path": "enhanced_measurement.nc:sig0_ocean_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "corrected 'ocean' backscatter coefficient : 20 Hz C band",
+        "units": "dB",
+        "standard_name": "surface_backwards_scattering_coefficient_of_radar_wave",
+        "quality_flag": "sig0_ocean_qual_20_c",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Instrumental corrections included : AGC instrumental errors correction (agc_cor_20_c), internal calibration correction (sig0_cal_20_c), modeled instrumental errors correction (mod_instr_cor_sig0_01_c), atmospheric attenuation correction (atm_cor_sig0_01_c) and system bias."
+      }
+    },
+    {
+      "short_name": "sig0_ocean_numval_01_c",
+      "target_path": "measurements/retracking/water/c/sig0_ocean_numval_01",
+      "source_path": "enhanced_measurement.nc:sig0_ocean_numval_01_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "number of valid points used to compute the 'ocean' backscatter coefficient: 1 Hz C band",
+        "units": "count",
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking."
+      }
+    },
+    {
+      "short_name": "sig0_ocean_qual_01_c",
+      "target_path": "measurements/retracking/water/c/sig0_ocean_qual_01",
+      "source_path": "enhanced_measurement.nc:sig0_ocean_qual_01_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "quality flag for the 'ocean' backscatter coefficient: 1 Hz C band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "Good Bad"
+      }
+    },
+    {
+      "short_name": "sig0_ocean_qual_20_c",
+      "target_path": "measurements/retracking/water/c/sig0_ocean_qual_20",
+      "source_path": "enhanced_measurement.nc:sig0_ocean_qual_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "quality flag for the 'ocean' backscatter coefficient: 20 Hz C band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "Yes No",
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Flag indicating the use or not of the 20-Hz estimate of the 'ocean' backscatter coefficient in the computation of 1Hz estimate"
+      }
+    },
+    {
+      "short_name": "sig0_ocean_rms_01_c",
+      "target_path": "measurements/retracking/water/c/sig0_ocean_rms_01",
+      "source_path": "enhanced_measurement.nc:sig0_ocean_rms_01_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "RMS of the 'ocean' backscatter coefficient: 1 Hz C band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Compression of high rate elements is preceded by a detection of outliers. Only valid high-rate values are used to compute this element"
+      }
+    },
+    {
+      "short_name": "sigmac_ocean_20_c",
+      "target_path": "measurements/retracking/water/c/sigmac_ocean_20",
+      "source_path": "enhanced_measurement.nc:sigmac_ocean_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Composite Sigma / 'ocean' retracking : 20 Hz C band",
+        "units": "s",
+        "add_offset": 0.0,
+        "scale_factor": 1e-15,
+        "comment": "LRM mode : ocean retracking, SAR mode : N.A."
+      }
+    },
+    {
+      "short_name": "swh_ocean_20_c",
+      "target_path": "measurements/retracking/water/c/swh_ocean_20",
+      "source_path": "enhanced_measurement.nc:swh_ocean_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "corrected 'ocean' significant waveheight : 20 Hz C band",
+        "units": "m",
+        "standard_name": "sea_surface_wave_significant_height",
+        "quality_flag": "swh_ocean_qual_20_c",
+        "add_offset": 0.0,
+        "scale_factor": 0.001,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Instrumental corrections included : modeled instrumental errors correction (mod_instr_cor_swh_01_c) and system bias."
+      }
+    },
+    {
+      "short_name": "swh_ocean_numval_01_c",
+      "target_path": "measurements/retracking/water/c/swh_ocean_numval_01",
+      "source_path": "enhanced_measurement.nc:swh_ocean_numval_01_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "number of valid points used to compute the 'ocean' significant waveheight: 1 Hz C band",
+        "units": "count",
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking."
+      }
+    },
+    {
+      "short_name": "swh_ocean_qual_20_c",
+      "target_path": "measurements/retracking/water/c/swh_ocean_qual_20",
+      "source_path": "enhanced_measurement.nc:swh_ocean_qual_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "quality flag for the 'ocean' significant waveheight: 20 Hz C band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "Yes No",
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Flag indicating the use or not of the 20-Hz estimate of the 'ocean' significant waveheight in the computation of 1Hz estimate"
+      }
+    },
+    {
+      "short_name": "swh_ocean_rms_01_c",
+      "target_path": "measurements/retracking/water/c/swh_ocean_rms_01",
+      "source_path": "enhanced_measurement.nc:swh_ocean_rms_01_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "RMS of the 'ocean' significant waveheight: 1 Hz C band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.001,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Compression of high rate elements is preceded by a detection of outliers. Only valid high-rate values are used to compute this element"
+      }
+    },
+    {
+      "short_name": "thermal_noise_ocean_20_c",
+      "target_path": "measurements/retracking/water/c/thermal_noise_ocean_20",
+      "source_path": "enhanced_measurement.nc:thermal_noise_ocean_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Thermal noise / 'ocean' retracking (FFT power unit): 20 Hz C band",
+        "units": "count",
+        "add_offset": 0.0,
+        "scale_factor": 1e-06,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking"
+      }
+    },
+    {
+      "short_name": "interpolated_c_band_range_ocean_20_ku",
+      "target_path": "measurements/retracking/water/ku/interpolated_c_band_range_ocean_20",
+      "source_path": "enhanced_measurement.nc:interpolated_c_band_range_ocean_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "C-band interpolated corrected 'ocean' altimeter range : 20 Hz Ku band",
+        "units": "m",
+        "quality_flag": "range_ocean_qual_20_c",
+        "add_offset": 700000.0,
+        "scale_factor": 0.0001,
+        "comment": "C-band altimeter range value used to compute the Ku-band altimeter ionospheric correction (iono_cor_alt_20_ku) "
+      }
+    },
+    {
+      "short_name": "off_nadir_angle_wf_ocean_20_ku",
+      "target_path": "measurements/retracking/water/ku/off_nadir_angle_wf_ocean_20",
+      "source_path": "enhanced_measurement.nc:off_nadir_angle_wf_ocean_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Square of the off nadir angle computed from waveforms / 'ocean' retracking : 20 Hz Ku band",
+        "units": "degrees^2",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking"
+      }
+    },
+    {
+      "short_name": "amplitude_ocean_20_ku",
+      "target_path": "measurements/retracking/water/ku/amplitude_ocean_20",
+      "source_path": "enhanced_measurement.nc:amplitude_ocean_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Amplitude / ocean retracking (FFT power unit): 20 Hz Ku band",
+        "units": "count",
+        "add_offset": 0.0,
+        "scale_factor": 1e-06,
+        "comment": "LRM mode : ocean retracking, SAR mode : N.A."
+      }
+    },
+    {
+      "short_name": "epoch_ocean_20_ku",
+      "target_path": "measurements/retracking/water/ku/epoch_ocean_20",
+      "source_path": "enhanced_measurement.nc:epoch_ocean_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Epoch / ocean retracking : 20 Hz Ku band",
+        "units": "s",
+        "add_offset": 0.0,
+        "scale_factor": 1e-15,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking."
+      }
+    },
+    {
+      "short_name": "mqe_ocean_20_ku",
+      "target_path": "measurements/retracking/water/ku/mqe_ocean_20",
+      "source_path": "enhanced_measurement.nc:mqe_ocean_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Mean quadratic error between waveform and model / 'ocean' retracking : 20 Hz Ku band",
+        "units": "count",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking"
+      }
+    },
+    {
+      "short_name": "number_of_iterations_ocean_20_ku",
+      "target_path": "measurements/retracking/water/ku/number_of_iterations_ocean_20",
+      "source_path": "enhanced_measurement.nc:number_of_iterations_ocean_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Number of iterations / 'ocean' retracking : 20 Hz Ku band",
+        "units": "count",
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking"
+      }
+    },
+    {
+      "short_name": "range_ocean_20_ku",
+      "target_path": "measurements/retracking/water/ku/range_ocean_20",
+      "source_path": "enhanced_measurement.nc:range_ocean_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "corrected 'ocean' altimeter range : 20 Hz Ku band",
+        "units": "m",
+        "quality_flag": "range_ocean_qual_20_ku",
+        "add_offset": 700000.0,
+        "scale_factor": 0.0001,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Instrumental corrections included : USO drift correction (uso_cor_20_ku), internal path correction (int_path_cor_20_ku), distance antenna-COG (cog_cor_01), Doppler correction (dop_cor_20_ku), modeled instrumental errors correction (mod_instr_cor_range_01_ku) and system bias"
+      }
+    },
+    {
+      "short_name": "range_ocean_numval_01_ku",
+      "target_path": "measurements/retracking/water/ku/range_ocean_numval_01",
+      "source_path": "enhanced_measurement.nc:range_ocean_numval_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "number of valid points used to compute the 'ocean' altimeter range : 1 Hz Ku band",
+        "units": "count",
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking"
+      }
+    },
+    {
+      "short_name": "range_ocean_qual_20_ku",
+      "target_path": "measurements/retracking/water/ku/range_ocean_qual_20",
+      "source_path": "enhanced_measurement.nc:range_ocean_qual_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "quality flag for the 'ocean' altimeter range : 20 Hz Ku band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "Yes No",
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Flag indicating the use or not of the 20-Hz estimate of the ocean altimeter range in the computation of 1Hz estimate"
+      }
+    },
+    {
+      "short_name": "range_ocean_rms_01_ku",
+      "target_path": "measurements/retracking/water/ku/range_ocean_rms_01",
+      "source_path": "enhanced_measurement.nc:range_ocean_rms_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "RMS of the 'ocean' altimeter range : 1 Hz Ku band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Compression of high rate elements is preceded by a detection of outliers. Only valid high-rate values are used to compute this element"
+      }
+    },
+    {
+      "short_name": "sig0_ocean_01_ku",
+      "target_path": "measurements/retracking/water/ku/sig0_ocean_01",
+      "source_path": "enhanced_measurement.nc:sig0_ocean_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "corrected 'ocean' backscatter coefficient : 1 Hz Ku band",
+        "units": "dB",
+        "standard_name": "surface_backwards_scattering_coefficient_of_radar_wave",
+        "quality_flag": "sig0_ocean_qual_01_ku",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Instrumental corrections included : AGC instrumental errors correction, internal calibration correction, modeled instrumental errors correction, atmospheric attenuation correction and system bias."
+      }
+    },
+    {
+      "short_name": "sig0_ocean_20_ku",
+      "target_path": "measurements/retracking/water/ku/sig0_ocean_20",
+      "source_path": "enhanced_measurement.nc:sig0_ocean_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "corrected 'ocean' backscatter coefficient : 20 Hz Ku band",
+        "units": "dB",
+        "standard_name": "surface_backwards_scattering_coefficient_of_radar_wave",
+        "quality_flag": "sig0_ocean_qual_20_ku",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Instrumental corrections included : AGC instrumental errors correction (agc_cor_20_ku), internal calibration correction (sig0_cal_20_ku), modeled instrumental errors correction (mod_instr_cor_sig0_01_ku), atmospheric attenuation correction (atm_cor_sig0_01_ku) and system bias."
+      }
+    },
+    {
+      "short_name": "sig0_ocean_numval_01_ku",
+      "target_path": "measurements/retracking/water/ku/sig0_ocean_numval_01",
+      "source_path": "enhanced_measurement.nc:sig0_ocean_numval_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "number of valid points used to compute the 'ocean' backscatter coefficient: 1 Hz Ku band",
+        "units": "count",
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking."
+      }
+    },
+    {
+      "short_name": "sig0_ocean_qual_01_ku",
+      "target_path": "measurements/retracking/water/ku/sig0_ocean_qual_01",
+      "source_path": "enhanced_measurement.nc:sig0_ocean_qual_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "quality flag for the 'ocean' backscatter coefficient: 1 Hz Ku band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "Good Bad"
+      }
+    },
+    {
+      "short_name": "sig0_ocean_qual_20_ku",
+      "target_path": "measurements/retracking/water/ku/sig0_ocean_qual_20",
+      "source_path": "enhanced_measurement.nc:sig0_ocean_qual_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "quality flag for the 'ocean' backscatter coefficient: 20 Hz Ku band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "Yes No",
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Flag indicating the use or not of the 20-Hz estimate of the 'ocean' backscatter coefficient in the computation of 1Hz estimate"
+      }
+    },
+    {
+      "short_name": "sig0_ocean_rms_01_ku",
+      "target_path": "measurements/retracking/water/ku/sig0_ocean_rms_01",
+      "source_path": "enhanced_measurement.nc:sig0_ocean_rms_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "RMS of the 'ocean' backscatter coefficient: 1 Hz Ku band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Compression of high rate elements is preceded by a detection of outliers. Only valid high-rate values are used to compute this element"
+      }
+    },
+    {
+      "short_name": "sigmac_ocean_20_ku",
+      "target_path": "measurements/retracking/water/ku/sigmac_ocean_20",
+      "source_path": "enhanced_measurement.nc:sigmac_ocean_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Composite Sigma / 'ocean' retracking : 20 Hz Ku band",
+        "units": "s",
+        "add_offset": 0.0,
+        "scale_factor": 1e-15,
+        "comment": "LRM mode : ocean retracking, SAR mode : N.A."
+      }
+    },
+    {
+      "short_name": "swh_ocean_20_ku",
+      "target_path": "measurements/retracking/water/ku/swh_ocean_20",
+      "source_path": "enhanced_measurement.nc:swh_ocean_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "corrected 'ocean' significant waveheight : 20 Hz Ku band",
+        "units": "m",
+        "standard_name": "sea_surface_wave_significant_height",
+        "quality_flag": "swh_ocean_qual_20_ku",
+        "add_offset": 0.0,
+        "scale_factor": 0.001,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Instrumental corrections included : modeled instrumental errors correction (mod_instr_cor_swh_01_ku) and system bias."
+      }
+    },
+    {
+      "short_name": "swh_ocean_numval_01_ku",
+      "target_path": "measurements/retracking/water/ku/swh_ocean_numval_01",
+      "source_path": "enhanced_measurement.nc:swh_ocean_numval_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "number of valid points used to compute the 'ocean' significant waveheight: 1 Hz Ku band",
+        "units": "count",
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking."
+      }
+    },
+    {
+      "short_name": "swh_ocean_qual_20_ku",
+      "target_path": "measurements/retracking/water/ku/swh_ocean_qual_20",
+      "source_path": "enhanced_measurement.nc:swh_ocean_qual_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "quality flag for the 'ocean' significant waveheight: 20 Hz Ku band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "Yes No",
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Flag indicating the use or not of the 20-Hz estimate of the 'ocean' significant waveheight in the computation of 1Hz estimate"
+      }
+    },
+    {
+      "short_name": "swh_ocean_rms_01_ku",
+      "target_path": "measurements/retracking/water/ku/swh_ocean_rms_01",
+      "source_path": "enhanced_measurement.nc:swh_ocean_rms_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "RMS of the 'ocean' significant waveheight: 1 Hz Ku band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.001,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Compression of high rate elements is preceded by a detection of outliers. Only valid high-rate values are used to compute this element"
+      }
+    },
+    {
+      "short_name": "thermal_noise_ocean_20_ku",
+      "target_path": "measurements/retracking/water/ku/thermal_noise_ocean_20",
+      "source_path": "enhanced_measurement.nc:thermal_noise_ocean_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Thermal noise / 'ocean' retracking (FFT power unit): 20 Hz Ku band",
+        "units": "count",
+        "add_offset": 0.0,
+        "scale_factor": 1e-06,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking"
+      }
+    },
+    {
+      "short_name": "off_nadir_angle_wf_ocean_20_plrm_ku",
+      "target_path": "measurements/retracking/water/plrm_ku/off_nadir_angle_wf_ocean_20",
+      "source_path": "enhanced_measurement.nc:off_nadir_angle_wf_ocean_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Square of the off nadir angle computed from waveforms / 'ocean' retracking : 20 Hz Plrm Ku band",
+        "units": "degrees^2",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking"
+      }
+    },
+    {
+      "short_name": "amplitude_ocean_20_plrm_ku",
+      "target_path": "measurements/retracking/water/plrm_ku/amplitude_ocean_20",
+      "source_path": "enhanced_measurement.nc:amplitude_ocean_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Amplitude / ocean retracking (FFT power unit): 20 Hz Plrm Ku band",
+        "units": "count",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "LRM mode : ocean retracking, SAR mode : N.A."
+      }
+    },
+    {
+      "short_name": "epoch_ocean_20_plrm_ku",
+      "target_path": "measurements/retracking/water/plrm_ku/epoch_ocean_20",
+      "source_path": "enhanced_measurement.nc:epoch_ocean_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Epoch / ocean retracking : 20 Hz Plrm Ku band",
+        "units": "s",
+        "add_offset": 0.0,
+        "scale_factor": 1e-15,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking."
+      }
+    },
+    {
+      "short_name": "mqe_ocean_20_plrm_ku",
+      "target_path": "measurements/retracking/water/plrm_ku/mqe_ocean_20",
+      "source_path": "enhanced_measurement.nc:mqe_ocean_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Mean quadratic error between waveform and model / 'ocean' retracking : 20 Hz Plrm Ku band",
+        "units": "count",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking"
+      }
+    },
+    {
+      "short_name": "number_of_iterations_ocean_20_plrm_ku",
+      "target_path": "measurements/retracking/water/plrm_ku/number_of_iterations_ocean_20",
+      "source_path": "enhanced_measurement.nc:number_of_iterations_ocean_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Number of iterations / 'ocean' retracking : 20 Hz Plrm Ku band",
+        "units": "count",
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking"
+      }
+    },
+    {
+      "short_name": "range_ocean_20_plrm_ku",
+      "target_path": "measurements/retracking/water/plrm_ku/range_ocean_20",
+      "source_path": "enhanced_measurement.nc:range_ocean_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "corrected 'ocean' altimeter range : 20 Hz Plrm Ku band",
+        "units": "m",
+        "quality_flag": "range_ocean_qual_20_plrm_ku",
+        "add_offset": 700000.0,
+        "scale_factor": 0.0001,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Instrumental corrections included : USO drift correction (uso_cor_20_c), internal path correction (int_path_cor_20_plrm_ku), distance antenna-COG (cog_cor_01), Doppler correction (dop_cor_20_plrm_ku), modeled instrumental errors correction (mod_instr_cor_range_01_plrm_ku) and system bias"
+      }
+    },
+    {
+      "short_name": "range_ocean_numval_01_plrm_ku",
+      "target_path": "measurements/retracking/water/plrm_ku/range_ocean_numval_01",
+      "source_path": "enhanced_measurement.nc:range_ocean_numval_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "number of valid points used to compute the 'ocean' altimeter range : 1 Hz Plrm Ku band",
+        "units": "count",
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking"
+      }
+    },
+    {
+      "short_name": "range_ocean_qual_20_plrm_ku",
+      "target_path": "measurements/retracking/water/plrm_ku/range_ocean_qual_20",
+      "source_path": "enhanced_measurement.nc:range_ocean_qual_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "quality flag for the 'ocean' altimeter range : 20 Hz Plrm Ku band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "Yes No",
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Flag indicating the use or not of the 20-Hz estimate of the ocean altimeter range in the computation of 1Hz estimate"
+      }
+    },
+    {
+      "short_name": "range_ocean_rms_01_plrm_ku",
+      "target_path": "measurements/retracking/water/plrm_ku/range_ocean_rms_01",
+      "source_path": "enhanced_measurement.nc:range_ocean_rms_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "RMS of the 'ocean' altimeter range : 1 Hz Plrm Ku band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Compression of high rate elements is preceded by a detection of outliers. Only valid high-rate values are used to compute this element"
+      }
+    },
+    {
+      "short_name": "sig0_ocean_01_plrm_ku",
+      "target_path": "measurements/retracking/water/plrm_ku/sig0_ocean_01",
+      "source_path": "enhanced_measurement.nc:sig0_ocean_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "corrected 'ocean' backscatter coefficient : 1 Hz Plrm Ku band",
+        "units": "dB",
+        "standard_name": "surface_backwards_scattering_coefficient_of_radar_wave",
+        "quality_flag": "sig0_ocean_qual_01_plrm_ku",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Instrumental corrections included : AGC instrumental errors correction, internal calibration correction, modeled instrumental errors correction, atmospheric attenuation correction and system bias."
+      }
+    },
+    {
+      "short_name": "sig0_ocean_20_plrm_ku",
+      "target_path": "measurements/retracking/water/plrm_ku/sig0_ocean_20",
+      "source_path": "enhanced_measurement.nc:sig0_ocean_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "corrected 'ocean' backscatter coefficient : 20 Hz Plrm Ku band",
+        "units": "dB",
+        "standard_name": "surface_backwards_scattering_coefficient_of_radar_wave",
+        "quality_flag": "sig0_ocean_qual_20_plrm_ku",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Instrumental corrections included : AGC instrumental errors correction (agc_cor_20_plrm_ku), internal calibration correction (sig0_cal_20_plrm_ku), modeled instrumental errors correction (mod_instr_cor_sig0_01_plrm_ku), atmospheric attenuation correction (atm_cor_sig0_01_plrm_ku) and system bias."
+      }
+    },
+    {
+      "short_name": "sig0_ocean_numval_01_plrm_ku",
+      "target_path": "measurements/retracking/water/plrm_ku/sig0_ocean_numval_01",
+      "source_path": "enhanced_measurement.nc:sig0_ocean_numval_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "number of valid points used to compute the 'ocean' backscatter coefficient: 1 Hz Plrm Ku band",
+        "units": "count",
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking."
+      }
+    },
+    {
+      "short_name": "sig0_ocean_qual_01_plrm_ku",
+      "target_path": "measurements/retracking/water/plrm_ku/sig0_ocean_qual_01",
+      "source_path": "enhanced_measurement.nc:sig0_ocean_qual_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "quality flag for the 'ocean' backscatter coefficient: 1 Hz Plrm Ku band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "Good Bad"
+      }
+    },
+    {
+      "short_name": "sig0_ocean_qual_20_plrm_ku",
+      "target_path": "measurements/retracking/water/plrm_ku/sig0_ocean_qual_20",
+      "source_path": "enhanced_measurement.nc:sig0_ocean_qual_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "quality flag for the 'ocean' backscatter coefficient: 20 Hz Plrm Ku band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "Yes No",
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Flag indicating the use or not of the 20-Hz estimate of the 'ocean' backscatter coefficient in the computation of 1Hz estimate"
+      }
+    },
+    {
+      "short_name": "sig0_ocean_rms_01_plrm_ku",
+      "target_path": "measurements/retracking/water/plrm_ku/sig0_ocean_rms_01",
+      "source_path": "enhanced_measurement.nc:sig0_ocean_rms_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "RMS of the 'ocean' backscatter coefficient: 1 Hz Plrm Ku band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Compression of high rate elements is preceded by a detection of outliers. Only valid high-rate values are used to compute this element"
+      }
+    },
+    {
+      "short_name": "sigmac_ocean_20_plrm_ku",
+      "target_path": "measurements/retracking/water/plrm_ku/sigmac_ocean_20",
+      "source_path": "enhanced_measurement.nc:sigmac_ocean_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Composite Sigma / 'ocean' retracking : 20 Hz Plrm Ku band",
+        "units": "s",
+        "add_offset": 0.0,
+        "scale_factor": 1e-15,
+        "comment": "LRM mode : ocean retracking, SAR mode : N.A."
+      }
+    },
+    {
+      "short_name": "swh_ocean_20_plrm_ku",
+      "target_path": "measurements/retracking/water/plrm_ku/swh_ocean_20",
+      "source_path": "enhanced_measurement.nc:swh_ocean_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "corrected 'ocean' significant waveheight : 20 Hz Plrm Ku band",
+        "units": "m",
+        "standard_name": "sea_surface_wave_significant_height",
+        "quality_flag": "swh_ocean_qual_20_plrm_ku",
+        "add_offset": 0.0,
+        "scale_factor": 0.001,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Instrumental corrections included : modeled instrumental errors correction (mod_instr_cor_swh_01_plrm_ku) and system bias."
+      }
+    },
+    {
+      "short_name": "swh_ocean_numval_01_plrm_ku",
+      "target_path": "measurements/retracking/water/plrm_ku/swh_ocean_numval_01",
+      "source_path": "enhanced_measurement.nc:swh_ocean_numval_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "number of valid points used to compute the 'ocean' significant waveheight: 1 Hz Plrm Ku band",
+        "units": "count",
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking."
+      }
+    },
+    {
+      "short_name": "swh_ocean_qual_20_plrm_ku",
+      "target_path": "measurements/retracking/water/plrm_ku/swh_ocean_qual_20",
+      "source_path": "enhanced_measurement.nc:swh_ocean_qual_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "quality flag for the 'ocean' significant waveheight: 20 Hz Plrm Ku band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "Yes No",
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Flag indicating the use or not of the 20-Hz estimate of the 'ocean' significant waveheight in the computation of 1Hz estimate"
+      }
+    },
+    {
+      "short_name": "swh_ocean_rms_01_plrm_ku",
+      "target_path": "measurements/retracking/water/plrm_ku/swh_ocean_rms_01",
+      "source_path": "enhanced_measurement.nc:swh_ocean_rms_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "RMS of the 'ocean' significant waveheight: 1 Hz Plrm Ku band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.001,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking. Compression of high rate elements is preceded by a detection of outliers. Only valid high-rate values are used to compute this element"
+      }
+    },
+    {
+      "short_name": "thermal_noise_ocean_20_plrm_ku",
+      "target_path": "measurements/retracking/water/plrm_ku/thermal_noise_ocean_20",
+      "source_path": "enhanced_measurement.nc:thermal_noise_ocean_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Thermal noise / 'ocean' retracking (FFT power unit): 20 Hz Plrm Ku band",
+        "units": "count",
+        "add_offset": 0.0,
+        "scale_factor": 1e-06,
+        "comment": "LRM mode : ocean retracking, SAR mode : ocean/coastal retracking"
+      }
+    },
+    {
+      "short_name": "elevation_ocog_20_ku",
+      "target_path": "measurements/retracking/icesheet/ku/elevation_ocog_20",
+      "source_path": "enhanced_measurement.nc:elevation_ocog_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "corrected altimeter elevation from OCOG (ice-1) retracker : 20 Hz Ku band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "LRM mode : OCOG (ice-1) retracking, SAR mode : OCOG (ice-1)  retracking. Instrumental corrections included : USO drift correction (uso_cor_[x1]_[x2]), internal path correction (int_path_cor_[x1]_[x2]),  distance antenna-COG (cog_cor_[x1]_[x2]) and Doppler slope correction (dop_slope_cor_[x1]_[x2]). Geophysical corrections included: GIM-derived ionospheric correction on Ku band (iono_cor_gim_[x1]_ku), model dry tropospheric correction (mod_dry_tropo_cor_meas_altitude_[x1]_[x2]),  model wet tropospheric correction (mod_wet_tropo_cor_meas_altitude_[x1]_[x2]), solid earth tide height (solid_earth_tide_[x1]_[x2]), geocentric ocean tide height solution 2 = FES (ocean_tide_sol2_[x1]_[x2], on ocean/semi-enclosed seas only)  , geocentric pole tide height (pole_tide_[x1]_[x2]) , ocean loading tide solution 2 = FES (load_tide_sol2_[x1]_[x2], on land only) inverted barometer height correction (inv_bar_cor_[x1] on ocean/semi-enclosed seas only) , high frequency fluctuations of the sea surface topography (hf_fluct_cor_[x1] for NTC/STC off line products only, on ocean/semi-enclosed seas only). A height slope correction is applied."
+      }
+    },
+    {
+      "short_name": "range_ocog_20_c",
+      "target_path": "measurements/retracking/main/c/range_ocog_20",
+      "source_path": "enhanced_measurement.nc:range_ocog_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "corrected ocog altimeter range : 20 Hz C band",
+        "units": "m",
+        "add_offset": 700000.0,
+        "scale_factor": 0.0001,
+        "comment": "LRM mode; SAR mode :ocog retracking. Instrumental corrections included : USO drift correction (uso_cor_20_c), internal path correction (int_path_cor_20_c), distance antenna-COG"
+      }
+    },
+    {
+      "short_name": "range_ocog_20_ku",
+      "target_path": "measurements/retracking/main/ku/range_ocog_20",
+      "source_path": "enhanced_measurement.nc:range_ocog_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "corrected ocog altimeter range : 20 Hz Ku band",
+        "units": "m",
+        "add_offset": 700000.0,
+        "scale_factor": 0.0001,
+        "comment": "LRM mode; SAR mode :ocog retracking. Instrumental corrections included : USO drift correction (uso_cor_20_ku), internal path correction (int_path_cor_20_ku), distance antenna-COG"
+      }
+    },
+    {
+      "short_name": "range_sea_ice_20_ku",
+      "target_path": "measurements/retracking/seaice/ku/range_sea_ice_20",
+      "source_path": "enhanced_measurement.nc:range_sea_ice_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "corrected 'sea ice' altimeter range : 20 Hz Ku band",
+        "units": "m",
+        "add_offset": 700000.0,
+        "scale_factor": 0.0001,
+        "comment": "SAR mode only : sea-ice margin retracking. Instrumental corrections included : USO drift correction (uso_cor_20_ku), internal path correction (int_path_cor_20_ku), distance antenna-COG and Doppler slope correction (dop_slope_cor_20_ku)"
+      }
+    },
+    {
+      "short_name": "sig0_sea_ice_sheet_20_ku",
+      "target_path": "measurements/retracking/seaice/ku/sig0_sea_ice_sheet_20",
+      "source_path": "enhanced_measurement.nc:sig0_sea_ice_sheet_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "corrected 'sea ice' backscatter coefficient : 20 Hz Ku band",
+        "units": "dB",
+        "standard_name": "surface_backwards_scattering_coefficient_of_radar_wave",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "SAR mode only : sea-ice margin retracking. Instrumental corrections included : AGC instrumental errors correction (agc_cor_20_ku) and internal calibration correction (sig0_cal_20_ku)"
+      }
+    },
+    {
+      "short_name": "surf_type_class_20_ku",
+      "target_path": "measurements/retracking/seaice/ku/surf_type_class_20",
+      "source_path": "enhanced_measurement.nc:surf_type_class_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "altimeter-derived surface type classification: 20 Hz Ku band",
+        "flag_values": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "flag_meanings": "open_ocean sea_ice lead unclassified"
+      }
+    },
+    {
+      "short_name": "inv_bar_cor_01",
+      "target_path": "measurements/geophysical/inv_bar_cor_01",
+      "source_path": "enhanced_measurement.nc:inv_bar_cor_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Inverted barometer height correction : 1 Hz",
+        "units": "m",
+        "standard_name": "sea_surface_height_correction_due_to_air_pressure_at_low_frequency",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Computed at the altimeter time-tag from the interpolation of 2 meteorological fields that surround the altimeter time-tag.",
+        "source": "European Center for Medium Range Weather Forecasting",
+        "institution": "ECMWF"
+      }
+    },
+    {
+      "short_name": "mod_dry_tropo_cor_meas_altitude_01",
+      "target_path": "measurements/geophysical/corrections/mod_dry_tropo_cor_meas_altitude_01",
+      "source_path": "enhanced_measurement.nc:mod_dry_tropo_cor_meas_altitude_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "model dry tropospheric correction at measurement altitude: 1 Hz",
+        "units": "m",
+        "standard_name": "altimeter_range_correction_due_to_dry_troposphere",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Computed from 3d meteorological fields at measurement altitude, at the altimeter time-tag from the interpolation of 2 meteorological fields that surround the altimeter time-tag. A dry tropospheric correction must be added (negative value) to the instrument range to correct this range measurement for dry tropospheric range delays of the radar pulse",
+        "source": "European Center for Medium Range Weather Forecasting",
+        "institution": "ECMWF"
+      }
+    },
+    {
+      "short_name": "mod_dry_tropo_cor_zero_altitude_01",
+      "target_path": "measurements/geophysical/corrections/mod_dry_tropo_cor_zero_altitude_01",
+      "source_path": "enhanced_measurement.nc:mod_dry_tropo_cor_zero_altitude_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "model dry tropospheric correction at zero altitude: 1 Hz",
+        "units": "m",
+        "standard_name": "altimeter_range_correction_due_to_dry_troposphere",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Computed from 3d meteorological fields at zero altitude, at the altimeter time-tag from the interpolation of 2 meteorological fields that surround the altimeter time-tag. A dry tropospheric correction must be added (negative value) to the instrument range to correct this range measurement for dry tropospheric range delays of the radar pulse",
+        "source": "European Center for Medium Range Weather Forecasting",
+        "institution": "ECMWF"
+      }
+    },
+    {
+      "short_name": "mod_wet_tropo_cor_meas_altitude_01",
+      "target_path": "measurements/geophysical/corrections/mod_wet_tropo_cor_meas_altitude_01",
+      "source_path": "enhanced_measurement.nc:mod_wet_tropo_cor_meas_altitude_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "model wet tropospheric correction at measurement altitude: 1 Hz",
+        "units": "m",
+        "standard_name": "altimeter_range_correction_due_to_wet_troposphere",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Computed from 3d meteorological fields at measurement altitude, at the altimeter time-tag from the interpolation of 2 meteorological fields that surround the altimeter time-tag. A wet tropospheric correction must be added (negative value) to the instrument range to correct this range measurement for wet tropospheric range delays of the radar pulse",
+        "source": "European Center for Medium Range Weather Forecasting",
+        "institution": "ECMWF"
+      }
+    },
+    {
+      "short_name": "mod_wet_tropo_cor_zero_altitude_01",
+      "target_path": "measurements/geophysical/corrections/mod_wet_tropo_cor_zero_altitude_01",
+      "source_path": "enhanced_measurement.nc:mod_wet_tropo_cor_zero_altitude_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "model wet tropospheric correction at zero altitude: 1 Hz",
+        "units": "m",
+        "standard_name": "altimeter_range_correction_due_to_wet_troposphere",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Computed from 3d meteorological fields at zero altitude, at the altimeter time-tag from the interpolation of 2 meteorological fields that surround the altimeter time-tag. A wet tropospheric correction must be added (negative value) to the instrument range to correct this range measurement for wet tropospheric range delays of the radar pulse",
+        "source": "European Center for Medium Range Weather Forecasting",
+        "institution": "ECMWF"
+      }
+    },
+    {
+      "short_name": "atm_cor_sig0_01_c",
+      "target_path": "measurements/geophysical/corrections/c/atm_cor_sig0_01",
+      "source_path": "enhanced_measurement.nc:atm_cor_sig0_01_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Atmospheric attenuation correction on the backscatter coefficient: 1 Hz C band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01
+      }
+    },
+    {
+      "short_name": "sea_state_bias_01_c",
+      "target_path": "measurements/geophysical/corrections/c/sea_state_bias_01",
+      "source_path": "enhanced_measurement.nc:sea_state_bias_01_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Sea state bias correction : 1 Hz C band",
+        "units": "m",
+        "standard_name": "sea_surface_height_bias_due_to_sea_surface_roughness",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "A sea state bias correction must be added (negative value) to the instrument range to correct this range measurement for sea state delays of the radar pulse.",
+        "source": "Empirical solution fitted on Jason-2 GDR_C data",
+        "institution": "CNES"
+      }
+    },
+    {
+      "short_name": "atm_cor_sig0_01_ku",
+      "target_path": "measurements/geophysical/corrections/ku/atm_cor_sig0_01",
+      "source_path": "enhanced_measurement.nc:atm_cor_sig0_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Atmospheric attenuation correction on the backscatter coefficient: 1 Hz Ku band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01
+      }
+    },
+    {
+      "short_name": "comp_wet_tropo_cor_01_ku",
+      "target_path": "measurements/geophysical/corrections/ku/comp_wet_tropo_cor_01",
+      "source_path": "enhanced_measurement.nc:comp_wet_tropo_cor_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "composite wet tropospheric correction: 1 Hz Ku band",
+        "units": "m",
+        "standard_name": "altimeter_range_correction_due_to_wet_troposphere",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Computed at the altimeter time-tag from both radiometer and model corrections over areas where the radiometer wet troposphere correction is missing or supposed as invalid due to the proximity of emerged lands, coastal areas and/or radiometer gaps in open oceans. A wet tropospheric correction must be added (negative value) to the instrument range to correct this range measurement for wet tropospheric range delays of the radar pulse"
+      }
+    },
+    {
+      "short_name": "iono_cor_alt_20_ku",
+      "target_path": "measurements/geophysical/corrections/ku/iono_cor_alt_20",
+      "source_path": "enhanced_measurement.nc:iono_cor_alt_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "altimeter ionospheric correction: 20 Hz Ku band",
+        "units": "m",
+        "standard_name": "altimeter_range_correction_due_to_ionosphere",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "An ionospheric correction must be added (negative value) to the instrument range to correct this range measurement for ionospheric range delays of the radar pulse. This correction is valid over ocean surfaces only",
+        "source": "SRAL",
+        "institution": "TAS"
+      }
+    },
+    {
+      "short_name": "iono_cor_alt_filtered_01_ku",
+      "target_path": "measurements/geophysical/corrections/ku/iono_cor_alt_filtered_01",
+      "source_path": "enhanced_measurement.nc:iono_cor_alt_filtered_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "altimeter ionospheric range filtered: 1 Hz Ku Band",
+        "units": "m",
+        "standard_name": "altimeter_range_correction_due_to_ionosphere",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "An ionospheric correction must be added (negative value) to the instrument range to correct this range measurement for ionospheric range delays of the radar pulse. This correction is valid over ocean surfaces only",
+        "source": "SRAL",
+        "institution": "TAS"
+      }
+    },
+    {
+      "short_name": "iono_cor_gim_01_ku",
+      "target_path": "measurements/geophysical/corrections/ku/iono_cor_gim_01",
+      "source_path": "enhanced_measurement.nc:iono_cor_gim_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "GIM ionospheric correction: 1 Hz",
+        "units": "m",
+        "standard_name": "altimeter_range_correction_due_to_ionosphere",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "An ionospheric correction must be added (negative value) to the instrument range to correct this range measurement for ionospheric range delays of the radar pulse.",
+        "source": "[TBD GIM version]",
+        "institution": "NASA/JPL"
+      }
+    },
+    {
+      "short_name": "rad_wet_tropo_cor_01_ku",
+      "target_path": "measurements/geophysical/corrections/ku/rad_wet_tropo_cor_01",
+      "source_path": "enhanced_measurement.nc:rad_wet_tropo_cor_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "radiometer wet tropospheric correction: 1 Hz Ku band",
+        "units": "m",
+        "standard_name": "altimeter_range_correction_due_to_wet_troposphere",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "A wet tropospheric correction must be added (negative value) to the instrument range to correct this range measurement for wet tropospheric range delays of the radar pulse. This correction is valid over ocean surfaces only",
+        "source": "MWR",
+        "institution": "CASA"
+      }
+    },
+    {
+      "short_name": "rad_wet_tropo_cor_sst_gam_01_ku",
+      "target_path": "measurements/geophysical/corrections/ku/rad_wet_tropo_cor_sst_gam_01",
+      "source_path": "enhanced_measurement.nc:rad_wet_tropo_cor_sst_gam_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "radiometer wet tropospheric correction: 1 Hz Ku band",
+        "units": "m",
+        "standard_name": "altimeter_range_correction_due_to_wet_troposphere",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Computed at the altimeter time-tag from the radiometer brightness temperatures, the Ku-band backscatter coefficient, the sea surface temperature and the lapse rate (decreasing rate of the atmosphere temperature with altitude). A wet tropospheric correction must be added (negative value) to the instrument range to correct this range measurement for wet tropospheric range delays of the radar pulse "
+      }
+    },
+    {
+      "short_name": "sea_state_bias_01_ku",
+      "target_path": "measurements/geophysical/corrections/ku/sea_state_bias_01",
+      "source_path": "enhanced_measurement.nc:sea_state_bias_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Sea state bias correction : 1 Hz Ku band",
+        "units": "m",
+        "standard_name": "sea_surface_height_bias_due_to_sea_surface_roughness",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "A sea state bias correction must be added (negative value) to the instrument range to correct this range measurement for sea state delays of the radar pulse.",
+        "source": "Empirical solution fitted on Jason-2 GDR_C data",
+        "institution": "CNES"
+      }
+    },
+    {
+      "short_name": "atm_cor_sig0_01_plrm_ku",
+      "target_path": "measurements/geophysical/corrections/plrm_ku/atm_cor_sig0_01",
+      "source_path": "enhanced_measurement.nc:atm_cor_sig0_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Atmospheric attenuation correction on the backscatter coefficient: 1 Hz Plrm Ku band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01
+      }
+    },
+    {
+      "short_name": "comp_wet_tropo_cor_01_plrm_ku",
+      "target_path": "measurements/geophysical/corrections/plrm_ku/comp_wet_tropo_cor_01",
+      "source_path": "enhanced_measurement.nc:comp_wet_tropo_cor_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "composite wet tropospheric correction: 1 Hz Plrm Ku band",
+        "units": "m",
+        "standard_name": "altimeter_range_correction_due_to_wet_troposphere",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Computed at the altimeter time-tag from both radiometer and model corrections over areas where the radiometer wet troposphere correction is missing or supposed as invalid due to the proximity of emerged lands, coastal areas and/or radiometer gaps in open oceans. A wet tropospheric correction must be added (negative value) to the instrument range to correct this range measurement for wet tropospheric range delays of the radar pulse"
+      }
+    },
+    {
+      "short_name": "iono_cor_alt_20_plrm_ku",
+      "target_path": "measurements/geophysical/corrections/plrm_ku/iono_cor_alt_20",
+      "source_path": "enhanced_measurement.nc:iono_cor_alt_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "altimeter ionospheric correction: 20 Hz Plrm Ku band",
+        "units": "m",
+        "standard_name": "altimeter_range_correction_due_to_ionosphere",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "An ionospheric correction must be added (negative value) to the instrument range to correct this range measurement for ionospheric range delays of the radar pulse. This correction is valid over ocean surfaces only",
+        "source": "SRAL",
+        "institution": "TAS"
+      }
+    },
+    {
+      "short_name": "iono_cor_alt_filtered_01_plrm_ku",
+      "target_path": "measurements/geophysical/corrections/plrm_ku/iono_cor_alt_filtered_01",
+      "source_path": "enhanced_measurement.nc:iono_cor_alt_filtered_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "altimeter ionospheric range filtered: 1 Hz Plrm Ku Band",
+        "units": "m",
+        "standard_name": "altimeter_range_correction_due_to_ionosphere",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "An ionospheric correction must be added (negative value) to the instrument range to correct this range measurement for ionospheric range delays of the radar pulse. This correction is valid over ocean surfaces only",
+        "source": "SRAL",
+        "institution": "TAS"
+      }
+    },
+    {
+      "short_name": "rad_wet_tropo_cor_01_plrm_ku",
+      "target_path": "measurements/geophysical/corrections/plrm_ku/rad_wet_tropo_cor_01",
+      "source_path": "enhanced_measurement.nc:rad_wet_tropo_cor_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "radiometer wet tropospheric correction: 1 Hz Plrm Ku band",
+        "units": "m",
+        "standard_name": "altimeter_range_correction_due_to_wet_troposphere",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "A wet tropospheric correction must be added (negative value) to the instrument range to correct this range measurement for wet tropospheric range delays of the radar pulse. This correction is valid over ocean surfaces only",
+        "source": "MWR",
+        "institution": "CASA"
+      }
+    },
+    {
+      "short_name": "rad_wet_tropo_cor_sst_gam_01_plrm_ku",
+      "target_path": "measurements/geophysical/corrections/plrm_ku/rad_wet_tropo_cor_sst_gam_01",
+      "source_path": "enhanced_measurement.nc:rad_wet_tropo_cor_sst_gam_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "radiometer wet tropospheric correction: 1 Hz Plrm Ku band",
+        "units": "m",
+        "standard_name": "altimeter_range_correction_due_to_wet_troposphere",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Computed at the altimeter time-tag from the radiometer brightness temperatures, the Ku-band backscatter coefficient, the sea surface temperature and the lapse rate (decreasing rate of the atmosphere temperature with altitude). A wet tropospheric correction must be added (negative value) to the instrument range to correct this range measurement for wet tropospheric range delays of the radar pulse "
+      }
+    },
+    {
+      "short_name": "sea_state_bias_01_plrm_ku",
+      "target_path": "measurements/geophysical/corrections/plrm_ku/sea_state_bias_01",
+      "source_path": "enhanced_measurement.nc:sea_state_bias_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Sea state bias correction : 1 Hz Plrm Ku band",
+        "units": "m",
+        "standard_name": "sea_surface_height_bias_due_to_sea_surface_roughness",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "A sea state bias correction must be added (negative value) to the instrument range to correct this range measurement for sea state delays of the radar pulse.",
+        "source": "Empirical solution fitted on Jason-2 GDR_C data",
+        "institution": "CNES"
+      }
+    },
+    {
+      "short_name": "echo_sample_ind",
+      "target_path": "measurements/geophysical/waveforms/echo_sample_ind",
+      "source_path": "enhanced_measurement.nc:echo_sample_ind",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "number of samples in the waveforms",
+        "units": "count",
+        "comment": "Set to be compliant with the CF-1.1 convention"
+      }
+    },
+    {
+      "short_name": "max_multi_stack_ind",
+      "target_path": "measurements/doppler/max_multi_stack_ind",
+      "source_path": "enhanced_measurement.nc:max_multi_stack_ind",
+      "item_format": "netcdf",
+      "is_optional": true,
+      "attributes": {
+        "long_name": "maximum number of multilook beams per stack",
+        "units": "count",
+        "comment": "Set to be compliant with the CF-1.6 convention"
+      }
+    },
+    {
+      "short_name": "beam_ang_stack_20_ku",
+      "target_path": "measurements/doppler/ku/beam_ang_stack_20",
+      "source_path": "enhanced_measurement.nc:beam_ang_stack_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "look angles in stack: 20 Hz Ku band",
+        "comment": "Look angles in stack: 20 Hz Ku band. These are looking angles and not beam angles. The useful values of the table are the first n_useful values where n_useful is the number of waveforms summed in stack (nb_stack_20_ku)"
+      }
+    },
+    {
+      "short_name": "beam_form_20_ku",
+      "target_path": "measurements/doppler/ku/beam_form_20",
+      "source_path": "enhanced_measurement.nc:beam_form_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "long_name": "flag on beam formation quality in stack : 20 Hz Ku band",
+        "units": "percent",
+        "scale_factor": 0.01,
+        "offset": 0.0,
+        "coordinates": "lon_20_ku lat_20_ku"
+      }
+    },
+    {
+      "short_name": "kurt_stack_20_ku",
+      "target_path": "measurements/doppler/ku/kurt_stack_20",
+      "source_path": "enhanced_measurement.nc:kurt_stack_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "kurtosis of stack : 20 Hz Ku band",
+        "units": "count",
+        "scale_factor": 1e-06,
+        "add_offset": 0.0,
+        "coordinates": "lon_20_ku lat_20_ku"
+      }
+    },
+    {
+      "short_name": "max_loc_stack_20_ku",
+      "target_path": "measurements/doppler/ku/max_loc_stack_20",
+      "source_path": "enhanced_measurement.nc:max_loc_stack_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Location of the maximum power of stack : 20 Hz Ku band",
+        "units": "rad",
+        "scale_factor": 1e-06,
+        "add_offset": 1.57,
+        "coordinates": "lon_20_ku  lat_20_ku"
+      }
+    },
+    {
+      "short_name": "max_stack_20_ku",
+      "target_path": "measurements/doppler/ku/max_stack_20",
+      "source_path": "enhanced_measurement.nc:max_stack_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 4294967295,
+        "long_name": "maximum power of stack : 20 Hz Ku band",
+        "units": "FFT power unit",
+        "coordinates": "lon_20_ku lat_20_ku"
+      }
+    },
+    {
+      "short_name": "rip_20_ku",
+      "target_path": "measurements/doppler/ku/rip_20",
+      "source_path": "enhanced_measurement.nc:rip_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 4294967295,
+        "long_name": "RIP, Range Integrated Power: l1b_echo_sar_ku mode",
+        "units": "FFT power unit",
+        "coordinates": "lon_20_ku lat_20_ku",
+        "comment": "the useful values of the table are the first nb_stack_l1b_echo_sar_ku values, one value of power for each individual echo"
+      }
+    },
+    {
+      "short_name": "skew_stack_20_ku",
+      "target_path": "measurements/doppler/ku/skew_stack_20",
+      "source_path": "enhanced_measurement.nc:skew_stack_20_ku",
+      "item_format": "netcdf",
+      "is_optional": true,
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "skewness of stack : 20 Hz Ku band",
+        "units": "count",
+        "scale_factor": 1e-06,
+        "add_offset": 0.0,
+        "coordinates": "lon_20_ku lat_20_ku"
+      }
+    },
+    {
+      "short_name": "stdev_stack_20_ku",
+      "target_path": "measurements/doppler/ku/stdev_stack_20",
+      "source_path": "enhanced_measurement.nc:stdev_stack_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 4294967295,
+        "long_name": "standard deviation of stack : 20 Hz Ku band",
+        "units": "rad",
+        "scale_factor": 1e-06,
+        "add_offset": 0.0,
+        "coordinates": "lon_20_ku lat_20_ku"
+      }
+    },
+    {
+      "short_name": "wf_sample_ind",
+      "target_path": "measurements/waveforms/wf_sample_ind",
+      "source_path": "enhanced_measurement.nc:wf_sample_ind",
+      "item_format": "netcdf",
+      "is_optional": true,
+      "attributes": {
+        "long_name": "number of samples in I2+Q2 waveforms",
+        "units": "count",
+        "comment": "Set to be compliant with the CF-1.6 convention"
+      }
+    },
+    {
+      "short_name": "waveform_20_c",
+      "target_path": "measurements/waveforms/c/waveform_20",
+      "source_path": "enhanced_measurement.nc:waveform_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 4294967295,
+        "long_name": "Waveform samples (I2+Q2) : 20 Hz C band",
+        "scale_factor": 0.001,
+        "add_offset": 0.0,
+        "units": "count",
+        "comment": "LRM mode Ku and C bands: the echo is corrected for the GPRW effect, SAR mode C band : the echo is the so-called averaged echo corrected for the GPRW effect,  SAR mode Ku band : the echo is corrected for Doppler range effect, phase/power burst calibration and GPWR effect"
+      }
+    },
+    {
+      "short_name": "waveform_20_ku",
+      "target_path": "measurements/waveforms/ku/waveform_20",
+      "source_path": "enhanced_measurement.nc:waveform_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 4294967295,
+        "long_name": "Waveform samples (I2+Q2) : 20 Hz Ku band",
+        "scale_factor": 0.001,
+        "add_offset": 0.0,
+        "units": "count",
+        "comment": "LRM mode Ku and C bands: the echo is corrected for the GPRW effect, SAR mode C band : the echo is the so-called averaged echo corrected for the GPRW effect, SAR mode Ku band : the echo is corrected for Doppler range effect, phase/power burst calibration and GPWR effect"
+      }
+    },
+    {
+      "short_name": "waveform_20_plrm_ku",
+      "target_path": "measurements/waveforms/plrm_ku/waveform_20",
+      "source_path": "enhanced_measurement.nc:waveform_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 4294967295,
+        "long_name": "Waveform samples (I2+Q2) : 20 Hz Plrm Ku band",
+        "scale_factor": 0.001,
+        "add_offset": 0.0,
+        "units": "count",
+        "comment": "LRM mode Ku and C bands: the echo is corrected for the GPRW effect, SAR mode C band : the echo is the so-called averaged echo corrected for the GPRW effect, SAR mode Plrm Ku band : the echo is corrected for Doppler range effect, phase/power burst calibration and GPWR effect"
+      }
+    },
+    {
+      "short_name": "acq_stat_20_c",
+      "target_path": "quality/l1b/c/acq_stat_20",
+      "source_path": "enhanced_measurement.nc:acq_stat_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "tracking configuration - acquisition status : 20 Hz C band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "no_acquisition acquisition",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "cl_gain_20_c",
+      "target_path": "quality/l1b/c/cl_gain_20",
+      "source_path": "enhanced_measurement.nc:cl_gain_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "tracking configuration - closed loop gain : 20 Hz C band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "Nominal_value Nominal_value_with_back_off",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "dem_eeprom_20_c",
+      "target_path": "quality/l1b/c/dem_eeprom_20",
+      "source_path": "enhanced_measurement.nc:dem_eeprom_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "tracking configuration - DEM EEPROM read access : 20 Hz C band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "enabled disabled",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "flag_man_plane_20_c",
+      "target_path": "quality/l1b/c/flag_man_plane_20",
+      "source_path": "enhanced_measurement.nc:flag_man_plane_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "manoeuvre plane flag : 20 Hz C band ",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "in_plane out_of_plane",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "flag_man_pres_20_c",
+      "target_path": "quality/l1b/c/flag_man_pres_20",
+      "source_path": "enhanced_measurement.nc:flag_man_pres_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "manoeuvre presence flag : 20 Hz C band ",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "no_manoeuvre ongoing_manoeuvre",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "flag_man_thrust_20_c",
+      "target_path": "quality/l1b/c/flag_man_thrust_20",
+      "source_path": "enhanced_measurement.nc:flag_man_thrust_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "manoeuvre thrust flag : 20 Hz C band ",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "no_thrust ongoing_thrust",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "isp_time_status_20_c",
+      "target_path": "quality/l1b/c/isp_time_status_20",
+      "source_path": "enhanced_measurement.nc:isp_time_status_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "ISP time status : 20 Hz C band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "SRAL_OBT_extrapolated SRAL_OBT_updated_with_SMU_OBT",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "loss_track_20_c",
+      "target_path": "quality/l1b/c/loss_track_20",
+      "source_path": "enhanced_measurement.nc:loss_track_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "loss of track criterion: 20 Hz C band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "normal loss_of_track",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "nav_bul_coarse_time_20_c",
+      "target_path": "quality/l1b/c/nav_bul_coarse_time_20",
+      "source_path": "enhanced_measurement.nc:nav_bul_coarse_time_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 4294967295,
+        "long_name": "navigation bulletin coarse time : 20 Hz C band",
+        "units": "second",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "nav_bul_fine_time_20_c",
+      "target_path": "quality/l1b/c/nav_bul_fine_time_20",
+      "source_path": "enhanced_measurement.nc:nav_bul_fine_time_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 4294967295,
+        "long_name": "navigation bulletin fine time : 20 Hz C band",
+        "units": "2^-24 second",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "nav_bul_source_20_c",
+      "target_path": "quality/l1b/c/nav_bul_source_20",
+      "source_path": "enhanced_measurement.nc:nav_bul_source_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "navigation bulletin source identifier : 20 Hz C band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "gps doris",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "nav_bul_status_20_c",
+      "target_path": "quality/l1b/c/nav_bul_status_20",
+      "source_path": "enhanced_measurement.nc:nav_bul_status_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "navigation bulletin status : 20 Hz C band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "OK KO",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "oper_instr_20_c",
+      "target_path": "quality/l1b/c/oper_instr_20",
+      "source_path": "enhanced_measurement.nc:oper_instr_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "operating instrument : 20 Hz C band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "A B",
+        "comment": "SAR mode: value the closest in time to the reference measurement - Instrument A stands for SRAL Nominal and instrument B stands for SRAL Redundant"
+      }
+    },
+    {
+      "short_name": "seq_count_20_c",
+      "target_path": "quality/l1b/c/seq_count_20",
+      "source_path": "enhanced_measurement.nc:seq_count_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "long_name": "sequence count : 20 Hz C band",
+        "units": "count",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "weighting_20_c",
+      "target_path": "quality/l1b/c/weighting_20",
+      "source_path": "enhanced_measurement.nc:weighting_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "altimeter configuration - weighting function : 20 Hz C band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "enabled disabled",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "nb_stack_20_ku",
+      "target_path": "quality/l1b/ku/nb_stack_20",
+      "source_path": "enhanced_measurement.nc:nb_stack_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "long_name": "Number of waveforms summed in stack in SAR processing : 20 Hz Ku band",
+        "units": "count",
+        "comment": "Number of multilooked beams used to form the SAR mode waveform"
+      }
+    },
+    {
+      "short_name": "acq_stat_20_ku",
+      "target_path": "quality/l1b/ku/acq_stat_20",
+      "source_path": "enhanced_measurement.nc:acq_stat_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "tracking configuration - acquisition status : 20 Hz Ku band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "no_acquisition acquisition",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "cl_gain_20_ku",
+      "target_path": "quality/l1b/ku/cl_gain_20",
+      "source_path": "enhanced_measurement.nc:cl_gain_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "tracking configuration - closed loop gain : 20 Hz Ku band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "Nominal_value Nominal_value_with_back_off",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "dem_eeprom_20_ku",
+      "target_path": "quality/l1b/ku/dem_eeprom_20",
+      "source_path": "enhanced_measurement.nc:dem_eeprom_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "tracking configuration - DEM EEPROM read access : 20 Hz Ku band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "enabled disabled",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "flag_man_plane_20_ku",
+      "target_path": "quality/l1b/ku/flag_man_plane_20",
+      "source_path": "enhanced_measurement.nc:flag_man_plane_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "manoeuvre plane flag : 20 Hz ku band ",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "in_plane out_of_plane",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "flag_man_pres_20_ku",
+      "target_path": "quality/l1b/ku/flag_man_pres_20",
+      "source_path": "enhanced_measurement.nc:flag_man_pres_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "manoeuvre presence flag : 20 Hz ku band ",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "no_manoeuvre ongoing_manoeuvre",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "flag_man_thrust_20_ku",
+      "target_path": "quality/l1b/ku/flag_man_thrust_20",
+      "source_path": "enhanced_measurement.nc:flag_man_thrust_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "manoeuvre thrust flag : 20 Hz ku band ",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "no_thrust ongoing_thrust",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "isp_time_status_20_ku",
+      "target_path": "quality/l1b/ku/isp_time_status_20",
+      "source_path": "enhanced_measurement.nc:isp_time_status_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "ISP time status : 20 Hz Ku band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "SRAL_OBT_extrapolated SRAL_OBT_updated_with_SMU_OBT",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "loss_track_20_ku",
+      "target_path": "quality/l1b/ku/loss_track_20",
+      "source_path": "enhanced_measurement.nc:loss_track_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "loss of track criterion: 20 Hz Ku band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "normal loss_of_track",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "nav_bul_coarse_time_20_ku",
+      "target_path": "quality/l1b/ku/nav_bul_coarse_time_20",
+      "source_path": "enhanced_measurement.nc:nav_bul_coarse_time_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 4294967295,
+        "long_name": "navigation bulletin coarse time : 20 Hz Ku band",
+        "units": "second",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "nav_bul_fine_time_20_ku",
+      "target_path": "quality/l1b/ku/nav_bul_fine_time_20",
+      "source_path": "enhanced_measurement.nc:nav_bul_fine_time_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 4294967295,
+        "long_name": "navigation bulletin fine time : 20 Hz Ku band",
+        "units": "2^-24 second",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "nav_bul_source_20_ku",
+      "target_path": "quality/l1b/ku/nav_bul_source_20",
+      "source_path": "enhanced_measurement.nc:nav_bul_source_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "navigation bulletin source identifier : 20 Hz Ku band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "gps doris",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "nav_bul_status_20_ku",
+      "target_path": "quality/l1b/ku/nav_bul_status_20",
+      "source_path": "enhanced_measurement.nc:nav_bul_status_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "navigation bulletin status : 20 Hz Ku band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "OK KO",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "oper_instr_20_ku",
+      "target_path": "quality/l1b/ku/oper_instr_20",
+      "source_path": "enhanced_measurement.nc:oper_instr_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "operating instrument : 20 Hz Ku band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "A B",
+        "comment": "SAR mode: value the closest in time to the reference measurement - Instrument A stands for SRAL Nominal and instrument B stands for SRAL Redundant"
+      }
+    },
+    {
+      "short_name": "seq_count_20_ku",
+      "target_path": "quality/l1b/ku/seq_count_20",
+      "source_path": "enhanced_measurement.nc:seq_count_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "long_name": "sequence count : 20 Hz Ku band",
+        "units": "count",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "weighting_20_ku",
+      "target_path": "quality/l1b/ku/weighting_20",
+      "source_path": "enhanced_measurement.nc:weighting_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "altimeter configuration - weighting function : 20 Hz Ku band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "enabled disabled",
+        "comment": "SAR mode: value the closest in time to the reference measurement"
+      }
+    },
+    {
+      "short_name": "interp_flag_water_tide_sol1_01",
+      "target_path": "quality/l2/interp_flag_water_tide_sol1_01",
+      "source_path": "enhanced_measurement.nc:interp_flag_water_tide_sol1_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Ocean tide solution 1 interpolation flag : 1 Hz",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "good bad",
+        "coordinates": "lon_01 lat_01",
+        "cooment": "0 = 4 points over ocean; 1 = less than 4 points"
+      }
+    },
+    {
+      "short_name": "interp_flag_water_tide_sol2_01",
+      "target_path": "quality/l2/interp_flag_water_tide_sol2_01",
+      "source_path": "enhanced_measurement.nc:interp_flag_water_tide_sol2_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Ocean tide solution 2 interpolation flag : 1 Hz",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "good bad",
+        "coordinates": "lon_01 lat_01",
+        "cooment": "0 = 4 points over ocean; 1 = less than 4 points"
+      }
+    },
+    {
+      "short_name": "meteo_map_avail_01",
+      "target_path": "quality/l2/meteo_map_avail_01",
+      "source_path": "enhanced_measurement.nc:meteo_map_avail_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Meteorological map availability: 1 Hz",
+        "flag_values": [
+          0,
+          1,
+          2
+        ],
+        "flag_meanings": "2_maps_nominal 1_map_extropolated no_map",
+        "comment": "Possible values are:  0 meaning '2 maps, nominal' (six hours apart), 1 meaning '1 map, extrapolation used', 2 meaning 'no map'. "
+      }
+    },
+    {
+      "short_name": "orbit_type_01",
+      "target_path": "quality/l2/orbit_type_01",
+      "source_path": "enhanced_measurement.nc:orbit_type_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Orbit type flag : 1 Hz Ku band",
+        "flag_values": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "flag_meanings": "osf fos navatt doris_nav gnss_roe pod_moe salp_moe pod_poe salp_poe"
+      }
+    },
+    {
+      "short_name": "rad_along_track_avg_flag_01",
+      "target_path": "quality/l2/rad_along_track_avg_flag_01",
+      "source_path": "enhanced_measurement.nc:rad_along_track_avg_flag_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Radiometer along-track averaging flag : 1 Hz",
+        "flag_values": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "flag_meanings": "good extrapolated degraded fail"
+      }
+    },
+    {
+      "short_name": "tb_238_quality_flag_01",
+      "target_path": "quality/l2/tb_238_quality_flag_01",
+      "source_path": "enhanced_measurement.nc:tb_238_quality_flag_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "Quality flag of 23.8 GHz main beam brightness temperature based on mean and standard deviation thresholds: 01 Hz ",
+        "_FillValue": 127,
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "good bad"
+      }
+    },
+    {
+      "short_name": "tb_365_quality_flag_01",
+      "target_path": "quality/l2/tb_365_quality_flag_01",
+      "source_path": "enhanced_measurement.nc:tb_365_quality_flag_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "Quality flag of 36.5 GHz main beam brightness temperature based on mean and standard deviation thresholds: 01 Hz ",
+        "_FillValue": 127,
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "good bad"
+      }
+    },
+    {
+      "short_name": "climato_use_flag_01_ku",
+      "target_path": "quality/l2/ku/climato_use_flag_01",
+      "source_path": "enhanced_measurement.nc:climato_use_flag_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "Flag indicating the use of climatological values for the computation of Sigma atmospheric attenuation: 01 Hz Ku band ",
+        "_FillValue": 127,
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "climato_not_used climato_used"
+      }
+    },
+    {
+      "short_name": "first_year_ice_class_01_ku",
+      "target_path": "quality/l2/ku/first_year_ice_class_01",
+      "source_path": "enhanced_measurement.nc:first_year_ice_class_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "First-year ice class membership : 1 Hz Ku band",
+        "units": "count",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "Value between 0 and 1"
+      }
+    },
+    {
+      "short_name": "instr_op_mode_20_ku",
+      "target_path": "quality/l2/ku/instr_op_mode_20",
+      "source_path": "enhanced_measurement.nc:instr_op_mode_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Instrument operating mode : 20 Hz Ku band",
+        "flag_values": [
+          0,
+          1,
+          2
+        ],
+        "flag_meanings": "LRM SAR LRM_and_SAR"
+      }
+    },
+    {
+      "short_name": "mode_id_20_ku",
+      "target_path": "quality/l2/ku/mode_id_20",
+      "source_path": "enhanced_measurement.nc:mode_id_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Mode identifier : 20 Hz Ku band",
+        "flag_values": [
+          0,
+          1,
+          2
+        ],
+        "flag_meanings": "closed_loop open_loop open_loop_fixed_gain",
+        "comment": "open loop fixed gain state applicable to SAR mode only"
+      }
+    },
+    {
+      "short_name": "multi_year_ice_class_01_ku",
+      "target_path": "quality/l2/ku/multi_year_ice_class_01",
+      "source_path": "enhanced_measurement.nc:multi_year_ice_class_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Multi-year ice class membership : 1 Hz Ku band",
+        "units": "count",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "Value between 0 and 1"
+      }
+    },
+    {
+      "short_name": "open_sea_ice_flag_01_ku",
+      "target_path": "quality/l2/ku/open_sea_ice_flag_01",
+      "source_path": "enhanced_measurement.nc:open_sea_ice_flag_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Open sea-ice flag : 1 Hz Ku band",
+        "flag_values": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "flag_meanings": "ocean first_year_sea_ice wet_ice multi_year_sea_ice ambiguous_mixture_of_type not_evaluated"
+      }
+    },
+    {
+      "short_name": "open_water_class_01_ku",
+      "target_path": "quality/l2/ku/open_water_class_01",
+      "source_path": "enhanced_measurement.nc:open_water_class_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Open water class membership : 1 Hz Ku band",
+        "units": "count",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "Value between 0 and 1"
+      }
+    },
+    {
+      "short_name": "peakiness_1_20_ku",
+      "target_path": "quality/l2/ku/peakiness_1_20",
+      "source_path": "enhanced_measurement.nc:peakiness_1_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Peakiness 1: 20 Hz Ku band",
+        "units": "count",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "Peakiness as computed for the ENVISAT mission"
+      }
+    },
+    {
+      "short_name": "peakiness_2_20_ku",
+      "target_path": "quality/l2/ku/peakiness_2_20",
+      "source_path": "enhanced_measurement.nc:peakiness_2_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Peakiness 2: 20 Hz Ku band",
+        "units": "count",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "Laxon's derivation"
+      }
+    },
+    {
+      "short_name": "rain_flag_01_ku",
+      "target_path": "quality/l2/ku/rain_flag_01",
+      "source_path": "enhanced_measurement.nc:rain_flag_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Altimeter rain flag : 1 Hz Ku band",
+        "flag_values": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "flag_meanings": "no_rain rain high_rain_probability_from_altimeter high_probability_of_no_rain_from_altimeter ambiguous_situation_possibility_of_ice evaluation_not_possible"
+      }
+    },
+    {
+      "short_name": "waveform_qual_ice_20_ku",
+      "target_path": "quality/l2/ku/waveform_qual_ice_20",
+      "source_path": "enhanced_measurement.nc:waveform_qual_ice_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Ice waveform quality check status : 20 Hz ku band",
+        "flag_mask": [
+          0,
+          1,
+          2,
+          4,
+          8,
+          16,
+          32
+        ],
+        "flag_meanings": "waveform_ok total_power_test_failed noise_power_test_failed variance_test_failed leading_edge_test_failed low_peakiness_test_failed high_peakiness_test_failed"
+      }
+    },
+    {
+      "short_name": "wet_ice_class_01_ku",
+      "target_path": "quality/l2/ku/wet_ice_class_01",
+      "source_path": "enhanced_measurement.nc:wet_ice_class_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Wet ice ice class membership : 1 Hz Ku band",
+        "units": "count",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "Value between 0 and 1"
+      }
+    },
+    {
+      "short_name": "instr_op_mode_20_c",
+      "target_path": "quality/l2/c/instr_op_mode_20",
+      "source_path": "enhanced_measurement.nc:instr_op_mode_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Instrument operating mode : 20 Hz C band",
+        "flag_values": [
+          0,
+          1,
+          2
+        ],
+        "flag_meanings": "LRM SAR LRM_and_SAR"
+      }
+    },
+    {
+      "short_name": "mode_id_20_c",
+      "target_path": "quality/l2/c/mode_id_20",
+      "source_path": "enhanced_measurement.nc:mode_id_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Mode identifier : 20 Hz C band",
+        "flag_values": [
+          0,
+          1,
+          2
+        ],
+        "flag_meanings": "closed_loop open_loop open_loop_fixed_gain",
+        "comment": "open loop fixed gain state applicable to SAR mode only"
+      }
+    },
+    {
+      "short_name": "peakiness_1_20_c",
+      "target_path": "quality/l2/c/peakiness_1_20",
+      "source_path": "enhanced_measurement.nc:peakiness_1_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Peakiness 1: 20 Hz C band",
+        "units": "count",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "Peakiness as computed for the ENVISAT mission"
+      }
+    },
+    {
+      "short_name": "peakiness_2_20_c",
+      "target_path": "quality/l2/c/peakiness_2_20",
+      "source_path": "enhanced_measurement.nc:peakiness_2_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Peakiness 2: 20 Hz C band",
+        "units": "count",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "Laxon's derivation"
+      }
+    },
+    {
+      "short_name": "climato_use_flag_01_plrm_ku",
+      "target_path": "quality/l2/plrm_ku/climato_use_flag_01",
+      "source_path": "enhanced_measurement.nc:climato_use_flag_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "Flag indicating the use of climatological values for the computation of Sigma atmospheric attenuation: 01 Hz Plrm Ku band ",
+        "_FillValue": 127,
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "climato_not_used climato_used"
+      }
+    },
+    {
+      "short_name": "first_year_ice_class_01_plrm_ku",
+      "target_path": "quality/l2/plrm_ku/first_year_ice_class_01",
+      "source_path": "enhanced_measurement.nc:first_year_ice_class_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "First-year ice class membership : 1 Hz Plrm Ku band",
+        "units": "count",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "Value between 0 and 1"
+      }
+    },
+    {
+      "short_name": "multi_year_ice_class_01_plrm_ku",
+      "target_path": "quality/l2/plrm_ku/multi_year_ice_class_01",
+      "source_path": "enhanced_measurement.nc:multi_year_ice_class_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Multi-year ice class membership : 1 Hz Plrm Ku band",
+        "units": "count",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "Value between 0 and 1"
+      }
+    },
+    {
+      "short_name": "open_sea_ice_flag_01_plrm_ku",
+      "target_path": "quality/l2/plrm_ku/open_sea_ice_flag_01",
+      "source_path": "enhanced_measurement.nc:open_sea_ice_flag_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Open sea-ice flag : 1 Hz Plrm Ku band",
+        "flag_values": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "flag_meanings": "ocean first_year_sea_ice wet_ice multi_year_sea_ice ambiguous_mixture_of_type not_evaluated"
+      }
+    },
+    {
+      "short_name": "open_water_class_01_plrm_ku",
+      "target_path": "quality/l2/plrm_ku/open_water_class_01",
+      "source_path": "enhanced_measurement.nc:open_water_class_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Open water class membership : 1 Hz Plrm Ku band",
+        "units": "count",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "Value between 0 and 1"
+      }
+    },
+    {
+      "short_name": "peakiness_1_20_plrm_ku",
+      "target_path": "quality/l2/plrm_ku/peakiness_1_20",
+      "source_path": "enhanced_measurement.nc:peakiness_1_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Peakiness 1: 20 Hz Plrm Ku band",
+        "units": "count",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "Peakiness as computed for the ENVISAT mission"
+      }
+    },
+    {
+      "short_name": "rain_flag_01_plrm_ku",
+      "target_path": "quality/l2/plrm_ku/rain_flag_01",
+      "source_path": "enhanced_measurement.nc:rain_flag_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Altimeter rain flag : 1 Hz Plrm Ku band",
+        "flag_values": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "flag_meanings": "no_rain rain high_rain_probability_from_altimeter high_probability_of_no_rain_from_altimeter ambiguous_situation_possibility_of_ice evaluation_not_possible"
+      }
+    },
+    {
+      "short_name": "wet_ice_class_01_plrm_ku",
+      "target_path": "quality/l2/plrm_ku/wet_ice_class_01",
+      "source_path": "enhanced_measurement.nc:wet_ice_class_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Wet ice ice class membership : 1 Hz Plrm Ku band",
+        "units": "count",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "Value between 0 and 1"
+      }
+    },
+    {
+      "short_name": "cog_cor_01",
+      "target_path": "conditions/instruments/altimeter/cog_cor_01",
+      "source_path": "enhanced_measurement.nc:cog_cor_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Distance antenna-COG correction on altimeter range: 1 Hz",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001
+      }
+    },
+    {
+      "short_name": "agc_cor_20_c",
+      "target_path": "conditions/instruments/altimeter/c/agc_cor_20",
+      "source_path": "enhanced_measurement.nc:agc_cor_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "correction for instrumental errors on AGC : 20 Hz C band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01
+      }
+    },
+    {
+      "short_name": "dop_cor_20_c",
+      "target_path": "conditions/instruments/altimeter/c/dop_cor_20",
+      "source_path": "enhanced_measurement.nc:dop_cor_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "doppler correction on the altimeter range : 20 Hz C band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Nadir Doppler correction on the altimeter range"
+      }
+    },
+    {
+      "short_name": "int_path_cor_20_c",
+      "target_path": "conditions/instruments/altimeter/c/int_path_cor_20",
+      "source_path": "enhanced_measurement.nc:int_path_cor_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "internal path correction on the altimeter range : 20 Hz C band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Internal calibration correction on the altimeter range"
+      }
+    },
+    {
+      "short_name": "mod_instr_cor_range_01_c",
+      "target_path": "conditions/instruments/altimeter/c/mod_instr_cor_range_01",
+      "source_path": "enhanced_measurement.nc:mod_instr_cor_range_01_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Modeled instrumental correction on the altimeter range: 1 Hz C band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001
+      }
+    },
+    {
+      "short_name": "mod_instr_cor_sig0_01_c",
+      "target_path": "conditions/instruments/altimeter/c/mod_instr_cor_sig0_01",
+      "source_path": "enhanced_measurement.nc:mod_instr_cor_sig0_01_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Modeled instrumental correction on the backscatter coefficient: 1 HzC band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01
+      }
+    },
+    {
+      "short_name": "mod_instr_cor_swh_01_c",
+      "target_path": "conditions/instruments/altimeter/c/mod_instr_cor_swh_01",
+      "source_path": "enhanced_measurement.nc:mod_instr_cor_swh_01_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Modeled instrumental correction on the significant waveheight: 1 Hz C band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.001
+      }
+    },
+    {
+      "short_name": "net_instr_cor_range_20_c",
+      "target_path": "conditions/instruments/altimeter/c/net_instr_cor_range_20",
+      "source_path": "enhanced_measurement.nc:net_instr_cor_range_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Net instrumental correction on the altimeter range : 20 Hz C band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Sum of distance antenna-COG, USO drift correction (uso_cor_20_c), internal path correction (int_path_cor_20_c), L2 Doppler correction update (dop_cor_20_c - dop_cor_l1b_20_c),modeled instrumental errors correction (mod_instr_cor_range_01_c) and system bias"
+      }
+    },
+    {
+      "short_name": "net_instr_cor_sig0_20_c",
+      "target_path": "conditions/instruments/altimeter/c/net_instr_cor_sig0_20",
+      "source_path": "enhanced_measurement.nc:net_instr_cor_sig0_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Net instrumental correction on the backscatter coefficient: 20 Hz C band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "Sum of AGC instrumental errors correction (agc_cor_20_c), internal calibration correction (sig0_cal_20_c), modeled instrumental errors correction (mod_instr_cor_sig0_01_c) and system bias."
+      }
+    },
+    {
+      "short_name": "net_instr_cor_swh_20_c",
+      "target_path": "conditions/instruments/altimeter/c/net_instr_cor_swh_20",
+      "source_path": "enhanced_measurement.nc:net_instr_cor_swh_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Net instrumental correction on the significant waveheight: 20 Hz C band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.001,
+        "comment": "Sum of modeled instrumental errors correction (mod_instr_cor_swh_01_c) and system bias"
+      }
+    },
+    {
+      "short_name": "sig0_cal_20_c",
+      "target_path": "conditions/instruments/altimeter/c/sig0_cal_20",
+      "source_path": "enhanced_measurement.nc:sig0_cal_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "internal calibration correction on the backscatter coefficient : 20 Hz C band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01
+      }
+    },
+    {
+      "short_name": "uso_cor_20_c",
+      "target_path": "conditions/instruments/altimeter/c/uso_cor_20",
+      "source_path": "enhanced_measurement.nc:uso_cor_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "USO frequency drift correction : 20 Hz C band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Correction of the USO frequency drift on the altimeter range"
+      }
+    },
+    {
+      "short_name": "agc_cor_20_ku",
+      "target_path": "conditions/instruments/altimeter/ku/agc_cor_20",
+      "source_path": "enhanced_measurement.nc:agc_cor_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "correction for instrumental errors on AGC : 20 Hz Ku band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01
+      }
+    },
+    {
+      "short_name": "dop_cor_20_ku",
+      "target_path": "conditions/instruments/altimeter/ku/dop_cor_20",
+      "source_path": "enhanced_measurement.nc:dop_cor_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "doppler correction on the altimeter range : 20 Hz Ku band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Nadir Doppler correction on the altimeter range"
+      }
+    },
+    {
+      "short_name": "int_path_cor_20_ku",
+      "target_path": "conditions/instruments/altimeter/ku/int_path_cor_20",
+      "source_path": "enhanced_measurement.nc:int_path_cor_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "internal path correction on the altimeter range : 20 Hz Ku band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Internal calibration correction on the altimeter range"
+      }
+    },
+    {
+      "short_name": "mod_instr_cor_range_01_ku",
+      "target_path": "conditions/instruments/altimeter/ku/mod_instr_cor_range_01",
+      "source_path": "enhanced_measurement.nc:mod_instr_cor_range_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Modeled instrumental correction on the altimeter range: 1 Hz Ku band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001
+      }
+    },
+    {
+      "short_name": "mod_instr_cor_sig0_01_ku",
+      "target_path": "conditions/instruments/altimeter/ku/mod_instr_cor_sig0_01",
+      "source_path": "enhanced_measurement.nc:mod_instr_cor_sig0_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Modeled instrumental correction on the backscatter coefficient: 1 Hz Ku band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01
+      }
+    },
+    {
+      "short_name": "mod_instr_cor_swh_01_ku",
+      "target_path": "conditions/instruments/altimeter/ku/mod_instr_cor_swh_01",
+      "source_path": "enhanced_measurement.nc:mod_instr_cor_swh_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Modeled instrumental correction on the significant waveheight: 1 Hz Ku band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.001
+      }
+    },
+    {
+      "short_name": "net_instr_cor_range_20_ku",
+      "target_path": "conditions/instruments/altimeter/ku/net_instr_cor_range_20",
+      "source_path": "enhanced_measurement.nc:net_instr_cor_range_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Net instrumental correction on the altimeter range : 20 Hz Ku band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Sum of distance antenna-COG, USO drift correction (uso_cor_20_ku), internal path correction (int_path_cor_20_ku), L2 Doppler correction update (dop_cor_20_ku - dop_cor_l1b_20_ku),modeled instrumental errors correction (mod_instr_cor_range_01_ku) and system bias"
+      }
+    },
+    {
+      "short_name": "net_instr_cor_sig0_20_ku",
+      "target_path": "conditions/instruments/altimeter/ku/net_instr_cor_sig0_20",
+      "source_path": "enhanced_measurement.nc:net_instr_cor_sig0_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Net instrumental correction on the backscatter coefficient: 20 Hz Ku band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "Sum of AGC instrumental errors correction (agc_cor_20_ku), internal calibration correction (sig0_cal_20_ku), modeled instrumental errors correction (mod_instr_cor_sig0_01_ku) and system bias."
+      }
+    },
+    {
+      "short_name": "net_instr_cor_swh_20_ku",
+      "target_path": "conditions/instruments/altimeter/ku/net_instr_cor_swh_20",
+      "source_path": "enhanced_measurement.nc:net_instr_cor_swh_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Net instrumental correction on the significant waveheight: 20 Hz Ku band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.001,
+        "comment": "Sum of modeled instrumental errors correction (mod_instr_cor_swh_01_ku) and system bias"
+      }
+    },
+    {
+      "short_name": "sig0_cal_20_ku",
+      "target_path": "conditions/instruments/altimeter/ku/sig0_cal_20",
+      "source_path": "enhanced_measurement.nc:sig0_cal_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "internal calibration correction on the backscatter coefficient : 20 Hz Ku band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01
+      }
+    },
+    {
+      "short_name": "uso_cor_20_ku",
+      "target_path": "conditions/instruments/altimeter/ku/uso_cor_20",
+      "source_path": "enhanced_measurement.nc:uso_cor_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "USO frequency drift correction : 20 Hz Ku band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Correction of the USO frequency drift on the altimeter range"
+      }
+    },
+    {
+      "short_name": "agc_cor_20_plrm_ku",
+      "target_path": "conditions/instruments/altimeter/plrm_ku/agc_cor_20",
+      "source_path": "enhanced_measurement.nc:agc_cor_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "correction for instrumental errors on AGC : 20 Hz Plrm Ku band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01
+      }
+    },
+    {
+      "short_name": "dop_cor_20_plrm_ku",
+      "target_path": "conditions/instruments/altimeter/plrm_ku/dop_cor_20",
+      "source_path": "enhanced_measurement.nc:dop_cor_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "doppler correction on the altimeter range : 20 Hz Plrm Ku band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Nadir Doppler correction on the altimeter range"
+      }
+    },
+    {
+      "short_name": "int_path_cor_20_plrm_ku",
+      "target_path": "conditions/instruments/altimeter/plrm_ku/int_path_cor_20",
+      "source_path": "enhanced_measurement.nc:int_path_cor_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "internal path correction on the altimeter range : 20 Hz Plrm Ku band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Internal calibration correction on the altimeter range"
+      }
+    },
+    {
+      "short_name": "mod_instr_cor_range_01_plrm_ku",
+      "target_path": "conditions/instruments/altimeter/plrm_ku/mod_instr_cor_range_01",
+      "source_path": "enhanced_measurement.nc:mod_instr_cor_range_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Modeled instrumental correction on the altimeter range: 1 Hz Plrm Ku band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001
+      }
+    },
+    {
+      "short_name": "mod_instr_cor_sig0_01_plrm_ku",
+      "target_path": "conditions/instruments/altimeter/plrm_ku/mod_instr_cor_sig0_01",
+      "source_path": "enhanced_measurement.nc:mod_instr_cor_sig0_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Modeled instrumental correction on the backscatter coefficient: 1 Hz Plrm Ku band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01
+      }
+    },
+    {
+      "short_name": "mod_instr_cor_swh_01_plrm_ku",
+      "target_path": "conditions/instruments/altimeter/plrm_ku/mod_instr_cor_swh_01",
+      "source_path": "enhanced_measurement.nc:mod_instr_cor_swh_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Modeled instrumental correction on the significant waveheight: 1 Hz Plrm Ku band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.001
+      }
+    },
+    {
+      "short_name": "net_instr_cor_range_20_plrm_ku",
+      "target_path": "conditions/instruments/altimeter/plrm_ku/net_instr_cor_range_20",
+      "source_path": "enhanced_measurement.nc:net_instr_cor_range_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Net instrumental correction on the altimeter range : 20 Hz Plrm Ku band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Sum of distance antenna-COG, USO drift correction (uso_cor_20_c), internal path correction (int_path_cor_20_plrm_ku), L2 Doppler correction update (dop_cor_20_plrm_ku - dop_cor_l1b_20_plrm_ku),modeled instrumental errors correction (mod_instr_cor_range_01_plrm_ku) and system bias"
+      }
+    },
+    {
+      "short_name": "net_instr_cor_sig0_20_plrm_ku",
+      "target_path": "conditions/instruments/altimeter/plrm_ku/net_instr_cor_sig0_20",
+      "source_path": "enhanced_measurement.nc:net_instr_cor_sig0_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Net instrumental correction on the backscatter coefficient: 20 Hz Plrm Ku band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "Sum of AGC instrumental errors correction (agc_cor_20_plrm_ku), internal calibration correction (sig0_cal_20_plrm_ku), modeled instrumental errors correction (mod_instr_cor_sig0_01_plrm_ku) and system bias."
+      }
+    },
+    {
+      "short_name": "net_instr_cor_swh_20_plrm_ku",
+      "target_path": "conditions/instruments/altimeter/plrm_ku/net_instr_cor_swh_20",
+      "source_path": "enhanced_measurement.nc:net_instr_cor_swh_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Net instrumental correction on the significant waveheight: 20 Hz Plrm Ku band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.001,
+        "comment": "Sum of modeled instrumental errors correction (mod_instr_cor_swh_01_plrm_ku) and system bias"
+      }
+    },
+    {
+      "short_name": "sig0_cal_20_plrm_ku",
+      "target_path": "conditions/instruments/altimeter/plrm_ku/sig0_cal_20",
+      "source_path": "enhanced_measurement.nc:sig0_cal_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "internal calibration correction on the backscatter coefficient : 20 Hz Plrm Ku band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01
+      }
+    },
+    {
+      "short_name": "tb_238_01",
+      "target_path": "conditions/instruments/radiometer/tb_238_01",
+      "source_path": "enhanced_measurement.nc:tb_238_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "23.8 GHz main beam brightness temperature: 1 Hz",
+        "units": "K",
+        "standard_name": "surface_brightness_temperature",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "source": "MWR",
+        "institution": "CASA"
+      }
+    },
+    {
+      "short_name": "tb_238_std_01",
+      "target_path": "conditions/instruments/radiometer/tb_238_std_01",
+      "source_path": "enhanced_measurement.nc:tb_238_std_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "Standard deviation of 23.8 GHz main beam brightness temperature: 01 Hz",
+        "_FillValue": 32767,
+        "units": "K",
+        "add_offset": 0.0,
+        "scale_factor": 0.01
+      }
+    },
+    {
+      "short_name": "tb_365_01",
+      "target_path": "conditions/instruments/radiometer/tb_365_01",
+      "source_path": "enhanced_measurement.nc:tb_365_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "36.5 GHz main beam brightness temperature: 1 Hz",
+        "units": "K",
+        "standard_name": "surface_brightness_temperature",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "source": "MWR",
+        "institution": "CASA"
+      }
+    },
+    {
+      "short_name": "tb_365_std_01",
+      "target_path": "conditions/instruments/radiometer/tb_365_std_01",
+      "source_path": "enhanced_measurement.nc:tb_365_std_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "Standard deviation of 36.5 GHz main beam brightness temperature: 01 Hz",
+        "_FillValue": 32767,
+        "units": "K",
+        "add_offset": 0.0,
+        "scale_factor": 0.01
+      }
+    },
+    {
+      "short_name": "rad_surf_type_01",
+      "target_path": "conditions/geophysical/surface/rad_surf_type_01",
+      "source_path": "enhanced_measurement.nc:rad_surf_type_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "radiometer derived surface type : 1 Hz",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "ocean land"
+      }
+    },
+    {
+      "short_name": "angle_coast_20_ku",
+      "target_path": "conditions/geophysical/surface/ku/angle_coast_20",
+      "source_path": "enhanced_measurement.nc:angle_coast_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "angle to the coast : 20 Hz Ku band",
+        "units": "degree",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "coordinates": "lon_20_ku lat_20_ku"
+      }
+    },
+    {
+      "short_name": "dist_coast_20_ku",
+      "target_path": "conditions/geophysical/surface/ku/dist_coast_20",
+      "source_path": "enhanced_measurement.nc:dist_coast_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "distance to the coast : 20 Hz Ku band",
+        "units": "m"
+      }
+    },
+    {
+      "short_name": "sea_ice_concentration_20_ku",
+      "target_path": "conditions/geophysical/surface/ku/sea_ice_concentration_20",
+      "source_path": "enhanced_measurement.nc:sea_ice_concentration_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "sea-ice concentration: 20 Hz Ku band",
+        "units": "percent",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "Derived from a 3-day average of SSM/I daily brightness temperatures or if unavailable a static monthly climatology."
+      }
+    },
+    {
+      "short_name": "snow_depth_20_ku",
+      "target_path": "conditions/geophysical/surface/ku/snow_depth_20",
+      "source_path": "enhanced_measurement.nc:snow_depth_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "snow depth: 20 Hz Ku band",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Snow depth"
+      }
+    },
+    {
+      "short_name": "surf_class_20_ku",
+      "target_path": "conditions/geophysical/surface/ku/surf_class_20",
+      "source_path": "enhanced_measurement.nc:surf_class_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "surface classification : 20 Hz ku band ",
+        "flag_values": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "flag_meanings": "open_ocean land continental_water aquatic_vegetation continental_ice_snow floating_ice salted_basin",
+        "_FillValue": 127,
+        "comment": "Computed from a mask built with MODIS and GlobCover data"
+      }
+    },
+    {
+      "short_name": "surf_type_20_ku",
+      "target_path": "conditions/geophysical/surface/ku/surf_type_20",
+      "source_path": "enhanced_measurement.nc:surf_type_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "surface type : 20 Hz Ku band",
+        "flag_values": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "flag_meanings": "ocean_or_semi_enclosed_sea enclosed_sea_or_lake continental_ice land"
+      }
+    },
+    {
+      "short_name": "surf_type_20_c",
+      "target_path": "conditions/geophysical/surface/c/surf_type_20",
+      "source_path": "enhanced_measurement.nc:surf_type_20_c",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "surface type : 20 Hz C band",
+        "flag_values": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "flag_meanings": "ocean_or_semi_enclosed_sea enclosed_sea_or_lake continental_ice land"
+      }
+    },
+    {
+      "short_name": "geoid_01",
+      "target_path": "conditions/geophysical/parameters/geoid_01",
+      "source_path": "enhanced_measurement.nc:geoid_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Geoid height : 1 Hz",
+        "units": "m",
+        "standard_name": "geoid_height_above_reference_ellipsoid",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Computed from the geoid model with a correction to refer the value to the mean tide system i.e. includes the permanent tide (zero frequency)",
+        "source": "EGM2008",
+        "institution": "GSFC"
+      }
+    },
+    {
+      "short_name": "load_tide_sol1_01",
+      "target_path": "conditions/geophysical/parameters/load_tide_sol1_01",
+      "source_path": "enhanced_measurement.nc:load_tide_sol1_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Load tide height for geocentric ocean tide (solution 1): 1 Hz",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "This value has already been added to the corresponding ocean tide height value recorded in the product (ocean_tide_sol1_01).",
+        "source": "GOT4.10c",
+        "institution": "GSFC"
+      }
+    },
+    {
+      "short_name": "load_tide_sol2_01",
+      "target_path": "conditions/geophysical/parameters/load_tide_sol2_01",
+      "source_path": "enhanced_measurement.nc:load_tide_sol2_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Load tide height for geocentric ocean tide (solution 2): 1 Hz",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "This value contains the total load tide height (short-period and long-period) for the geocentric ocean tide (solution 2). To get only the pure ocean tide height (solution 2), do: ocean_tide_sol2_01 + ocean_tide_non_eq_01 - load_tide_sol2_01. This value has already been added to the corresponding ocean tide height value recorded in the product (ocean_tide_sol2_01).",
+        "source": "FES2014b",
+        "institution": "LEGOS/CNES"
+      }
+    },
+    {
+      "short_name": "ocean_tide_eq_01",
+      "target_path": "conditions/geophysical/parameters/ocean_tide_eq_01",
+      "source_path": "enhanced_measurement.nc:ocean_tide_eq_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Equilibrium long-period ocean tide height : 1 Hz",
+        "units": "m",
+        "standard_name": "sea_surface_height_amplitude_due_to_equilibrium_ocean_tide",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "This value has already been added to the two geocentric ocean tide height values recorded in the product (ocean_tide_sol1_01 and ocean_tide_sol2_01). The permanent tide (zero frequency) is not included in this parameter because it is included in the geoid and mean sea surface (geoid_01, mean_sea_surf_sol1_01).",
+        "source": "Cartwright and Edden [1973] Corrected tables of tidal harmonics - J. Geophys. J. R. Astr. Soc., 33, 253-264.",
+        "institution": "[TBD Equilibrium tide institution]"
+      }
+    },
+    {
+      "short_name": "ocean_tide_non_eq_01",
+      "target_path": "conditions/geophysical/parameters/ocean_tide_non_eq_01",
+      "source_path": "enhanced_measurement.nc:ocean_tide_non_eq_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Non-equilibrium long-period ocean tide height : 1 Hz",
+        "units": "m",
+        "standard_name": "sea_surface_height_amplitude_due_to_non_equilibrium_ocean_tide",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "This parameter is computed as a correction to the parameter ocean_tide_eq_01; it contains the long-period ocean tide and the long-period load tide components. This value can be added to ocean_tide_eq_01 (or ocean_tide_sol1_01, ocean_tide_sol2_01) so that the resulting value models the total non equilibrium ocean tide height.",
+        "source": "FES2014b",
+        "institution": "LEGOS/CNES"
+      }
+    },
+    {
+      "short_name": "ocean_tide_sol1_01",
+      "target_path": "conditions/geophysical/parameters/ocean_tide_sol1_01",
+      "source_path": "enhanced_measurement.nc:ocean_tide_sol1_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Geocentric ocean tide height (solution 1) : 1 Hz",
+        "units": "m",
+        "standard_name": "sea_surface_height_amplitude_due_to_geocentric_ocean_tide",
+        "quality_flag": "interp_flag_ocean_tide_sol1_01",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Solution 1 corresponds to GOT model. Includes the corresponding loading tide (load_tide_sol1_01) and equilibrium long-period ocean tide height (ocean_tide_eq_01). The permanent tide (zero frequency) is not included in this parameter because it is included in the geoid and mean sea surface (geoid_01, mean_sea_surf_sol1_01).",
+        "source": "GOT4.10c",
+        "institution": "GSFC"
+      }
+    },
+    {
+      "short_name": "ocean_tide_sol2_01",
+      "target_path": "conditions/geophysical/parameters/ocean_tide_sol2_01",
+      "source_path": "enhanced_measurement.nc:ocean_tide_sol2_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Geocentric ocean tide height (solution 2) : 1 Hz",
+        "units": "m",
+        "standard_name": "sea_surface_height_amplitude_due_to_geocentric_ocean_tide",
+        "quality_flag": "interp_flag_ocean_tide_sol2_01",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Solution 2 corresponds to FES model. Includes the corresponding short-period part of the loading tide (load_tide_sol2_01) and equilibrium long-period ocean tide height (ocean_tide_eq_01). The permanent tide (zero frequency) is not included in this parameter because it is included in the geoid and mean sea surface (geoid_01, mean_sea_surf_sol1_01).",
+        "source": "FES2014b",
+        "institution": "LEGOS/CNES"
+      }
+    },
+    {
+      "short_name": "odle_01",
+      "target_path": "conditions/geophysical/parameters/odle_01",
+      "source_path": "enhanced_measurement.nc:odle_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Ocean depth/land elevation: 1 Hz",
+        "units": "m",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "source": "ACE2",
+        "institution": "EAPRS Laboratory"
+      }
+    },
+    {
+      "short_name": "pole_tide_01",
+      "target_path": "conditions/geophysical/parameters/pole_tide_01",
+      "source_path": "enhanced_measurement.nc:pole_tide_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Geocentric tide height : 1 Hz",
+        "units": "m",
+        "standard_name": "sea_surface_height_amplitude_due_to_pole_tide",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "source": "Wahr [1985] Deformation of the Earth induced by polar motion - J. Geophys. Res. (Solid Earth), 90, 9363-9368.",
+        "institution": "IERS [TBC]"
+      }
+    },
+    {
+      "short_name": "solid_earth_tide_01",
+      "target_path": "conditions/geophysical/parameters/solid_earth_tide_01",
+      "source_path": "enhanced_measurement.nc:solid_earth_tide_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Solid earth tide height : 1 Hz",
+        "units": "m",
+        "standard_name": "sea_surface_height_amplitude_due_to_earth_tide",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "Calculated using Cartwright and Tayler tables and consisting of the second and third degree constituents. The permanent tide (zero frequency) is not included.",
+        "source": "Cartwright and Edden [1973] Corrected tables of tidal harmonics - J. Geophys. J. R. Astr. Soc., 33, 253-264.",
+        "institution": "[TBD Solid earth tide institution]"
+      }
+    },
+    {
+      "short_name": "wind_speed_mod_u_01",
+      "target_path": "conditions/geophysical/meteo/wind_speed_mod_u_01",
+      "source_path": "enhanced_measurement.nc:wind_speed_mod_u_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "U component of the model wind vector : 1 Hz",
+        "units": "m/s",
+        "standard_name": "wind_speed",
+        "quality_flag": "meteo_map_avail_01",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "Computed at the altimeter time-tag from the interpolation of 2 meteorological fields that surround the altimeter time-tag ",
+        "source": "European Center for Medium Range Weather Forecasting",
+        "institution": "ECMWF"
+      }
+    },
+    {
+      "short_name": "wind_speed_mod_v_01",
+      "target_path": "conditions/geophysical/meteo/wind_speed_mod_v_01",
+      "source_path": "enhanced_measurement.nc:wind_speed_mod_v_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "V component of the model wind vector : 1 Hz",
+        "units": "m/s",
+        "standard_name": "wind_speed",
+        "quality_flag": "meteo_map_avail_01",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "Computed at the altimeter time-tag from the interpolation of 2 meteorological fields that surround the altimeter time-tag ",
+        "source": "European Center for Medium Range Weather Forecasting",
+        "institution": "ECMWF"
+      }
+    },
+    {
+      "short_name": "rad_liquid_water_01_ku",
+      "target_path": "conditions/geophysical/meteo/ku/rad_liquid_water_01",
+      "source_path": "enhanced_measurement.nc:rad_liquid_water_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Radiometer liquid water content : 1 Hz Ku band",
+        "units": "kg/m^2",
+        "standard_name": "atmosphere_cloud_liquid_water_content",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "Should not be used over land",
+        "source": "MWR",
+        "institution": "CASA"
+      }
+    },
+    {
+      "short_name": "rad_water_vapor_01_ku",
+      "target_path": "conditions/geophysical/meteo/ku/rad_water_vapor_01",
+      "source_path": "enhanced_measurement.nc:rad_water_vapor_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Radiometer water vapor content : 1 Hz Ku band",
+        "units": "kg/m^2",
+        "standard_name": "atmosphere_water_vapor_content",
+        "add_offset": 0.0,
+        "scale_factor": 0.1,
+        "comment": "Should not be used over land",
+        "source": "MWR",
+        "institution": "CASA"
+      }
+    },
+    {
+      "short_name": "rain_att_01_ku",
+      "target_path": "conditions/geophysical/meteo/ku/rain_att_01",
+      "source_path": "enhanced_measurement.nc:rain_att_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Rain attenuation : 1 Hz Ku band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01
+      }
+    },
+    {
+      "short_name": "snow_density_20_ku",
+      "target_path": "conditions/geophysical/meteo/ku/snow_density_20",
+      "source_path": "enhanced_measurement.nc:snow_density_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "snow density: 20 Hz Ku band",
+        "units": "kg/m^3"
+      }
+    },
+    {
+      "short_name": "wind_speed_alt_01_ku",
+      "target_path": "conditions/geophysical/meteo/ku/wind_speed_alt_01",
+      "source_path": "enhanced_measurement.nc:wind_speed_alt_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Altimeter wind speed : 1 Hz Ku band",
+        "units": "m/s",
+        "standard_name": "wind_speed",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "Should not be used over land"
+      }
+    },
+    {
+      "short_name": "rain_att_01_plrm_ku",
+      "target_path": "conditions/geophysical/meteo/plrm_ku/rain_att_01",
+      "source_path": "enhanced_measurement.nc:rain_att_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Rain attenuation : 1 Hz Plrm Ku band",
+        "units": "dB",
+        "add_offset": 0.0,
+        "scale_factor": 0.01
+      }
+    },
+    {
+      "short_name": "wind_speed_alt_01_plrm_ku",
+      "target_path": "conditions/geophysical/meteo/plrm_ku/wind_speed_alt_01",
+      "source_path": "enhanced_measurement.nc:wind_speed_alt_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Altimeter wind speed : 1 Hz Plrm Ku band",
+        "units": "m/s",
+        "standard_name": "wind_speed",
+        "add_offset": 0.0,
+        "scale_factor": 0.01,
+        "comment": "Should not be used over land"
+      }
+    },
+    {
+      "short_name": "off_nadir_pitch_angle_pf_01",
+      "target_path": "conditions/geometric/off_nadir_pitch_angle_pf_01",
+      "source_path": "enhanced_measurement.nc:off_nadir_pitch_angle_pf_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Off nadir pitch angle derived from platform data: 1 Hz",
+        "units": "degrees",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001
+      }
+    },
+    {
+      "short_name": "off_nadir_roll_angle_pf_01",
+      "target_path": "conditions/geometric/off_nadir_roll_angle_pf_01",
+      "source_path": "enhanced_measurement.nc:off_nadir_roll_angle_pf_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Off nadir roll angle derived from platform data: 1 Hz",
+        "units": "degrees",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001
+      }
+    },
+    {
+      "short_name": "off_nadir_yaw_angle_pf_01",
+      "target_path": "conditions/geometric/off_nadir_yaw_angle_pf_01",
+      "source_path": "enhanced_measurement.nc:off_nadir_yaw_angle_pf_01",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 2147483647,
+        "long_name": "Off nadir yaw angle derived from platform data: 1 Hz",
+        "units": "degrees",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001
+      }
+    },
+    {
+      "short_name": "corrected_off_nadir_angle_wf_water_01_ku",
+      "target_path": "conditions/geometric/ku/corrected_off_nadir_angle_wf_water_01",
+      "source_path": "enhanced_measurement.nc:corrected_off_nadir_angle_wf_water_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Corrected square of the off nadir angle derived from waveforms: 1 Hz Ku band",
+        "units": "degrees^2",
+        "quality_flag": "val_alt_off_nadir_angle_wf_water_01_ku",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "coordinates": "lon_01 lat_01"
+      }
+    },
+    {
+      "short_name": "mod_instr_cor_off_nadir_angle_01_ku",
+      "target_path": "conditions/geometric/ku/mod_instr_cor_off_nadir_angle_01",
+      "source_path": "enhanced_measurement.nc:mod_instr_cor_off_nadir_angle_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Modeled instrumental correction on the square of the off-nadir angle: 1 Hz Ku band",
+        "units": "degrees^2",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001
+      }
+    },
+    {
+      "short_name": "off_nadir_angle_numval_01_ku",
+      "target_path": "conditions/geometric/ku/off_nadir_angle_numval_01",
+      "source_path": "enhanced_measurement.nc:off_nadir_angle_numval_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "number of valid points used to compute the off-nadir angle derived from waveforms: 1 Hz Ku band",
+        "units": "count"
+      }
+    },
+    {
+      "short_name": "off_nadir_angle_rms_01_ku",
+      "target_path": "conditions/geometric/ku/off_nadir_angle_rms_01",
+      "source_path": "enhanced_measurement.nc:off_nadir_angle_rms_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "RMS of the square of the off-nadir angle derived from waveforms: 1 Hz Ku band",
+        "units": "degrees^2",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "coordinates": "lon_01 lat_01",
+        "comment": "compression of high rate elements is preceded by a detection of outliers. Only valid high-rate values are used to compute this element"
+      }
+    },
+    {
+      "short_name": "off_nadir_angle_used_20_ku",
+      "target_path": "conditions/geometric/ku/off_nadir_angle_used_20",
+      "source_path": "enhanced_measurement.nc:off_nadir_angle_used_20_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "flag indicating the use or not of the 20 Hz estimate of the square of the off-nadir angle in the computation of 1Hz estimate: 20 Hz Ku band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "Yes No",
+        "coordinates": "lon_20_ku lat_20_ku",
+        "comment": "LRM mode : ocean retracking , SAR mode : ocean/coastal retracking "
+      }
+    },
+    {
+      "short_name": "val_alt_off_nadir_angle_wf_water_01_ku",
+      "target_path": "conditions/geometric/ku/val_alt_off_nadir_angle_wf_water_01",
+      "source_path": "enhanced_measurement.nc:val_alt_off_nadir_angle_wf_water_01_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Validity flag for the square of the off nadir angle derived from waveforms: 1 Hz Ku band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "Valid Invalid",
+        "coordinates": "lon_01 lat_01"
+      }
+    },
+    {
+      "short_name": "corrected_off_nadir_angle_wf_water_01_plrm_ku",
+      "target_path": "conditions/geometric/plrm_ku/corrected_off_nadir_angle_wf_water_01",
+      "source_path": "enhanced_measurement.nc:corrected_off_nadir_angle_wf_water_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Corrected square of the off nadir angle derived from waveforms: 1 Hz Plrm Ku band",
+        "units": "degrees^2",
+        "quality_flag": "val_alt_off_nadir_angle_wf_water_01_plrm_ku",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "coordinates": "lon_01 lat_01",
+        "comment": "This parameter is issued from the ocean retracking in LRM mode and from the ocean/coastal retracking in SAR mode. It accounts for modeled instrumental errors correction  (mod_instr_cor_off_nadir_angle_01_plrm_ku) and system bias"
+      }
+    },
+    {
+      "short_name": "mod_instr_cor_off_nadir_angle_01_plrm_ku",
+      "target_path": "conditions/geometric/plrm_ku/mod_instr_cor_off_nadir_angle_01",
+      "source_path": "enhanced_measurement.nc:mod_instr_cor_off_nadir_angle_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "Modeled instrumental correction on the square of the off-nadir angle: 1 Hz Plrm Ku band",
+        "units": "degrees^2",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001
+      }
+    },
+    {
+      "short_name": "off_nadir_angle_numval_01_plrm_ku",
+      "target_path": "conditions/geometric/plrm_ku/off_nadir_angle_numval_01",
+      "source_path": "enhanced_measurement.nc:off_nadir_angle_numval_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "number of valid points used to compute the off-nadir angle derived from waveforms: 1 Hz Plrm Ku band",
+        "units": "count"
+      }
+    },
+    {
+      "short_name": "off_nadir_angle_rms_01_plrm_ku",
+      "target_path": "conditions/geometric/plrm_ku/off_nadir_angle_rms_01",
+      "source_path": "enhanced_measurement.nc:off_nadir_angle_rms_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 32767,
+        "long_name": "RMS of the square of the off-nadir angle derived from waveforms: 1 Hz Plrm Ku band",
+        "units": "degrees^2",
+        "add_offset": 0.0,
+        "scale_factor": 0.0001,
+        "comment": "compression of high rate elements is preceded by a detection of outliers. Only valid high-rate values are used to compute this element"
+      }
+    },
+    {
+      "short_name": "off_nadir_angle_used_20_plrm_ku",
+      "target_path": "conditions/geometric/plrm_ku/off_nadir_angle_used_20",
+      "source_path": "enhanced_measurement.nc:off_nadir_angle_used_20_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "flag indicating the use or not of the 20 Hz estimate of the square of the off-nadir angle in the computation of 1Hz estimate: 20 Hz Plrm Ku band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "Yes No",
+        "comment": "LRM mode : ocean retracking , SAR mode : ocean/coastal retracking "
+      }
+    },
+    {
+      "short_name": "val_alt_off_nadir_angle_wf_water_01_plrm_ku",
+      "target_path": "conditions/geometric/plrm_ku/val_alt_off_nadir_angle_wf_water_01",
+      "source_path": "enhanced_measurement.nc:val_alt_off_nadir_angle_wf_water_01_plrm_ku",
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 127,
+        "long_name": "Validity flag for the square of the off nadir angle derived from waveforms: 1 Hz Plrm Ku band",
+        "flag_values": [
+          0,
+          1
+        ],
+        "flag_meanings": "Valid Invalid",
+        "coordinates": "lon_01 lat_01"
+      }
+    }
+  ]
+}

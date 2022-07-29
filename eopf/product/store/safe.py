@@ -237,7 +237,10 @@ class EOSafeStore(EOProductStore):
                 raise KeyError(f"Invalid path :  {key}")
             else:
                 raise last_error
-        return self._eo_object_merge(*eo_obj_list)
+        try:
+            return self._eo_object_merge(*eo_obj_list)
+        except NotImplementedError as e:
+            raise NotImplementedError("failed accessing key " + key + ": " + str(e)) from e
 
     def __len__(self) -> int:
         if self.status is StorageStatus.CLOSE:
@@ -386,7 +389,7 @@ class EOSafeStore(EOProductStore):
                 count_eovar += 1
                 data = eo_obj._data.variable
             if count_eovar > 1:
-                raise NotImplementedError()
+                raise NotImplementedError("More than one variable were found with the same target path !")
             dims = dims.union(eo_obj.dims)
             attrs.update(eo_obj.attrs)
 
@@ -601,7 +604,10 @@ class SafeMappingManager:
         """Add a mapping from the format read from json to our internal format.
         Also add own parents mapping and register new children to ancestors hierarchy store.
         """
-        self._extract_accessor_config(config, json_data)
+        try:
+            self._extract_accessor_config(config, json_data)
+        except TypeError as e:
+            raise TypeError("error in " + target_path + ": " + str(e)) from e
         if target_path in self._config_mapping:
             self._config_mapping[target_path].append(config)
         else:
