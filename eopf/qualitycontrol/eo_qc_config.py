@@ -5,6 +5,7 @@ from collections import defaultdict
 from collections.abc import MutableMapping
 from typing import Iterator
 
+from eopf.conf import conf_loader
 from eopf.exceptions import (
     EOPCConfigFactoryAlreadyDefaultConfiguration,
     EOPCConfigFactoryNoDefaultConfiguration,
@@ -39,13 +40,14 @@ class EOQCConfig(MutableMapping[str, EOQC]):
         super().__init__()
         self._qclist = {}
         self.default = False
+        conf = conf_loader()
         with open(config_path, "r") as f:
             qc_config = json.load(f)
             self.id = qc_config["id"]
             self.default = qc_config["default"]
             self.product_type = qc_config["product_type"]
             if qc_config.get("common_qc", False) is not False:
-                common_qc_paths = os.path.join(os.path.dirname(os.path.realpath(__file__)), "configs/common_qc.json")
+                common_qc_paths = os.path.join(conf.qualitycontrol, "common_qc.json")
                 with open(common_qc_paths, "r") as w:
                     common_qc = json.load(w)
                     for qc_type in common_qc["quality_checks"]:
@@ -97,8 +99,8 @@ class EOPCConfigFactory:
 
     def __init__(self) -> None:
         self._configs: dict[str, EOQCConfig] = {}
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        qc_configs_paths = glob.glob(f"{dir_path}/configs/*.json")
+        conf = conf_loader()
+        qc_configs_paths = glob.glob(f"{conf.qualitycontrol}/*.json")
         for path_to_config in qc_configs_paths:
             if not os.path.basename(path_to_config) == "common_qc.json":
                 qc_config = EOQCConfig(path_to_config)

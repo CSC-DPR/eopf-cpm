@@ -1,7 +1,8 @@
 How to write a safe mapping
 ===========================
 
-The safe store use json mapping to match for each legacy product the target_path EOPath given to the SAFE store to it's actual location (sub file source_path + local_path in the file).
+The safe store use json mapping to match for each legacy product the target_path EOPath given to
+the SAFE store to it's actual location (sub file source_path + local_path in the file).
 
 
 An example of mapping::
@@ -82,13 +83,15 @@ accessor_config :
         }
 
 item_format :
-    registration string of an accessor/store in the EOStoreFactory. We currently provide : grib, jp2, netcdf, netcdf_string_to_time, xmlangles, xmlmetadata, xmltp, zarr
+    registration string of an accessor/store in the EOStoreFactory. We currently provide : grib, jp2, netcdf,
+    netcdf_string_to_time, xmlangles, xmlmetadata, xmltp, zarr
 
 is_optional:
     (optional) a boolean indicating if the presence of this data is optional (default to false)
 
 local_path :
-    (optional) an alternative way of passing the local_path used by the accessor to get the item. It's not recommended to use both local_path and source_path:local_path.
+    (optional) an alternative way of passing the local_path used by the accessor to get the item.
+    It's not recommended to use both local_path and source_path:local_path.
 
 parameters :
     (all optional) the main way to apply simple modifications to object returned by accessor before giving them to the product
@@ -114,8 +117,30 @@ The rest of the json file can contain anything. It can notably be used by the `a
 
 In the example xml_mapping is used like that.
 
-Use your store (without modifying the eopf sources)
----------------------------------------------------
+Adding mapping in a plugin
+--------------------------
+
+To add new mapping in a ``eopf-cpm`` plugin, you can reference a new *entry points* section named **eopf.store.mapping_folder**
+in my **setup.cfg** or **pyproject.toml**,
+
+* pyproject.toml **flit** format:
+    .. code-block:: toml
+
+        [project.entry-points."store.mapping_folder"]
+        newfoldername = path.to.my.mapping.folder
+
+* setup.cfg **setuptools** format:
+    .. code-block:: toml
+
+        [options.entry_points]
+        eopf.store.mapping_folder =
+            newfoldername = path.to.my.mapping.folder
+
+or if you use it as a standalone you can create and add your own mapping in your configuration folder
+(see :ref:`configuration`)
+
+Use your own EOSafeStore
+------------------------
 Create a EOMappingFactory, register your mapping to it and initialise your SafeStore with it as *mapping_factory*.
 
 .. note:: You can also provide custom accessors or parameter transformations to the SAFE Store with *store_factory* and *parameters_transformations*
