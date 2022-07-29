@@ -1,3 +1,7 @@
+default:
+  interruptible: true
+  image: python:3.9
+
 stages:
 - test
 - sonarqube-runner
@@ -35,7 +39,6 @@ workflow:
 #############################################
 linter:
   stage: test
-  image: python:3.9
   before_script:
   - pip install .[linter]
   script:
@@ -50,7 +53,6 @@ linter:
 
 formater:
   stage: test
-  image: python:3.9
   before_script:
   - pip install .[formatter]
   script:
@@ -59,7 +61,6 @@ formater:
 
 typing:
   stage: test
-  image: python:3.9
   before_script:
   - pip install .[typing]
   script:
@@ -67,7 +68,6 @@ typing:
 
 unit-tests:
   stage: test
-  image: python:3.9
   before_script:
   - pip install .[tests] .[notebook]
   script:
@@ -93,7 +93,6 @@ unit-tests:
 
 integration-tests:
   stage: test
-  image: python:3.9
   before_script:
   - pip install .[tests] .[notebook]
   needs:
@@ -113,7 +112,6 @@ integration-tests:
 
 security:
   stage: test
-  image: python:3.9
   before_script:
   - pip install .[security]
   script:
@@ -128,7 +126,6 @@ security:
 
 deps-sec:
   stage: test
-  image: python:3.9
   before_script:
   - pip install .[security]
   script:
@@ -137,7 +134,6 @@ deps-sec:
 
 docs-cov:
   stage: test
-  image: python:3.9
   before_script:
   - pip install .[doc-cov]
   script:
@@ -149,7 +145,6 @@ docs-cov:
 
 complexity:
   stage: test
-  image: python:3.9
   before_script:
   - pip install .[complexity]
   script:
@@ -161,7 +156,6 @@ complexity:
 #############################################
 build-package:
   stage: build
-  image: python:3.9
   script:
     - pip wheel -w dist --no-deps .
   artifacts:
@@ -170,7 +164,6 @@ build-package:
 
 build-doc:
   stage: build
-  image: python:3.9
   variables:
     GIT_STRATEGY: none
   before_script:
@@ -200,7 +193,6 @@ build-doc:
 #############################################
 deploy-package:
   stage: deploy
-  image: python:3.9
   needs: [build-package]
   dependencies:
   - build-package
@@ -215,7 +207,6 @@ deploy-package:
 
 test-pages:
   stage: deploy
-  image: python:3.9
   needs: [build-doc]
   dependencies:
   - build-doc
@@ -229,7 +220,6 @@ test-pages:
 
 pages:
   stage: deploy
-  image: python:3.9
   needs: [build-doc]
   dependencies:
   - build-doc
