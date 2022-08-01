@@ -1,4 +1,3 @@
-import datetime
 import itertools as it
 import json
 import os
@@ -9,13 +8,11 @@ from typing import TYPE_CHECKING, Any, Iterator, Optional, Union
 
 import fsspec
 import kerchunk.hdf
-import numpy as np
-import pandas as pd
-import pytz
-import xarray as xr
 from netCDF4 import Dataset, Group, Variable
 
 from eopf.exceptions import StoreNotOpenError
+from eopf.formatting import formatable_method
+from eopf.formatting.factory import unformatable_method
 from eopf.product.store import EOProductStore
 from eopf.product.store.zarr import EOZarrStore
 from eopf.product.utils import conv, decode_attrs, reverse_conv
@@ -55,17 +52,20 @@ class EONetCDFStore(EOProductStore):
         super().__init__(url)
 
     # docstr-coverage: inherited
+    @unformatable_method()
     def __delitem__(self, key: str) -> None:
         if self._sub_store is not None:
             del self._sub_store
 
     # docstr-coverage: inherited
+    @formatable_method()
     def __getitem__(self, key: str) -> "EOObject":
         item = self.sub_store[key]
         item.attrs.update(decode_netcdf_attrs(item.attrs))
         return item
 
     # docstr-coverage: inherited
+    @unformatable_method()
     def __setitem__(self, key: str, value: "EOObject") -> None:
         self.sub_store[key] = value
 
@@ -88,14 +88,17 @@ class EONetCDFStore(EOProductStore):
         super().open(mode)
 
     # docstr-coverage: inherited
+    @unformatable_method()
     def is_group(self, path: str) -> bool:
         return self.sub_store.is_group(path)
 
     # docstr-coverage: inherited
+    @unformatable_method()
     def is_variable(self, path: str) -> bool:
         return self.sub_store.is_variable(path)
 
     # docstr-coverage: inherited
+    @unformatable_method()
     def iter(self, path: str) -> Iterator[str]:
         return self.sub_store.iter(path)
 
@@ -188,6 +191,7 @@ class EONetCDFStoreNCpy(EOProductStore):
         self.complevel: int = 4
         self.shuffle: bool = True
 
+    @formatable_method()
     def __getitem__(self, key: str) -> "EOObject":
 
         if self._root is None:
@@ -214,6 +218,7 @@ class EONetCDFStoreNCpy(EOProductStore):
             raise StoreNotOpenError("Store must be open before access to it")
         return len(self._root.groups) + len(self._root.variables)
 
+    @unformatable_method()
     def __setitem__(self, key: str, value: "EOObject") -> None:
         from eopf.product.core import EOGroup, EOVariable
 
@@ -269,6 +274,7 @@ class EONetCDFStoreNCpy(EOProductStore):
         return False  # We don't want this store to be our default netcdf store.
 
     # docstr-coverage: inherited
+    @unformatable_method()
     def is_group(self, path: str) -> bool:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
@@ -276,6 +282,7 @@ class EONetCDFStoreNCpy(EOProductStore):
         return isinstance(current_node, (Group, Dataset))
 
     # docstr-coverage: inherited
+    @unformatable_method()
     def is_variable(self, path: str) -> bool:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
@@ -283,6 +290,7 @@ class EONetCDFStoreNCpy(EOProductStore):
         return isinstance(current_node, Variable)
 
     # docstr-coverage: inherited
+    @unformatable_method()
     def iter(self, path: str) -> Iterator[str]:
         if self._root is None:
             raise StoreNotOpenError("Store must be open before access to it")
@@ -352,128 +360,3 @@ class EONetCDFStoreNCpy(EOProductStore):
         if key in ["/", ""]:
             return self._root
         return self._root[key]
-
-
-class EONetcdfStringToTimeAccessor(EOProductStore):
-    """
-    Store representation to access NetCDF date time format of the given URL
-
-    Parameters
-    ----------
-    url: str
-        path url or the target store
-    """
-
-    # docstr-coverage: inherited
-    def __init__(self, url: str) -> None:
-        url = os.path.expanduser(url)
-        super().__init__(url)
-        self._root = None
-
-    def __getitem__(self, key: str) -> "EOObject":
-        from eopf.product.core import EOVariable
-
-        if self._root is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-
-        # convert unix start time to date time format
-        time_da = self._root.get(key, "1970-1-1T0:0:0.000000Z")
-        start = pd.to_datetime(datetime.datetime.fromtimestamp(0, tz=pytz.UTC))
-        end = pd.to_datetime(time_da)
-        # compute and convert the time difference into microseconds
-        time_delta = (end - start) // pd.Timedelta("1microsecond")
-
-        # create coresponding attributes
-        attributes = {}
-        attributes["unit"] = f"microseconds since {start.strftime('%Y-%m-%dT%H:%M:%S.%fZ')}"
-        attributes["standard_name"] = "time"
-        if key == "ANX_time":
-            attributes["long_name"] = "Time of ascending node crossing in UTC"
-        elif key == "calibration_time":
-            attributes["long_name"] = "Time of calibration in UTC"
-
-        # create an EOVariable and return it
-        eov: EOVariable = EOVariable(data=np.array([time_delta[0]]), attrs=attributes)
-        return eov
-
-    def __len__(self) -> int:
-        if self._root is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        return 1
-
-    def __setitem__(self, key: str, value: "EOObject") -> None:
-        from eopf.product.core import EOVariable
-
-        if self._root is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        # set the data
-        if not isinstance(value, EOVariable):
-            raise TypeError(f"The value {key} must be an EOVariable")
-        self._check_node(key)
-
-        self._root[key] = value._data
-        # set the attrs of the value
-        self.write_attrs(key, value.attrs)
-        # write to netcdf
-        self._root.to_netcdf(self.url)
-
-    # docstr-coverage: inherited
-    def close(self) -> None:
-        if self._root is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        super().close()
-        self._root.close()
-        self._root = None
-
-    # docstr-coverage: inherited
-    def is_group(self, path: str) -> bool:
-        if self._root is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-
-        return True
-
-    # docstr-coverage: inherited
-    def is_variable(self, path: str) -> bool:
-        if self._root is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-
-        return False
-
-    # docstr-coverage: inherited
-    def iter(self, path: str) -> Iterator[str]:
-        if self._root is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        self._check_node(path)
-        return iter([])
-
-    # docstr-coverage: inherited
-    def open(self, mode: str = "r", **kwargs: Any) -> None:
-        super().open()
-        self._root = xr.open_dataset(self.url, mode=mode)
-
-    # docstr-coverage: inherited
-    def write_attrs(self, group_path: str, attrs: MutableMapping[str, Any] = {}) -> None:
-        if self._root is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        self._check_node(group_path)
-        self._root.attrs.update(attrs)
-
-    def _check_node(self, key: str) -> Union[Dataset, Group, Variable]:
-        """Check if the key exists, only top level is used
-
-        Returns
-        ----------
-        Union of Dataset, Group, Variable
-
-        Raises
-        ------
-        StoreNotOpenError
-            If the store is closed
-        KeyError
-            If the key does not exist
-        """
-        if self._root is None:
-            raise StoreNotOpenError("Store must be open before access to it")
-        # if key not in ["/", ""]:
-
-        #     raise KeyError(f"{key} does not exist")

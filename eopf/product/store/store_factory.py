@@ -1,8 +1,8 @@
 from typing import Any, Optional
 
+import pkg_resources
+
 from eopf.product.store import EOProductStore
-from eopf.product.store.netcdf import EONetCDFStoreNCpy
-from eopf.product.store.rasterio import EORasterIOAccessor
 
 
 class EOStoreFactory:
@@ -10,48 +10,12 @@ class EOStoreFactory:
         self.item_formats: dict[str, type[EOProductStore]] = dict()
         self.store_types: set[type[EOProductStore]] = set()
         if default_stores:
-            from eopf.product.store.cog import EOCogStore
-            from eopf.product.store.filename_to_variable import (
-                FilenameToVariableAccessor,
-            )
-            from eopf.product.store.grib import EOGribAccessor
-            from eopf.product.store.memmap_accessors import (
-                FixedMemMapAccessor,
-                MemMapAccessor,
-            )
-            from eopf.product.store.netcdf import (
-                EONetCDFStore,
-                EONetcdfStringToTimeAccessor,
-            )
-            from eopf.product.store.safe import EOSafeStore
-            from eopf.product.store.wrappers import (
-                FromAttributesToFlagValueAccessor,
-                FromAttributesToVariableAccessor,
-            )
-            from eopf.product.store.xml_accessors import (
-                XMLAnglesAccessor,
-                XMLManifestAccessor,
-                XMLTPAccessor,
-            )
-            from eopf.product.store.zarr import EOZarrStore
-
-            self.register_store(EOZarrStore)
-            self.register_store(EOZarrStore, "zarr")
-            self.register_store(EOSafeStore, "safe")
-            self.register_store(EOCogStore, "cogs")
-            self.register_store(FilenameToVariableAccessor, "filename_to_subswath")
-            self.register_store(EONetCDFStore, "netcdf")
-            self.register_store(EONetCDFStoreNCpy, "netcdf-netCDF4py")
-            self.register_store(EONetcdfStringToTimeAccessor, "netcdf_string_to_time")
-            self.register_store(XMLManifestAccessor, "xmlmetadata")
-            self.register_store(EOGribAccessor, "grib")
-            self.register_store(EORasterIOAccessor, "jp2")
-            self.register_store(XMLAnglesAccessor, "xmlangles")
-            self.register_store(XMLTPAccessor, "xmltp")
-            self.register_store(FromAttributesToVariableAccessor, "attribute_element_to_float_variable")
-            self.register_store(FromAttributesToFlagValueAccessor, "attribute_element_to_flag_variable")
-            self.register_store(MemMapAccessor, "L0packetlist")
-            self.register_store(FixedMemMapAccessor, "L0annotationlist")
+            for entry in pkg_resources.iter_entry_points("eopf.accessors"):
+                cls_ = entry.load()
+                if entry.name == "default":
+                    self.register_store(cls_)
+                else:
+                    self.register_store(cls_, entry.name)
 
     def register_store(self, store_class: type[EOProductStore], *args: str) -> None:
         self.store_types.add(store_class)

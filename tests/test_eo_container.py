@@ -548,7 +548,7 @@ def test_group_to_product(product):
 @pytest.mark.parametrize(
     "mapping_filename, expected_invalid",
     [
-        #    (lazy_fixture("S1_IM_OCN_MAPPING"),2),
+        #    (lazy_fixture("S1_IW_OCN_MAPPING"),2),
         # todo: temporary : until S2 mapping fix
         # (lazy_fixture("S2A_MSIL1C_MAPPING"), 3),
         (lazy_fixture("S3_OL_1_EFR_MAPPING"), 1),  # invalid for conditions_metadata and stac_discovery

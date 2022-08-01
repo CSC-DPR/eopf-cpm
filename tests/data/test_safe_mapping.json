@@ -156,15 +156,15 @@
             }
         },
         {
-            "short_name": "anx_time",
-            "target_path": "/conditions/viscal/anx_time",
-            "source_path": "viscal.nc:ANX_time",
-            "item_format": "netcdf_string_to_time",
-            "parameters": {
-                "dimensions": [
-                    "one"
-                ]
-            }
+          "short_name": "calibration_time",
+          "target_path": "/conditions/viscal/calibration_time",
+          "source_path": "viscal.nc:to_unix_time(calibration_time)",
+          "item_format": "netcdf-netCDF4py",
+          "parameters": {
+            "dimensions": [
+              "one"
+            ]
+          }
         },
         {
             "short_name": "manifest",

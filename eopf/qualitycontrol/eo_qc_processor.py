@@ -8,7 +8,7 @@ from eopf.exceptions import InvalidProductError
 from eopf.product.core.eo_product import EOProduct
 from eopf.qualitycontrol.eo_qc_config import EOPCConfigFactory, EOQCConfig
 
-logger = logging.getLogger("EOPF")
+logger = logging.getLogger("eopf")
 
 
 class EOQCProcessor(EOProcessor):

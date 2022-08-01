@@ -43,7 +43,12 @@ class EOProductStore(MutableMapping[str, "EOObject"]):
 
     def __del__(self) -> None:
         if self.status != StorageStatus.CLOSE:
-            self.close()
+            try:
+                self.close()
+            except StoreNotOpenError:
+                # Caused by deletion caused by exceptions in the init issues.
+                self._status = StorageStatus.CLOSE
+                pass
 
     def __delitem__(self, key: str) -> None:  # pragma: no cover
         raise NotImplementedError()

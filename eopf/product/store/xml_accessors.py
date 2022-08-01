@@ -401,9 +401,9 @@ class XMLManifestAccessor(EOProductStore):
             A list of dictionaries containing converted values in the same nesting as input list.
         """
         local_list_of_dicts = []
-        local_dict = dict()
         # Iterate through input list
         for idx in attributes_list:
+            local_dict = dict()
             if isinstance(idx, str):
                 converted_value = self.stac_mapper(idx)
                 return [converted_value] if converted_value is not None else [idx]

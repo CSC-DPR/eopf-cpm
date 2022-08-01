@@ -9,439 +9,1216 @@
       "short_name": "latitude",
       "target_path": "/coordinates/image_grid/latitude",
       "source_path": "geo_coordinates.nc:latitude",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "DEM corrected latitude",
+        "scale_factor": 1e-06,
+        "standard_name": "latitude",
+        "units": "degrees_north",
+        "valid_max": 90000000,
+        "valid_min": -90000000
+      }
     },
     {
       "short_name": "longitude",
       "target_path": "/coordinates/image_grid/longitude",
       "source_path": "geo_coordinates.nc:longitude",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "DEM corrected longitude",
+        "scale_factor": 1e-06,
+        "standard_name": "longitude",
+        "units": "degrees_east",
+        "valid_max": 180000000,
+        "valid_min": -180000000
+      }
     },
     {
       "short_name": "detector_index",
       "target_path": "/coordinates/image_grid/detector_index",
       "source_path": "instrument_data.nc:detector_index",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1,
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Detector index",
+        "valid_max": 3699,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "row_time",
       "target_path": "/coordinates/image_grid/row_time",
       "source_path": "time_coordinates.nc:time_stamp",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1,
+        "long_name": "Elapsed time since 01 Jan 2000 0h",
+        "standard_name": "time",
+        "units": "microseconds since 2000-01-01 00:00:00"
+      }
     },
     {
       "short_name": "tp_latitude",
       "target_path": "/coordinates/tiepoint_grid/latitude",
       "source_path": "tie_geo_coordinates.nc:latitude",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "Latitude",
+        "scale_factor": 1e-06,
+        "standard_name": "latitude",
+        "units": "degrees_north",
+        "valid_max": 90000000,
+        "valid_min": -90000000
+      }
     },
     {
       "short_name": "tp_longitude",
       "target_path": "/coordinates/tiepoint_grid/longitude",
       "source_path": "tie_geo_coordinates.nc:longitude",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "Longitude",
+        "scale_factor": 1e-06,
+        "standard_name": "longitude",
+        "units": "degrees_east",
+        "valid_max": 180000000,
+        "valid_min": -180000000
+      }
     },
     {
       "short_name": "orphans_latitude",
       "target_path": "/coordinates/orphans/latitude",
       "source_path": "removed_pixels.nc:latitude",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "DEM corrected latitude for removed pixels",
+        "scale_factor": 1e-06,
+        "standard_name": "latitude",
+        "units": "degrees_north",
+        "valid_max": 90000000,
+        "valid_min": -90000000
+      }
     },
     {
       "short_name": "orphans_longitude",
       "target_path": "/coordinates/orphans/longitude",
       "source_path": "removed_pixels.nc:longitude",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "DEM corrected longitude for removed pixels",
+        "scale_factor": 1e-06,
+        "standard_name": "longitude",
+        "units": "degrees_east",
+        "valid_max": 180000000,
+        "valid_min": -180000000
+      }
     },
     {
       "short_name": "orphans_detector_index",
       "target_path": "/coordinates/orphans/detector_index",
       "source_path": "removed_pixels.nc:detector_index",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1,
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Detector index for removed pixels",
+        "valid_max": 3699,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "oa01_radiance",
       "target_path": "/measurements/image/oa01_radiance",
       "source_path": "Oa01_radiance.nc:Oa01_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa01_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "TOA radiance for OLCI acquisition band Oa01",
+        "scale_factor": 0.013946459628641605,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "oa02_radiance",
       "target_path": "/measurements/image/oa02_radiance",
       "source_path": "Oa02_radiance.nc:Oa02_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa02_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "TOA radiance for OLCI acquisition band Oa02",
+        "scale_factor": 0.013387260027229786,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "oa03_radiance",
       "target_path": "/measurements/image/oa03_radiance",
       "source_path": "Oa03_radiance.nc:Oa03_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa03_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "TOA radiance for OLCI acquisition band Oa03",
+        "scale_factor": 0.012148120440542698,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "oa04_radiance",
       "target_path": "/measurements/image/oa04_radiance",
       "source_path": "Oa04_radiance.nc:Oa04_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa04_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "TOA radiance for OLCI acquisition band Oa04",
+        "scale_factor": 0.011519820429384708,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "oa05_radiance",
       "target_path": "/measurements/image/oa05_radiance",
       "source_path": "Oa05_radiance.nc:Oa05_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa05_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "TOA radiance for OLCI acquisition band Oa05",
+        "scale_factor": 0.010095260106027126,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "oa06_radiance",
       "target_path": "/measurements/image/oa06_radiance",
       "source_path": "Oa06_radiance.nc:Oa06_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa06_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "TOA radiance for OLCI acquisition band Oa06",
+        "scale_factor": 0.012353800237178802,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "oa07_radiance",
       "target_path": "/measurements/image/oa07_radiance",
       "source_path": "Oa07_radiance.nc:Oa07_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa07_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "TOA radiance for OLCI acquisition band Oa07",
+        "scale_factor": 0.008791609667241573,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "oa08_radiance",
       "target_path": "/measurements/image/oa08_radiance",
       "source_path": "Oa08_radiance.nc:Oa08_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa08_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "TOA radiance for OLCI acquisition band Oa08",
+        "scale_factor": 0.008765390142798424,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "oa09_radiance",
       "target_path": "/measurements/image/oa09_radiance",
       "source_path": "Oa09_radiance.nc:Oa09_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa09_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "TOA radiance for OLCI acquisition band Oa09",
+        "scale_factor": 0.009510300122201443,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "oa10_radiance",
       "target_path": "/measurements/image/oa10_radiance",
       "source_path": "Oa10_radiance.nc:Oa10_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa10_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "TOA radiance for OLCI acquisition band Oa10",
+        "scale_factor": 0.007733779959380627,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "oa11_radiance",
       "target_path": "/measurements/image/oa11_radiance",
       "source_path": "Oa11_radiance.nc:Oa11_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa11_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "TOA radiance for OLCI acquisition band Oa11",
+        "scale_factor": 0.006755230017006397,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "oa12_radiance",
       "target_path": "/measurements/image/oa12_radiance",
       "source_path": "Oa12_radiance.nc:Oa12_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa12_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "TOA radiance for OLCI acquisition band Oa12",
+        "scale_factor": 0.007199599873274565,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "oa13_radiance",
       "target_path": "/measurements/image/oa13_radiance",
       "source_path": "Oa13_radiance.nc:Oa13_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa13_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "TOA radiance for OLCI acquisition band Oa13",
+        "scale_factor": 0.007496839854866266,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "oa14_radiance",
       "target_path": "/measurements/image/oa14_radiance",
       "source_path": "Oa14_radiance.nc:Oa14_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa14_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "TOA radiance for OLCI acquisition band Oa14",
+        "scale_factor": 0.008651199750602245,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "oa15_radiance",
       "target_path": "/measurements/image/oa15_radiance",
       "source_path": "Oa15_radiance.nc:Oa15_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa15_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "TOA radiance for OLCI acquisition band Oa15",
+        "scale_factor": 0.005267790053039789,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "oa16_radiance",
       "target_path": "/measurements/image/oa16_radiance",
       "source_path": "Oa16_radiance.nc:Oa16_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa16_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "TOA radiance for OLCI acquisition band Oa16",
+        "scale_factor": 0.005302669946104288,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "oa17_radiance",
       "target_path": "/measurements/image/oa17_radiance",
       "source_path": "Oa17_radiance.nc:Oa17_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa17_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "TOA radiance for OLCI acquisition band Oa17",
+        "scale_factor": 0.004930039867758751,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "oa18_radiance",
       "target_path": "/measurements/image/oa18_radiance",
       "source_path": "Oa18_radiance.nc:Oa18_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa18_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "TOA radiance for OLCI acquisition band Oa18",
+        "scale_factor": 0.0054996199905872345,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "oa19_radiance",
       "target_path": "/measurements/image/oa19_radiance",
       "source_path": "Oa19_radiance.nc:Oa19_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa19_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "TOA radiance for OLCI acquisition band Oa19",
+        "scale_factor": 0.005028469953685999,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "oa20_radiance",
       "target_path": "/measurements/image/oa20_radiance",
       "source_path": "Oa20_radiance.nc:Oa20_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa20_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "TOA radiance for OLCI acquisition band Oa20",
+        "scale_factor": 0.003263779915869236,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "oa21_radiance",
       "target_path": "/measurements/image/oa21_radiance",
       "source_path": "Oa21_radiance.nc:Oa21_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa21_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "TOA radiance for OLCI acquisition band Oa21",
+        "scale_factor": 0.0032411799766123295,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "orphans_oa01_radiance",
       "target_path": "/measurements/orphans/oa01_radiance",
       "source_path": "removed_pixels.nc:Oa01_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa01_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Radiance for removed pixels for OLCI acquisition band Oa01",
+        "scale_factor": 0.013946459628641605,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "orphans_oa02_radiance",
       "target_path": "/measurements/orphans/oa02_radiance",
       "source_path": "removed_pixels.nc:Oa02_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa02_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Radiance for removed pixels for OLCI acquisition band Oa02",
+        "scale_factor": 0.013387260027229786,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "orphans_oa03_radiance",
       "target_path": "/measurements/orphans/oa03_radiance",
       "source_path": "removed_pixels.nc:Oa03_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa03_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Radiance for removed pixels for OLCI acquisition band Oa03",
+        "scale_factor": 0.012148120440542698,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "orphans_oa04_radiance",
       "target_path": "/measurements/orphans/oa04_radiance",
       "source_path": "removed_pixels.nc:Oa04_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa04_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Radiance for removed pixels for OLCI acquisition band Oa04",
+        "scale_factor": 0.011519820429384708,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "orphans_oa05_radiance",
       "target_path": "/measurements/orphans/oa05_radiance",
       "source_path": "removed_pixels.nc:Oa05_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa05_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Radiance for removed pixels for OLCI acquisition band Oa05",
+        "scale_factor": 0.010095260106027126,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "orphans_oa06_radiance",
       "target_path": "/measurements/orphans/oa06_radiance",
       "source_path": "removed_pixels.nc:Oa06_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa06_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Radiance for removed pixels for OLCI acquisition band Oa06",
+        "scale_factor": 0.012353800237178802,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "orphans_oa07_radiance",
       "target_path": "/measurements/orphans/oa07_radiance",
       "source_path": "removed_pixels.nc:Oa07_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa07_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Radiance for removed pixels for OLCI acquisition band Oa07",
+        "scale_factor": 0.008791609667241573,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "orphans_oa08_radiance",
       "target_path": "/measurements/orphans/oa08_radiance",
       "source_path": "removed_pixels.nc:Oa08_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa08_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Radiance for removed pixels for OLCI acquisition band Oa08",
+        "scale_factor": 0.008765390142798424,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "orphans_oa09_radiance",
       "target_path": "/measurements/orphans/oa09_radiance",
       "source_path": "removed_pixels.nc:Oa09_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa09_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Radiance for removed pixels for OLCI acquisition band Oa09",
+        "scale_factor": 0.009510300122201443,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "orphans_oa10_radiance",
       "target_path": "/measurements/orphans/oa10_radiance",
       "source_path": "removed_pixels.nc:Oa10_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa10_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Radiance for removed pixels for OLCI acquisition band Oa10",
+        "scale_factor": 0.007733779959380627,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "orphans_oa11_radiance",
       "target_path": "/measurements/orphans/oa11_radiance",
       "source_path": "removed_pixels.nc:Oa11_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa11_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Radiance for removed pixels for OLCI acquisition band Oa11",
+        "scale_factor": 0.006755230017006397,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "orphans_oa12_radiance",
       "target_path": "/measurements/orphans/oa12_radiance",
       "source_path": "removed_pixels.nc:Oa12_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa12_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Radiance for removed pixels for OLCI acquisition band Oa12",
+        "scale_factor": 0.007199599873274565,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "orphans_oa13_radiance",
       "target_path": "/measurements/orphans/oa13_radiance",
       "source_path": "removed_pixels.nc:Oa13_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa13_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Radiance for removed pixels for OLCI acquisition band Oa13",
+        "scale_factor": 0.007496839854866266,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "orphans_oa14_radiance",
       "target_path": "/measurements/orphans/oa14_radiance",
       "source_path": "removed_pixels.nc:Oa14_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa14_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Radiance for removed pixels for OLCI acquisition band Oa14",
+        "scale_factor": 0.008651199750602245,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "orphans_oa15_radiance",
       "target_path": "/measurements/orphans/oa15_radiance",
       "source_path": "removed_pixels.nc:Oa15_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa15_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Radiance for removed pixels for OLCI acquisition band Oa15",
+        "scale_factor": 0.005267790053039789,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "orphans_oa16_radiance",
       "target_path": "/measurements/orphans/oa16_radiance",
       "source_path": "removed_pixels.nc:Oa16_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa16_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Radiance for removed pixels for OLCI acquisition band Oa16",
+        "scale_factor": 0.005302669946104288,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "orphans_oa17_radiance",
       "target_path": "/measurements/orphans/oa17_radiance",
       "source_path": "removed_pixels.nc:Oa17_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa17_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Radiance for removed pixels for OLCI acquisition band Oa17",
+        "scale_factor": 0.004930039867758751,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "orphans_oa18_radiance",
       "target_path": "/measurements/orphans/oa18_radiance",
       "source_path": "removed_pixels.nc:Oa18_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa18_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Radiance for removed pixels for OLCI acquisition band Oa18",
+        "scale_factor": 0.0054996199905872345,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "orphans_oa19_radiance",
       "target_path": "/measurements/orphans/oa19_radiance",
       "source_path": "removed_pixels.nc:Oa19_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa19_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Radiance for removed pixels for OLCI acquisition band Oa19",
+        "scale_factor": 0.005028469953685999,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "orphans_oa20_radiance",
       "target_path": "/measurements/orphans/oa20_radiance",
       "source_path": "removed_pixels.nc:Oa20_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa20_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Radiance for removed pixels for OLCI acquisition band Oa20",
+        "scale_factor": 0.003263779915869236,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "orphans_oa21_radiance",
       "target_path": "/measurements/orphans/oa21_radiance",
       "source_path": "removed_pixels.nc:Oa21_radiance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 65535,
+        "add_offset": 0.0,
+        "ancillary_variables": "Oa21_radiance_err",
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Radiance for removed pixels for OLCI acquisition band Oa21",
+        "scale_factor": 0.0032411799766123295,
+        "units": "mW.m-2.sr-1.nm-1",
+        "valid_max": 65534,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "quality_flags",
       "target_path": "/quality/image/quality_flags",
       "source_path": "qualityFlags.nc:quality_flags",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "coordinates": "time_stamp altitude latitude longitude",
+        "flag_masks": [
+          2147483648,
+          1073741824,
+          536870912,
+          268435456,
+          134217728,
+          67108864,
+          33554432,
+          16777216,
+          8388608,
+          4194304,
+          2097152,
+          1048576,
+          524288,
+          262144,
+          131072,
+          65536,
+          32768,
+          16384,
+          8192,
+          4096,
+          2048,
+          1024,
+          512,
+          256,
+          128,
+          64,
+          32,
+          16,
+          8,
+          4,
+          2,
+          1
+        ],
+        "flag_meanings": "land coastline fresh_inland_water tidal_region bright straylight_risk invalid cosmetic duplicated sun-glint_risk dubious saturated@Oa01 saturated@Oa02 saturated@Oa03 saturated@Oa04 saturated@Oa05 saturated@Oa06 saturated@Oa07 saturated@Oa08 saturated@Oa09 saturated@Oa10 saturated@Oa11 saturated@Oa12 saturated@Oa13 saturated@Oa14 saturated@Oa15 saturated@Oa16 saturated@Oa17 saturated@Oa18 saturated@Oa19 saturated@Oa20 saturated@Oa21",
+        "long_name": "Classification and quality flags"
+      }
     },
     {
       "short_name": "orphans_quality_flags",
       "target_path": "/quality/orphans/quality_flags",
       "source_path": "removed_pixels.nc:quality_flags",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "coordinates": "time_stamp altitude latitude longitude",
+        "flag_masks": [
+          2147483648,
+          1073741824,
+          536870912,
+          268435456,
+          134217728,
+          67108864,
+          33554432,
+          16777216,
+          8388608,
+          4194304,
+          2097152,
+          1048576,
+          524288,
+          262144,
+          131072,
+          65536,
+          32768,
+          16384,
+          8192,
+          4096,
+          2048,
+          1024,
+          512,
+          256,
+          128,
+          64,
+          32,
+          16,
+          8,
+          4,
+          2,
+          1
+        ],
+        "flag_meanings": "land coastline fresh_inland_water tidal_region bright straylight_risk invalid cosmetic duplicated sun-glint_risk dubious saturated@Oa01 saturated@Oa02 saturated@Oa03 saturated@Oa04 saturated@Oa05 saturated@Oa06 saturated@Oa07 saturated@Oa08 saturated@Oa09 saturated@Oa10 saturated@Oa11 saturated@Oa12 saturated@Oa13 saturated@Oa14 saturated@Oa15 saturated@Oa16 saturated@Oa17 saturated@Oa18 saturated@Oa19 saturated@Oa20 saturated@Oa21",
+        "long_name": "Classification and quality flags for removed pixels"
+      }
     },
     {
       "short_name": "geometry_oaa",
       "target_path": "/conditions/geometry/oaa",
       "source_path": "tie_geometries.nc:OAA",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "coordinates": "latitude longitude",
+        "long_name": "Observation (Viewing) Azimuth Angle",
+        "scale_factor": 1e-06,
+        "units": "degrees",
+        "valid_max": 180000000,
+        "valid_min": -180000000
+      }
     },
     {
       "short_name": "geometry_oza",
       "target_path": "/conditions/geometry/oza",
       "source_path": "tie_geometries.nc:OZA",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 4294967295,
+        "coordinates": "latitude longitude",
+        "long_name": "Observation (Viewing) Zenith Angle",
+        "scale_factor": 1e-06,
+        "units": "degrees",
+        "valid_max": 180000000,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "geometry_saa",
       "target_path": "/conditions/geometry/saa",
       "source_path": "tie_geometries.nc:SAA",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -2147483648,
+        "coordinates": "latitude longitude",
+        "long_name": "Sun Azimuth Angle",
+        "scale_factor": 1e-06,
+        "units": "degrees",
+        "valid_max": 180000000,
+        "valid_min": -180000000
+      }
     },
     {
       "short_name": "geometry_sza",
       "target_path": "/conditions/geometry/sza",
       "source_path": "tie_geometries.nc:SZA",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 4294967295,
+        "coordinates": "latitude longitude",
+        "long_name": "Sun Zenith Angle",
+        "scale_factor": 1e-06,
+        "units": "degrees",
+        "valid_max": 180000000,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "geometry_altitude",
       "target_path": "/conditions/geometry/altitude",
       "source_path": "geo_coordinates.nc:altitude",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -32768,
+        "long_name": "DEM corrected altitude",
+        "standard_name": "altitude",
+        "units": "m",
+        "valid_max": 9000,
+        "valid_min": -1000
+      }
     },
     {
       "short_name": "meteo_atmospheric_temperature_profile",
       "target_path": "/conditions/meteo/atmospheric_temperature_profile",
       "source_path": "tie_meteo.nc:atmospheric_temperature_profile",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1.0,
+        "ancillary_variables": "reference_pressure_level",
+        "coordinates": "latitude longitude",
+        "long_name": "Air temperature profile",
+        "standard_name": "air_temperature",
+        "units": "K",
+        "valid_max": 400.0,
+        "valid_min": 0.0
+      }
     },
     {
       "short_name": "meteo_horizontal_wind",
       "target_path": "/conditions/meteo/horizontal_wind",
       "source_path": "tie_meteo.nc:horizontal_wind",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 9.969209968386869e+36,
+        "coordinates": "latitude longitude",
+        "long_name": "Horizontal wind vector at 10m altitude",
+        "units": "m.s-1",
+        "valid_max": 100.0,
+        "valid_min": -100.0
+      }
     },
     {
       "short_name": "meteo_humidity",
       "target_path": "/conditions/meteo/humidity",
       "source_path": "tie_meteo.nc:humidity",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1.0,
+        "coordinates": "latitude longitude",
+        "long_name": "Relative humidity",
+        "standard_name": "relative_humidity",
+        "units": "%",
+        "valid_max": 100.0,
+        "valid_min": 0.0
+      }
     },
     {
       "short_name": "meteo_reference_pressure_level",
       "target_path": "/conditions/meteo/reference_pressure_level",
       "source_path": "tie_meteo.nc:reference_pressure_level",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1.0,
+        "coordinates": "latitude longitude",
+        "long_name": "Reference pressure level",
+        "standard_name": "air_pressure",
+        "units": "hPa",
+        "valid_max": 1500.0,
+        "valid_min": 0.0
+      }
     },
     {
       "short_name": "meteo_sea_level_pressure",
       "target_path": "/conditions/meteo/sea_level_pressure",
       "source_path": "tie_meteo.nc:sea_level_pressure",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1.0,
+        "coordinates": "latitude longitude",
+        "long_name": "Mean sea level pressure",
+        "standard_name": "air_pressure_at_sea_level",
+        "units": "hPa",
+        "valid_max": 1500.0,
+        "valid_min": 0.0
+      }
     },
     {
       "short_name": "meteo_total_columnar_water_vapour",
       "target_path": "/conditions/meteo/total_columnar_water_vapour",
       "source_path": "tie_meteo.nc:total_columnar_water_vapour",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1.0,
+        "coordinates": "latitude longitude",
+        "long_name": "Total column water vapour",
+        "standard_name": "atmosphere_water_vapor_content",
+        "units": "kg.m-2",
+        "valid_max": 100.0,
+        "valid_min": 0.0
+      }
     },
     {
       "short_name": "meteo_total_ozone",
       "target_path": "/conditions/meteo/total_ozone",
       "source_path": "tie_meteo.nc:total_ozone",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1.0,
+        "coordinates": "latitude longitude",
+        "long_name": "Total columnar ozone",
+        "standard_name": "atmosphere_mass_content_of_ozone",
+        "units": "kg.m-2",
+        "valid_max": 100.0,
+        "valid_min": 0.0
+      }
     },
     {
       "short_name": "instrument_fwhm",
       "target_path": "/conditions/instrument/fwhm",
       "source_path": "instrument_data.nc:FWHM",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1.0,
+        "ancillary_variables": "detector_index lambda0",
+        "long_name": "OLCI bandwidth (Full Widths at Half Maximum)",
+        "units": "nm",
+        "valid_max": 650.0,
+        "valid_min": 0.0
+      }
     },
     {
       "short_name": "instrument_frame_offset",
       "target_path": "/conditions/instrument/frame_offset",
       "source_path": "instrument_data.nc:frame_offset",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -32768,
+        "ancillary_variables": "detector_index",
+        "long_name": "Re-sampling along-track frame offset",
+        "valid_max": 15,
+        "valid_min": -15
+      }
     },
     {
       "short_name": "instrument_lambda0",
       "target_path": "/conditions/instrument/lambda0",
       "source_path": "instrument_data.nc:lambda0",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1.0,
+        "ancillary_variables": "detector_index FWHM",
+        "long_name": "OLCI characterised central wavelength",
+        "units": "nm",
+        "valid_max": 1040.0,
+        "valid_min": 390.0
+      }
     },
     {
       "short_name": "instrument_relative_spectral_covariance",
       "target_path": "/conditions/instrument/relative_spectral_covariance",
       "source_path": "instrument_data.nc:relative_spectral_covariance",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "ancillary_variables": "lambda0",
+        "long_name": "Relative spectral covariance matrix"
+      }
     },
     {
       "short_name": "instrument_solar_flux",
       "target_path": "/conditions/instrument/solar_flux",
       "source_path": "instrument_data.nc:solar_flux",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -1.0,
+        "ancillary_variables": "detector_index lambda0",
+        "long_name": "In-band solar irradiance, seasonally corrected",
+        "units": "mW.m-2.nm-1",
+        "valid_max": 2500.0,
+        "valid_min": 500.0
+      }
     },
     {
       "short_name": "orphans_sza",
       "target_path": "/conditions/orphans/sza",
       "source_path": "removed_pixels.nc:SZA",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": 4294967295,
+        "coordinates": "time_stamp altitude latitude longitude",
+        "long_name": "Sun Zenith Angle for removed pixels",
+        "scale_factor": 1e-06,
+        "units": "degrees",
+        "valid_max": 180000000,
+        "valid_min": 0
+      }
     },
     {
       "short_name": "orphans_altitude",
       "target_path": "/conditions/orphans/altitude",
       "source_path": "removed_pixels.nc:altitude",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "_FillValue": -32768,
+        "long_name": "DEM corrected altitude for removed pixels",
+        "standard_name": "altitude",
+        "units": "m",
+        "valid_max": 9000,
+        "valid_min": -1000
+      }
     },
     {
       "short_name": "orphans_nb_removed_pixels",
       "target_path": "/conditions/orphans/nb_removed_pixels",
       "source_path": "removed_pixels.nc:nb_removed_pixels",
-      "item_format": "netcdf"
+      "item_format": "netcdf",
+      "attributes": {
+        "long_name": "Number removed pixels per frame"
+      }
     },
     {
       "short_name": "stac_discovery",
@@ -478,17 +1255,8 @@
       "start_datetime": "metadataSection/metadataObject[@ID='acquisitionPeriod']/metadataWrap/xmlData/sentinel-safe:acquisitionPeriod/sentinel-safe:startTime",
       "end_datetime": "metadataSection/metadataObject[@ID='acquisitionPeriod']/metadataWrap/xmlData/sentinel-safe:acquisitionPeriod/sentinel-safe:stopTime",
       "created": "to_ISO8601(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:creationTime)",
-      "eopf:platform": {
-        "nssdc_identifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:nssdcIdentifier",
-        "family": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:familyName",
-        "number": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:number"
-      },
-      "eopf:instrument": {
-        "name": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName",
-        "short_name": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/@abbreviation",
-        "mode": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode",
-        "identifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode/@identifier"
-      },
+      "platform": "concat(metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:familyName, metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:number)",
+      "instrument": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/@abbreviation",
       "providers": [
         {
           "name": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:resource[@role='L1 Product']/sentinel-safe:processing/sentinel-safe:facility/@name",
@@ -512,17 +1280,13 @@
         "timeliness": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:timeliness",
         "collection": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:baselineCollection",
         "processing_baseline": "is_optional(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:processingBaseline)",
-        "disposition": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dispositionMode",
-        "orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber)",
+        "instrument_mode": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode",
+        "absolute_orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber)",
         "relative_orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:relativeOrbitNumber)",
-        "ground_track_direction": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber/@groundTrackDirection",
-        "downlink_information": {
-          "granule_number": "is_optional(to_int(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:granuleNumber))",
-          "granule_position": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:granulePosition",
-          "dump_start": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:dumpStart",
-          "receiving_station": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingGroundStation",
-          "receiving_start": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingStartTime",
-          "receiving_stop": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingStopTime"
+        "ground_track_direction": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber[@type='start']/@groundTrackDirection",
+        "image_size": {
+          "rows": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:imageSize/sentinel3:rows)",
+          "columns": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:imageSize/sentinel3:columns)"
         },
         "pixel_classification": {
           "invalid": {
@@ -560,23 +1324,6 @@
           "tidal": {
             "percent": "to_float(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:classificationSummary/sentinel3:tidalRegionPixels/@percentage)"
           }
-        },
-        "data_information": {
-          "measurement_accuracy": "metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:measurementAccuracy",
-          "accuracy_reference": "metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:accuracyReference",
-          "image_size": {
-            "rows": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:imageSize/sentinel3:rows)",
-            "columns": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:imageSize/sentinel3:columns)"
-          },
-          "earth_sun_distance": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:earthSunDistance)",
-          "ocl_status": "metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:oclStatus",
-          "sampling": {
-            "along_track_time": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:samplingParameters/olci:alTimeSampling)",
-            "along_track_spatial": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:samplingParameters/olci:alSpatialSampling)",
-            "across_track_spatial": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:samplingParameters/olci:acSpatialSampling)",
-            "rows_per_tiepoint": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:samplingParameters/olci:rowsPerTiePoint)",
-            "cols_per_tiepoint": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:samplingParameters/olci:columnsPerTiePoint)"
-          }
         }
       }
     },
@@ -590,6 +1337,19 @@
     "assets": []
   },
   "conditions_metadata": {
+    "data_information": {
+      "measurement_accuracy": "metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:measurementAccuracy",
+      "accuracy_reference": "metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:accuracyReference",
+      "earth_sun_distance": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:earthSunDistance)",
+      "ocl_status": "metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:oclStatus",
+      "sampling": {
+        "along_track_time": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:samplingParameters/olci:alTimeSampling)",
+        "along_track_spatial": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:samplingParameters/olci:alSpatialSampling)",
+        "across_track_spatial": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:samplingParameters/olci:acSpatialSampling)",
+        "rows_per_tiepoint": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:samplingParameters/olci:rowsPerTiePoint)",
+        "cols_per_tiepoint": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:samplingParameters/olci:columnsPerTiePoint)"
+      }
+    },
     "band_descriptions": {
       "Oa01": {
         "units": "Text(nm)",
@@ -745,6 +1505,9 @@
       "source": "Text(ECMWF)",
       "type": "metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:ecmwfType",
       "time_relevance": "to_int(metadataSection/metadataObject[@ID='olciProductInformation']/metadataWrap/xmlData/olci:olciProductInformation/olci:ecmwfType/@timeRelevance)"
+    },
+    "platform": {
+      "nssdc_identifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:nssdcIdentifier"
     }
   },
   "namespaces": {

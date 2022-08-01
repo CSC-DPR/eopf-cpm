@@ -1,25 +1,22 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Any, Dict, List, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Union
 
-import lxml
+import lxml.etree
 import numpy
 from pandas import Timedelta, to_datetime
 from pytz import UTC
 
 from eopf.exceptions import FormattingError
-from eopf.product.core import EOVariable
 
 from .utils import detect_pole_or_antemeridian, poly_coords_parsing, split_poly
 
+if TYPE_CHECKING:  # pragma: no cover
+    from eopf.product.core import EOVariable
+
 
 class EOAbstractFormatter(ABC):
-    """Abstract formatter representation
-    Attributes
-    ----------
-    name: str
-        name of the formatter
-    """
+    """Abstract formatter representation"""
 
     @property
     @abstractmethod
@@ -154,9 +151,9 @@ class ToUNIXTimeSLSTRL1(EOAbstractFormatter):
     """Formatter for unix time conversion for SLSTR L1 ANX_time and calibration_time variables"""
 
     # docstr-coverage: inherited
-    name = "to_unix_time_slstr_l1"
+    name = "to_unix_time"
 
-    def format(self, input: Any) -> EOVariable:
+    def format(self, input: Any) -> "EOVariable":
         """Convert input to unix time
 
         Parameters
@@ -173,13 +170,15 @@ class ToUNIXTimeSLSTRL1(EOAbstractFormatter):
         FormattingError
             When formatting can not be carried
         """
+        from eopf.product.core import EOVariable
+
         try:
             # compute the start and end time
             start = to_datetime(datetime.fromtimestamp(0, tz=UTC))
-            end = to_datetime(input[:])
+            end = to_datetime(input[:], utc=True)
 
             # compute and convert the time difference into microseconds
-            time_delta = numpy.array([numpy.int64((end - start) // Timedelta("1microsecond"))])
+            time_delta = numpy.array(numpy.int64((end - start) // Timedelta("1microsecond")))
 
             # create coresponding attributes
             attributes = {}
@@ -194,7 +193,7 @@ class ToUNIXTimeSLSTRL1(EOAbstractFormatter):
             eov: EOVariable = EOVariable(data=time_delta, attrs=attributes)
             return eov
         except Exception as e:
-            raise FormattingError(f"{e}")
+            raise FormattingError(f"{e}") from e
 
 
 class ToISO8601(EOAbstractFormatter):
@@ -401,4 +400,4 @@ class ToMean(EOAbstractFormatter):
     name = "to_mean"
 
     def format(self, xpath_input: List[lxml.etree._Element]) -> Any:
-        return [float(element.text) for element in xpath_input]
+        return numpy.mean([float(element.text) for element in xpath_input])

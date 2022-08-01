@@ -23,14 +23,18 @@ class FilePart(NamedTuple):
     def from_string(cls, string: str) -> "FilePart":
         """Create instance of FilePart from the filename as a string"""
         time_format = "%Y%m%dt%H%M%S"
-        file_type_str, start_time_str, end_time_str = re.findall(
-            r".{3}-(.{2,3})-ocn-vv-(.*)-(.*)-\d{6}-\w{6}-\d{3}\.nc",
+        times = re.findall(
+            r"[\d]+t[\d]+",
             string,
-        )[0]
+        )
+        file_type_str = string.split("-")[1]
+        value = int(file_type_str[-1]) if len(file_type_str) == 3 else 0
+        if len(times) != 2:
+            raise ValueError(f"{times} from {string} does not contain two times")
         return cls(
-            int(file_type_str[-1]) if len(file_type_str) == 3 else 0,
-            datetime.datetime.strptime(start_time_str, time_format),
-            datetime.datetime.strptime(end_time_str, time_format),
+            value,
+            datetime.datetime.strptime(times[0], time_format),
+            datetime.datetime.strptime(times[1], time_format),
         )
 
 
@@ -58,8 +62,10 @@ class FilenameToVariableAccessor(EOReadOnlyStore):
 
     def __getitem__(self, key: str) -> "EOObject":
         self.check_node(key)
+
         files = (f.rpartition("/")[-1] for f in self._fsmap.keys())  # type: ignore[union-attr]
-        data = [d.value for d in sorted(map(FilePart.from_string, files), key=lambda x: x.start_time)]
+        files_infos = map(FilePart.from_string, files)
+        data = [d.value for d in sorted(files_infos, key=lambda x: x.start_time)]
         dim = len(data)
         return EOVariable(data=data, dims=(str(dim),))
 

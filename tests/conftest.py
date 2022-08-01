@@ -1,11 +1,8 @@
-# import concurrent.futures
 import json
-import logging
 import os
 import shutil
 from datetime import timedelta
 
-# import fsspec
 import pytest
 
 # import required dask fixtures :
@@ -19,13 +16,7 @@ from distributed.utils_test import (  # noqa # pylint: disable=unused-import
 )
 from hypothesis import HealthCheck, settings
 
-from .utils import (  # S3_CONFIG_REAL,; S3_TEST_DATA_PATH,
-    EMBEDED_TEST_DATA_PATH,
-    MAPPING_PATH,
-    S3_TEST_DATA_PROTOCOL,
-    TEST_DATA_PATH,
-    glob_fixture,
-)
+from .utils import EMBEDED_TEST_DATA_PATH, MAPPING_PATH, TEST_DATA_PATH, glob_fixture
 
 # ----------------------------------#
 # --- pytest command line options --#
@@ -94,15 +85,33 @@ def EMBEDED_TEST_DATA_FOLDER():
 
 
 @pytest.fixture
-def S1_IM_OCN_MAPPING(MAPPING_FOLDER: str):
+def S1_IW_OCN_MAPPING(MAPPING_FOLDER: str):
     """Path to a S1 OCN IW 1 mapping"""
     return os.path.join(MAPPING_FOLDER, "S1_OCN_IW_mapping.json")
+
+
+@pytest.fixture
+def S1_SM_OCN_MAPPING(MAPPING_FOLDER: str):
+    """Path to a S1 OCN SM 1 mapping"""
+    return os.path.join(MAPPING_FOLDER, "S1_OCN_SM_mapping.json")
+
+
+@pytest.fixture
+def S1_WV_OCN_MAPPING(MAPPING_FOLDER: str):
+    """Path to a S1 OCN WV 1 mapping"""
+    return os.path.join(MAPPING_FOLDER, "S1_OCN_WV_mapping.json")
 
 
 @pytest.fixture
 def S2_MSIL1C_MAPPING(MAPPING_FOLDER: str):
     """Path to a S2 MSIL1C mapping"""
     return os.path.join(MAPPING_FOLDER, "S2_MSIL1C_mapping.json")
+
+
+@pytest.fixture
+def S2_MSIL2A_MAPPING(MAPPING_FOLDER: str):
+    """Path to a S2 MSIL1C mapping"""
+    return os.path.join(MAPPING_FOLDER, "S2_MSIL2A_mapping.json")
 
 
 @pytest.fixture
@@ -135,6 +144,12 @@ def S3_SY_2_SYN_MAPPING(MAPPING_FOLDER: str):
     return os.path.join(MAPPING_FOLDER, "S3_SY_2_SYN_mapping.json")
 
 
+@pytest.fixture
+def S3_SR_2_LAN_MAPPING(MAPPING_FOLDER: str):
+    """Path to a S3 SR 2 LAN mapping"""
+    return os.path.join(MAPPING_FOLDER, "S3_SR_2_LAN_mapping.json")
+
+
 # ----------------------------------#
 # ------------ PRODUCT -------------#
 # ----------------------------------#
@@ -153,14 +168,38 @@ def TEST_PRODUCT_ZIP(request):
 
 
 # ############# S1 ##############
-@glob_fixture("S1*_IW_OCN*[!.zarr][!.SAFE].zip", protocols=["zip"])
-def S1_IM_OCN(request):
+@glob_fixture("S1*_IW_OCN*[!.zarr]")
+def S1_IW_OCN(request):
     """Path to a S1 OCN LEVEL 1 product"""
     return request.param
 
 
 @glob_fixture("S1*_IW_OCN*[!.zarr][!.SAFE].zip", protocols=["zip"])
-def S1_IM_OCN_ZIP(request):
+def S1_IW_OCN_ZIP(request):
+    """Path to a S1 OCN LEVEL 1 product"""
+    return request.param
+
+
+@glob_fixture("S1*_S[1-6]_OCN*[!.zarr]")
+def S1_SM_OCN(request):
+    """Path to a S1 OCN LEVEL 1 product"""
+    return request.param
+
+
+@glob_fixture("S1*_S[1-6]_OCN*[!.zarr][!.SAFE].zip", protocols=["zip"])
+def S1_SM_OCN_ZIP(request):
+    """Path to a S1 OCN LEVEL 1 product"""
+    return request.param
+
+
+@glob_fixture("S1*_WV_OCN*[!.zarr]")
+def S1_WV_OCN(request):
+    """Path to a S1 OCN LEVEL 1 product"""
+    return request.param
+
+
+@glob_fixture("S1*_WV_OCN*[!.zarr][!.SAFE].zip", protocols=["zip"])
+def S1_WV_OCN_ZIP(request):
     """Path to a S1 OCN LEVEL 1 product"""
     return request.param
 
@@ -178,6 +217,18 @@ def S2_MSIL1C_ZIP(request):
     return request.param
 
 
+@glob_fixture("S2*_MSIL2A*.SAFE")
+def S2_MSIL2A(request):
+    """Path to a S2 MSIL2A LEVEL 2 product"""
+    return request.param
+
+
+@glob_fixture("S2*_MSIL2A*[!.zarr][!.SAFE].zip", protocols=["zip"])
+def S2_MSIL2A_ZIP(request):
+    """Path to a S2 MSIL2A LEVEL 2 product in zip format"""
+    return request.param
+
+
 # ############# S3 ##############
 @glob_fixture("S3*_OL_1_E*R*[!.zarr][!.SAFE].zip", protocols=["zip"])
 def S3_OL_1_EFR_ZIP(request):
@@ -187,7 +238,13 @@ def S3_OL_1_EFR_ZIP(request):
 
 @glob_fixture("S3*_OL_1_E*R*.SEN3")
 def S3_OL_1_EFR(request):
-    """Path to a S3 OL LEVEL 2 product"""
+    """Path to a S3 OL LEVEL 1 product"""
+    return request.param
+
+
+@glob_fixture("S3*_OL_1_E*R*.zarr")
+def S3_OL_1_EFR_ZARR(request):
+    """Path to a S3 OL LEVEL 1 product"""
     return request.param
 
 
@@ -235,6 +292,18 @@ def S3_SY_2_SYN(request):
 
 @glob_fixture("S3*_SY_2_SYN*[!.zarr][!.SAFE].zip", protocols=["zip"])
 def S3_SY_2_SYN_ZIP(request):
+    """Path to a S3 SY 2 SYN product"""
+    return request.param
+
+
+@glob_fixture("S3*_SR_2_LAN*.SEN3")
+def S3_SR_2_LAN(request):
+    """Path to a S3 SY 2 SYN product"""
+    return request.param
+
+
+@glob_fixture("S3*_SR_2_LAN*[!.zarr][!.SAFE].zip", protocols=["zip"])
+def S3_SR_2_LAN_ZIP(request):
     """Path to a S3 SY 2 SYN product"""
     return request.param
 
@@ -294,25 +363,3 @@ def TRIGGER_JSON_FILE(dask_client_all, EMBEDED_TEST_DATA_FOLDER, OUTPUT_DIR, S3_
         json.dump(data, f)
 
     return output_name
-
-
-def load_file_from_s3(filename, data_mapper, dest_path):
-    real_path = os.path.join(data_mapper.root, filename)
-    real_dest_path = os.path.join(dest_path, filename)
-    dir_file_name = os.path.dirname(real_path)
-    if not os.path.isfile(real_dest_path):
-        os.makedirs(dir_file_name, exist_ok=True)
-        data_mapper.fs.get(real_path, real_dest_path)
-        logging.debug(f"COPY {S3_TEST_DATA_PROTOCOL}://{real_path} IN {real_dest_path}")
-
-
-@pytest.fixture(scope="session", autouse=True)
-def load_data():
-    pass
-    # if S3_TEST_DATA_PROTOCOL == "s3":
-    #     data_mapper = fsspec.get_mapper(f"{S3_TEST_DATA_PROTOCOL}://{S3_TEST_DATA_PATH}", **S3_CONFIG_REAL)
-    #     os.makedirs(TEST_DATA_PATH, exist_ok=True)
-    #     with concurrent.futures.ThreadPoolExecutor() as executor:
-    #         pool = [executor.submit(load_file_from_s3, file, data_mapper, TEST_DATA_PATH) for file in data_mapper]
-    #         concurrent.futures.wait(pool)
-    #     yield

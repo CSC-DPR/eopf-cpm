@@ -237,7 +237,10 @@ class EOSafeStore(EOProductStore):
                 raise KeyError(f"Invalid path :  {key}")
             else:
                 raise last_error
-        return self._eo_object_merge(*eo_obj_list)
+        try:
+            return self._eo_object_merge(*eo_obj_list)
+        except NotImplementedError as e:
+            raise NotImplementedError("failed accessing key " + key + ": " + str(e)) from e
 
     def __len__(self) -> int:
         if self.status is StorageStatus.CLOSE:
@@ -386,7 +389,7 @@ class EOSafeStore(EOProductStore):
                 count_eovar += 1
                 data = eo_obj._data.variable
             if count_eovar > 1:
-                raise NotImplementedError()
+                raise NotImplementedError("More than one variable were found with the same target path !")
             dims = dims.union(eo_obj.dims)
             attrs.update(eo_obj.attrs)
 
@@ -570,21 +573,18 @@ class SafeMappingManager:
                 mapped_store = SafeHierarchy()
             else:
                 if self._is_compressed:
-                    if self._temp_dir is None:
-                        self._temp_dir = tempfile.TemporaryDirectory()
-                    accessor_file = os.path.join(self._temp_dir.name, file_path)
-                    if not os.path.exists(accessor_file):
-                        # create parent directory (needed if the file is in a subfolder of the zip)
-                        os.makedirs(os.path.split(accessor_file)[0], exist_ok=True)
-                        if file_path in self._fs_map_access:  # For file
-                            with open(accessor_file, mode="wb") as file_:
-                                file_.write(self._fs_map_access[file_path])
-                        elif not any(
-                            path.startswith(file_path) for path in self._fs_map_access
-                        ):  # check directory level
-                            raise FileNotFoundError()
+                    accessor_file = self._uncompress_file(file_path)
                 else:
+                    if self._mode[0] in ["w", "W"]:
+                        file_path = file_path.replace(".*", "FILL.")
+                        file_path = file_path.replace("*", "STAR")
                     accessor_file = self._fs_map_access.fs.sep.join([self._fs_map_access.root, file_path])
+                if self._mode[0] not in ["r", "R", "c", "C"]:
+                    # We are writing
+                    parent_path, _ = upsplit_eo_path(file_path)
+                    accessor_parent = self._fs_map_access.fs.sep.join([self._fs_map_access.root, parent_path])
+                    self._fs_map_access.fs.makedirs(accessor_parent, exist_ok=True)
+
                 mapped_store = self._store_factory.get_store(
                     accessor_file,
                     item_format,
@@ -604,7 +604,10 @@ class SafeMappingManager:
         """Add a mapping from the format read from json to our internal format.
         Also add own parents mapping and register new children to ancestors hierarchy store.
         """
-        self._extract_accessor_config(config, json_data)
+        try:
+            self._extract_accessor_config(config, json_data)
+        except TypeError as e:
+            raise TypeError("error in " + target_path + ": " + str(e)) from e
         if target_path in self._config_mapping:
             self._config_mapping[target_path].append(config)
         else:
@@ -707,3 +710,28 @@ class SafeMappingManager:
             if config[self.CONFIG_FORMAT] != "misc":
                 self._add_data_mapping(config[self.CONFIG_TARGET], config, json_data)
         self._product_type = json_data[self._mapping_factory.RECO][self._mapping_factory.TYPE_RECO]
+
+    def _uncompress_file(self, file_path: str) -> str:
+        """Uncompress a file form a zip safe into a temporary folder, and return the uncompressed local path.
+
+        Parameters
+        ----------
+        file_path
+
+        Returns
+        -------
+
+        """
+        if self._fs_map_access is None:
+            raise StoreNotOpenError("Store must be open before access to it")
+        if self._temp_dir is None:
+            # We need to unzip everything as some accessor indirectly open files.
+            self._temp_dir = tempfile.TemporaryDirectory()
+            for path_zip, file_zip in self._fs_map_access.items():
+                file_unzip = os.path.join(self._temp_dir.name, path_zip)
+                # create parent directory (needed if the file is in a subfolder of the zip)
+                os.makedirs(os.path.split(file_unzip)[0], exist_ok=True)
+                with open(file_unzip, mode="wb") as file_:
+                    file_.write(file_zip)
+        accessor_file = os.path.join(self._temp_dir.name, file_path)
+        return accessor_file

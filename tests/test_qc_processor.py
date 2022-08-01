@@ -1,5 +1,4 @@
 import os
-import shutil
 from typing import Any
 from unittest import mock
 
@@ -14,9 +13,6 @@ from eopf.product.store.safe import EOSafeStore
 from eopf.qualitycontrol.eo_qc import EOQCFormula, EOQCProcessingUnit, EOQCValidRange
 from eopf.qualitycontrol.eo_qc_config import EOPCConfigFactory, EOQCConfig
 from eopf.qualitycontrol.eo_qc_processor import EOQCProcessor
-from tests.utils import PARENT_DATA_PATH
-
-test_config_files = ["common_qc.json", "test_qc.json"]
 
 
 class QC01Unit(EOProcessingUnit):
@@ -27,26 +23,17 @@ class QC01Unit(EOProcessingUnit):
 
 
 @pytest.fixture
-def output_report_path(OUTPUT_DIR):
-    return OUTPUT_DIR
+def config_folder(EMBEDED_TEST_DATA_FOLDER):
+    with mock.patch(
+        "eopf.conf.EOPFConfiguration.qualitycontrol",
+        new_callable=mock.PropertyMock(return_value=os.path.join(EMBEDED_TEST_DATA_FOLDER, "qualitycontrol")),
+    ):
+        yield
 
 
-@pytest.fixture()
-def sample_config_path(EMBEDED_TEST_DATA_FOLDER):
-    for config_file in test_config_files:
-        config_file_path = os.path.join(PARENT_DATA_PATH, f"eopf/qualitycontrol/configs/{config_file}")
-        if not os.path.isfile(config_file_path):
-            shutil.copyfile(os.path.join(EMBEDED_TEST_DATA_FOLDER, config_file), config_file_path)
-    yield os.path.join(PARENT_DATA_PATH, "eopf/qualitycontrol/configs/test_qc.json")
-
-
-@pytest.fixture(scope="session", autouse=True)
-def clean_config_path():
-    yield
-    for config_file in test_config_files:
-        config_file_path = os.path.join(PARENT_DATA_PATH, f"eopf/qualitycontrol/configs/{config_file}")
-        if os.path.isfile(config_file_path):
-            os.remove(config_file_path)
+@pytest.fixture
+def sample_config_path(config_folder, EMBEDED_TEST_DATA_FOLDER):
+    return os.path.join(EMBEDED_TEST_DATA_FOLDER, "qualitycontrol", "test_qc.json")
 
 
 def check_data(id):
@@ -120,7 +107,7 @@ def check_data(id):
 
 
 @pytest.fixture
-def eoqcProcessor():
+def eoqcProcessor(config_folder):
     qc_processor = EOQCProcessor()
     return qc_processor
 
@@ -133,7 +120,7 @@ def eoqcConfig(sample_config_path):
 
 
 @pytest.fixture
-def eoqcConfigFactory():
+def eoqcConfigFactory(config_folder):
     qc_configFactory = EOPCConfigFactory()
     return qc_configFactory
 
@@ -213,7 +200,7 @@ def test_EOQCProcessor_init(sample_config_path):
 
 @pytest.mark.need_files
 @pytest.mark.unit
-@pytest.mark.parametrize("store_type", [(lazy_fixture("S3_OL_1_EFR"))])
+@pytest.mark.parametrize("store_type", [(lazy_fixture("S3_OL_1_EFR_ZIP"))])
 def test_EOQCProcessor_productType(store_type, eoqcProcessor):
     store = EOSafeStore(store_type)
     product = EOProduct("my_product", storage=store)
@@ -279,7 +266,7 @@ def test_qc_exception(store_type, eoqcProcessor):
 @pytest.mark.parametrize(
     "store_type, write_report, report_path",
     [
-        (lazy_fixture("S3_OL_1_EFR_ZIP"), True, lazy_fixture("output_report_path")),
+        (lazy_fixture("S3_OL_1_EFR_ZIP"), True, lazy_fixture("OUTPUT_DIR")),
         (lazy_fixture("S3_OL_1_EFR_ZIP"), True, None),
     ],
 )
@@ -305,7 +292,7 @@ def test_write_report(store_type, eoqcProcessor, write_report, report_path):
 @pytest.mark.unit
 @pytest.mark.parametrize(
     "store_type, report_path",
-    [(lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("output_report_path"))],
+    [(lazy_fixture("S3_OL_1_EFR_ZIP"), lazy_fixture("OUTPUT_DIR"))],
 )
 def test_error_writing_report(store_type, report_path, sample_config_path):
     # Initialisation of a qcprocessor with a configuration

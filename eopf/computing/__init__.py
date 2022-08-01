@@ -1,3 +1,6 @@
+"""eopf.computing module provide to re-engineered processor developers a
+homogenous API implementing advanced parallelism features whatever the execution context: HPC, Cloud or local.
+"""
 from .abstract import (
     EOBlockProcessingStep,
     EOOverlapProcessingStep,

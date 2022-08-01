@@ -1,5 +1,5 @@
 Tracing
-=================================
+=======
 
 We separate tracing into two:
 
@@ -7,7 +7,7 @@ We separate tracing into two:
 - system based continoous tracing
 
 Profiling
-------------------------------------------
+---------
 
 For function profiling we provide the developpers two parametrisable
 decorators,  which are meant to give parralel processing feedback
@@ -22,8 +22,8 @@ Both profilers are available in the :py:mod:`eopf.tracing module`.
 
         from eopf.tracing import dask_profiler, single_thread_profiler
 
-dask_profiler()
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+dask_profiler
+~~~~~~~~~~~~~
 
 Below we present a realistic example of a developper's defined function.
 As you can see the function has been decorated with the :py:func:`~eopf.tracing.profiler.dask_profiler`.
@@ -71,8 +71,8 @@ parameter to False. This allows to leave the decorator syntax in place
 without modifying the functionality of the decorated function.
 
 
-single_thread_profiler()
-~~~~~~~~~~~~~~~~~~~~~~~
+single_thread_profiler
+~~~~~~~~~~~~~~~~~~~~~~
 
 With single_thread_profiler the developper gets *cProfile*
 statistics (pstats.Stats) of the decorated function. Further more,
@@ -118,7 +118,7 @@ below. The single_thread_profiler must be the first one.
 
 
 System based continoous tracing
-------------------------------------------
+-------------------------------
 
 For continous tracking we refer the developpers and users to
 *dask dashboard*, usually located at <http://127.0.0.1:8787/status>.

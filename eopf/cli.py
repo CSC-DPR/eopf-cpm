@@ -1,3 +1,6 @@
+"""eopf.cli define abstracts classes to add new command over eopf-cpm cli command.
+"""
+
 import asyncio
 from abc import ABC, abstractmethod
 from functools import wraps
@@ -121,11 +124,13 @@ class EOPFCLI(click.MultiCommand):
     """
 
     def list_commands(self, ctx: click.Context) -> list[str]:
-        return sorted(pkg_resources.get_entry_map("eopf").get("eopf.cli", {}).keys())
+        return sorted(entry.name for entry in pkg_resources.iter_entry_points("eopf.cli"))
 
     def get_command(self, ctx: click.Context, cmd_name: str) -> Optional[click.Command]:
-        cmd = pkg_resources.get_entry_map("eopf").get("eopf.cli", {})[cmd_name].load()
-        return cmd()
+        cmd = None
+        for entry in pkg_resources.iter_entry_points("eopf.cli", cmd_name):
+            cmd = entry.load()()
+        return cmd
 
 
 @click.command(name="eopf", cls=EOPFCLI, add_help_option=True)

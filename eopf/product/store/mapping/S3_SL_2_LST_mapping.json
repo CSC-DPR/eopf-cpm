@@ -16,6 +16,15 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -1000000,
+        "add_offset": 0.0,
+        "long_name": "Geolocated x (across track) coordinate of detector FOV centre",
+        "scale_factor": 1.0,
+        "units": "m",
+        "valid_max": 1000000,
+        "valid_min": -500000
       }
     },
     {
@@ -28,6 +37,15 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -5000000,
+        "add_offset": 0.0,
+        "long_name": "Geolocated y (along track) coordinate of detector FOV centre",
+        "scale_factor": 1.0,
+        "units": "m",
+        "valid_max": 100000000,
+        "valid_min": -1000000
       }
     },
     {
@@ -40,6 +58,16 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 0.0,
+        "long_name": "Surface elevation of detector FOV centre above reference ellipsoid",
+        "scale_factor": 1.0,
+        "standard_name": "surface_altitude",
+        "units": "m",
+        "valid_max": 9000,
+        "valid_min": -450
       }
     },
     {
@@ -52,6 +80,16 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -2147483648,
+        "add_offset": 0.0,
+        "long_name": "Latitude of detector FOV centre on the earth's surface",
+        "scale_factor": 1e-06,
+        "standard_name": "latitude",
+        "units": "degrees_north",
+        "valid_max": 90000000,
+        "valid_min": -90000000
       }
     },
     {
@@ -64,6 +102,16 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -2147483648,
+        "add_offset": 0.0,
+        "long_name": "Longitude of detector FOV centre on the earth's surface",
+        "scale_factor": 1e-06,
+        "standard_name": "longitude",
+        "units": "degrees_east",
+        "valid_max": 180000000,
+        "valid_min": -180000000
       }
     },
     {
@@ -76,6 +124,11 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Geolocated x (across track) coordinate of detector FOV centre",
+        "units": "m"
       }
     },
     {
@@ -88,6 +141,11 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Geolocated y (along track) coordinate of detector FOV centre",
+        "units": "m"
       }
     },
     {
@@ -100,6 +158,14 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Latitude of detector FOV centre on the earth's surface",
+        "standard_name": "latitude",
+        "units": "degrees_north",
+        "valid_max": 90.0,
+        "valid_min": -90.0
       }
     },
     {
@@ -112,6 +178,14 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Longitude of detector FOV centre on the earth's surface",
+        "standard_name": "longitude",
+        "units": "degrees_east",
+        "valid_max": 180.0,
+        "valid_min": -180.0
       }
     },
     {
@@ -124,6 +198,15 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -1000000,
+        "add_offset": 0.0,
+        "long_name": "Geolocated x (across track) coordinate of detector FOV centre",
+        "scale_factor": 1.0,
+        "units": "m",
+        "valid_max": 1000000,
+        "valid_min": -500000
       }
     },
     {
@@ -136,6 +219,15 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -5000000,
+        "add_offset": 0.0,
+        "long_name": "Geolocated y (along track) coordinate of detector FOV centre",
+        "scale_factor": 1.0,
+        "units": "m",
+        "valid_max": 100000000,
+        "valid_min": -1000000
       }
     },
     {
@@ -148,6 +240,16 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 0.0,
+        "long_name": "Surface elevation of detector FOV centre above reference ellipsoid",
+        "scale_factor": 1.0,
+        "standard_name": "surface_altitude",
+        "units": "m",
+        "valid_max": 9000,
+        "valid_min": -450
       }
     },
     {
@@ -160,6 +262,16 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -2147483648,
+        "add_offset": 0.0,
+        "long_name": "Latitude of detector FOV centre on the earth's surface",
+        "scale_factor": 9.999999974752427e-07,
+        "standard_name": "latitude",
+        "units": "degrees_north",
+        "valid_max": 90000000,
+        "valid_min": -90000000
       }
     },
     {
@@ -172,6 +284,16 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -2147483648,
+        "add_offset": 0.0,
+        "long_name": "Longitude of detector FOV centre on the earth's surface",
+        "scale_factor": 9.999999974752427e-07,
+        "standard_name": "longitude",
+        "units": "degrees_east",
+        "valid_max": 180000000,
+        "valid_min": -180000000
       }
     },
     {
@@ -184,6 +306,19 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "flag_masks": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64,
+          128
+        ],
+        "flag_meanings": "single_low single_moderate dual_low dual_moderate spare spare spare spare"
       }
     },
     {
@@ -196,6 +331,27 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "flag_masks": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64,
+          128,
+          256,
+          512,
+          1024,
+          2048,
+          4096,
+          8192,
+          16384,
+          32768
+        ],
+        "flag_meanings": "visible 1.37_threshold 1.6_small_histogram 1.6_large_histogram 2.25_small_histogram 2.25_large_histogram 11_spatial_coherence gross_cloud thin_cirrus medium_high fog_low_stratus 11_12_view_difference 3.7_11_view_difference thermal_histogram spare spare"
       }
     },
     {
@@ -208,6 +364,27 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "flag_masks": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64,
+          128,
+          256,
+          512,
+          1024,
+          2048,
+          4096,
+          8192,
+          16384,
+          32768
+        ],
+        "flag_meanings": "coastline ocean tidal land inland_water unfilled spare spare cosmetic duplicate day twilight sun_glint snow summary_cloud summary_pointing"
       }
     },
     {
@@ -220,6 +397,19 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "flag_masks": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64,
+          128
+        ],
+        "flag_meanings": "FlipMirrorAbsoluteError FlipMirrorIntegratedError FlipMirrorRMSError ScanMirrorAbsoluteError ScanMirrorIntegratedError ScanMirrorRMSError ScanTimeError Platform_Mode"
       }
     },
     {
@@ -232,6 +422,14 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 0.5,
+        "long_name": "Probability of cloud in pixel (dual view)",
+        "scale_factor": 0.005,
+        "valid_max": 19900,
+        "valid_min": -20100
       }
     },
     {
@@ -244,6 +442,14 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 0.5,
+        "long_name": "Probability of cloud in pixel (single view)",
+        "scale_factor": 0.005,
+        "valid_max": 19900,
+        "valid_min": -20100
       }
     },
     {
@@ -256,6 +462,19 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "flag_masks": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64,
+          128
+        ],
+        "flag_meanings": "single_low single_moderate dual_low dual_moderate spare spare spare spare"
       }
     },
     {
@@ -268,6 +487,27 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "flag_masks": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64,
+          128,
+          256,
+          512,
+          1024,
+          2048,
+          4096,
+          8192,
+          16384,
+          32768
+        ],
+        "flag_meanings": "visible 1.37_threshold 1.6_small_histogram 1.6_large_histogram 2.25_small_histogram 2.25_large_histogram 11_spatial_coherence gross_cloud thin_cirrus medium_high fog_low_stratus 11_12_view_difference 3.7_11_view_difference thermal_histogram spare spare"
       }
     },
     {
@@ -280,6 +520,27 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "flag_masks": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64,
+          128,
+          256,
+          512,
+          1024,
+          2048,
+          4096,
+          8192,
+          16384,
+          32768
+        ],
+        "flag_meanings": "coastline ocean tidal land inland_water unfilled spare spare cosmetic duplicate day twilight sun_glint snow summary_cloud summary_pointing"
       }
     },
     {
@@ -292,6 +553,19 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "flag_masks": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64,
+          128
+        ],
+        "flag_meanings": "FlipMirrorAbsoluteError FlipMirrorIntegratedError FlipMirrorRMSError ScanMirrorAbsoluteError ScanMirrorIntegratedError ScanMirrorRMSError ScanTimeError Platform_Mode"
       }
     },
     {
@@ -304,6 +578,12 @@
           "rows_tn",
           "columns_tn"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Satellite azimuth angle",
+        "standard_name": "sensor_azimuth_angle",
+        "units": "degrees"
       }
     },
     {
@@ -316,6 +596,11 @@
           "rows_tn",
           "columns_tn"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Distance from satellite to surface",
+        "units": "m"
       }
     },
     {
@@ -328,6 +613,12 @@
           "rows_tn",
           "columns_tn"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Satellite zenith angle",
+        "standard_name": "sensor_zenith_angle",
+        "units": "degrees"
       }
     },
     {
@@ -340,6 +631,12 @@
           "rows_tn",
           "columns_tn"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Solar azimuth angle",
+        "standard_name": "solar_azimuth_angle",
+        "units": "degrees"
       }
     },
     {
@@ -352,6 +649,11 @@
           "rows_tn",
           "columns_tn"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Distance from sun to surface",
+        "units": "m"
       }
     },
     {
@@ -364,6 +666,12 @@
           "rows_tn",
           "columns_tn"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Solar zenith angle",
+        "standard_name": "solar_zenith_angle",
+        "units": "degrees"
       }
     },
     {
@@ -376,6 +684,10 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": 255,
+        "long_name": "Gridded pixel detector number"
       }
     },
     {
@@ -387,6 +699,10 @@
         "dimensions": [
           "one"
         ]
+      },
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "Offset between scan index and corresponding ISP scan count"
       }
     },
     {
@@ -399,6 +715,10 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": 65535,
+        "long_name": "Gridded pixel number"
       }
     },
     {
@@ -411,6 +731,10 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": 65535,
+        "long_name": "Pixel scan number"
       }
     },
     {
@@ -423,6 +747,10 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": 255,
+        "long_name": "Gridded pixel detector number"
       }
     },
     {
@@ -435,6 +763,10 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": 65535,
+        "long_name": "Gridded pixel number"
       }
     },
     {
@@ -447,6 +779,10 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": 65535,
+        "long_name": "Pixel scan number"
       }
     },
     {
@@ -459,6 +795,15 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 0.0,
+        "long_name": "Gridded locally correlated LST uncertainties due to atmospheric fitting",
+        "scale_factor": 0.0020000000949949026,
+        "units": "K",
+        "valid_max": 4000,
+        "valid_min": 0
       }
     },
     {
@@ -471,6 +816,15 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 0.0,
+        "long_name": "Gridded locally correlated LST uncertainties due to geolocation",
+        "scale_factor": 0.0020000000949949026,
+        "units": "K",
+        "valid_max": 4000,
+        "valid_min": 0
       }
     },
     {
@@ -483,6 +837,15 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 0.0,
+        "long_name": "Gridded locally correlated LST uncertainties due to fractional vegetation",
+        "scale_factor": 0.0020000000949949026,
+        "units": "K",
+        "valid_max": 4000,
+        "valid_min": 0
       }
     },
     {
@@ -495,6 +858,15 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 0.0,
+        "long_name": "Gridded locally correlated LST uncertainties from pre-launch calibration",
+        "scale_factor": 0.0020000000949949026,
+        "units": "K",
+        "valid_max": 4000,
+        "valid_min": 0
       }
     },
     {
@@ -507,6 +879,15 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 0.0,
+        "long_name": "Gridded uncorrelated LST uncertainties from on-board calibration",
+        "scale_factor": 0.0020000000949949026,
+        "units": "K",
+        "valid_max": 4000,
+        "valid_min": 0
       }
     },
     {
@@ -519,6 +900,15 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 0.0,
+        "long_name": "Gridded large systematic LST uncertainties",
+        "scale_factor": 0.0020000000949949026,
+        "units": "K",
+        "valid_max": 4000,
+        "valid_min": 0
       }
     },
     {
@@ -531,6 +921,15 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 0.0,
+        "long_name": "Ungridded locally correlated LST uncertainties due to atmospheric fitting",
+        "scale_factor": 0.0020000000949949026,
+        "units": "K",
+        "valid_max": 4000,
+        "valid_min": 0
       }
     },
     {
@@ -543,6 +942,15 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 0.0,
+        "long_name": "Ungridded locally correlated LST uncertainties due to geolocation",
+        "scale_factor": 0.0020000000949949026,
+        "units": "K",
+        "valid_max": 4000,
+        "valid_min": 0
       }
     },
     {
@@ -555,6 +963,15 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 0.0,
+        "long_name": "Ungridded locally correlated LST uncertainties due to fractional vegetation",
+        "scale_factor": 0.0020000000949949026,
+        "units": "K",
+        "valid_max": 4000,
+        "valid_min": 0
       }
     },
     {
@@ -567,6 +984,15 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 0.0,
+        "long_name": "Ungridded locally correlated LST uncertainties from pre-lauch calibration",
+        "scale_factor": 0.0020000000949949026,
+        "units": "K",
+        "valid_max": 4000,
+        "valid_min": 0
       }
     },
     {
@@ -579,6 +1005,15 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 0.0,
+        "long_name": "Ungridded uncorrelated LST uncertainties from on-board calibration",
+        "scale_factor": 0.0020000000949949026,
+        "units": "K",
+        "valid_max": 4000,
+        "valid_min": 0
       }
     },
     {
@@ -591,6 +1026,15 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 0.0,
+        "long_name": "Ungridded large systematic LST uncertainties",
+        "scale_factor": 0.0020000000949949026,
+        "units": "K",
+        "valid_max": 4000,
+        "valid_min": 0
       }
     },
     {
@@ -603,6 +1047,15 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 0.0,
+        "long_name": "Gridded Normalized Difference Vegetation Index",
+        "scale_factor": 4.999999873689376e-05,
+        "standard_name": "normalized_difference_vegetation_index",
+        "valid_max": 25000,
+        "valid_min": -25000
       }
     },
     {
@@ -615,6 +1068,16 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 30.0,
+        "long_name": "Gridded Total Column Water Vapour",
+        "scale_factor": 0.0010000000474974513,
+        "standard_name": "atmosphere_mass_content_of_water_vapor",
+        "units": "kg m-2",
+        "valid_max": 32767,
+        "valid_min": -30000
       }
     },
     {
@@ -627,6 +1090,41 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "flag_meanings": "open_ocean irrigated_cropland rainfed_cropland mosaic_cropland mosaic_vegetation broadleaved_evergreen_forest closed_broadleaved_deciduous_forrest open_broadleaved_deciduous_forest closed_needleleaved_forest open_needleleaved_forest mixed_forest mosaic_forest mosaic_grassland shrubland grassland sparse_vegetation freshwater_flooded_forest saltwater_flooded_forest flooded_vegetation artificial_surface bare_area_unknown bare_area_orthents bare_area_sand bare_area_calcids bare_area_cambids bare_area_orthels water snow_and_ice unfilled",
+        "flag_values": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28
+        ],
+        "long_name": "Gridded GlobCover surface classification code"
       }
     },
     {
@@ -638,6 +1136,16 @@
         "dimensions": [
           "nval"
         ]
+      },
+      "attributes": {
+        "flag_meanings": "not_recognised not_validated limited_validation fully_validated",
+        "flag_values": [
+          -1,
+          0,
+          1,
+          2
+        ],
+        "long_name": "LST validation status for biome class"
       }
     },
     {
@@ -650,6 +1158,15 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 0.5,
+        "long_name": "Gridded fractional vegetation cover",
+        "scale_factor": 1.9999999494757503e-05,
+        "standard_name": "vegetation_area_fraction",
+        "valid_max": 25000,
+        "valid_min": -25000
       }
     },
     {
@@ -662,6 +1179,15 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 0.0,
+        "long_name": "Ungridded Normalized Difference Vegetation Index",
+        "scale_factor": 4.999999873689376e-05,
+        "standard_name": "normalized_difference_vegetation_index",
+        "valid_max": 25000,
+        "valid_min": -25000
       }
     },
     {
@@ -674,6 +1200,16 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 30.0,
+        "long_name": "Ungridded Total Column Water Vapour",
+        "scale_factor": 0.0010000000474974513,
+        "standard_name": "atmosphere_mass_content_of_water_vapor",
+        "units": "kg m-2",
+        "valid_max": 32767,
+        "valid_min": -30000
       }
     },
     {
@@ -686,6 +1222,11 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "flag_meanings": "0",
+        "flag_values": 0,
+        "long_name": "Ungridded GlobCover surface classification code"
       }
     },
     {
@@ -698,6 +1239,15 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 0.5,
+        "long_name": "Ungridded fractional vegetation cover",
+        "scale_factor": 1.9999999494757503e-05,
+        "standard_name": "vegetation_area_fraction",
+        "valid_max": 25000,
+        "valid_min": -25000
       }
     },
     {
@@ -711,6 +1261,13 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Fractional cloud cover",
+        "model": "ECMWF_F",
+        "parameter": "164",
+        "standard_name": "cloud_area_fraction"
       }
     },
     {
@@ -725,6 +1282,14 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "2m dew point",
+        "model": "ECMWF_F",
+        "parameter": "168",
+        "standard_name": "dew_point_temperature",
+        "units": "K"
       }
     },
     {
@@ -738,6 +1303,13 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "East-west integrated surface wind stress",
+        "model": "ECMWF_F",
+        "parameter": "180",
+        "units": "N m-2 s"
       }
     },
     {
@@ -751,6 +1323,13 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Integrated surface latent heat flux",
+        "model": "ECMWF_F",
+        "parameter": "147",
+        "units": "W m-2 s"
       }
     },
     {
@@ -764,6 +1343,13 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "North-south integrated surface wind stress",
+        "model": "ECMWF_F",
+        "parameter": "181",
+        "units": "N m-2 s"
       }
     },
     {
@@ -777,6 +1363,13 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Sea ice fraction",
+        "model": "ECMWF_F",
+        "parameter": "31",
+        "standard_name": "sea_ice_area_fraction"
       }
     },
     {
@@ -790,6 +1383,14 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Sea surface temperature",
+        "model": "ECMWF_F",
+        "parameter": "34",
+        "standard_name": "sea_surface_temperature",
+        "units": "K"
       }
     },
     {
@@ -803,6 +1404,13 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Integrated surface sensible heat flux",
+        "model": "ECMWF_F",
+        "parameter": "146",
+        "units": "W m-2 s"
       }
     },
     {
@@ -816,6 +1424,14 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Skin temperature",
+        "model": "ECMWF_F",
+        "parameter": "235",
+        "standard_name": "surface_temperature",
+        "units": "K"
       }
     },
     {
@@ -829,6 +1445,13 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Snow albedo",
+        "model": "ECMWF_F",
+        "parameter": "32",
+        "standard_name": "surface_albedo_assuming_deep_snow"
       }
     },
     {
@@ -842,6 +1465,14 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Snow liquid water equivalent depth",
+        "model": "ECMWF_F",
+        "parameter": "141",
+        "standard_name": "lwe_thickness_of_surface_snow_amount",
+        "units": "metre"
       }
     },
     {
@@ -855,6 +1486,14 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Volumetric Soil Water Layer 1",
+        "model": "ECMWF_F",
+        "parameter": "39",
+        "standard_name": "lwe_thickness_of_moisture_content_of_soil_layer",
+        "units": "metre"
       }
     },
     {
@@ -868,6 +1507,13 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Integrated surface solar radiation",
+        "model": "ECMWF_F",
+        "parameter": "176",
+        "units": "W m-2 s"
       }
     },
     {
@@ -882,6 +1528,14 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Specific humidity profile (kg/kg)",
+        "model": "ECMWF_F",
+        "parameter": "133",
+        "standard_name": "specific_humidity",
+        "units": "kg/kg"
       }
     },
     {
@@ -895,6 +1549,14 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Surface pressure",
+        "model": "ECMWF_F",
+        "parameter": "134",
+        "standard_name": "surface_air_pressure",
+        "units": "hPa"
       }
     },
     {
@@ -909,6 +1571,14 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Atmospheric temperature profile",
+        "model": "ECMWF_F",
+        "parameter": "130",
+        "standard_name": "air_temperature",
+        "units": "K"
       }
     },
     {
@@ -923,6 +1593,14 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "2m air temperature",
+        "model": "ECMWF_F",
+        "parameter": "167",
+        "standard_name": "air_temperature",
+        "units": "K"
       }
     },
     {
@@ -936,6 +1614,13 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Integrated surface thermal radiation",
+        "model": "ECMWF_F",
+        "parameter": "177",
+        "units": "W m-2 s"
       }
     },
     {
@@ -949,6 +1634,14 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Total column ozone",
+        "model": "ECMWF_F",
+        "parameter": "206",
+        "standard_name": "atmosphere_mass_content_of_ozone",
+        "units": "kg m-2"
       }
     },
     {
@@ -962,6 +1655,14 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Total column water vapour",
+        "model": "ECMWF_F",
+        "parameter": "137",
+        "standard_name": "atmosphere_water_vapor_content",
+        "units": "kg m-2"
       }
     },
     {
@@ -976,6 +1677,14 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "10m U wind component",
+        "model": "ECMWF_F",
+        "parameter": "165",
+        "standard_name": "eastward_wind",
+        "units": "m s-1"
       }
     },
     {
@@ -990,6 +1699,14 @@
           "rows_tx",
           "columns_tx"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "10m V wind component",
+        "model": "ECMWF_F",
+        "parameter": "166",
+        "standard_name": "northward_wind",
+        "units": "m s-1"
       }
     },
     {
@@ -1002,6 +1719,16 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 290.0,
+        "long_name": "Gridded Land Surface Temperature",
+        "scale_factor": 0.0020000000949949026,
+        "standard_name": "surface_temperature",
+        "units": "K",
+        "valid_max": 32767,
+        "valid_min": -32767
       }
     },
     {
@@ -1014,6 +1741,15 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 0.0,
+        "long_name": "Gridded Land Surface Temperature estimated total uncertainty",
+        "scale_factor": 0.0020000000949949026,
+        "units": "K",
+        "valid_max": 4000,
+        "valid_min": 0
       }
     },
     {
@@ -1026,6 +1762,23 @@
           "rows_in",
           "columns_in"
         ]
+      },
+      "attributes": {
+        "flag_masks": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64,
+          128,
+          256,
+          512,
+          1024
+        ],
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel LST_underflow LST_overflow biome",
+        "long_name": "Gridded LST pixel exception flags"
       }
     },
     {
@@ -1038,6 +1791,16 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 290.0,
+        "long_name": "Ungridded Land Surface Temperature",
+        "scale_factor": 0.0020000000949949026,
+        "standard_name": "surface_temperature",
+        "units": "K",
+        "valid_max": 32767,
+        "valid_min": -32767
       }
     },
     {
@@ -1050,6 +1813,15 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -32768,
+        "add_offset": 0.0,
+        "long_name": "Ungridded Land Surface Temperature estimated total uncertainty",
+        "scale_factor": 0.0020000000949949026,
+        "units": "K",
+        "valid_max": 4000,
+        "valid_min": 0
       }
     },
     {
@@ -1062,6 +1834,23 @@
           "rows_in",
           "orphan_pixels_in"
         ]
+      },
+      "attributes": {
+        "flag_masks": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64,
+          128,
+          256,
+          512,
+          1024
+        ],
+        "flag_meanings": "ISP_absent pixel_absent not_decompressed no_signal saturation invalid_radiance no_parameters unfilled_pixel LST_underflow LST_overflow biome",
+        "long_name": "Ungridded LST pixel exception flags"
       }
     },
     {
@@ -1073,6 +1862,10 @@
         "dimensions": [
           "one"
         ]
+      },
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "First pixel acquisition in nadir view relative to SCANSYNC"
       }
     },
     {
@@ -1084,6 +1877,12 @@
         "dimensions": [
           "rows_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": 65535,
+        "long_name": "Scan number of the first nadir scan contributing to each line",
+        "valid_max": 19353,
+        "valid_min": 0
       }
     },
     {
@@ -1095,6 +1894,12 @@
         "dimensions": [
           "rows_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": 65535,
+        "long_name": "Scan number of the last nadir scan contributing to each line",
+        "valid_max": 19353,
+        "valid_min": 0
       }
     },
     {
@@ -1106,6 +1911,12 @@
         "dimensions": [
           "rows_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -9223372036854775808,
+        "long_name": "Time at SCANSYNC of the last scan contributing to each nadir image row",
+        "standard_name": "time",
+        "units": "microseconds since 2000-01-01T00:00:00Z"
       }
     },
     {
@@ -1117,6 +1928,12 @@
         "dimensions": [
           "rows_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -9223372036854775808,
+        "long_name": "Time at SCANSYNC of the first scan contributing to each nadir image row",
+        "standard_name": "time",
+        "units": "microseconds since 2000-01-01T00:00:00Z"
       }
     },
     {
@@ -1128,6 +1945,10 @@
         "dimensions": [
           "one"
         ]
+      },
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "First pixel acquisition in oblique view relative to SCANSYNC"
       }
     },
     {
@@ -1139,6 +1960,12 @@
         "dimensions": [
           "rows_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": 65535,
+        "long_name": "Scan number of the first oblique scan contributing to each line",
+        "valid_max": 19353,
+        "valid_min": 0
       }
     },
     {
@@ -1150,6 +1977,12 @@
         "dimensions": [
           "rows_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": 65535,
+        "long_name": "Scan number of the last oblique scan contributing to each line",
+        "valid_max": 19353,
+        "valid_min": 0
       }
     },
     {
@@ -1161,6 +1994,12 @@
         "dimensions": [
           "rows_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -9223372036854775808,
+        "long_name": "Time at SCANSYNC of the last scan contributing to each oblique image row",
+        "standard_name": "time",
+        "units": "microseconds since 2000-01-01T00:00:00Z"
       }
     },
     {
@@ -1172,6 +2011,12 @@
         "dimensions": [
           "rows_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -9223372036854775808,
+        "long_name": "Time at SCANSYNC of the first scan contributing to each oblique image row",
+        "standard_name": "time",
+        "units": "microseconds since 2000-01-01T00:00:00Z"
       }
     },
     {
@@ -1183,6 +2028,11 @@
         "dimensions": [
           "one"
         ]
+      },
+      "attributes": {
+        "_FillValue": "to_float(NaN)",
+        "long_name": "Time sampling interval for pixels along each scan",
+        "units": "us"
       }
     },
     {
@@ -1194,6 +2044,11 @@
         "dimensions": [
           "one"
         ]
+      },
+      "attributes": {
+        "_FillValue": -2147483648,
+        "long_name": "Scan period, defined as a complete rotation of the scan mirrors consisting of exactly 3670 1km (or 7340 500m) pixel acquisitions",
+        "units": "us"
       }
     },
     {
@@ -1205,6 +2060,12 @@
         "dimensions": [
           "rows_in"
         ]
+      },
+      "attributes": {
+        "_FillValue": -9223372036854775808,
+        "long_name": "Time at which the sub-satellite point crosses the image row",
+        "standard_name": "time",
+        "units": "microseconds since 2000-01-01T00:00:00Z"
       }
     },
     {
@@ -1242,17 +2103,8 @@
       "start_datetime": "metadataSection/metadataObject[@ID='acquisitionPeriod']/metadataWrap/xmlData/sentinel-safe:acquisitionPeriod/sentinel-safe:startTime",
       "end_datetime": "metadataSection/metadataObject[@ID='acquisitionPeriod']/metadataWrap/xmlData/sentinel-safe:acquisitionPeriod/sentinel-safe:stopTime",
       "created": "to_ISO8601(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:creationTime)",
-      "eopf:platform": {
-        "nssdc_identifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:nssdcIdentifier",
-        "family": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:familyName",
-        "number": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:number"
-      },
-      "eopf:instrument": {
-        "name": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName",
-        "short_name": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/@abbreviation",
-        "mode": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode",
-        "identifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode/@identifier"
-      },
+      "platform": "concat(metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:familyName, metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:number)",
+      "instrument": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:familyName/@abbreviation",
       "providers": [
         {
           "name": "metadataSection/metadataObject[@ID='processing']/metadataWrap/xmlData/sentinel-safe:processing/sentinel-safe:resource[@role='L2 Product']/sentinel-safe:processing/sentinel-safe:facility/@name",
@@ -1275,17 +2127,13 @@
         "type": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:productType",
         "timeliness": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:timeliness",
         "collection": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:baselineCollection",
-        "disposition": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dispositionMode",
-        "orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber)",
+        "instrument_mode": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:instrument/sentinel-safe:mode",
+        "absolute_orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber)",
         "relative_orbit_number": "to_int(metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:relativeOrbitNumber)",
-        "ground_track_direction": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber/@groundTrackDirection",
-        "downlink_information": {
-          "granule_number": "is_optional(to_int(metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:granuleNumber))",
-          "granule_position": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:granulePosition",
-          "dump_start": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:dumpStart",
-          "receiving_station": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingGroundStation",
-          "receiving_start": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingStartTime",
-          "receiving_stop": "metadataSection/metadataObject[@ID='generalProductInformation']/metadataWrap/xmlData/sentinel3:generalProductInformation/sentinel3:dumpInformation/sentinel3:receivingStopTime"
+        "ground_track_direction": "metadataSection/metadataObject[@ID='measurementOrbitReference']/metadataWrap/xmlData/sentinel-safe:orbitReference/sentinel-safe:orbitNumber[@type='start']/@groundTrackDirection",
+        "image_size": {
+          "rows": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:rows)",
+          "columns": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:columns)"
         },
         "pixel_classification": {
           "cosmetic": {
@@ -1322,27 +2170,27 @@
           "cloud": {
             "percent": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:classificationSummary/sentinel3:cloudyPixels/@percentage)"
           }
-        },
-        "data_information": {
-          "measurement_accuracy": "metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:measurementAccuracy",
-          "accuracy_reference": "metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:accuracyReference",
-          "nadir_image_size": {
-            "start_offset": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:startOffset)",
-            "track_offset": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:trackOffset)",
-            "rows": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:rows)",
-            "columns": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:columns)"
-          },
-          "oblique_image_size": {
-            "start_offset": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:obliqueImageSize/sentinel3:startOffset)",
-            "track_offset": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:obliqueImageSize/sentinel3:trackOffset)",
-            "rows": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:obliqueImageSize/sentinel3:rows)",
-            "columns": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:obliqueImageSize/sentinel3:columns)"
-          }
         }
       }
     }
   },
   "conditions_metadata": {
+    "data_information": {
+      "measurement_accuracy": "metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:measurementAccuracy",
+      "accuracy_reference": "metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:accuracyReference",
+      "nadir_image_size": {
+        "start_offset": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:startOffset)",
+        "track_offset": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:trackOffset)",
+        "rows": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:rows)",
+        "columns": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:nadirImageSize/sentinel3:columns)"
+      },
+      "oblique_image_size": {
+        "start_offset": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:obliqueImageSize/sentinel3:startOffset)",
+        "track_offset": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:obliqueImageSize/sentinel3:trackOffset)",
+        "rows": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:obliqueImageSize/sentinel3:rows)",
+        "columns": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:obliqueImageSize/sentinel3:columns)"
+      }
+    },
     "detector_temperatures": {
       "S1_Detector": {
         "min": "to_float(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:temperatureSummary/slstr:temperature[@element='S1_Detector']/slstr:min)",
@@ -1429,6 +2277,9 @@
       "source": "Text(ECMWF)",
       "type": "metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:ecmwfType",
       "time_relevance": "to_int(metadataSection/metadataObject[@ID='slstrProductInformation']/metadataWrap/xmlData/slstr:slstrProductInformation/slstr:ecmwfType/@timeRelevance)"
+    },
+    "platform": {
+      "nssdc_identifier": "metadataSection/metadataObject[@ID='platform']/metadataWrap/xmlData/sentinel-safe:platform/sentinel-safe:nssdcIdentifier"
     }
   },
   "namespaces": {

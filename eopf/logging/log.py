@@ -2,8 +2,9 @@ from json import load
 from logging import CRITICAL, DEBUG, ERROR, INFO, NOTSET, WARNING, Logger, getLogger
 from logging.config import dictConfig
 from pathlib import Path
-from typing import Union
+from typing import Optional, Union
 
+from eopf.conf import conf_loader
 from eopf.exceptions import (
     LoggingConfigurationAlreadyExists,
     LoggingConfigurationDirDoesNotExist,
@@ -18,18 +19,14 @@ from eopf.exceptions.warnings import (
 
 
 class EOLogFactory(object):
-    """A factory generating Python Logger based on given configuration
+    """A factory generating Python Logger based on given configuration"""
 
-    Attributes
-    ----------
-    _cfgs: dict[str, Path]
-        dictionary of logger configurations
-    cfg_dir: Path
-        path to the directory containing logger configurations
-    """
-
-    cfg_dir = Path(__file__).parent / "conf"
+    cfg_dir: Optional[Path] = None
+    """path to the directory containing logger configurations"""
+    DEFAULT_CFG_DIR = Path(__file__).parent / "conf"
+    """Default directory containing configurations"""
     _cfgs: dict[str, Path] = {}
+    """dictionary of logger configurations"""
 
     def __init__(self) -> None:
         """Initializes by registering logger configurations in the cfg_dir
@@ -39,9 +36,23 @@ class EOLogFactory(object):
         LoggingConfigurationDirDoesNotExist
             When the preset or given logging directory does not exist
         """
-        if not self.cfg_dir.is_dir():
+        if self.cfg_dir is None:
+            self.set_default_cfg_dir()
+
+        if not (self.cfg_dir and self.cfg_dir.is_dir()):
             raise LoggingConfigurationDirDoesNotExist("The logging configuration directory must exist")
+
         self.register_cfg_dir()
+
+    def set_default_cfg_dir(self) -> None:
+        """Set the default config dir according to the eopf configuration folder"""
+        conf = conf_loader()
+        current_conf_dir = Path(conf.logging)
+        as_conf_file = len([_ for _ in current_conf_dir.glob("*.json")]) > 0
+        if as_conf_file:
+            self.cfg_dir = current_conf_dir
+        else:
+            self.cfg_dir = self.DEFAULT_CFG_DIR
 
     def __new__(cls) -> "EOLogFactory":
         """Ensures there is only one object of EOLogFactory (singletone)"""
@@ -182,11 +193,11 @@ class EOLogFactory(object):
         self._cfgs = {}
 
         # register the configurations in the cfg_dir
-        no_cofiguration_present = True
-        for cfg_path in self.cfg_dir.iterdir():
-            if cfg_path.is_file() and cfg_path.suffix in [".json"]:
-                no_cofiguration_present = False
+        configuration_present = False
+        if self.cfg_dir is not None:
+            for cfg_path in self.cfg_dir.glob("*.json"):
+                configuration_present = True
                 self.register_cfg(cfg_path.stem, cfg_path)
 
-        if no_cofiguration_present:
+        if not configuration_present:
             raise NoLoggingConfigurationFile(f"No logging configuration file .json is present in {self.cfg_dir}")
